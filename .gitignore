@@ -58,6 +58,6 @@ typings/
 .env
 
 #elipmoc
-Test/
+Test/*
 !.gitkeep
 
