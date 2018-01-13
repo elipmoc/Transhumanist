@@ -1,6 +1,6 @@
 //ライブラリのインポート
-var http = require('http');
-var fs = require('fs');
+const http = require('http');
+const fs = require('fs');
 
 //サーバーの作成
 let server = http.createServer();
