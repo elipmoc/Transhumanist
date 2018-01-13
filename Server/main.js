@@ -13,31 +13,33 @@ server.listen(3000);
 function routing(req, res) {
     switch (req.url) {
         case "/":
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.end(fs.readFileSync("./Html/login.html"));
+            sendHtml(res, "./Html/login.html");
             break;
         case "/Css/login.css":
-            res.writeHead(200, {
-                'Content-Type': 'text/css'
-            });
-            res.end(fs.readFileSync("./Css/login.css"));
+            sendCss(res, "./Css/login.css");
             break;
         case "/Css/board.css":
-            res.writeHead(200, {
-                'Content-Type': 'text/css'
-            });
-            res.end(fs.readFileSync("./Css/board.css"));
+            sendCss(res, "./Css/board.css");
             break;
         case "/board.html":
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.end(fs.readFileSync("./Html/board.html"));
+            sendHtml(res, "./Html/board.html");
             break;
         default:
             res.end("not find url " + req.url);
             break;
     }
+}
+
+function sendHtml(res, path) {
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+    res.end(fs.readFileSync(path));
+}
+
+function sendCss(res, path) {
+    res.writeHead(200, {
+        'Content-Type': 'text/css'
+    });
+    res.end(fs.readFileSync(path));
 }
