@@ -24,6 +24,12 @@ function routing(req, res) {
             });
             res.end(fs.readFileSync("./Css/login.css"));
             break;
+        case "/Css/board.css":
+            res.writeHead(200, {
+                'Content-Type': 'text/css'
+            });
+            res.end(fs.readFileSync("./Css/board.css"));
+            break;
         default:
             res.end("not find url " + req.url);
             break;
