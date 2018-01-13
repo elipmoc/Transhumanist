@@ -30,6 +30,12 @@ function routing(req, res) {
             });
             res.end(fs.readFileSync("./Css/board.css"));
             break;
+        case "/board.html":
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.end(fs.readFileSync("./Html/board.html"));
+            break;
         default:
             res.end("not find url " + req.url);
             break;
