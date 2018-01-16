@@ -24,6 +24,9 @@ function routing(req, res) {
         case "/board.html":
             sendHtml(res, "./Html/board.html");
             break;
+        case "/Js/Lib/enchant.js":
+            sendJs(res, "./Js/Lib/enchant.js");
+            break;
         default:
             res.end("not find url " + req.url);
             break;
@@ -40,6 +43,13 @@ function sendHtml(res, path) {
 function sendCss(res, path) {
     res.writeHead(200, {
         'Content-Type': 'text/css'
+    });
+    res.end(fs.readFileSync(path));
+}
+
+function sendJs(res, path) {
+    res.writeHead(200, {
+        'Content-Type': 'text/plane'
     });
     res.end(fs.readFileSync(path));
 }
