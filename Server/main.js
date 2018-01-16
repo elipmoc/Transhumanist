@@ -27,6 +27,9 @@ function routing(req, res) {
         case "/Js/Lib/enchant.js":
             sendJs(res, "./Js/Lib/enchant.js");
             break;
+        case "/Js/board.js":
+            sendJs(res, "./Js/board.js");
+            break;
         default:
             res.end("not find url " + req.url);
             break;
