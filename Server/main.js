@@ -24,8 +24,8 @@ function routing(req, res) {
         case "/board.html":
             sendHtml(res, "./Html/board.html");
             break;
-        case "/Js/Lib/enchant.js":
-            sendJs(res, "./Js/Lib/enchant.js");
+        case "/Js/Lib/easel.js":
+            sendJs(res, "./Js/Lib/easeljs-0.8.2.min.js");
             break;
         case "/Js/board.js":
             sendJs(res, "./Js/board.js");
