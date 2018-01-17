@@ -11,7 +11,7 @@ window.onload = () => {
         let backColorSprite = new Sprite(960, 540);
         let surface = new Surface(960, 540)
         surface.context.beginPath();
-        surface.context.fillStyle = "rgb(20,20,255)";
+        surface.context.fillStyle = "rgb(0,0,0)";
         surface.context.fillRect(0, 0, 960, 540);
         backColorSprite.image = surface;
         scene.addChild(backColorSprite);
