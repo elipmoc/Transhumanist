@@ -1,9 +1,8 @@
-#test{
-    color: blueviolet;
-}
-
-#enchant-stage{
+#myCanvas{
     width: 960px;
     height: 876px;
-    margin: 0 auto;  
+}
+
+body{
+    text-align: center;
 }
