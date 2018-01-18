@@ -30,6 +30,9 @@ function routing(req, res) {
         case "/Js/board.js":
             sendJs(res, "./Js/board.js");
             break;
+        case "/Js/login.js":
+            sendJs(res, "./Js/login.js");
+            break;
         default:
             res.end("not find url " + req.url);
             break;
