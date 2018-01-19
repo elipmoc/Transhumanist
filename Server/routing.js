@@ -16,6 +16,12 @@ exports.createRouter = () => {
     myRouter.get("/Js/:path", (req, res) => {
         sendJs(res, "./Js/" + req.params.path);
     });
+    myRouter.get("/Img/:path", (req, res) => {
+        sendPng(res, "./Resource/Img/" + req.params.path);
+    });
+    myRouter.get("/Img/ui/:path", (req, res) => {
+        sendPng(res, "./Resource/Img/ui/" + req.params.path);
+    });
     myRouter.get("/:path", (req, res) => {
         sendHtml(res, "./Html/" + req.params.path);
     });
@@ -72,6 +78,12 @@ function sendCss(res, path) {
 function sendJs(res, path) {
     res.writeHead(200, {
         'Content-Type': 'text/plane'
+    });
+    res.end(fs.readFileSync(path));
+}
+function sendPng(res, path) {
+    res.writeHead(200, {
+        'Content-Type': 'image/png'
     });
     res.end(fs.readFileSync(path));
 }
