@@ -31,36 +31,6 @@ exports.createRouter = () => {
     }
 }
 
-/*
-
-//ルーティングをして適切にデータをクライアントに送信
-exports.routing = function (req, res) {
-    switch (req.url) {
-        case "/":
-            sendHtml(res, "./Html/login.html");
-            break;
-        case "/Css/login.css":
-            sendCss(res, "./Css/login.css");
-            break;
-        case "/Css/board.css":
-            sendCss(res, "./Css/board.css");
-            break;
-        case "/board.html":
-            sendHtml(res, "./Html/board.html");
-            break;
-        case "/Js/Lib/easel.js":
-            sendJs(res, "./Js/Lib/easeljs-0.8.2.min.js");
-            break;
-        case "/Js/board.js":
-            sendJs(res, "./Js/board.js");
-            break;
-        default:
-            res.end("not find url " + req.url);
-            break;
-    }
-}
-*/
-
 function sendHtml(res, path) {
     res.writeHead(200, {
         'Content-Type': 'text/html'
