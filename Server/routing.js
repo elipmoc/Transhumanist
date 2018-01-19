@@ -27,6 +27,8 @@ exports.createRouter = () => {
     }
 }
 
+/*
+
 //ルーティングをして適切にデータをクライアントに送信
 exports.routing = function (req, res) {
     switch (req.url) {
@@ -53,6 +55,7 @@ exports.routing = function (req, res) {
             break;
     }
 }
+*/
 
 function sendHtml(res, path) {
     res.writeHead(200, {
