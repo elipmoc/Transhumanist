@@ -7,21 +7,19 @@ exports.createRouter = () => {
     myRouter.get("/", (req, res) => {
         sendHtml(res, "./Html/login.html");
     });
-    myRouter.get("/Css/login.css", (req, res) => {
-        sendCss(res, "./Css/login.css");
-    });
-    myRouter.get("/Css/board.css", (req, res) => {
-        sendHtml(res, "./Css/board.css");
-    });
-    myRouter.get("/board.html", (req, res) => {
-        sendHtml(res, "./Html/board.html");
-    });
     myRouter.get("/Js/Lib/easel.js", (req, res) => {
         sendHtml(res, "./Js/Lib/easeljs-0.8.2.min.js");
     });
-    myRouter.get("/Js/board.js", (req, res) => {
-        sendHtml(res, "./Js/board.js");
+    myRouter.get("/Css/:path", (req, res) => {
+        sendCss(res, "./Css/" + req.params.path);
     });
+    myRouter.get("/Js/:path", (req, res) => {
+        sendJs(res, "./Js/" + req.params.path);
+    });
+    myRouter.get("/:path", (req, res) => {
+        sendHtml(res, "./Html/" + req.params.path);
+    });
+
     return (req, res) => {
         myRouter(req, res, finalhandler(req, res));
     }
