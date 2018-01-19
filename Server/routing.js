@@ -1,5 +1,31 @@
 const fs = require('fs');
 const router = require('router');
+const finalhandler = require('finalhandler');
+
+exports.createRouter = () => {
+    let myRouter = router();
+    myRouter.get("/", (req, res) => {
+        sendHtml(res, "./Html/login.html");
+    });
+    myRouter.get("/Css/login.css", (req, res) => {
+        sendCss(res, "./Css/login.css");
+    });
+    myRouter.get("/Css/board.css", (req, res) => {
+        sendHtml(res, "./Css/board.css");
+    });
+    myRouter.get("/board.html", (req, res) => {
+        sendHtml(res, "./Html/board.html");
+    });
+    myRouter.get("/Js/Lib/easel.js", (req, res) => {
+        sendHtml(res, "./Js/Lib/easeljs-0.8.2.min.js");
+    });
+    myRouter.get("/Js/board.js", (req, res) => {
+        sendHtml(res, "./Js/board.js");
+    });
+    return (req, res) => {
+        myRouter(req, res, finalhandler(req, res));
+    }
+}
 
 //ルーティングをして適切にデータをクライアントに送信
 exports.routing = function (req, res) {
