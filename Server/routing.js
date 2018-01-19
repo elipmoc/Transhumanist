@@ -1,5 +1,6 @@
 const fs = require('fs');
 const router = require('router');
+
 //ルーティングをして適切にデータをクライアントに送信
 exports.routing = function (req, res) {
     switch (req.url) {
