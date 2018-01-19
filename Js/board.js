@@ -1,11 +1,10 @@
 
 window.onload = () => {
     let stage = new createjs.Stage("myCanvas");
-    let circle = new createjs.Shape();
-    circle.addEventListener("click", e => alert("baho"));
-    circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
-    circle.x = 100;
-    circle.y = 100;
-    stage.addChild(circle);
+    let background = new createjs.Shape();
+    background.graphics.beginFill("black").drawRect(0, 0, 960, 876);
+    background.x = 0;
+    background.y = 0;
+    stage.addChild(background);
     stage.update();
 }
