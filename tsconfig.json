@@ -5,6 +5,7 @@
         "sourceMap": false,
         "declaration": true,
         "outDir": "./Js",
+        "rootDir": "./Ts",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
