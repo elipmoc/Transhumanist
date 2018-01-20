@@ -59,16 +59,16 @@ function deleteRoom(roomID){
 }
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
-function addMember(playerName,playerTag){
-    
+function addMember(roomID,playerName,playerTag){
+
 }
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
-function addMember(playerTag){
+function deleteMember(roomID,playerTag){
 
 }
 
 //プレイ中かどうかが変更
-function updatePlayFlag(playFlag){
+function updatePlayFlag(roomID,playFlag){
 
 }
