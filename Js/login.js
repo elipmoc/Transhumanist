@@ -1,15 +1,31 @@
-let RoomData = {
-    roomName:"バーチャル控室",
-    roomId:114514,
-    playFlag:true,
-    playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
-};
+let RoomData = [
+    {
+        roomName:"バーチャル控室",
+        roomId:114514,
+        playFlag:true,
+        playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
+    },
+    {
+        roomName:"テスト用収容室",
+        roomId:666,
+        playFlag:false,
+        playerList:["","","",""]
+    },
+    {
+        roomName:"なんでもいい",
+        roomId:10,
+        playFlag:false,
+        playerList:["A","B","C",""]
+    }
+];
 
-addRoom(RoomData);
+initRoomList(RoomData);
 
 //部屋のリストを受け取って画面に表示
 function initRoomList(roomDataList){
-    
+    for(let i = 0;i<roomDataList.length;i++){
+        addRoom(roomDataList[i]);    
+    }
 }
 
 //部屋を新規追加
@@ -45,7 +61,9 @@ function addRoom(roomData){
     for(let i = 0;i<4;i++){
         td = document.createElement("td");
         td.setAttribute("class","player" + i);
-        td.textContent = roomData.playerList[i];
+        if(!(roomData.playerList.length < i)){
+            td.textContent = roomData.playerList[i];
+        }
         tr.appendChild(td);
     }
     table.appendChild(tr);
