@@ -1,7 +1,7 @@
 let RoomData = {
     roomName:"バーチャル控室",
     roomId:114115,
-    playFlag:false,
+    playFlag:true,
     playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
 };
 
@@ -33,7 +33,13 @@ function addRoom(roomData){
     tr = document.createElement("tr");
     td = document.createElement("td");
     td.setAttribute("class","playFlag");
-    td.textContent = roomData.playFlag ? "プレイ中":"ここにボタン";
+    if(roomData.playFlag){
+        td.textContent = "プレイ中";
+    }
+    else{
+        //ここにボタンを追加。
+        td.textContent = "待機中";
+    }
     tr.appendChild(td);
     
     for(let i = 0;i<4;i++){
@@ -54,7 +60,7 @@ function deleteRoom(roomID){
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
 function addMember(playerName,playerTag){
-
+    
 }
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
