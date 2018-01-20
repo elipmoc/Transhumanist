@@ -9,13 +9,13 @@ let RoomData = [
         roomName:"テスト用収容室",
         roomId:666,
         playFlag:false,
-        playerList:["","","","何もない"]
+        playerList:["何もない"]
     },
     {
         roomName:"なんでもいい",
         roomId:10,
         playFlag:false,
-        playerList:["A","B","C",""]
+        playerList:["A","B","C"]
     }
 ];
 
@@ -46,6 +46,10 @@ function addRoom(roomData){
     tr.appendChild(td);
     table.appendChild(tr);
 　　//テーブル下段
+    let button = document.createElement("input");
+    button.setAttribute("type","button");
+    button.setAttribute("value","部屋に入室");
+
     tr = document.createElement("tr");
     td = document.createElement("td");
     td.setAttribute("class","playFlag");
@@ -54,7 +58,7 @@ function addRoom(roomData){
     }
     else{
         //ここにボタンを追加。
-        td.textContent = "待機中";
+        td.appendChild(button);
     }
     tr.appendChild(td);
     
