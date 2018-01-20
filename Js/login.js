@@ -9,7 +9,7 @@ let RoomData = [
         roomName:"テスト用収容室",
         roomId:666,
         playFlag:false,
-        playerList:["","","",""]
+        playerList:["","","","何もない"]
     },
     {
         roomName:"なんでもいい",
@@ -79,12 +79,12 @@ function deleteRoom(roomID){
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
 function addMember(roomID,playerName,playerTag){
-
+    document.getElementById(roomID).lastElementChild.getElementsByClassName(playerTag)[0].textContent = playerName;
 }
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
 function deleteMember(roomID,playerTag){
-
+    
 }
 
 //プレイ中かどうかが変更
