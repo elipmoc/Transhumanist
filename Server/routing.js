@@ -10,6 +10,9 @@ exports.createRouter = () => {
     myRouter.get("/Js/Lib/easel.js", (req, res) => {
         sendHtml(res, "./Js/Lib/easeljs-0.8.2.min.js");
     });
+    myRouter.get("/Js/Lib/preload.js", (req, res) => {
+        sendHtml(res, "./Js/Lib/preloadjs-0.6.2.min.js");
+    });
     myRouter.get("/Css/:path", (req, res) => {
         sendCss(res, "./Css/" + req.params.path);
     });

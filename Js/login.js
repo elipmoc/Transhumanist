@@ -1,15 +1,31 @@
-let RoomData = {
-    roomName:"バーチャル控室",
-    roomId:114115,
-    playFlag:false,
-    playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
-};
+let RoomData = [
+    {
+        roomName:"バーチャル控室",
+        roomId:114514,
+        playFlag:true,
+        playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
+    },
+    {
+        roomName:"テスト用収容室",
+        roomId:666,
+        playFlag:false,
+        playerList:["何もない"]
+    },
+    {
+        roomName:"なんでもいい",
+        roomId:10,
+        playFlag:false,
+        playerList:["A","B","C"]
+    }
+];
 
-addRoom(RoomData);
+initRoomList(RoomData);
 
 //部屋のリストを受け取って画面に表示
 function initRoomList(roomDataList){
-    
+    for(let i = 0;i<roomDataList.length;i++){
+        addRoom(roomDataList[i]);    
+    }
 }
 
 //部屋を新規追加
@@ -30,16 +46,28 @@ function addRoom(roomData){
     tr.appendChild(td);
     table.appendChild(tr);
 　　//テーブル下段
+    let button = document.createElement("input");
+    button.setAttribute("type","button");
+    button.setAttribute("value","部屋に入室");
+
     tr = document.createElement("tr");
     td = document.createElement("td");
     td.setAttribute("class","playFlag");
-    td.textContent = roomData.playFlag ? "プレイ中":"ここにボタン";
+    if(roomData.playFlag){
+        td.textContent = "プレイ中";
+    }
+    else{
+        //ここにボタンを追加。
+        td.appendChild(button);
+    }
     tr.appendChild(td);
     
     for(let i = 0;i<4;i++){
         td = document.createElement("td");
         td.setAttribute("class","player" + i);
-        td.textContent = roomData.playerList[i];
+        if(!(roomData.playerList.length < i)){
+            td.textContent = roomData.playerList[i];
+        }
         tr.appendChild(td);
     }
     table.appendChild(tr);
@@ -49,20 +77,37 @@ function addRoom(roomData){
 
 //部屋を削除
 function deleteRoom(roomID){
-
+    let target = document.getElementById(roomID);
+    target.parentNode.removeChild(target);
 }
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
-function addMember(playerName,playerTag){
-
+function addMember(roomID,playerName,playerTag){
+    document.getElementById(roomID).lastElementChild.
+        getElementsByClassName(playerTag)[0].textContent = playerName;
 }
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
-function addMember(playerTag){
-
+function deleteMember(roomID,playerTag){
+    document.getElementById(roomID).lastElementChild.
+        getElementsByClassName(playerTag)[0].textContent = "";
 }
 
 //プレイ中かどうかが変更
-function updatePlayFlag(playFlag){
+function updatePlayFlag(roomID,playFlag){
+    let target = document.getElementById(roomID).lastElementChild.
+        getElementsByClassName("playFlag")[0];
+    if(target.children != null) target.textContent = null;
 
+    if(playFlag){
+        target.textContent = "プレイ中";
+    }
+    else{
+        let button = document.createElement("input");
+        button.setAttribute("type","button");
+        button.setAttribute("value","部屋に入室");
+
+        //ここにボタンを追加。
+        target.appendChild(button);
+    }
 }
