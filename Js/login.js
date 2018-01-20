@@ -1,6 +1,6 @@
 let RoomData = {
     roomName:"バーチャル控室",
-    roomId:114115,
+    roomId:114514,
     playFlag:true,
     playerList:["ミライアカリ","輝夜月","シロ","のじゃロリ"]
 };
@@ -55,7 +55,8 @@ function addRoom(roomData){
 
 //部屋を削除
 function deleteRoom(roomID){
-
+    let target = document.getElementById(roomID);
+    target.parentNode.removeChild(target);
 }
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
