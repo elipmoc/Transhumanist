@@ -83,15 +83,31 @@ function deleteRoom(roomID){
 
 //メンバーを追加(playerTagはclass =”player1”等の部分)
 function addMember(roomID,playerName,playerTag){
-    document.getElementById(roomID).lastElementChild.getElementsByClassName(playerTag)[0].textContent = playerName;
+    document.getElementById(roomID).lastElementChild.
+        getElementsByClassName(playerTag)[0].textContent = playerName;
 }
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
 function deleteMember(roomID,playerTag){
-    document.getElementById(roomID).lastElementChild.getElementsByClassName(playerTag)[0].textContent = "";
+    document.getElementById(roomID).lastElementChild.
+        getElementsByClassName(playerTag)[0].textContent = "";
 }
 
 //プレイ中かどうかが変更
 function updatePlayFlag(roomID,playFlag){
+    let target = document.getElementById(roomID).lastElementChild.
+        getElementsByClassName("playFlag")[0];
+    if(target.children != null) target.textContent = null;
 
+    if(playFlag){
+        target.textContent = "プレイ中";
+    }
+    else{
+        let button = document.createElement("input");
+        button.setAttribute("type","button");
+        button.setAttribute("value","部屋に入室");
+
+        //ここにボタンを追加。
+        target.appendChild(button);
+    }
 }
