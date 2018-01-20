@@ -84,7 +84,7 @@ function addMember(roomID,playerName,playerTag){
 
 //メンバーを削除(playerTagはclass =”player1”等の部分)
 function deleteMember(roomID,playerTag){
-    
+    document.getElementById(roomID).lastElementChild.getElementsByClassName(playerTag)[0].textContent = "";
 }
 
 //プレイ中かどうかが変更
