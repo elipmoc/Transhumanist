@@ -1,5 +1,5 @@
 module.exports = {
-    entry: { hoge: "hoge" },
+    entry: { main: "./Ts/main.ts" },
     output: {
         filename: './Js/[name].js'
     },
