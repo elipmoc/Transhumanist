@@ -1,5 +1,8 @@
 module.exports = {
-    entry: { board: "./Ts/board.ts" },
+    entry: {
+        board: "./Ts/board.ts",
+        login: "./Ts/login.ts"
+    },
     output: {
         filename: './Js/[name].js'
     },
