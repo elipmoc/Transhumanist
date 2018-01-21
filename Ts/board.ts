@@ -1,72 +1,3 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
-
 const queue = new createjs.LoadQueue();
 const canvasWidth = 960;
 const canvasHeight = 876;
@@ -85,13 +16,15 @@ window.onload = () => {
         { id: "button", src: "Img/ui/button.png" },
         { id: "handTest", src: "Img/ui/handTest.png" }
     ]);
-};
+}
+
 function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
     let background = new createjs.Shape();
     background.graphics.beginFill("black").
         drawRect(0, 0, canvasWidth, canvasHeight);
     stage.addChild(background);
+
     //プレイヤー1の枠
     let player1frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
     player1frame.regX = player1frame.image.width / 2;
@@ -113,11 +46,13 @@ function preloadImage() {
     player1resourceArea.x = canvasWidth / 2;
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
+
     //プレイヤー2の枠
     let player2frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
     player2frame.regY = player2frame.image.height / 2;
     player2frame.y = canvasHeight / 2;
     stage.addChild(player2frame);
+
     //プレイヤー3の枠
     let player3frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
     player3frame.rotation = 180;
@@ -126,6 +61,7 @@ function preloadImage() {
     player3frame.x = canvasWidth / 2;
     player3frame.y = player3frame.image.height;
     stage.addChild(player3frame);
+
     //プレイヤー4の枠
     let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
     player4frame.rotation = 180;
@@ -134,6 +70,7 @@ function preloadImage() {
     player4frame.x = canvasWidth - player4frame.image.width;
     player4frame.y = canvasHeight / 2;
     stage.addChild(player4frame);
+
     //設定枠
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
     stage.addChild(topWindowsL);
@@ -142,6 +79,7 @@ function preloadImage() {
     setting.x = (topWindowsL.image.height - setting.image.height) / 2;
     setting.y = (topWindowsL.image.height - setting.image.height) / 2;
     stage.addChild(setting);
+
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
     topWindowsR.scaleX = -1;
@@ -149,7 +87,3 @@ function preloadImage() {
     stage.addChild(topWindowsR);
     stage.update();
 }
-
-
-/***/ })
-/******/ ]);
