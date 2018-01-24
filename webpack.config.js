@@ -1,10 +1,12 @@
+
+console.log("すごーい！君はwebpackできるフレンズなんだね！");
 module.exports = {
     entry: {
-        board: "./Ts/board.ts",
-        login: "./Ts/login.ts"
+        "Js/board": "./Ts/board.ts",
+        "Js/login": "./Ts/login.ts"
     },
     output: {
-        filename: './Js/[name].js'
+        filename: './[name].js'
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
