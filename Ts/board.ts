@@ -85,5 +85,22 @@ function preloadImage() {
     topWindowsR.scaleX = -1;
     topWindowsR.x = canvasWidth;
     stage.addChild(topWindowsR);
+
+    //ターン終了ボタン
+    let turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
+    turnFinishButton.regX = turnFinishButton.image.width;
+    turnFinishButton.regY = turnFinishButton.image.height;
+    turnFinishButton.x = canvasWidth - 20;
+    turnFinishButton.y = canvasHeight - 20;
+    stage.addChild(turnFinishButton);
+    //ターン終了ボタンテキスト
+    let turnFinishText = new createjs.Text("ターン終了", "30px Arial");
+    turnFinishText.regX = turnFinishText.getMeasuredWidth() / 2;
+    turnFinishText.regY = turnFinishText.getMeasuredHeight() / 2;
+    turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
+    turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
+    stage.addChild(turnFinishText);
+
+
     stage.update();
 }
