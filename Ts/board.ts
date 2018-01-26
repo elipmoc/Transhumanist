@@ -94,12 +94,28 @@ function preloadImage() {
     turnFinishButton.y = canvasHeight - 20;
     stage.addChild(turnFinishButton);
     //ターン終了ボタンテキスト
-    let turnFinishText = new createjs.Text("ターン終了", "30px Arial");
+    let turnFinishText = new createjs.Text("ターン終了", "20px Arial");
     turnFinishText.regX = turnFinishText.getMeasuredWidth() / 2;
     turnFinishText.regY = turnFinishText.getMeasuredHeight() / 2;
     turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
     turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
     stage.addChild(turnFinishText);
+
+    //宣戦布告ボタン
+    let declareWarButton = new createjs.Bitmap(queue.getResult("button"));
+    declareWarButton.regX = 0;
+    declareWarButton.regY = declareWarButton.image.height;
+    declareWarButton.x = 20;
+    declareWarButton.y = canvasHeight - 20;
+    stage.addChild(declareWarButton);
+
+    //宣戦布告ボタンテキスト
+    let declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
+    declareWarText.regX = declareWarText.getMeasuredWidth() / 2;
+    declareWarText.regY = declareWarText.getMeasuredHeight() / 2;
+    declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
+    declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
+    stage.addChild(declareWarText);
 
 
     stage.update();
