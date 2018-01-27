@@ -1,3 +1,8 @@
+import * as io from "socket.io-client";
+
+//サンプルソケットに繋げる
+const socket = io("/login");
+
 type RoomData = {
     roomName: string,
     roomId: number,
@@ -127,4 +132,37 @@ function updatePlayFlag(roomID: number, playFlag: boolean) {
             target.appendChild(button);
         }
     }
+}
+
+//hogeEventとしてデータの受信処理
+socket.on("addRoom", (data: string) => {
+    let roomData :RoomData = JSON.parse(data);
+    if(roomData != null) addRoom(roomData);
+});
+
+socket.on("deleteRoom",(data:number) => {
+    let roomId :number = data;
+    if(roomId != null) deleteRoom(roomId);
+});
+
+socket.on("addMember",(data: string)=>{
+    let member = JSON.parse(data);
+    if(member != null) addMember(member.roomID,member.playerName,member.playerTag);
+});
+
+socket.on("deleteMember",(data: string)=>{
+    let member = JSON.parse(data);
+    if(member != null) deleteMember(member.roomID,member.playerTag);
+});
+
+socket.on("updatePlayFlag",(data: string)=>{
+    let playData = JSON.parse(data);
+    if(playData != null) updatePlayFlag(playData.roomID,playData.playFlag);
+});
+
+
+if(socket == null){
+    addMember(999,"aaaa","player1");
+    deleteMember(999,"player1");
+    updatePlayFlag(999,false);
 }
