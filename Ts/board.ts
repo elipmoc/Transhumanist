@@ -4,7 +4,8 @@ const queue = new createjs.LoadQueue();
 const canvasWidth = 960;
 const canvasHeight = 876;
 window.onload = () => {
-    new view.PlayerInfo();
+    new view.Player1Window();
+
     queue.on("complete", preloadImage);
     queue.loadManifest([
         { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },

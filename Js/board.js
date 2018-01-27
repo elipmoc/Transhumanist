@@ -66,12 +66,17 @@
 /******/ ({
 
 /***/ 20:
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const view = __webpack_require__(21);
 const queue = new createjs.LoadQueue();
 const canvasWidth = 960;
 const canvasHeight = 876;
 window.onload = () => {
+    new view.Player1Window();
     queue.on("complete", preloadImage);
     queue.loadManifest([
         { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },
@@ -148,8 +153,62 @@ function preloadImage() {
     topWindowsR.scaleX = -1;
     topWindowsR.x = canvasWidth;
     stage.addChild(topWindowsR);
+    //ターン終了ボタン
+    let turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
+    turnFinishButton.regX = turnFinishButton.image.width;
+    turnFinishButton.regY = turnFinishButton.image.height;
+    turnFinishButton.x = canvasWidth - 20;
+    turnFinishButton.y = canvasHeight - 20;
+    stage.addChild(turnFinishButton);
+    //ターン終了ボタンテキスト
+    let turnFinishText = new createjs.Text("ターン終了", "20px Arial");
+    turnFinishText.regX = turnFinishText.getMeasuredWidth() / 2;
+    turnFinishText.regY = turnFinishText.getMeasuredHeight() / 2;
+    turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
+    turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
+    stage.addChild(turnFinishText);
+    //宣戦布告ボタン
+    let declareWarButton = new createjs.Bitmap(queue.getResult("button"));
+    declareWarButton.regX = 0;
+    declareWarButton.regY = declareWarButton.image.height;
+    declareWarButton.x = 20;
+    declareWarButton.y = canvasHeight - 20;
+    stage.addChild(declareWarButton);
+    //宣戦布告ボタンテキスト
+    let declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
+    declareWarText.regX = declareWarText.getMeasuredWidth() / 2;
+    declareWarText.regY = declareWarText.getMeasuredHeight() / 2;
+    declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
+    declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
+    stage.addChild(declareWarText);
     stage.update();
 }
+
+
+/***/ }),
+
+/***/ 21:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+//player情報
+class PlayerInfo {
+}
+exports.PlayerInfo = PlayerInfo;
+//プレイヤーウインドウ表示のベースクラス
+class PlayerWindowBase {
+    constructor() { this.negative.color = ""; }
+}
+exports.PlayerWindowBase = PlayerWindowBase;
+class Player1Window extends PlayerWindowBase {
+    constructor() {
+        super();
+        this.negative.color = "";
+    }
+}
+exports.Player1Window = Player1Window;
 
 
 /***/ })
