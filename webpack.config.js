@@ -4,7 +4,6 @@ module.exports = {
     entry: {
         "Js/board": "./Ts/board.ts",
         "Js/login": "./Ts/login.ts",
-        "Js/socketSample": "./Ts/socketSample.ts"
     },
     output: {
         filename: './[name].js'
