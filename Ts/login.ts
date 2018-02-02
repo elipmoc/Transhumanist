@@ -10,28 +10,6 @@ type RoomData = {
     playerList: string[]
 }
 
-let testRoomDataList: RoomData[] = [
-    {
-        roomName: "バーチャル控室",
-        roomId: 114514,
-        playFlag: true,
-        playerList: ["ミライアカリ", "輝夜月", "シロ", "のじゃロリ"]
-    },
-    {
-        roomName: "テスト用収容室",
-        roomId: 666,
-        playFlag: false,
-        playerList: ["何もない"]
-    },
-    {
-        roomName: "なんでもいい",
-        roomId: 10,
-        playFlag: false,
-        playerList: ["A", "B", "C"]
-    }
-];
-
-initRoomList(testRoomDataList);
 //部屋のリストを受け取って画面に表示
 function initRoomList(roomDataList: RoomData[]) {
     for (let i = 0; i < roomDataList.length; i++) {
@@ -160,9 +138,19 @@ socket.on("updatePlayFlag",(data: string)=>{
     if(playData != null) updatePlayFlag(playData.roomID,playData.playFlag);
 });
 
-
-if(socket == null){
-    addMember(999,"aaaa","player1");
-    deleteMember(999,"player1");
-    updatePlayFlag(999,false);
+//requestRoomList
+function requestRoomList(){
+    socket.emit("requestRoomList",null);
 }
+
+requestRoomList();
+
+//sendRoomList
+socket.on("sendRoomList",(data: string)=>{
+    let RoomList: RoomData[] = JSON.parse(data);
+    initRoomList(RoomList);
+});
+
+//requestEnter
+
+//resultEnter

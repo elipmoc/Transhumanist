@@ -1,13 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+let testRoomDataList = [
+    {
+        roomName: "バーチャル控室",
+        roomId: 114514,
+        playFlag: true,
+        playerList: ["ミライアカリ", "輝夜月", "シロ", "のじゃロリ"]
+    },
+    {
+        roomName: "テスト用収容室",
+        roomId: 666,
+        playFlag: false,
+        playerList: ["何もない"]
+    },
+    {
+        roomName: "なんでもいい",
+        roomId: 10,
+        playFlag: false,
+        playerList: ["A", "B", "C"]
+    }
+];
 //メインソケットからサンプルソケットを生成
 function create(mainSocket) {
     let loginSocket = mainSocket.of("/login");
     //クライアントが繋がった時の処理
     loginSocket.on("connection", (socket) => {
-        //hogeEventでhello!!を送信
-        //socket.emit("hogeEvent", "hello!!");
-        //socket.on("testBtn",function(date){console.log(date)});
+        //requestRoomList + sendRoomList
+        socket.on("requestRoomList", data => {
+            if (data == null) {
+                socket.emit("sendRoomList", JSON.stringify(testRoomDataList));
+            }
+        });
         //addRoom
         socket.emit("addRoom", JSON.stringify({
             roomName: "serverTest",
