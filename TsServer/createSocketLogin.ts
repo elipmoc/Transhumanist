@@ -1,11 +1,6 @@
-type RoomData = {
-    roomName: string,
-    roomId: number,
-    playFlag: boolean,
-    playerList: string[]
-}
+import * as type from "../TsServer/roomData";
 
-let testRoomDataList: RoomData[] = [
+let testRoomDataList: type.RoomData[] = [
     {
         roomName: "バーチャル控室",
         roomId: 114514,

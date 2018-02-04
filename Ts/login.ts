@@ -1,24 +1,18 @@
 import * as io from "socket.io-client";
+import * as type from "../TsServer/roomData";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
 
-type RoomData = {
-    roomName: string,
-    roomId: number,
-    playFlag: boolean,
-    playerList: string[]
-}
-
 //部屋のリストを受け取って画面に表示
-function initRoomList(roomDataList: RoomData[]) {
+function initRoomList(roomDataList: type.RoomData[]) {
     for (let i = 0; i < roomDataList.length; i++) {
         addRoom(roomDataList[i]);
     }
 }
 
 //部屋を新規追加
-function addRoom(roomData: RoomData) {
+function addRoom(roomData: type.RoomData) {
     let tr = document.createElement("tr");
     let td = document.createElement("td");
     let table = document.createElement("table");
@@ -114,7 +108,7 @@ function updatePlayFlag(roomID: number, playFlag: boolean) {
 
 //hogeEventとしてデータの受信処理
 socket.on("addRoom", (data: string) => {
-    let roomData :RoomData = JSON.parse(data);
+    let roomData :type.RoomData = JSON.parse(data);
     if(roomData != null) addRoom(roomData);
 });
 
@@ -147,7 +141,7 @@ requestRoomList();
 
 //sendRoomList
 socket.on("sendRoomList",(data: string)=>{
-    let RoomList: RoomData[] = JSON.parse(data);
+    let RoomList: type.RoomData[] = JSON.parse(data);
     initRoomList(RoomList);
 });
 
