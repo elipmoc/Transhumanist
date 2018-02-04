@@ -1,5 +1,5 @@
 import * as io from "socket.io-client";
-import * as type from "../TsServer/roomData";
+import * as type from "../Share/roomData";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -108,39 +108,39 @@ function updatePlayFlag(roomID: number, playFlag: boolean) {
 
 //hogeEventとしてデータの受信処理
 socket.on("addRoom", (data: string) => {
-    let roomData :type.RoomData = JSON.parse(data);
-    if(roomData != null) addRoom(roomData);
+    let roomData: type.RoomData = JSON.parse(data);
+    if (roomData != null) addRoom(roomData);
 });
 
-socket.on("deleteRoom",(data:number) => {
-    let roomId :number = data;
-    if(roomId != null) deleteRoom(roomId);
+socket.on("deleteRoom", (data: number) => {
+    let roomId: number = data;
+    if (roomId != null) deleteRoom(roomId);
 });
 
-socket.on("addMember",(data: string)=>{
+socket.on("addMember", (data: string) => {
     let member = JSON.parse(data);
-    if(member != null) addMember(member.roomID,member.playerName,member.playerTag);
+    if (member != null) addMember(member.roomID, member.playerName, member.playerTag);
 });
 
-socket.on("deleteMember",(data: string)=>{
+socket.on("deleteMember", (data: string) => {
     let member = JSON.parse(data);
-    if(member != null) deleteMember(member.roomID,member.playerTag);
+    if (member != null) deleteMember(member.roomID, member.playerTag);
 });
 
-socket.on("updatePlayFlag",(data: string)=>{
+socket.on("updatePlayFlag", (data: string) => {
     let playData = JSON.parse(data);
-    if(playData != null) updatePlayFlag(playData.roomID,playData.playFlag);
+    if (playData != null) updatePlayFlag(playData.roomID, playData.playFlag);
 });
 
 //requestRoomList
-function requestRoomList(){
-    socket.emit("requestRoomList",null);
+function requestRoomList() {
+    socket.emit("requestRoomList", null);
 }
 
 requestRoomList();
 
 //sendRoomList
-socket.on("sendRoomList",(data: string)=>{
+socket.on("sendRoomList", (data: string) => {
     let RoomList: type.RoomData[] = JSON.parse(data);
     initRoomList(RoomList);
 });

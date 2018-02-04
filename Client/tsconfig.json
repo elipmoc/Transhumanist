@@ -4,8 +4,6 @@
         "module": "commonjs",
         "sourceMap": false,
         "declaration": true,
-        "outDir": "./Js",
-        "rootDir": "./Ts",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noUnusedLocals": true,
@@ -13,5 +11,12 @@
         "strictNullChecks": true,
         "noImplicitReturns": true,
         "noEmitOnError": true
-    }
+    },
+    "include": [
+        "../Client/**/*",
+        "../Share/**/*"
+    ],
+    "exclude": [
+        "../Server"
+    ]
 }

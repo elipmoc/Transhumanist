@@ -2,8 +2,8 @@
 console.log("すごーい！君はwebpackできるフレンズなんだね！");
 module.exports = {
     entry: {
-        "Js/board": "./Ts/board.ts",
-        "Js/login": "./Ts/login.ts",
+        "Client/board": "./Client/board.ts",
+        "Client/login": "./Client/login.ts",
     },
     output: {
         filename: './[name].js'

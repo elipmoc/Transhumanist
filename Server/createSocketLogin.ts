@@ -1,4 +1,4 @@
-import * as type from "../TsServer/roomData";
+import * as type from "../Share/roomData";
 
 let testRoomDataList: type.RoomData[] = [
     {
@@ -28,38 +28,38 @@ export function create(mainSocket: SocketIO.Server) {
     //クライアントが繋がった時の処理
     loginSocket.on("connection", (socket: SocketIO.Socket) => {
         //requestRoomList + sendRoomList
-        socket.on("requestRoomList",data =>{
-            if(data == null){
-                socket.emit("sendRoomList",JSON.stringify(testRoomDataList));
+        socket.on("requestRoomList", data => {
+            if (data == null) {
+                socket.emit("sendRoomList", JSON.stringify(testRoomDataList));
             }
         });
 
         //addRoom
-        socket.emit("addRoom",JSON.stringify({
+        socket.emit("addRoom", JSON.stringify({
             roomName: "serverTest",
             roomId: 300,
             playFlag: false,
-            playerList: ["add", "delete", "mad","うける"]
+            playerList: ["add", "delete", "mad", "うける"]
         }));
 
         //deleteRoom
-        socket.emit("deleteRoom",10);
+        socket.emit("deleteRoom", 10);
 
         //addMember
-        socket.emit("addMember",JSON.stringify({
+        socket.emit("addMember", JSON.stringify({
             roomID: 666,
             playerName: "静かなオーケストラ",
             playerTag: "player1"
         }));
 
         //deleteMember
-        socket.emit("deleteMember",JSON.stringify({
+        socket.emit("deleteMember", JSON.stringify({
             roomID: 114514,
             playerTag: "player0"
         }));
 
         //updatePlayFlag
-        socket.emit("updatePlayFlag",JSON.stringify({
+        socket.emit("updatePlayFlag", JSON.stringify({
             roomID: 666,
             playFlag: true
         }));
