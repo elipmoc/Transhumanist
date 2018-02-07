@@ -65,3 +65,7 @@ Test/*
 !/Client/Lib/
 /Share/*.js
 /Share/*.d.ts
+/Server/*.js
+/Server/*.d.ts
+!/Server/main.js
+!/Server/routing.js
