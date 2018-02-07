@@ -60,4 +60,5 @@ typings/
 #elipmoc
 Test/*
 !.gitkeep
-
+/Client/*.js
+!/Client/Lib/
