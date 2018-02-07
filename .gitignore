@@ -61,4 +61,5 @@ typings/
 Test/*
 !.gitkeep
 /Client/*.js
+/Client/*.d.ts
 !/Client/Lib/
