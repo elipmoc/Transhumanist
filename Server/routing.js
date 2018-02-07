@@ -7,17 +7,17 @@ exports.createRouter = () => {
     myRouter.get("/", (req, res) => {
         sendHtml(res, "./Html/login.html");
     });
-    myRouter.get("/Js/Lib/easel.js", (req, res) => {
-        sendHtml(res, "./Js/Lib/easeljs-0.8.2.min.js");
+    myRouter.get("/Client/Lib/easel.js", (req, res) => {
+        sendHtml(res, "./Client/Lib/easeljs-0.8.2.min.js");
     });
-    myRouter.get("/Js/Lib/preload.js", (req, res) => {
-        sendHtml(res, "./Js/Lib/preloadjs-0.6.2.min.js");
+    myRouter.get("/Client/Lib/preload.js", (req, res) => {
+        sendHtml(res, "./Client/Lib/preloadjs-0.6.2.min.js");
     });
     myRouter.get("/Css/:path", (req, res) => {
         sendCss(res, "./Css/" + req.params.path);
     });
-    myRouter.get("/Js/:path", (req, res) => {
-        sendJs(res, "./Js/" + req.params.path);
+    myRouter.get("/Client/:path", (req, res) => {
+        sendJs(res, "./Client/" + req.params.path);
     });
     myRouter.get("/Img/:path", (req, res) => {
         sendPng(res, "./Resource/Img/" + req.params.path);

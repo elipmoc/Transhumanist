@@ -3,7 +3,7 @@
     "tasks": [
         {
             "type": "typescript",
-            "tsconfig": "TsServer/tsconfig.json",
+            "tsconfig": "Server/tsconfig.json",
             "group": {
                 "kind": "build",
                 "isDefault": true
