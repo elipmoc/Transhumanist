@@ -63,3 +63,5 @@ Test/*
 /Client/*.js
 /Client/*.d.ts
 !/Client/Lib/
+/Share/*.js
+/Share/*.d.ts
