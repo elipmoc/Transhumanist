@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+let testPlayerData = [];
 let testRoomDataList = [
     {
         roomName: "バーチャル控室",
@@ -56,7 +57,30 @@ function create(mainSocket) {
             roomID: 666,
             playFlag: true
         }));
+        //requestEnter
+        socket.on("requestEnter", (data) => {
+            let request = JSON.parse(data);
+            for (let i = 0; i < testRoomDataList.length; i++) {
+                if (testRoomDataList[i].roomId == request.roomId) {
+                    for (let j = 0; j < 4; j++) {
+                        if (testRoomDataList[i].playerList[j] == null) {
+                            testRoomDataList[i].playerList[j] = request.playerNama;
+                            let data = {
+                                uuId: "koyunoIDha-1999",
+                                roomId: request.roomId,
+                                playerId: j
+                            };
+                            testPlayerData.push(data);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            //socket.emit("resultEnter","なんか");
+            console.log(testPlayerData);
+        });
+        return loginSocket;
     });
-    return loginSocket;
 }
 exports.create = create;
