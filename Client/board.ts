@@ -33,7 +33,7 @@ function preloadImage() {
     player1frame.regY = player1frame.image.height;
     player1frame.x = global.canvasWidth / 2;
     player1frame.y = global.canvasHeight;
-    stage.addChild(player1frame);
+    // stage.addChild(player1frame);
     //プレイヤー1の設置アクション
     let player1buildArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
     player1buildArea.regX = player1buildArea.image.width / 2;
@@ -119,5 +119,6 @@ function preloadImage() {
     declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
     stage.addChild(declareWarText);
 
+    new view.Player1Window(stage, queue);
     stage.update();
 }
