@@ -32,6 +32,7 @@ function addRoom(roomData: type.RoomData) {
     let button = document.createElement("input");
     button.setAttribute("type", "button");
     button.setAttribute("value", "部屋に入室");
+    button.onclick = function() {requestEnter(roomData.roomId);};
 
     tr = document.createElement("tr");
     td = document.createElement("td");
@@ -106,7 +107,6 @@ function updatePlayFlag(roomID: number, playFlag: boolean) {
     }
 }
 
-//hogeEventとしてデータの受信処理
 socket.on("addRoom", (data: string) => {
     let roomData: type.RoomData = JSON.parse(data);
     if (roomData != null) addRoom(roomData);
@@ -146,5 +146,14 @@ socket.on("sendRoomList", (data: string) => {
 });
 
 //requestEnter
+function requestEnter(roomId: Number){
+    let data = {roomId: roomId,name:"Sutaa"};
+    socket.emit("requestEnter", JSON.stringify(data));
+}
 
+/*
 //resultEnter
+socket.on("resultEnter",(data: string)=>{
+
+});
+*/
