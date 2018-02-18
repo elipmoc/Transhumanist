@@ -147,8 +147,15 @@ socket.on("sendRoomList", (data: string) => {
 
 //requestEnter
 function requestEnter(roomId: Number){
-    let data = {roomId: roomId,name:"Sutaa"};
-    socket.emit("requestEnter", JSON.stringify(data));
+    let target = <HTMLInputElement>document.getElementById("playerName");
+    let name :string = target.value;
+
+    if(name != ""){
+        let data = {roomId: roomId,name: name};
+        socket.emit("requestEnter", JSON.stringify(data));
+    }else{
+        alert("プレイヤー名が入力されていません！");
+    }
 }
 
 /*
