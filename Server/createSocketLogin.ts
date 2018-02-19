@@ -1,4 +1,5 @@
 import * as type from "../Share/roomData";
+import * as uuid from "node-uuid";
 
 type PlayerData = {
     uuId: string;
@@ -81,12 +82,14 @@ export function create(mainSocket: SocketIO.Server) {
                     for(let j = 0; j < 4; j++){
                         if(testRoomDataList[i].playerList[j] == null){
                             testRoomDataList[i].playerList[j] = request.playerNama;
- 
+                            
                             let data: PlayerData = {
-                                uuId: "koyunoIDha-1999",
+                                uuId: uuid.v4(),
                                 roomId: request.roomId,
                                 playerId: j
                             };
+
+                            
                             testPlayerData.push(data);
                             break;
                         }
@@ -101,3 +104,4 @@ export function create(mainSocket: SocketIO.Server) {
         return loginSocket;
     });
 }
+

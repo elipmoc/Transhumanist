@@ -5,6 +5,7 @@
   "main": "webpack.config.js",
   "dependencies": {
     "@types/createjs": "0.0.29",
+    "@types/node-uuid": "0.0.28",
     "@types/socket.io": "^1.4.31",
     "@types/socket.io-client": "^1.4.32",
     "express": "^4.16.2",
