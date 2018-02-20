@@ -134,7 +134,7 @@ socket.on("updatePlayFlag", (data: string) => {
 
 //requestRoomList
 function requestRoomList() {
-    socket.emit("requestRoomList", null);
+    socket.emit("requestRoomList");
 }
 
 requestRoomList();
