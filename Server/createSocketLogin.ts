@@ -44,8 +44,8 @@ export function create(mainSocket: SocketIO.Server) {
     //クライアントが繋がった時の処理
     loginSocket.on("connection", (socket: SocketIO.Socket) => {
         //requestRoomList + sendRoomList
-        socket.on("requestRoomList", () => {            
-            socket.emit("sendRoomList", JSON.stringify(testRoomDataList));
+        socket.on("requestRoomList", () => {
+            socket.emit("sendRoomList", JSON.stringify(Array.from(myMap.values())));
         });
 
         //addRoom
