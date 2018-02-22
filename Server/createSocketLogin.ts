@@ -31,7 +31,6 @@ let testRoomDataList: type.RoomData[] = [
 ];
 
 const myMap = new Map<number, type.RoomData>();
-const myMap = new Map();
 
 //myMapにセット。この関数は完成版では恐らく不要です。
 for(let i = 0; i<testRoomDataList.length; i++){
