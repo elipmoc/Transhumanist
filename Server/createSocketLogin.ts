@@ -31,7 +31,6 @@ let testRoomDataList: type.RoomData[] = [
 ];
 
 const myMap = new Map<number, type.RoomData>();
-const myMap = new Map();
 
 //myMapにセット。この関数は完成版では恐らく不要です。
 for(let i = 0; i<testRoomDataList.length; i++){
@@ -45,8 +44,8 @@ export function create(mainSocket: SocketIO.Server) {
     //クライアントが繋がった時の処理
     loginSocket.on("connection", (socket: SocketIO.Socket) => {
         //requestRoomList + sendRoomList
-        socket.on("requestRoomList", () => {            
-            socket.emit("sendRoomList", JSON.stringify(testRoomDataList));
+        socket.on("requestRoomList", () => {
+            socket.emit("sendRoomList", JSON.stringify(Array.from(myMap.values())));
         });
 
         //addRoom
@@ -80,21 +79,23 @@ export function create(mainSocket: SocketIO.Server) {
         }));
 
         //requestEnter
-        socket.on("requestEnter", (data: string)=>{
+        socket.on("requestEnter", (data: string) => {
             let request = JSON.parse(data);
+            const roomData = myMap.get(request.roomId);
+            if (roomData != undefined) {
+                for (let j = 0; j < 4; j++) {
+                    if (roomData.playerList[j] == null) {
+                        roomData.playerList[j] = request.name;
 
-            for(let j = 0; j < 4; j++){
-                if(myMap.get(request.roomId).playerList[j] == null){
-                    myMap.get(request.roomId).playerList[j] = request.name;
-                    
-                    let data: PlayerData = {
-                        uuId: uuid.v4(),
-                        roomId: request.roomId,
-                        playerId: j
-                    };
+                        let data: PlayerData = {
+                            uuId: uuid.v4(),
+                            roomId: request.roomId,
+                            playerId: j
+                        };
 
-                    testPlayerData.push(data);
-                    break;
+                        testPlayerData.push(data);
+                        break;
+                    }
                 }
             }
 
