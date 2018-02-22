@@ -79,21 +79,23 @@ export function create(mainSocket: SocketIO.Server) {
         }));
 
         //requestEnter
-        socket.on("requestEnter", (data: string)=>{
+        socket.on("requestEnter", (data: string) => {
             let request = JSON.parse(data);
+            const roomData = myMap.get(request.roomId);
+            if (roomData != undefined) {
+                for (let j = 0; j < 4; j++) {
+                    if (roomData.playerList[j] == null) {
+                        roomData.playerList[j] = request.name;
 
-            for(let j = 0; j < 4; j++){
-                if(myMap.get(request.roomId).playerList[j] == null){
-                    myMap.get(request.roomId).playerList[j] = request.name;
-                    
-                    let data: PlayerData = {
-                        uuId: uuid.v4(),
-                        roomId: request.roomId,
-                        playerId: j
-                    };
+                        let data: PlayerData = {
+                            uuId: uuid.v4(),
+                            roomId: request.roomId,
+                            playerId: j
+                        };
 
-                    testPlayerData.push(data);
-                    break;
+                        testPlayerData.push(data);
+                        break;
+                    }
                 }
             }
 
