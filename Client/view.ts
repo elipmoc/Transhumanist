@@ -24,8 +24,10 @@ export class PlayerWindowBase extends createjs.Container {
         super();
         this.playerNameText = new createjs.Text();
         this.playerFrame = new createjs.Bitmap("");
+        this.speedText = new createjs.Text();
         this.addChild(this.playerFrame);
         this.addChild(this.playerNameText);
+        this.addChild(this.speedText);
     }
     //set PlayerInfo(playerInfo: PlayerInfo) {
 }
@@ -44,6 +46,12 @@ export class Player1Window extends PlayerWindowBase {
         this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
         this.playerNameText.x;
         this.playerNameText.y = 5;
+        this.speedText.x = -180;
+        this.speedText.y = 35;
+        this.speedText.color = "white";
+        this.speedText.font = "15px Arial";
+        this.speedText.text = "処理速度:114514";
+
 
 
     }
