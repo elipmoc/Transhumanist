@@ -119,6 +119,7 @@ function preloadImage() {
     declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
     stage.addChild(declareWarText);
 
-    new view.Player1Window(stage, queue);
+    const player1Window = new view.Player1Window(queue);
+    stage.addChild(player1Window);
     stage.update();
 }
