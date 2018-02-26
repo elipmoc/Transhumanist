@@ -1,18 +1,18 @@
 import * as io from "socket.io-client";
-import * as type from "../Share/roomData";
+import * as type from "../Share/roomDataForClient";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
 
 //部屋のリストを受け取って画面に表示
-function initRoomList(roomDataList: type.RoomData[]) {
+function initRoomList(roomDataList: type.RoomDataForClient[]) {
     for (let i = 0; i < roomDataList.length; i++) {
         addRoom(roomDataList[i]);
     }
 }
 
 //部屋を新規追加
-function addRoom(roomData: type.RoomData) {
+function addRoom(roomData: type.RoomDataForClient) {
     let tr = document.createElement("tr");
     let td = document.createElement("td");
     let table = document.createElement("table");
@@ -108,7 +108,7 @@ function updatePlayFlag(roomID: number, playFlag: boolean) {
 }
 
 socket.on("addRoom", (data: string) => {
-    let roomData: type.RoomData = JSON.parse(data);
+    let roomData: type.RoomDataForClient = JSON.parse(data);
     if (roomData != null) addRoom(roomData);
 });
 
@@ -141,7 +141,7 @@ requestRoomList();
 
 //sendRoomList
 socket.on("sendRoomList", (data: string) => {
-    let RoomList: type.RoomData[] = JSON.parse(data);
+    let RoomList: type.RoomDataForClient[] = JSON.parse(data);
     initRoomList(RoomList);
 });
 

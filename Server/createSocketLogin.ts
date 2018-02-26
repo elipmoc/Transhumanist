@@ -1,4 +1,4 @@
-import * as type from "../Share/roomData";
+import * as type from "../Share/roomDataForClient";
 import * as uuid from "node-uuid";
 
 type PlayerData = {
@@ -9,28 +9,31 @@ type PlayerData = {
 
 let testPlayerData: PlayerData[] = [];
 
-let testRoomDataList: type.RoomData[] = [
+let testRoomDataList: type.RoomDataForClient[] = [
     {
         roomName: "バーチャル控室",
         roomId: 114514,
         playFlag: true,
-        playerList: ["ミライアカリ", "輝夜月", "シロ", "のじゃロリ"]
+        playerList: ["ミライアカリ", "輝夜月", "シロ", "のじゃロリ"],
+        passwordFlag: false
     },
     {
         roomName: "テスト用収容室",
         roomId: 666,
         playFlag: false,
-        playerList: ["何もない"]
+        playerList: ["何もない"],
+        passwordFlag: false
     },
     {
         roomName: "なんでもいい",
         roomId: 10,
         playFlag: false,
-        playerList: ["A", "B", "C"]
+        playerList: ["A", "B", "C"],
+        passwordFlag: false
     }
 ];
 
-const myMap = new Map<number, type.RoomData>();
+const myMap = new Map<number, type.RoomDataForClient>();
 
 //myMapにセット。この関数は完成版では恐らく不要です。
 for(let i = 0; i<testRoomDataList.length; i++){
