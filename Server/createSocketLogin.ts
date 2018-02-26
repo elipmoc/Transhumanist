@@ -59,27 +59,29 @@ export function create(mainSocket: SocketIO.Server) {
             playerList: ["add", "delete", "mad", "うける"]
         }));
 
-        //deleteRoom
-        socket.emit("deleteRoom", 10);
+        setTimeout(()=>{
+            //deleteRoom
+            socket.emit("deleteRoom", 10);
 
-        //addMember
-        socket.emit("addMember", JSON.stringify({
-            roomID: 666,
-            playerName: "静かなオーケストラ",
-            playerTag: "player1"
-        }));
+            //addMember
+            socket.emit("addMember", JSON.stringify({
+                roomID: 666,
+                playerName: "静かなオーケストラ",
+                playerId: 1
+            }));
 
-        //deleteMember
-        socket.emit("deleteMember", JSON.stringify({
-            roomID: 114514,
-            playerTag: "player0"
-        }));
+            //deleteMember
+            socket.emit("deleteMember", JSON.stringify({
+                roomID: 114514,
+                playerId: 0
+            }));
 
-        //updatePlayFlag
-        socket.emit("updatePlayFlag", JSON.stringify({
-            roomID: 666,
-            playFlag: true
-        }));
+            //updatePlayFlag
+            socket.emit("updatePlayFlag", JSON.stringify({
+                roomID: 666,
+                playFlag: true
+            }));
+        },1000);
 
         //requestEnter
         socket.on("requestEnter", (data: string) => {
@@ -105,7 +107,7 @@ export function create(mainSocket: SocketIO.Server) {
             //socket.emit("resultEnter","なんか");
             console.log(testPlayerData);
         });
-
+        
         return loginSocket;
     });
 }
