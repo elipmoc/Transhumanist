@@ -1,5 +1,6 @@
 import * as io from "socket.io-client";
-import * as type from "../Share/roomDataForClient";
+import {RoomDataForClient} from "../Share/roomDataForClient";
+import {PlayerDataForClient} from "../Share/playerDataForClient";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -8,7 +9,7 @@ class RoomView {
     private roomId: number;
     private clickRequestEnterCallBack: () => void;
     
-    constructor(roomDataForClient: type.RoomDataForClient){
+    constructor(roomDataForClient: RoomDataForClient){
         this.roomId = roomDataForClient.roomId;
 
         let tr = document.createElement("tr");
@@ -108,13 +109,13 @@ class RoomViewList {
         this.roomViewMap = new Map<number,RoomView>();
     }
 
-    initRoomList(roomDataForClientList: type.RoomDataForClient[]){
+    initRoomList(roomDataForClientList: RoomDataForClient[]){
         for (let i = 0; i < roomDataForClientList.length; i++) {
             this.addRoom(roomDataForClientList[i]);
         }
     }
 
-    addRoom(roomDataForClient: type.RoomDataForClient){
+    addRoom(roomDataForClient: RoomDataForClient){
         const roomView = new RoomView(roomDataForClient);
         roomView.onClickRequestEnter(() => {requestEnter(roomDataForClient.roomId);});
 
@@ -125,12 +126,11 @@ class RoomViewList {
         this.roomViewMap.delete(roomId);
     }
 
-    addMember(roomId:number, playerName:string, playerId:number){
-        this.roomViewMap.get(roomId).addMember(playerName,playerId);
+    addMember(playerData :PlayerDataForClient){
+        this.roomViewMap.get(playerData.roomId).addMember(playerData.playerName,playerData.playerId);
     }
-    deleteMember(roomId:number, playerId:number){
-        this.roomViewMap.get(roomId).deleteMember(playerId);
-
+    deleteMember(playerData :PlayerDataForClient){
+        this.roomViewMap.get(playerData.roomId).deleteMember(playerData.playerId);
     }
     updatePlayFlag(roomId:number , playFlag:boolean){
         this.roomViewMap.get(roomId).setPlayFlag(playFlag);
@@ -140,7 +140,7 @@ class RoomViewList {
 const roomViewList = new RoomViewList();
 
 socket.on("addRoom", (data: string) => {
-    let roomData: type.RoomDataForClient = JSON.parse(data);
+    let roomData: RoomDataForClient = JSON.parse(data);
     if (roomData != null) roomViewList.addRoom(roomData);
 });
 
@@ -150,13 +150,13 @@ socket.on("deleteRoom", (data: number) => {
 });
 
 socket.on("addMember", (data: string) => {
-    let member = JSON.parse(data);
-    if (member != null) roomViewList.addMember(member.roomID, member.playerName, member.playerId);
+    let member :PlayerDataForClient = JSON.parse(data);
+    if (member != null) roomViewList.addMember(member);
 });
 
 socket.on("deleteMember", (data: string) => {
-    let member = JSON.parse(data);
-    if (member != null) roomViewList.deleteMember(member.roomID, member.playerId);
+    let member :PlayerDataForClient = JSON.parse(data);
+    if (member != null) roomViewList.deleteMember(member);
 });
 
 socket.on("updatePlayFlag", (data: string) => {
@@ -171,7 +171,7 @@ function requestRoomList() {
 
 //sendRoomList
 socket.on("sendRoomList", (data: string) => {
-    let RoomList: type.RoomDataForClient[] = JSON.parse(data);
+    let RoomList: RoomDataForClient[] = JSON.parse(data);
     roomViewList.initRoomList(RoomList);
 });
 

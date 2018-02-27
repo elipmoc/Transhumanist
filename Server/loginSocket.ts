@@ -1,4 +1,5 @@
-import * as type from "../Share/roomDataForClient";
+import {RoomDataForClient} from "../Share/roomDataForClient";
+//import {PlayerDataForClient} from "../Share/playerDataForClient";
 import * as uuid from "node-uuid";
 
 type PlayerData = {
@@ -9,7 +10,7 @@ type PlayerData = {
 
 let testPlayerData: PlayerData[] = [];
 
-let testRoomDataList: type.RoomDataForClient[] = [
+let testRoomDataList: RoomDataForClient[] = [
     {
         roomName: "バーチャル控室",
         roomId: 114514,
@@ -33,7 +34,7 @@ let testRoomDataList: type.RoomDataForClient[] = [
     }
 ];
 
-const myMap = new Map<number, type.RoomDataForClient>();
+const myMap = new Map<number, RoomDataForClient>();
 
 //myMapにセット。この関数は完成版では恐らく不要です。
 for(let i = 0; i<testRoomDataList.length; i++){
@@ -65,15 +66,16 @@ export function create(mainSocket: SocketIO.Server) {
 
             //addMember
             socket.emit("addMember", JSON.stringify({
-                roomID: 666,
-                playerName: "静かなオーケストラ",
-                playerId: 1
+                roomId: 666,
+                playerId: 1,
+                playerName: "静かなオーケストラ"
             }));
 
             //deleteMember
             socket.emit("deleteMember", JSON.stringify({
-                roomID: 114514,
-                playerId: 0
+                roomId: 114514,
+                playerId: 0,
+                playerName: ""
             }));
 
             //updatePlayFlag
