@@ -1,47 +1,12 @@
 import * as io from "socket.io-client";
 import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
-import {RoomView} from "../Client/roomView";
-
-class RoomViewList {
-    private roomViewMap: Map<number, RoomView>;
-
-    constructor(){
-        this.roomViewMap = new Map<number,RoomView>();
-    }
-
-    initRoomList(roomDataForClientList: RoomDataForClient[]){
-        for (let i = 0; i < roomDataForClientList.length; i++) {
-            this.addRoom(roomDataForClientList[i]);
-        }
-    }
-
-    addRoom(roomDataForClient: RoomDataForClient){
-        const roomView = new RoomView(roomDataForClient);
-        roomView.onClickRequestEnter(() => {requestEnter(roomDataForClient.roomId);});
-
-        this.roomViewMap.set(roomDataForClient.roomId, roomView);
-    }
-    deleteRoom(roomId: number){
-        this.roomViewMap.get(roomId).deleteRoom(); 
-        this.roomViewMap.delete(roomId);
-    }
-
-    addMember(playerData :PlayerDataForClient){
-        this.roomViewMap.get(playerData.roomId).addMember(playerData.playerName,playerData.playerId);
-    }
-    deleteMember(playerData :PlayerDataForClient){
-        this.roomViewMap.get(playerData.roomId).deleteMember(playerData.playerId);
-    }
-    updatePlayFlag(roomId:number , playFlag:boolean){
-        this.roomViewMap.get(roomId).setPlayFlag(playFlag);
-    }
-}
+import {RoomViewList} from "../Client/roomViewList";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
 
-const roomViewList = new RoomViewList();
+const roomViewList = new RoomViewList(requestEnter);
 
 socket.on("addRoom", (data: string) => {
     let roomData: RoomDataForClient = JSON.parse(data);
