@@ -124,6 +124,7 @@ function preloadImage() {
     player1Window.setSpeed(810);
     player1Window.setResource(10);
     player1Window.setActivityRange(5);
+    player1Window.setUncertainty(777);
     stage.addChild(player1Window);
     stage.update();
 }

@@ -16,7 +16,7 @@ export class PlayerWindowBase extends createjs.Container {
     protected speedText: createjs.Text;
     protected resourceText: createjs.Text;
     protected activityRangeText: createjs.Text;
-    protected uncertainty: createjs.Text;
+    protected uncertaintyText: createjs.Text;
     protected positive: createjs.Text;
     protected negative: createjs.Text;
     protected playerFrame: createjs.Bitmap;
@@ -27,11 +27,13 @@ export class PlayerWindowBase extends createjs.Container {
         this.speedText = new createjs.Text();
         this.resourceText = new createjs.Text();
         this.activityRangeText = new createjs.Text();
+        this.uncertaintyText = new createjs.Text();
         this.addChild(this.playerFrame);
         this.addChild(this.playerNameText);
         this.addChild(this.speedText);
         this.addChild(this.resourceText);
         this.addChild(this.activityRangeText);
+        this.addChild(this.uncertaintyText);
     }
     setPlayerName(name: string) {
         this.playerNameText.text = name;
@@ -44,6 +46,9 @@ export class PlayerWindowBase extends createjs.Container {
     }
     setActivityRange(range: number) {
         this.activityRangeText.text = "活動範囲:" + range;
+    }
+    setUncertainty(uncertainty: number) {
+        this.uncertaintyText.text = "不確定性:" + uncertainty;
     }
     //set PlayerInfo(playerInfo: PlayerInfo) {
 }
@@ -73,5 +78,9 @@ export class Player1Window extends PlayerWindowBase {
         this.activityRangeText.y = 35;
         this.activityRangeText.color = "white";
         this.activityRangeText.font = "15px Arial";
+        this.uncertaintyText.x = 90;
+        this.uncertaintyText.y = 35;
+        this.uncertaintyText.color = "white";
+        this.uncertaintyText.font = "15px Arial";
     }
 }
