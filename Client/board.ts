@@ -120,6 +120,7 @@ function preloadImage() {
     stage.addChild(declareWarText);
 
     const player1Window = new view.Player1Window(queue);
+    player1Window.setPlayerName("輝夜月");
     stage.addChild(player1Window);
     stage.update();
 }

@@ -29,6 +29,9 @@ export class PlayerWindowBase extends createjs.Container {
         this.addChild(this.playerNameText);
         this.addChild(this.speedText);
     }
+    setPlayerName(name: string) {
+        this.playerNameText.text = name;
+    }
     //set PlayerInfo(playerInfo: PlayerInfo) {
 }
 
@@ -41,7 +44,6 @@ export class Player1Window extends PlayerWindowBase {
         this.x = global.canvasWidth / 2;
         this.y = global.canvasHeight - this.playerFrame.image.height;
         this.playerNameText.color = "blue";
-        this.playerNameText.text = "輝夜月";
         this.playerNameText.font = "20px Arial";
         this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
         this.playerNameText.x;
