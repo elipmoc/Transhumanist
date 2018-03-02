@@ -53,7 +53,7 @@ function preloadImage() {
     let player2frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
     player2frame.regY = player2frame.image.height / 2;
     player2frame.y = global.canvasHeight / 2;
-    stage.addChild(player2frame);
+    //stage.addChild(player2frame);
 
     //プレイヤー3の枠
     let player3frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
@@ -127,6 +127,17 @@ function preloadImage() {
     player1Window.setUncertainty(777);
     player1Window.setPositive(15);
     player1Window.setNegative(30);
+
+    const player2Window = new view.Player2Window(queue);
+    player2Window.setPlayerName("スーパーひとしくん");
+    player2Window.setSpeed(931);
+    player2Window.setResource(1919);
+    player2Window.setActivityRange(4545);
+    player2Window.setUncertainty(721);
+    player2Window.setPositive(893);
+    player2Window.setNegative(801);
+
     stage.addChild(player1Window);
+    stage.addChild(player2Window);
     stage.update();
 }
