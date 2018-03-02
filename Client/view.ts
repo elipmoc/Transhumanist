@@ -77,7 +77,6 @@ export class Player1Window extends PlayerWindowBase {
         this.playerNameText.color = "blue";
         this.playerNameText.font = "20px Arial";
         this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
-        this.playerNameText.x;
         this.playerNameText.y = 5;
 
         this.speedText.x = -180;
