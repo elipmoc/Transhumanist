@@ -125,6 +125,8 @@ function preloadImage() {
     player1Window.setResource(10);
     player1Window.setActivityRange(5);
     player1Window.setUncertainty(777);
+    player1Window.setPositive(15);
+    player1Window.setNegative(30);
     stage.addChild(player1Window);
     stage.update();
 }
