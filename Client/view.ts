@@ -15,7 +15,7 @@ export class PlayerWindowBase extends createjs.Container {
     protected playerNameText: createjs.Text;
     protected speedText: createjs.Text;
     protected resourceText: createjs.Text;
-    protected activityRange: createjs.Text;
+    protected activityRangeText: createjs.Text;
     protected uncertainty: createjs.Text;
     protected positive: createjs.Text;
     protected negative: createjs.Text;
@@ -26,10 +26,12 @@ export class PlayerWindowBase extends createjs.Container {
         this.playerFrame = new createjs.Bitmap("");
         this.speedText = new createjs.Text();
         this.resourceText = new createjs.Text();
+        this.activityRangeText = new createjs.Text();
         this.addChild(this.playerFrame);
         this.addChild(this.playerNameText);
         this.addChild(this.speedText);
         this.addChild(this.resourceText);
+        this.addChild(this.activityRangeText);
     }
     setPlayerName(name: string) {
         this.playerNameText.text = name;
@@ -39,6 +41,9 @@ export class PlayerWindowBase extends createjs.Container {
     }
     setResource(resource: number) {
         this.resourceText.text = "リソース:" + resource;
+    }
+    setActivityRange(range: number) {
+        this.activityRangeText.text = "活動範囲:" + range;
     }
     //set PlayerInfo(playerInfo: PlayerInfo) {
 }
@@ -64,5 +69,9 @@ export class Player1Window extends PlayerWindowBase {
         this.resourceText.y = 35;
         this.resourceText.color = "white";
         this.resourceText.font = "15px Arial";
+        this.activityRangeText.x = 10;
+        this.activityRangeText.y = 35;
+        this.activityRangeText.color = "white";
+        this.activityRangeText.font = "15px Arial";
     }
 }
