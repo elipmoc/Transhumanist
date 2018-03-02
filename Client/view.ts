@@ -32,6 +32,9 @@ export class PlayerWindowBase extends createjs.Container {
     setPlayerName(name: string) {
         this.playerNameText.text = name;
     }
+    setSpeed(speed: number) {
+        this.speedText.text = "処理速度:" + speed;
+    }
     //set PlayerInfo(playerInfo: PlayerInfo) {
 }
 
@@ -52,9 +55,5 @@ export class Player1Window extends PlayerWindowBase {
         this.speedText.y = 35;
         this.speedText.color = "white";
         this.speedText.font = "15px Arial";
-        this.speedText.text = "処理速度:114514";
-
-
-
     }
 }
