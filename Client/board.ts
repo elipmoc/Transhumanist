@@ -42,15 +42,6 @@ function preloadImage() {
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
 
-    //プレイヤー3の枠
-    let player3frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
-    player3frame.rotation = 180;
-    player3frame.regX = player3frame.image.width / 2;
-    player3frame.regY = 0;
-    player3frame.x = global.canvasWidth / 2;
-    player3frame.y = player3frame.image.height;
-    stage.addChild(player3frame);
-
     //プレイヤー4の枠
     let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
     player4frame.rotation = 180;
@@ -124,7 +115,17 @@ function preloadImage() {
     player2Window.setPositive(893);
     player2Window.setNegative(801);
 
+    const player3Window = new view.Player3Window(queue);
+    player3Window.setPlayerName("イキリオタク");
+    player3Window.setSpeed(99);
+    player3Window.setResource(99);
+    player3Window.setActivityRange(99);
+    player3Window.setUncertainty(99);
+    player3Window.setPositive(999);
+    player3Window.setNegative(999);
+
     stage.addChild(player1Window);
     stage.addChild(player2Window);
+    stage.addChild(player3Window);
     stage.update();
 }

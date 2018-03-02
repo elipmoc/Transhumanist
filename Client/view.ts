@@ -149,3 +149,51 @@ export class Player2Window extends PlayerWindowBase {
         this.negativeText.font = "12px Arial";
     }
 }
+
+export class Player3Window extends PlayerWindowBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+
+        this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
+        this.playerFrame.regX = this.playerFrame.image.width / 2;
+        this.playerFrame.regY = this.playerFrame.image.height;
+        this.playerFrame.rotation = 180;
+
+        this.x = global.canvasWidth / 2;
+
+        this.playerNameText.color = "orange";
+        this.playerNameText.font = "20px Arial";
+        this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
+        this.playerNameText.y = 5;
+
+        this.speedText.x = -180;
+        this.speedText.y = 35;
+        this.speedText.color = "white";
+        this.speedText.font = "15px Arial";
+
+        this.resourceText.x = -80;
+        this.resourceText.y = 35;
+        this.resourceText.color = "white";
+        this.resourceText.font = "15px Arial";
+
+        this.activityRangeText.x = 10;
+        this.activityRangeText.y = 35;
+        this.activityRangeText.color = "white";
+        this.activityRangeText.font = "15px Arial";
+
+        this.uncertaintyText.x = 90;
+        this.uncertaintyText.y = 35;
+        this.uncertaintyText.color = "white";
+        this.uncertaintyText.font = "15px Arial";
+
+        this.positiveText.x = -80;
+        this.positiveText.y = 60;
+        this.positiveText.color = "green";
+        this.positiveText.font = "15px Arial";
+
+        this.negativeText.x = 0;
+        this.negativeText.y = 60;
+        this.negativeText.color = "red";
+        this.negativeText.font = "15px Arial";
+    }
+}
