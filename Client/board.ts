@@ -122,6 +122,7 @@ function preloadImage() {
     const player1Window = new view.Player1Window(queue);
     player1Window.setPlayerName("輝夜月");
     player1Window.setSpeed(810);
+    player1Window.setResource(10);
     stage.addChild(player1Window);
     stage.update();
 }
