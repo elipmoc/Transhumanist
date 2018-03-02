@@ -66,11 +66,14 @@ export class PlayerWindowBase extends createjs.Container {
 export class Player1Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super();
+
         this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
         this.playerFrame.regX = this.playerFrame.image.width / 2;
         this.playerFrame.regY = 0;
+
         this.x = global.canvasWidth / 2;
         this.y = global.canvasHeight - this.playerFrame.image.height;
+
         this.playerNameText.color = "blue";
         this.playerNameText.font = "20px Arial";
         this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
