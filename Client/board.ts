@@ -27,19 +27,12 @@ function preloadImage() {
         drawRect(0, 0, global.canvasWidth, global.canvasHeight);
     stage.addChild(background);
 
-    //プレイヤー1の枠
-    let player1frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
-    player1frame.regX = player1frame.image.width / 2;
-    player1frame.regY = player1frame.image.height;
-    player1frame.x = global.canvasWidth / 2;
-    player1frame.y = global.canvasHeight;
-    // stage.addChild(player1frame);
     //プレイヤー1の設置アクション
     let player1buildArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
     player1buildArea.regX = player1buildArea.image.width / 2;
     player1buildArea.regY = player1buildArea.image.height;
     player1buildArea.x = global.canvasWidth / 2;
-    player1buildArea.y = global.canvasHeight - player1frame.image.height - 4;
+    player1buildArea.y = global.canvasHeight - 85;
     stage.addChild(player1buildArea);
     //プレイヤー1のリソース
     let player1resourceArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
@@ -48,12 +41,6 @@ function preloadImage() {
     player1resourceArea.x = global.canvasWidth / 2;
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
-
-    //プレイヤー2の枠
-    let player2frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
-    player2frame.regY = player2frame.image.height / 2;
-    player2frame.y = global.canvasHeight / 2;
-    //stage.addChild(player2frame);
 
     //プレイヤー3の枠
     let player3frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
