@@ -42,15 +42,6 @@ function preloadImage() {
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
 
-    //プレイヤー4の枠
-    /* let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
-     player4frame.rotation = 180;
-     player4frame.regX = player4frame.image.width;
-     player4frame.regY = player4frame.image.height / 2;
-     player4frame.x = global.canvasWidth - player4frame.image.width;
-     player4frame.y = global.canvasHeight / 2;
-     stage.addChild(player4frame);*/
-
     //設定枠
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
     stage.addChild(topWindowsL);
