@@ -43,13 +43,13 @@ function preloadImage() {
     stage.addChild(player1resourceArea);
 
     //プレイヤー4の枠
-    let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
-    player4frame.rotation = 180;
-    player4frame.regX = player4frame.image.width;
-    player4frame.regY = player4frame.image.height / 2;
-    player4frame.x = global.canvasWidth - player4frame.image.width;
-    player4frame.y = global.canvasHeight / 2;
-    stage.addChild(player4frame);
+    /* let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
+     player4frame.rotation = 180;
+     player4frame.regX = player4frame.image.width;
+     player4frame.regY = player4frame.image.height / 2;
+     player4frame.x = global.canvasWidth - player4frame.image.width;
+     player4frame.y = global.canvasHeight / 2;
+     stage.addChild(player4frame);*/
 
     //設定枠
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
@@ -124,8 +124,18 @@ function preloadImage() {
     player3Window.setPositive(999);
     player3Window.setNegative(999);
 
+    const player4Window = new view.Player4Window(queue);
+    player4Window.setPlayerName("いなむ");
+    player4Window.setSpeed(93);
+    player4Window.setResource(9);
+    player4Window.setActivityRange(9);
+    player4Window.setUncertainty(9);
+    player4Window.setPositive(88);
+    player4Window.setNegative(44);
+
     stage.addChild(player1Window);
     stage.addChild(player2Window);
     stage.addChild(player3Window);
+    stage.addChild(player4Window);
     stage.update();
 }
