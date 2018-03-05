@@ -73,20 +73,8 @@ function preloadImage() {
     stage.addChild(turnFinishText);
 
     //宣戦布告ボタン
-    let declareWarButton = new createjs.Bitmap(queue.getResult("button"));
-    declareWarButton.regX = 0;
-    declareWarButton.regY = declareWarButton.image.height;
-    declareWarButton.x = 20;
-    declareWarButton.y = global.canvasHeight - 20;
+    const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
     stage.addChild(declareWarButton);
-
-    //宣戦布告ボタンテキスト
-    let declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
-    declareWarText.regX = declareWarText.getMeasuredWidth() / 2;
-    declareWarText.regY = declareWarText.getMeasuredHeight() / 2;
-    declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
-    declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
-    stage.addChild(declareWarText);
 
     const player1Window = new view.Player1Window(queue);
     player1Window.setPlayerName("輝夜月");

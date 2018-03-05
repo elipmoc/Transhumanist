@@ -10,6 +10,43 @@ export class PlayerInfo {
     negative: number;
 }
 
+//ボタンのベースクラス
+export class ButtonBase extends createjs.Container {
+    private onClickCallback: () => void;
+    protected awakeClickEvent() {
+        this.onClickCallback();
+    }
+    constructor(onClickCallback: () => void) {
+        super();
+        this.onClickCallback = onClickCallback;
+    }
+}
+
+//宣戦布告ボタン
+export class DeclareWarButton extends ButtonBase {
+    private declareWarButton: createjs.Bitmap;
+    private declareWarText: createjs.Text;
+    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+        super(onClickCallback);
+        //ボタン画像
+        this.declareWarButton = new createjs.Bitmap(queue.getResult("button"));
+        this.declareWarButton.regX = 0;
+        this.declareWarButton.regY = this.declareWarButton.image.height;
+        this.declareWarButton.x = 20;
+        this.declareWarButton.y = global.canvasHeight - 20;
+        this.declareWarButton.addEventListener("click", () => onClickCallback());
+        this.addChild(this.declareWarButton);
+
+        //ボタンテキスト
+        this.declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
+        this.declareWarText.regX = this.declareWarText.getMeasuredWidth() / 2;
+        this.declareWarText.regY = this.declareWarText.getMeasuredHeight() / 2;
+        this.declareWarText.x = this.declareWarButton.x + this.declareWarButton.image.width / 2;
+        this.declareWarText.y = this.declareWarButton.y - this.declareWarButton.image.height / 2;
+        this.addChild(this.declareWarText);
+    }
+}
+
 //プレイヤーウインドウ表示のベースクラス
 export class PlayerWindowBase extends createjs.Container {
     protected playerNameText: createjs.Text;
