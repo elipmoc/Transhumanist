@@ -58,19 +58,8 @@ function preloadImage() {
     stage.addChild(topWindowsR);
 
     //ターン終了ボタン
-    let turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
-    turnFinishButton.regX = turnFinishButton.image.width;
-    turnFinishButton.regY = turnFinishButton.image.height;
-    turnFinishButton.x = global.canvasWidth - 20;
-    turnFinishButton.y = global.canvasHeight - 20;
+    let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
     stage.addChild(turnFinishButton);
-    //ターン終了ボタンテキスト
-    let turnFinishText = new createjs.Text("ターン終了", "20px Arial");
-    turnFinishText.regX = turnFinishText.getMeasuredWidth() / 2;
-    turnFinishText.regY = turnFinishText.getMeasuredHeight() / 2;
-    turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
-    turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
-    stage.addChild(turnFinishText);
 
     //宣戦布告ボタン
     const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);

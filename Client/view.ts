@@ -37,6 +37,28 @@ export class DeclareWarButton extends viewBase.ButtonBase {
     }
 }
 
+//ターン終了ボタン
+export class TurnFinishButton extends viewBase.ButtonBase {
+    private turnFinishButton: createjs.Bitmap;
+    private turnFinishText: createjs.Text;
+    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+        super(onClickCallback);
+        //ターン終了ボタン画像
+        this.turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
+        this.turnFinishButton.regX = this.turnFinishButton.image.width;
+        this.turnFinishButton.regY = this.turnFinishButton.image.height;
+        this.turnFinishButton.x = global.canvasWidth - 20;
+        this.turnFinishButton.y = global.canvasHeight - 20;
+        this.turnFinishButton.addEventListener("click", () => onClickCallback());
+        this.addChild(this.turnFinishButton);
+
+        //ターン終了ボタンテキスト
+        this.turnFinishText = new createjs.Text("ターン終了", "20px Arial");
+        this.turnFinishText.regX = this.turnFinishText.getMeasuredWidth() / 2;
+        this.turnFinishText.regY = this.turnFinishText.getMeasuredHeight() / 2;
+        this.turnFinishText.x = this.turnFinishButton.x - this.turnFinishButton.image.width / 2;
+        this.turnFinishText.y = this.turnFinishButton.y - this.turnFinishButton.image.height / 2;
+        this.addChild(this.turnFinishText);
     }
 }
 
