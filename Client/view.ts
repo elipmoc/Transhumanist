@@ -62,6 +62,20 @@ export class TurnFinishButton extends viewBase.ButtonBase {
     }
 }
 
+//設定ボタン
+export class SettingButton extends viewBase.ButtonBase {
+    private settingButton: createjs.Bitmap;
+    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+        super(onClickCallback);
+        this.settingButton = new createjs.Bitmap(queue.getResult("setting"));
+        this.settingButton.addEventListener("click", () => onClickCallback());
+        this.addChild(this.settingButton);
+    }
+
+    public getHeight() { return this.settingButton.image.height; }
+
+}
+
 export class Player1Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super();

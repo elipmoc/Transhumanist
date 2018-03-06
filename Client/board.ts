@@ -46,10 +46,10 @@ function preloadImage() {
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
     stage.addChild(topWindowsL);
     //設定ボタン
-    let setting = new createjs.Bitmap(queue.getResult("setting"));
-    setting.x = (topWindowsL.image.height - setting.image.height) / 2;
-    setting.y = (topWindowsL.image.height - setting.image.height) / 2;
-    stage.addChild(setting);
+    const settingButton = new view.SettingButton(() => alert("設定！"), queue);
+    settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2;
+    settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2;
+    stage.addChild(settingButton);
 
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
