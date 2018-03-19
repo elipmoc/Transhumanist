@@ -1,6 +1,6 @@
 import {RoomData} from "../Server/roomData";
 
-export class RoomDataMao{
+export class RoomDataMap{
     private roomDataMap:Map<number,RoomData>;
 
     addRoomData(roomData:RoomData){}
