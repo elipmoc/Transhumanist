@@ -1,5 +1,5 @@
 import {PlayerDataForClient} from "../Share/playerDataForClient";
-export class RoomEvent{
+export type RoomEvents = {
     addMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
     deleteMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
     updateMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
