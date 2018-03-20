@@ -2,6 +2,7 @@ import * as io from "socket.io-client";
 import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
 import {RoomViewList} from "../Client/roomViewList";
+import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -44,18 +45,28 @@ socket.on("sendRoomList", (data: string) => {
     roomViewList.initRoomList(RoomList);
 });
 
-//requestEnter
+//requestEnterRoom
 function requestEnter(roomId: Number){
     let target = <HTMLInputElement>document.getElementById("playerName");
     let name :string = target.value;
 
     if(name != ""){
         let data = {roomId: roomId,name: name};
-        socket.emit("requestEnter", JSON.stringify(data));
+        socket.emit("requestEnterRoom", JSON.stringify(data));
     }else{
         alert("プレイヤー名が入力されていません！");
     }
 }
+
+//resultEnterRoom
+socket.on("resultEnterRoom",(resultEnterRoomData:ResultEnterRoomData)=>{
+    if(resultEnterRoomData.successFlag){
+        console.log("入室できました！");
+    }
+    else{
+        console.log(resultEnterRoomData.errorMsg);
+    }
+});
 
 
 requestRoomList();
