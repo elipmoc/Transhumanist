@@ -1,8 +1,9 @@
-import {PlayerDataForClient} from "../Share/playerDataForClient";
-export type RoomEvents = {
-    addMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
-    deleteMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
-    updateMemberCallBack:(playerDataForClient:PlayerDataForClient)=>void
+import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 
-    deleteRoomCallBack:(roomId:number)=>void
+export type RoomEvents = {
+    addMemberCallBack: (playerDataForClient: PlayerDataForClient) => void
+    deleteMemberCallBack: (playerDataForClient: PlayerDataForClient) => void
+    updatePlayFlagCallBack: (playFlagDataForClient: PlayFlagDataForClient) => void
+    deleteRoomCallBack: (roomId: number) => void
 }
