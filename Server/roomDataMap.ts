@@ -1,10 +1,16 @@
-import {RoomData} from "../Server/roomData";
+import { RoomData } from "../Server/roomData";
 
-export class RoomDataMap{
-    private roomDataMap:Map<number,RoomData>;
+export class RoomDataMap {
+    private roomDataMap: Map<number, RoomData>;
 
-    addRoomData(roomData:RoomData){}
-    deleteRoomData(roomId:number){}
-    toArray(){} //返り値 RoomData[]
-    getRoomData(roomId:number){} //返り値 RoomData
+    addRoomData(roomData: RoomData) {
+        this.roomDataMap.set(roomData.getRoomId(), roomData);
+    }
+    deleteRoomData(roomId: number) {
+        this.roomDataMap.delete(roomId);
+    }
+    toArray() {
+        return Array.from(this.roomDataMap.values());
+    }
+    getRoomData(roomId: number) { return this.roomDataMap.get(roomId); }
 }
