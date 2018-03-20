@@ -1,4 +1,6 @@
 import {RoomDataForClient} from "../Share/roomDataForClient";
+import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
+
 //import {PlayerDataForClient} from "../Share/playerDataForClient";
 import * as uuid from "node-uuid";
 
@@ -85,9 +87,15 @@ export function create(mainSocket: SocketIO.Server) {
             }));
         },1000);
 
-        //requestEnter
-        socket.on("requestEnter", (data: string) => {
+        //requestEnterRoom
+        socket.on("requestEnterRoom", (data: string) => {
             let request = JSON.parse(data);
+            let resultEnterRoomData:ResultEnterRoomData = {
+                successFlag: false,
+                errorMsg: "",
+                uuid: 0
+            };
+
             const roomData = myMap.get(request.roomId);
             if (roomData != undefined) {
                 for (let j = 0; j < 4; j++) {
@@ -99,6 +107,10 @@ export function create(mainSocket: SocketIO.Server) {
                             roomId: request.roomId,
                             playerId: j
                         };
+                        
+                        //resultEnterRoomDataの作成
+                        resultEnterRoomData.successFlag = true;
+                        //resultEnterRoomData.uuid = data.uuId;
 
                         testPlayerData.push(data);
                         break;
@@ -106,8 +118,7 @@ export function create(mainSocket: SocketIO.Server) {
                 }
             }
 
-            //socket.emit("resultEnter","なんか");
-            console.log(testPlayerData);
+            socket.emit("resultEnterRoom",resultEnterRoomData);
         });
         
         return loginSocket;
