@@ -33,9 +33,9 @@ export class RoomData {
         this.roomEvents.updatePlayFlagCallBack(playFlagDataForClient);
     }
 
-    exsistUuid(uuid: number) { return true; }
+    exsistUuid(uuid: string) { return true; }
 
-    deleteMember(uuid: number) { }
+    deleteMember(uuid: string) { }
 
     addMember(playerData: PlayerData) { }
 

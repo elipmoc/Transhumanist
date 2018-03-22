@@ -93,7 +93,7 @@ export function create(mainSocket: SocketIO.Server) {
             let resultEnterRoomData:ResultEnterRoomData = {
                 successFlag: false,
                 errorMsg: "",
-                uuid: 0
+                uuid: ""
             };
 
             const roomData = myMap.get(request.roomId);
@@ -110,7 +110,7 @@ export function create(mainSocket: SocketIO.Server) {
                         
                         //resultEnterRoomDataの作成
                         resultEnterRoomData.successFlag = true;
-                        //resultEnterRoomData.uuid = data.uuId;
+                        resultEnterRoomData.uuid = data.uuId;
 
                         testPlayerData.push(data);
                         break;
