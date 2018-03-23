@@ -1,7 +1,7 @@
 //ライブラリのインポート
-const http = require('http');
+import * as http from 'http';
 const myRouter = require('./routing.js');
-const io = require("socket.io");
+import * as io from "socket.io";
 
 //サーバーの作成
 let server = http.createServer();
