@@ -2,8 +2,10 @@
 import * as http from 'http';
 const myRouter = require('./routing.js');
 import * as io from "socket.io";
-import {LoginSocket} from "../Server/loginSocket";
 import {LoginControler} from "../Server/loginControler";
+import {LoginSocket} from "../Server/loginSocket";
+import {BoardControler} from "../Server/boardControler";
+import {BoardSocket} from "../Server/boardSocket";
 
 //サーバーの作成
 let server = http.createServer();
@@ -14,7 +16,9 @@ server.on("request", myRouter.createRouter());
 const mainSocket = io(server);
 //メインソケットからログインソケットを作成
 const loginControler = new LoginControler;
+const boardControler = new BoardControler;
 const loginSocket = new LoginSocket(mainSocket,loginControler);
+const boardSocket = new BoardSocket(mainSocket,boardControler);
 
 //サーバーポート設定
 server.listen(3000);
