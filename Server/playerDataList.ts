@@ -35,4 +35,12 @@ export class PlayerDataList {
         return this.playerDataList.filter(x => { return x != null; }).length;
     }
 
+    public getPlayerNameList() {
+        return this.playerDataList.filter(x => x != null)
+            .map(x => {
+                if (x != null) return x.getName();
+                return "ここにはたどり着くことはありません";
+            });
+    }
+
 }
