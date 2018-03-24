@@ -1,7 +1,9 @@
+import * as global from "./boardGlobalData"
+import * as view from "./view"
+
 const queue = new createjs.LoadQueue();
-const canvasWidth = 960;
-const canvasHeight = 876;
 window.onload = () => {
+
     queue.on("complete", preloadImage);
     queue.loadManifest([
         { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },
@@ -22,68 +24,86 @@ function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
     let background = new createjs.Shape();
     background.graphics.beginFill("black").
-        drawRect(0, 0, canvasWidth, canvasHeight);
+        drawRect(0, 0, global.canvasWidth, global.canvasHeight);
     stage.addChild(background);
 
-    //プレイヤー1の枠
-    let player1frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
-    player1frame.regX = player1frame.image.width / 2;
-    player1frame.regY = player1frame.image.height;
-    player1frame.x = canvasWidth / 2;
-    player1frame.y = canvasHeight;
-    stage.addChild(player1frame);
     //プレイヤー1の設置アクション
     let player1buildArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
     player1buildArea.regX = player1buildArea.image.width / 2;
     player1buildArea.regY = player1buildArea.image.height;
-    player1buildArea.x = canvasWidth / 2;
-    player1buildArea.y = canvasHeight - player1frame.image.height - 4;
+    player1buildArea.x = global.canvasWidth / 2;
+    player1buildArea.y = global.canvasHeight - 85;
     stage.addChild(player1buildArea);
     //プレイヤー1のリソース
     let player1resourceArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
     player1resourceArea.regX = player1resourceArea.image.width / 2;
     player1resourceArea.regY = player1resourceArea.image.height;
-    player1resourceArea.x = canvasWidth / 2;
+    player1resourceArea.x = global.canvasWidth / 2;
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
-
-    //プレイヤー2の枠
-    let player2frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
-    player2frame.regY = player2frame.image.height / 2;
-    player2frame.y = canvasHeight / 2;
-    stage.addChild(player2frame);
-
-    //プレイヤー3の枠
-    let player3frame = new createjs.Bitmap(queue.getResult("evenPlayerFrame"));
-    player3frame.rotation = 180;
-    player3frame.regX = player3frame.image.width / 2;
-    player3frame.regY = 0;
-    player3frame.x = canvasWidth / 2;
-    player3frame.y = player3frame.image.height;
-    stage.addChild(player3frame);
-
-    //プレイヤー4の枠
-    let player4frame = new createjs.Bitmap(queue.getResult("oddPlayerFrame"));
-    player4frame.rotation = 180;
-    player4frame.regX = player4frame.image.width;
-    player4frame.regY = player4frame.image.height / 2;
-    player4frame.x = canvasWidth - player4frame.image.width;
-    player4frame.y = canvasHeight / 2;
-    stage.addChild(player4frame);
 
     //設定枠
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
     stage.addChild(topWindowsL);
     //設定ボタン
-    let setting = new createjs.Bitmap(queue.getResult("setting"));
-    setting.x = (topWindowsL.image.height - setting.image.height) / 2;
-    setting.y = (topWindowsL.image.height - setting.image.height) / 2;
-    stage.addChild(setting);
+    const settingButton = new view.SettingButton(() => alert("設定！"), queue);
+    settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2;
+    settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2;
+    stage.addChild(settingButton);
 
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
     topWindowsR.scaleX = -1;
-    topWindowsR.x = canvasWidth;
+    topWindowsR.x = global.canvasWidth;
     stage.addChild(topWindowsR);
+
+    //ターン終了ボタン
+    let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
+    stage.addChild(turnFinishButton);
+
+    //宣戦布告ボタン
+    const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
+    stage.addChild(declareWarButton);
+
+    const player1Window = new view.Player1Window(queue);
+    player1Window.setPlayerName("輝夜月");
+    player1Window.setSpeed(810);
+    player1Window.setResource(10);
+    player1Window.setActivityRange(5);
+    player1Window.setUncertainty(777);
+    player1Window.setPositive(15);
+    player1Window.setNegative(30);
+
+    const player2Window = new view.Player2Window(queue);
+    player2Window.setPlayerName("スーパーひとしくん");
+    player2Window.setSpeed(931);
+    player2Window.setResource(1919);
+    player2Window.setActivityRange(4545);
+    player2Window.setUncertainty(721);
+    player2Window.setPositive(893);
+    player2Window.setNegative(801);
+
+    const player3Window = new view.Player3Window(queue);
+    player3Window.setPlayerName("イキリオタク");
+    player3Window.setSpeed(99);
+    player3Window.setResource(99);
+    player3Window.setActivityRange(99);
+    player3Window.setUncertainty(99);
+    player3Window.setPositive(999);
+    player3Window.setNegative(999);
+
+    const player4Window = new view.Player4Window(queue);
+    player4Window.setPlayerName("いなむ");
+    player4Window.setSpeed(93);
+    player4Window.setResource(9);
+    player4Window.setActivityRange(9);
+    player4Window.setUncertainty(9);
+    player4Window.setPositive(88);
+    player4Window.setNegative(44);
+
+    stage.addChild(player1Window);
+    stage.addChild(player2Window);
+    stage.addChild(player3Window);
+    stage.addChild(player4Window);
     stage.update();
 }
