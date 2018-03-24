@@ -1,11 +1,12 @@
 import { RoomEvents } from "../Server/roomEvents";
 import { PlayerData } from "../Server/playerData";
+import { PlayerDataList } from "../Server/playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 
 export class RoomData {
     private roomId: number;
     private roomName: string;
-    private playerDataList: PlayerData[];
+    private playerDataList: PlayerDataList;
     private playFlag: boolean;
     private passwordFlag: boolean;
     private password: string;
