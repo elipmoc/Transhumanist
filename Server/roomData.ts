@@ -34,15 +34,17 @@ export class RoomData {
         this.roomEvents.updatePlayFlagCallBack(playFlagDataForClient);
     }
 
-    getPlayerData(uuid: string) { }
+    getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
 
-    deleteMember(uuid: string) { }
+    deleteMember(uuid: string) { this.playerDataList.deleteMember(uuid); }
 
-    addMember(playerData: PlayerData) { }
+    addMember(playerData: PlayerData) { this.playerDataList.addMember(playerData); }
 
     passwordCheck(str: string) { return this.password == str; }
 
     needPassword() { return this.passwordFlag; }
 
     deleteRoom() { this.roomEvents.deleteRoomCallBack(this.roomId); }
+
+    getPlayerCount() { return this.playerDataList.getPlayerCount(); }
 }
