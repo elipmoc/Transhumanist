@@ -15,8 +15,10 @@ server.on("request", myRouter.createRouter());
 //メインソケットを作成
 const mainSocket = io(server);
 //メインソケットからログインソケットを作成
-const loginControler = new LoginControler;
 const boardControler = new BoardControler;
+
+const loginControler = new LoginControler(boardControler,);
+
 const loginSocket = new LoginSocket(mainSocket,loginControler);
 const boardSocket = new BoardSocket(mainSocket,boardControler);
 
