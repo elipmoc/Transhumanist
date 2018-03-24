@@ -3,8 +3,7 @@ import { PlayerData } from "../Server/playerData"
 export class PlayerDataList {
     private playerDataList: (PlayerData | null)[]
     public constructor() {
-        this.playerDataList = new Array(4);
-        this.playerDataList.forEach(x => x = null);
+        this.playerDataList = new Array(null, null, null, null);
     }
     public getPlayerData(uuid: string) {
         return this.playerDataList.find(x => {
