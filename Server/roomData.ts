@@ -47,4 +47,6 @@ export class RoomData {
     deleteRoom() { this.roomEvents.deleteRoomCallBack(this.roomId); }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
+
+    getPlayerNameList() { return this.playerDataList.getPlayerNameList(); }
 }
