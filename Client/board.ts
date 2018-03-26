@@ -16,7 +16,8 @@ window.onload = () => {
         { id: "oddPlayerRBArea", src: "Img/ui/oddPlayerRBArea.png" },
         { id: "logEvent", src: "Img/ui/logEvent.png" },
         { id: "button", src: "Img/ui/button.png" },
-        { id: "handTest", src: "Img/ui/handTest.png" }
+        { id: "handTest", src: "Img/ui/handTest.png" },
+        { id: "optionWindow", src: "Img/ui/optionWindow.png" }
     ]);
 }
 
