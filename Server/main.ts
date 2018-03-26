@@ -17,12 +17,8 @@ const mainSocket = io(server);
 //メインソケットからログインソケットを作成
 const boardControler = new BoardControler;
 
-/*
-const loginControler = new LoginControler(boardControler,);
-
-const loginSocket = new LoginSocket(mainSocket,loginControler);
+const loginSocket = new LoginSocket(mainSocket,boardControler);
 const boardSocket = new BoardSocket(mainSocket,boardControler);
-*/
 
 //サーバーポート設定
 server.listen(3000);
