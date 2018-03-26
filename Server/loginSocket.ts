@@ -3,6 +3,11 @@ import {BoardControler} from "./boardControler";
 import {RoomEvents} from "./roomEvents";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
+import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
+import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
+import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
+import {RoomDataForClient} from "../Share/roomDataForClient";
 
 export class LoginSocket {
     private loginControler :LoginControler;
@@ -10,7 +15,7 @@ export class LoginSocket {
     constructor(socket:SocketIO.Server,boardControler:BoardControler){
         let roomEvents:RoomEvents = {
             addMemberCallBack: (playerDataForClient: PlayerDataForClient) => {
-                socket.emit("deleteMember", JSON.stringify(playerDataForClient));
+                socket.emit("addMember", JSON.stringify(playerDataForClient));
             },
             deleteMemberCallBack: (playerDataForClient: PlayerDataForClient) => {
                 socket.emit("deleteMember", JSON.stringify(playerDataForClient));
@@ -26,20 +31,22 @@ export class LoginSocket {
         let loginSocket = socket.of("/login");
         //クライアントが繋がった時を処理
         loginSocket.on("connection",(socket:SocketIO.Socket)=>{
-            
-        });
-        /*
-        socket.emit("addRoom");
-        socket.emit("deleteRoom");
-        socket.emit("addMember");
-        socket.emit("deleteMember");
-        socket.emit("updatePlayFlag");
+            socket.emit("sendRoomList",this.loginControler.sendRoomList());
 
-        socket.on("requestEnterRoom");
-        socket.on("requestRoomList");
-        socket.emit("sendRoomList");
-        socket.emit("resultEnterRoom");
-        socket.emit("sendRoomList");
-        */
+            socket.on("requestCreateRoom",(data:string)=>{
+                let request: RequestCreateRoomData = JSON.parse(data);
+                let result : ResultCreateRoomData = this.loginControler.createRoom(request);
+
+                if(result.successFlag){
+                    socket.emit("sendRoomList",this.loginControler.sendRoomList());
+                }
+                socket.emit("resultCreateRoom",result);
+            });
+            socket.on("requestEnterRoom",(data:string)=>{
+                let request: RequestEnterRoomData = JSON.parse(data);
+                let result : ResultEnterRoomData = this.loginControler.enterRoom(request);
+                socket.emit("resultEnterRoom",result);
+            });
+        });
     };
 }

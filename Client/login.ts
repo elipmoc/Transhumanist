@@ -1,8 +1,10 @@
 import * as io from "socket.io-client";
 import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
-import {RoomViewList} from "../Client/roomViewList";
+import {RoomViewList} from "./roomViewList";
 import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
+import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
+import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -11,39 +13,56 @@ const roomViewList = new RoomViewList(requestEnter);
 
 socket.on("addRoom", (data: string) => {
     let roomData: RoomDataForClient = JSON.parse(data);
-    if (roomData != null) roomViewList.addRoom(roomData);
+    roomViewList.addRoom(roomData);
 });
 
 socket.on("deleteRoom", (data: number) => {
     let roomId: number = data;
-    if (roomId != null) roomViewList.deleteRoom(roomId);
+    roomViewList.deleteRoom(roomId);
 });
 
 socket.on("addMember", (data: string) => {
     let member :PlayerDataForClient = JSON.parse(data);
-    if (member != null) roomViewList.addMember(member);
+    roomViewList.addMember(member);
 });
 
 socket.on("deleteMember", (data: string) => {
     let member :PlayerDataForClient = JSON.parse(data);
-    if (member != null) roomViewList.deleteMember(member);
+    roomViewList.deleteMember(member);
 });
 
 socket.on("updatePlayFlag", (data: string) => {
-    let playData = JSON.parse(data);
-    if (playData != null) roomViewList.updatePlayFlag(playData.roomID, playData.playFlag);
+    let playData:PlayFlagDataForClient = JSON.parse(data);
+    roomViewList.updatePlayFlag(playData);
 });
-
-//requestRoomList
-function requestRoomList() {
-    socket.emit("requestRoomList");
-}
 
 //sendRoomList
 socket.on("sendRoomList", (data: string) => {
     let RoomList: RoomDataForClient[] = JSON.parse(data);
     roomViewList.initRoomList(RoomList);
 });
+
+let button = document.getElementById("createButton");
+button.onclick = () => {requestCreate();};
+
+//requestCreateRoom
+function requestCreate(){
+    let request:RequestCreateRoomData = {
+        roomName: (<HTMLInputElement>document.getElementById("roomName")).value,
+        password: (<HTMLInputElement>document.getElementById("pass")).value,
+        passwordFlag: (<HTMLInputElement>document.getElementById("passwordFlag")).checked,
+        playerName: (<HTMLInputElement>document.getElementById("playerName")).value
+    };
+    if(request.playerName == ""){
+        alert("プレイヤー名が入力されていません！");
+    }else if(request.roomName == ""){
+        alert("部屋の名前が入力されていません！");
+    }else if(request.passwordFlag || request.password == ""){
+        alert("パスワードが入力されていません！");
+    }else{
+        socket.emit("requestEnterRoom", JSON.stringify(request));
+    }
+}
 
 //requestEnterRoom
 function requestEnter(roomId: Number){
@@ -67,6 +86,3 @@ socket.on("resultEnterRoom",(resultEnterRoomData:ResultEnterRoomData)=>{
         console.log(resultEnterRoomData.errorMsg);
     }
 });
-
-
-requestRoomList();
