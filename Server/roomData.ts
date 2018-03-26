@@ -37,7 +37,16 @@ export class RoomData {
 
     getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
 
-    deleteMember(uuid: string) { this.playerDataList.deleteMember(uuid); }
+    deleteMember(uuid: string) {
+        this.playerDataList.deleteMember(uuid);
+        const playerDataForClient: PlayerDataForClient =
+            {
+                roomId: this.roomId,
+                playerId: this.playerDataList.getPlayerId(uuid),
+                playerName: ""
+            };
+        this.roomEvents.deleteMemberCallBack(playerDataForClient);
+    }
 
     addMember(playerData: PlayerData) {
         this.playerDataList.addMember(playerData);
