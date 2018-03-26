@@ -7,8 +7,6 @@ import { LoginSocket } from "../Server/loginSocket";
 import { BoardControler } from "../Server/boardControler";
 import { BoardSocket } from "../Server/boardSocket";
 
-import { RoomIdGenerator } from "../Server/roomIdGenerator";
-
 //サーバーの作成
 let server = http.createServer();
 
@@ -19,7 +17,6 @@ const mainSocket = io(server);
 //メインソケットからログインソケットを作成
 const boardControler = new BoardControler;
 
-const roomIdGenerator = new RoomIdGenerator;
 /*
 const loginControler = new LoginControler(boardControler,);
 
