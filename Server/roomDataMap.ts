@@ -3,6 +3,10 @@ import { RoomData } from "../Server/roomData";
 export class RoomDataMap {
     private roomDataMap: Map<number, RoomData>;
 
+    constructor() {
+        this.roomDataMap = new Map<number, RoomData>();
+    }
+
     addRoomData(roomData: RoomData) {
         this.roomDataMap.set(roomData.getRoomId(), roomData);
     }
