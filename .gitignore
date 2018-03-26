@@ -67,4 +67,3 @@ Test/*
 /Share/*.d.ts
 /Server/*.js
 /Server/*.d.ts
-!/Server/routing.js
