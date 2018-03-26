@@ -5,6 +5,14 @@ export class PlayerDataList {
     public constructor() {
         this.playerDataList = new Array(null, null, null, null);
     }
+
+    public getPlayerId(uuid: string) {
+        return this.playerDataList.findIndex(x => {
+            if (x == null) return false;
+            return x.getUuid() == uuid;
+        });
+    }
+
     public getPlayerData(uuid: string) {
         return this.playerDataList.find(x => {
             if (x == null) return false;
