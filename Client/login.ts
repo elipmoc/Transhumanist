@@ -12,33 +12,28 @@ const roomViewList = new RoomViewList(requestEnter);
 
 socket.on("addRoom", (data: string) => {
     let roomData: RoomDataForClient = JSON.parse(data);
-    if (roomData != null) roomViewList.addRoom(roomData);
+    roomViewList.addRoom(roomData);
 });
 
 socket.on("deleteRoom", (data: number) => {
     let roomId: number = data;
-    if (roomId != null) roomViewList.deleteRoom(roomId);
+    roomViewList.deleteRoom(roomId);
 });
 
 socket.on("addMember", (data: string) => {
     let member :PlayerDataForClient = JSON.parse(data);
-    if (member != null) roomViewList.addMember(member);
+    roomViewList.addMember(member);
 });
 
 socket.on("deleteMember", (data: string) => {
     let member :PlayerDataForClient = JSON.parse(data);
-    if (member != null) roomViewList.deleteMember(member);
+    roomViewList.deleteMember(member);
 });
 
 socket.on("updatePlayFlag", (data: string) => {
     let playData:PlayFlagDataForClient = JSON.parse(data);
-    if (playData != null) roomViewList.updatePlayFlag(playData);
+    roomViewList.updatePlayFlag(playData);
 });
-
-//requestRoomList
-function requestRoomList() {
-    socket.emit("requestRoomList");
-}
 
 //sendRoomList
 socket.on("sendRoomList", (data: string) => {
@@ -68,6 +63,3 @@ socket.on("resultEnterRoom",(resultEnterRoomData:ResultEnterRoomData)=>{
         console.log(resultEnterRoomData.errorMsg);
     }
 });
-
-
-requestRoomList();
