@@ -8,12 +8,15 @@ import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { BoardControler } from "../Server/boardControler";
+import { RoomIdGenerator } from "../Server/roomIdGenerator";
+
 import * as uuid from "node-uuid";
 
 export class LoginControler {
     private roomDataMap: RoomDataMap;
     private boardControler: BoardControler;
     private roomEvents: RoomEvents;
+    private roomIdGenerator:RoomIdGenerator;
 
     constructor(boardControler: BoardControler, roomEvents: RoomEvents) {
         this.boardControler = boardControler;
@@ -22,16 +25,24 @@ export class LoginControler {
     }
     createRoom(requestCreateRoomData: RequestCreateRoomData) {
         let request = requestCreateRoomData;
-        let roomData = new RoomData(1, request.roomName, request.password, this.roomEvents);
+        let roomId = this.roomIdGenerator.getRoomId();
 
-        //ここ条件式が追加される
+        //roomIdがundefined
+        if(roomId == null){
+            let result: ResultCreateRoomData = {
+                successFlag: true,
+                errorMsg: ""
+            };
+            return result;
+        }
 
+        let roomData = new RoomData(roomId, request.roomName, request.password, this.roomEvents);
         this.roomDataMap.addRoomData(roomData);
         let result: ResultCreateRoomData = {
             successFlag: true,
             errorMsg: ""
         };
-        return result
+        return result;
     }
     enterRoom(requestEnterRoomData: RequestEnterRoomData) {
         let request = requestEnterRoomData;
@@ -43,7 +54,7 @@ export class LoginControler {
                 errorMsg: "この部屋は存在しません。",
                 uuid: ""
             };
-            return result
+            return result;
         }
         else if (roomData.getPlayerCount() == 4) {
             //部屋満員
@@ -52,7 +63,7 @@ export class LoginControler {
                 errorMsg: "この部屋は満員のため、入室出来ません。",
                 uuid: ""
             };
-            return result
+            return result;
         } else {
             //プレイヤー入室
             let playerData = new PlayerData(uuid.v4(), request.playerName);
@@ -63,7 +74,7 @@ export class LoginControler {
                 errorMsg: "",
                 uuid: playerData.getUuid()
             };
-            return result
+            return result;
         }
     }
     sendRoomList() {
