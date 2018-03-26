@@ -61,12 +61,13 @@ function requestCreate(){
     }else if(request.passwordFlag && request.password == ""){
         alert("パスワードが入力されていません！");
     }else{
-        socket.emit("requestEnterRoom", JSON.stringify(request));
+        socket.emit("requestCreateRoom", JSON.stringify(request));
     }
 }
 
 //resultCreateRoom
-socket.on("resultCreateRoom",(resultCreateRoomData:ResultCreateRoomData)=>{
+socket.on("resultCreateRoom",(data:string)=>{
+    let resultCreateRoomData:ResultCreateRoomData = JSON.parse(data);
     if(resultCreateRoomData.successFlag){
         console.log("部屋が作成できました！");
     }
@@ -89,7 +90,8 @@ function requestEnter(roomId: Number){
 }
 
 //resultEnterRoom
-socket.on("resultEnterRoom",(resultEnterRoomData:ResultEnterRoomData)=>{
+socket.on("resultEnterRoom",(data:string)=>{
+    let resultEnterRoomData:ResultEnterRoomData = JSON.parse(data);
     if(resultEnterRoomData.successFlag){
         console.log("入室できました！");
     }

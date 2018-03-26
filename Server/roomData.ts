@@ -20,6 +20,8 @@ export class RoomData {
         this.passwordFlag = (password == "");
         this.playFlag = false;
         this.roomEvents = roomEvents;
+
+        this.playerDataList = new PlayerDataList;
     }
 
     getRoomId() { return this.roomId; }
