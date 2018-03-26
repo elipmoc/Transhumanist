@@ -16,19 +16,24 @@ export class LoginControler {
     private roomDataMap: RoomDataMap;
     private boardControler: BoardControler;
     private roomEvents: RoomEvents;
-    private roomIdGenerator:RoomIdGenerator;
+    private roomIdGenerator: RoomIdGenerator;
 
     constructor(boardControler: BoardControler, roomEvents: RoomEvents) {
         this.boardControler = boardControler;
         this.roomEvents = roomEvents;
         this.roomDataMap = new RoomDataMap;
+        const hoge = this.roomEvents.deleteRoomCallBack;
+        this.roomEvents.deleteRoomCallBack = (roomId: number) => {
+            hoge(roomId);
+            this.roomIdGenerator.releaseRoomId(roomId);
+        }
     }
     createRoom(requestCreateRoomData: RequestCreateRoomData) {
         let request = requestCreateRoomData;
         let roomId = this.roomIdGenerator.getRoomId();
 
         //roomIdがundefined
-        if(roomId == null){
+        if (roomId == null) {
             let result: ResultCreateRoomData = {
                 successFlag: false,
                 errorMsg: "これ以上は部屋が作れません。"
