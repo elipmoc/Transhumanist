@@ -2,6 +2,7 @@ import { RoomEvents } from "../Server/roomEvents";
 import { PlayerData } from "../Server/playerData";
 import { PlayerDataList } from "../Server/playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
+import { PlayerDataForClient } from "../Share/playerDataForClient";
 
 export class RoomData {
     private roomId: number;
@@ -38,7 +39,16 @@ export class RoomData {
 
     deleteMember(uuid: string) { this.playerDataList.deleteMember(uuid); }
 
-    addMember(playerData: PlayerData) { this.playerDataList.addMember(playerData); }
+    addMember(playerData: PlayerData) {
+        const playerDataForClient: PlayerDataForClient =
+            {
+                roomId: this.roomId,
+                playerId: this.playerDataList.getPlayerCount() + 1,
+                playerName: playerData.getName()
+            };
+        this.roomEvents.addMemberCallBack(playerDataForClient);
+        this.playerDataList.addMember(playerData);
+    }
 
     passwordCheck(str: string) { return this.password == str; }
 
