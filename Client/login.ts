@@ -3,6 +3,7 @@ import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
 import {RoomViewList} from "./roomViewList";
 import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
+import {ResultCreateRoomData} from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 
@@ -57,12 +58,22 @@ function requestCreate(){
         alert("プレイヤー名が入力されていません！");
     }else if(request.roomName == ""){
         alert("部屋の名前が入力されていません！");
-    }else if(request.passwordFlag || request.password == ""){
+    }else if(request.passwordFlag && request.password == ""){
         alert("パスワードが入力されていません！");
     }else{
         socket.emit("requestEnterRoom", JSON.stringify(request));
     }
 }
+
+//resultCreateRoom
+socket.on("resultCreateRoom",(resultCreateRoomData:ResultCreateRoomData)=>{
+    if(resultCreateRoomData.successFlag){
+        console.log("部屋が作成できました！");
+    }
+    else{
+        console.log(resultCreateRoomData.errorMsg);
+    }
+});
 
 //requestEnterRoom
 function requestEnter(roomId: Number){
