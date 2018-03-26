@@ -13,11 +13,11 @@ export class RoomData {
     private password: string;
     private roomEvents: RoomEvents;
 
-    constructor(roomId: number, roomName: string, password: string, roomEvents: RoomEvents) {
+    constructor(roomId: number, roomName: string, password: string, passwordFlag: boolean, roomEvents: RoomEvents) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.password = password;
-        this.passwordFlag = (password == "");
+        this.passwordFlag = passwordFlag;
         this.playFlag = false;
         this.roomEvents = roomEvents;
 

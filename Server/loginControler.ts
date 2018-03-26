@@ -43,7 +43,7 @@ export class LoginControler {
             return result;
         }
 
-        let roomData = new RoomData(roomId, request.roomName, request.password, this.roomEvents);
+        let roomData = new RoomData(roomId, request.roomName, request.password, request.passwordFlag, this.roomEvents);
         this.roomDataMap.addRoomData(roomData);
         let result: ResultCreateRoomData = {
             successFlag: true,
