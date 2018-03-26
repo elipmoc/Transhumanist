@@ -60,6 +60,7 @@ typings/
 #elipmoc
 Test/*
 !.gitkeep
+!/Test/tsconfig.json
 /Client/*.js
 /Client/*.d.ts
 !/Client/Lib/

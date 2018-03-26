@@ -21,6 +21,17 @@
             "problemMatcher": [
                 "$tsc"
             ]
+        },
+        {
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "type": "typescript",
+            "tsconfig": "Test\\tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ]
         }
     ]
 }
