@@ -58,7 +58,7 @@ function requestCreate(){
         alert("プレイヤー名が入力されていません！");
     }else if(request.roomName == ""){
         alert("部屋の名前が入力されていません！");
-    }else if(request.passwordFlag || request.password == ""){
+    }else if(request.passwordFlag && request.password == ""){
         alert("パスワードが入力されていません！");
     }else{
         socket.emit("requestEnterRoom", JSON.stringify(request));
