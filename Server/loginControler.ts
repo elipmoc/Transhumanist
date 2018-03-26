@@ -1,14 +1,14 @@
-import { RoomData } from "../Server/roomData";
-import { RoomDataMap } from "../Server/roomDataMap";
-import { RoomEvents } from "../Server/roomEvents";
-import { PlayerData } from "../Server/playerData";
+import { RoomData } from "./roomData";
+import { RoomDataMap } from "./roomDataMap";
+import { RoomEvents } from "./roomEvents";
+import { PlayerData } from "./playerData";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
-import { BoardControler } from "../Server/boardControler";
-import { RoomIdGenerator } from "../Server/roomIdGenerator";
+import { BoardControler } from "./boardControler";
+import { RoomIdGenerator } from "./roomIdGenerator";
 
 import * as uuid from "node-uuid";
 
@@ -30,8 +30,8 @@ export class LoginControler {
         //roomIdがundefined
         if(roomId == null){
             let result: ResultCreateRoomData = {
-                successFlag: true,
-                errorMsg: ""
+                successFlag: false,
+                errorMsg: "これ以上は部屋が作れません。"
             };
             return result;
         }

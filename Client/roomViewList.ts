@@ -1,6 +1,7 @@
 import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
-import {RoomView} from "../Client/roomView";
+import {RoomView} from "./roomView";
+import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 
 export class RoomViewList {
     private roomViewMap: Map<number, RoomView>;
@@ -34,7 +35,7 @@ export class RoomViewList {
     deleteMember(playerData :PlayerDataForClient){
         this.roomViewMap.get(playerData.roomId).deleteMember(playerData.playerId);
     }
-    updatePlayFlag(roomId:number , playFlag:boolean){
-        this.roomViewMap.get(roomId).setPlayFlag(playFlag);
+    updatePlayFlag(playFlagData:PlayFlagDataForClient){
+        this.roomViewMap.get(playFlagData.roomId).setPlayFlag(playFlagData.playFlag);
     }
 }
