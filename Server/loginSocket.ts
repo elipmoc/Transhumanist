@@ -31,21 +31,22 @@ export class LoginSocket {
         let loginSocket = socket.of("/login");
         //クライアントが繋がった時を処理
         loginSocket.on("connection",(socket:SocketIO.Socket)=>{
-            socket.emit("sendRoomList",this.loginControler.sendRoomList());
+            socket.emit("sendRoomList",JSON.stringify(this.loginControler.sendRoomList()));
 
             socket.on("requestCreateRoom",(data:string)=>{
                 let request: RequestCreateRoomData = JSON.parse(data);
                 let result : ResultCreateRoomData = this.loginControler.createRoom(request);
 
                 if(result.successFlag){
-                    socket.emit("sendRoomList",this.loginControler.sendRoomList());
+                    console.log(JSON.stringify(this.loginControler.sendRoomList()));
+                    socket.emit("sendRoomList",JSON.stringify(this.loginControler.sendRoomList()));
                 }
-                socket.emit("resultCreateRoom",result);
+                socket.emit("resultCreateRoom",JSON.stringify(result));
             });
             socket.on("requestEnterRoom",(data:string)=>{
                 let request: RequestEnterRoomData = JSON.parse(data);
                 let result : ResultEnterRoomData = this.loginControler.enterRoom(request);
-                socket.emit("resultEnterRoom",result);
+                socket.emit("resultEnterRoom",JSON.stringify(result));
             });
         });
     };

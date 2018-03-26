@@ -22,6 +22,8 @@ export class LoginControler {
         this.boardControler = boardControler;
         this.roomEvents = roomEvents;
         this.roomDataMap = new RoomDataMap;
+        this.roomIdGenerator = new RoomIdGenerator;
+
         const hoge = this.roomEvents.deleteRoomCallBack;
         this.roomEvents.deleteRoomCallBack = (roomId: number) => {
             hoge(roomId);
@@ -91,6 +93,7 @@ export class LoginControler {
                 playerList: x.getPlayerNameList(),
                 passwordFlag: x.needPassword()
             };
+            return roomDataForClient;
         });
     }
 }
