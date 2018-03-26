@@ -40,14 +40,14 @@ export class RoomData {
     deleteMember(uuid: string) { this.playerDataList.deleteMember(uuid); }
 
     addMember(playerData: PlayerData) {
+        this.playerDataList.addMember(playerData);
         const playerDataForClient: PlayerDataForClient =
             {
                 roomId: this.roomId,
-                playerId: this.playerDataList.getPlayerCount() + 1,
+                playerId: this.playerDataList.getPlayerId(playerData.getUuid()),
                 playerName: playerData.getName()
             };
         this.roomEvents.addMemberCallBack(playerDataForClient);
-        this.playerDataList.addMember(playerData);
     }
 
     passwordCheck(str: string) { return this.password == str; }
