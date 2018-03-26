@@ -251,3 +251,9 @@ export class Player4Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "12px Arial";
     }
 }
+
+export class OptionWindow extends createjs.Container {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+    }
+}
