@@ -3,6 +3,7 @@ import {RoomDataForClient} from "../Share/roomDataForClient";
 import {PlayerDataForClient} from "../Share/playerDataForClient";
 import {RoomViewList} from "../Client/roomViewList";
 import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
+import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -30,8 +31,8 @@ socket.on("deleteMember", (data: string) => {
 });
 
 socket.on("updatePlayFlag", (data: string) => {
-    let playData = JSON.parse(data);
-    if (playData != null) roomViewList.updatePlayFlag(playData.roomID, playData.playFlag);
+    let playData:PlayFlagDataForClient = JSON.parse(data);
+    if (playData != null) roomViewList.updatePlayFlag(playData);
 });
 
 //requestRoomList
