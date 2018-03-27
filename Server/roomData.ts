@@ -3,21 +3,21 @@ import { PlayerData } from "../Server/playerData";
 import { PlayerDataList } from "../Server/playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { PasswordInfo } from "./passwordInfo";
+import { PassThrough } from "stream";
 
 export class RoomData {
     private roomId: number;
     private roomName: string;
     private playerDataList: PlayerDataList;
     private playFlag: boolean;
-    private passwordFlag: boolean;
-    private password: string;
+    private passwordInfo: PasswordInfo;
     private roomEvents: RoomEvents;
 
-    constructor(roomId: number, roomName: string, password: string, passwordFlag: boolean, roomEvents: RoomEvents) {
+    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents) {
         this.roomId = roomId;
         this.roomName = roomName;
-        this.password = password;
-        this.passwordFlag = passwordFlag;
+        this.passwordInfo = passwordInfo;
         this.playFlag = false;
         this.roomEvents = roomEvents;
 
@@ -61,9 +61,7 @@ export class RoomData {
         this.roomEvents.addMemberCallBack(playerDataForClient);
     }
 
-    passwordCheck(str: string) { return this.password == str; }
-
-    needPassword() { return this.passwordFlag; }
+    getPasswordInfo() { return this.passwordInfo; }
 
     deleteRoom() { this.roomEvents.deleteRoomCallBack(this.roomId); }
 

@@ -9,6 +9,7 @@ import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { BoardControler } from "./boardControler";
 import { RoomIdGenerator } from "./roomIdGenerator";
+import { PasswordInfo } from "./passwordInfo";
 
 import * as uuid from "node-uuid";
 
@@ -43,7 +44,14 @@ export class LoginControler {
             return result;
         }
 
-        let roomData = new RoomData(roomId, request.roomName, request.password, request.passwordFlag, this.roomEvents);
+        let roomData
+            = new RoomData(
+                roomId,
+                request.roomName,
+                new PasswordInfo(request.password, request.passwordFlag),
+                this.roomEvents
+            );
+
         this.roomDataMap.addRoomData(roomData);
         let result: ResultCreateRoomData = {
             successFlag: true,
@@ -91,7 +99,7 @@ export class LoginControler {
                 roomId: x.getRoomId(),
                 playFlag: x.getPlayFlag(),
                 playerList: x.getPlayerNameList(),
-                passwordFlag: x.needPassword()
+                passwordFlag: x.getPasswordInfo().isNeedPassword()
             };
             return roomDataForClient;
         });
