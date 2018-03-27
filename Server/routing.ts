@@ -17,7 +17,7 @@ export function createRouter() {
         sendCss(res, "./Css/" + req.params.path);
     });
     myRouter.get("/Client/:path", (req: any, res: any) => {
-        sendJs(res, "./Client/" + req.params.path);
+        sendJs(res, "./dist/Client/" + req.params.path);
     });
     myRouter.get("/Img/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/" + req.params.path);
