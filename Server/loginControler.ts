@@ -8,7 +8,9 @@ import {
     ResultCreateRoomData, successResultCreateRoomData, faildResultCreateRoomData
 } from "../Share/resultCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
-import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
+import {
+    ResultEnterRoomData, successResultEnterRoomData, faildResultEnterRoomData
+} from "../Share/resultEnterRoomData";
 import { BoardControler } from "./boardControler";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { PasswordInfo } from "./passwordInfo";
@@ -47,39 +49,24 @@ export class LoginControler {
         this.roomDataMap.addRoomData(roomData);
         return successResultCreateRoomData();
     }
+
     enterRoom(requestEnterRoomData: RequestEnterRoomData) {
         let request = requestEnterRoomData;
         let roomData = this.roomDataMap.getRoomData(request.roomId);
-        if (roomData == undefined) {
-            //部屋が存在しない
-            let result: ResultEnterRoomData = {
-                successFlag: false,
-                errorMsg: "この部屋は存在しません。",
-                uuid: ""
-            };
-            return result;
-        }
-        else if (roomData.getPlayerCount() == 4) {
-            //部屋満員
-            let result: ResultEnterRoomData = {
-                successFlag: false,
-                errorMsg: "この部屋は満員のため、入室出来ません。",
-                uuid: ""
-            };
-            return result;
-        } else {
-            //プレイヤー入室
-            let playerData = new PlayerData(uuid.v4(), request.playerName);
-            roomData.addMember(playerData);
 
-            let result: ResultEnterRoomData = {
-                successFlag: true,
-                errorMsg: "",
-                uuid: playerData.getUuid()
-            };
-            return result;
-        }
+        if (roomData == undefined)
+            //部屋が存在しない
+            return faildResultEnterRoomData("この部屋は存在しません。");
+        if (roomData.getPlayerCount() == 4)
+            //部屋満員
+            return faildResultEnterRoomData("この部屋は満員のため、入室出来ません。");
+
+        //プレイヤー入室
+        let playerData = new PlayerData(uuid.v4(), request.playerName);
+        roomData.addMember(playerData);
+        return successResultEnterRoomData(playerData.getUuid());
     }
+
     sendRoomList() {
         return this.roomDataMap.toArray().map(x => {
             let roomDataForClient: RoomDataForClient = {
