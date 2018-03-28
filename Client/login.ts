@@ -71,6 +71,7 @@ socket.on("resultCreateRoom", (data: string) => {
     let resultCreateRoomData: ResultCreateRoomData = JSON.parse(data);
     if (resultCreateRoomData.successFlag) {
         console.log("部屋が作成できました！");
+        requestEnter(resultCreateRoomData.roomId);
     }
     else {
         console.log(resultCreateRoomData.errorMsg);
