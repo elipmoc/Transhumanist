@@ -253,7 +253,12 @@ export class Player4Window extends viewBase.PlayerWindowBase {
 }
 
 export class OptionWindow extends createjs.Container {
+    private optionFrame: createjs.Bitmap;
     constructor(queue: createjs.LoadQueue) {
         super();
+        this.optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
+        this.optionFrame.regX = this.optionFrame.image.width / 2;
+        this.optionFrame.regY = this.optionFrame.image.height / 2;
+        this.addChild(this.optionFrame);
     }
 }

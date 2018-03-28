@@ -43,11 +43,17 @@ function preloadImage() {
     player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
     stage.addChild(player1resourceArea);
 
+    //オプションウインドウ
+    const optionWindow = new view.OptionWindow(queue);
+    optionWindow.x = global.canvasWidth / 2;
+    optionWindow.y = global.canvasHeight / 2;
+    optionWindow.visible = false;
+
     //設定枠
     let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
     stage.addChild(topWindowsL);
     //設定ボタン
-    const settingButton = new view.SettingButton(() => alert("設定！"), queue);
+    const settingButton = new view.SettingButton(() => { stage.update(), optionWindow.visible = true }, queue);
     settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2;
     settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2;
     stage.addChild(settingButton);
@@ -106,5 +112,6 @@ function preloadImage() {
     stage.addChild(player2Window);
     stage.addChild(player3Window);
     stage.addChild(player4Window);
+    stage.addChild(optionWindow);
     stage.update();
 }
