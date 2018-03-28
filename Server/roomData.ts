@@ -3,23 +3,25 @@ import { PlayerData } from "../Server/playerData";
 import { PlayerDataList } from "../Server/playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { PasswordInfo } from "./passwordInfo";
+import { PassThrough } from "stream";
 
 export class RoomData {
     private roomId: number;
     private roomName: string;
     private playerDataList: PlayerDataList;
     private playFlag: boolean;
-    private passwordFlag: boolean;
-    private password: string;
+    private passwordInfo: PasswordInfo;
     private roomEvents: RoomEvents;
 
-    constructor(roomId: number, roomName: string, password: string, roomEvents: RoomEvents) {
+    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents) {
         this.roomId = roomId;
         this.roomName = roomName;
-        this.password = password;
-        this.passwordFlag = (password == "");
+        this.passwordInfo = passwordInfo;
         this.playFlag = false;
         this.roomEvents = roomEvents;
+
+        this.playerDataList = new PlayerDataList;
     }
 
     getRoomId() { return this.roomId; }
@@ -32,7 +34,7 @@ export class RoomData {
         this.playFlag = playFlag;
         let playFlagDataForClient: PlayFlagDataForClient
             = { playFlag: playFlag, roomId: this.roomId };
-        this.roomEvents.updatePlayFlagCallBack(playFlagDataForClient);
+        this.roomEvents.updatePlayFlag(playFlagDataForClient);
     }
 
     getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
@@ -45,7 +47,7 @@ export class RoomData {
                 playerId: this.playerDataList.getPlayerId(uuid),
                 playerName: ""
             };
-        this.roomEvents.deleteMemberCallBack(playerDataForClient);
+        this.roomEvents.deleteMember(playerDataForClient);
     }
 
     addMember(playerData: PlayerData) {
@@ -56,14 +58,12 @@ export class RoomData {
                 playerId: this.playerDataList.getPlayerId(playerData.getUuid()),
                 playerName: playerData.getName()
             };
-        this.roomEvents.addMemberCallBack(playerDataForClient);
+        this.roomEvents.addMember(playerDataForClient);
     }
 
-    passwordCheck(str: string) { return this.password == str; }
+    getPasswordInfo() { return this.passwordInfo; }
 
-    needPassword() { return this.passwordFlag; }
-
-    deleteRoom() { this.roomEvents.deleteRoomCallBack(this.roomId); }
+    deleteRoom() { this.roomEvents.deleteRoom(this.roomId); }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
 

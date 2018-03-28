@@ -1,10 +1,12 @@
 import * as io from "socket.io-client";
-import {RoomDataForClient} from "../Share/roomDataForClient";
-import {PlayerDataForClient} from "../Share/playerDataForClient";
-import {RoomViewList} from "./roomViewList";
-import {ResultEnterRoomData} from "../Share/resultEnterRoomData";
+import { RoomDataForClient } from "../Share/roomDataForClient";
+import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { RoomViewList } from "./roomViewList";
+import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
+import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
+import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -22,17 +24,17 @@ socket.on("deleteRoom", (data: number) => {
 });
 
 socket.on("addMember", (data: string) => {
-    let member :PlayerDataForClient = JSON.parse(data);
+    let member: PlayerDataForClient = JSON.parse(data);
     roomViewList.addMember(member);
 });
 
 socket.on("deleteMember", (data: string) => {
-    let member :PlayerDataForClient = JSON.parse(data);
+    let member: PlayerDataForClient = JSON.parse(data);
     roomViewList.deleteMember(member);
 });
 
 socket.on("updatePlayFlag", (data: string) => {
-    let playData:PlayFlagDataForClient = JSON.parse(data);
+    let playData: PlayFlagDataForClient = JSON.parse(data);
     roomViewList.updatePlayFlag(playData);
 });
 
@@ -43,46 +45,63 @@ socket.on("sendRoomList", (data: string) => {
 });
 
 let button = document.getElementById("createButton");
-button.onclick = () => {requestCreate();};
+button.onclick = () => { requestCreate(); };
 
 //requestCreateRoom
-function requestCreate(){
-    let request:RequestCreateRoomData = {
+function requestCreate() {
+    let request: RequestCreateRoomData = {
         roomName: (<HTMLInputElement>document.getElementById("roomName")).value,
         password: (<HTMLInputElement>document.getElementById("pass")).value,
         passwordFlag: (<HTMLInputElement>document.getElementById("passwordFlag")).checked,
         playerName: (<HTMLInputElement>document.getElementById("playerName")).value
     };
-    if(request.playerName == ""){
+    if (request.playerName == "") {
         alert("プレイヤー名が入力されていません！");
-    }else if(request.roomName == ""){
+    } else if (request.roomName == "") {
         alert("部屋の名前が入力されていません！");
-    }else if(request.passwordFlag || request.password == ""){
+    } else if (request.passwordFlag && request.password == "") {
         alert("パスワードが入力されていません！");
-    }else{
-        socket.emit("requestEnterRoom", JSON.stringify(request));
+    } else {
+        socket.emit("requestCreateRoom", JSON.stringify(request));
     }
 }
 
-//requestEnterRoom
-function requestEnter(roomId: Number){
-    let target = <HTMLInputElement>document.getElementById("playerName");
-    let name :string = target.value;
+//resultCreateRoom
+socket.on("resultCreateRoom", (data: string) => {
+    let resultCreateRoomData: ResultCreateRoomData = JSON.parse(data);
+    if (resultCreateRoomData.successFlag) {
+        console.log("部屋が作成できました！");
+        requestEnter(resultCreateRoomData.roomId);
+    }
+    else {
+        console.log(resultCreateRoomData.errorMsg);
+    }
+});
 
-    if(name != ""){
-        let data = {roomId: roomId,name: name};
-        socket.emit("requestEnterRoom", JSON.stringify(data));
-    }else{
+//requestEnterRoom
+function requestEnter(roomId: number) {
+    let target = <HTMLInputElement>document.getElementById("playerName");
+    let name: string = target.value;
+
+    if (name != "") {
+        let requestEnterRoomData: RequestEnterRoomData = {
+            roomId: roomId,
+            playerName: name,
+            password: "あとまわし"
+        }
+        socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
+    } else {
         alert("プレイヤー名が入力されていません！");
     }
 }
 
 //resultEnterRoom
-socket.on("resultEnterRoom",(resultEnterRoomData:ResultEnterRoomData)=>{
-    if(resultEnterRoomData.successFlag){
+socket.on("resultEnterRoom", (data: string) => {
+    let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
+    if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
     }
-    else{
+    else {
         console.log(resultEnterRoomData.errorMsg);
     }
 });

@@ -3,7 +3,7 @@ export class RoomIdGenerator{
     constructor(){
         this.unUsedId = new Array(100);
         for(let i=0;i<this.unUsedId.length;i++){
-            this.unUsedId[i] = i++;
+            this.unUsedId[i] = (i + 1);
         }
     }
     getRoomId(){

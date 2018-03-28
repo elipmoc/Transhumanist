@@ -68,3 +68,4 @@ Test/*
 /Share/*.d.ts
 /Server/*.js
 /Server/*.d.ts
+/dist/*
