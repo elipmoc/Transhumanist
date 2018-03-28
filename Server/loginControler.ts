@@ -10,8 +10,8 @@ import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { BoardControler } from "./boardControler";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { PasswordInfo } from "./passwordInfo";
-
 import * as uuid from "node-uuid";
+import { RoomEmits } from "./RoomEmits";
 
 export class LoginControler {
     private roomDataMap: RoomDataMap;
@@ -19,18 +19,13 @@ export class LoginControler {
     private roomEvents: RoomEvents;
     private roomIdGenerator: RoomIdGenerator;
 
-    constructor(boardControler: BoardControler, roomEvents: RoomEvents) {
+    constructor(boardControler: BoardControler, roomEmits: RoomEmits) {
         this.boardControler = boardControler;
-        this.roomEvents = roomEvents;
-        this.roomDataMap = new RoomDataMap;
         this.roomIdGenerator = new RoomIdGenerator;
-
-        const hoge = this.roomEvents.deleteRoomCallBack;
-        this.roomEvents.deleteRoomCallBack = (roomId: number) => {
-            hoge(roomId);
-            this.roomIdGenerator.releaseRoomId(roomId);
-        }
+        this.roomEvents = new RoomEvents(roomEmits, this.roomIdGenerator.releaseRoomId);
+        this.roomDataMap = new RoomDataMap;
     }
+
     createRoom(requestCreateRoomData: RequestCreateRoomData) {
         let request = requestCreateRoomData;
         let roomId = this.roomIdGenerator.getRoomId();

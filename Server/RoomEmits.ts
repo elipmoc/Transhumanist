@@ -2,8 +2,8 @@ import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 
 export class RoomEmits {
-    private loginSocket: SocketIO.Server;
-    public constructor(loginSocket: SocketIO.Server) {
+    private loginSocket: SocketIO.Namespace;
+    public constructor(loginSocket: SocketIO.Namespace) {
         this.loginSocket = loginSocket;
     }
     public addMemberEmit(playerDataForClient: PlayerDataForClient) {

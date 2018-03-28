@@ -34,7 +34,7 @@ export class RoomData {
         this.playFlag = playFlag;
         let playFlagDataForClient: PlayFlagDataForClient
             = { playFlag: playFlag, roomId: this.roomId };
-        this.roomEvents.updatePlayFlagCallBack(playFlagDataForClient);
+        this.roomEvents.updatePlayFlag(playFlagDataForClient);
     }
 
     getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
@@ -47,7 +47,7 @@ export class RoomData {
                 playerId: this.playerDataList.getPlayerId(uuid),
                 playerName: ""
             };
-        this.roomEvents.deleteMemberCallBack(playerDataForClient);
+        this.roomEvents.deleteMember(playerDataForClient);
     }
 
     addMember(playerData: PlayerData) {
@@ -58,12 +58,12 @@ export class RoomData {
                 playerId: this.playerDataList.getPlayerId(playerData.getUuid()),
                 playerName: playerData.getName()
             };
-        this.roomEvents.addMemberCallBack(playerDataForClient);
+        this.roomEvents.addMember(playerDataForClient);
     }
 
     getPasswordInfo() { return this.passwordInfo; }
 
-    deleteRoom() { this.roomEvents.deleteRoomCallBack(this.roomId); }
+    deleteRoom() { this.roomEvents.deleteRoom(this.roomId); }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
 
