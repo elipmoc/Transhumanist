@@ -4,7 +4,9 @@ import { RoomEvents } from "./roomEvents";
 import { PlayerData } from "./playerData";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
-import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
+import {
+    ResultCreateRoomData, successResultCreateRoomData, faildResultCreateRoomData
+} from "../Share/resultCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { BoardControler } from "./boardControler";
@@ -30,14 +32,9 @@ export class LoginControler {
         let request = requestCreateRoomData;
         let roomId = this.roomIdGenerator.getRoomId();
 
-        //roomIdがundefined
-        if (roomId == null) {
-            let result: ResultCreateRoomData = {
-                successFlag: false,
-                errorMsg: "これ以上は部屋が作れません。"
-            };
-            return result;
-        }
+        //roomIdがnull
+        if (roomId == null)
+            return faildResultCreateRoomData("これ以上は部屋が作れません。");
 
         let roomData
             = new RoomData(
@@ -48,11 +45,7 @@ export class LoginControler {
             );
 
         this.roomDataMap.addRoomData(roomData);
-        let result: ResultCreateRoomData = {
-            successFlag: true,
-            errorMsg: ""
-        };
-        return result;
+        return successResultCreateRoomData();
     }
     enterRoom(requestEnterRoomData: RequestEnterRoomData) {
         let request = requestEnterRoomData;
