@@ -47,7 +47,7 @@ export class LoginControler {
             );
 
         this.roomDataMap.addRoomData(roomData);
-        return successResultCreateRoomData();
+        return successResultCreateRoomData(roomId);
     }
 
     enterRoom(requestEnterRoomData: RequestEnterRoomData) {
