@@ -68,7 +68,14 @@ export class SettingButton extends viewBase.ButtonBase {
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         super(onClickCallback);
         this.settingButton = new createjs.Bitmap(queue.getResult("setting"));
+        //Graphicsオブジェクトを作成する
+        var g = new createjs.Graphics()
+            .beginStroke("#000")
+            .beginFill("#000")
+            .rect(0, 0, this.settingButton.image.width, this.settingButton.image.height);
+        const rect = new createjs.Shape(g);
         this.settingButton.addEventListener("click", () => onClickCallback());
+        this.settingButton.hitArea = rect;
         this.addChild(this.settingButton);
     }
 
