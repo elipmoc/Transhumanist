@@ -1,6 +1,7 @@
 import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RoomEmits } from "./RoomEmits";
+import { RoomDataForClient } from "../Share/roomDataForClient";
 
 export class RoomEvents {
     private roomEmits: RoomEmits;
@@ -18,6 +19,9 @@ export class RoomEvents {
     }
     public updatePlayFlag(playFlagDataForClient: PlayFlagDataForClient) {
         this.roomEmits.updatePlayFlagEmit(playFlagDataForClient);
+    }
+    public addRoom(roomData: RoomDataForClient) {
+        this.roomEmits.addRoomEmit(roomData);
     }
     public deleteRoom(roomId: number) {
         this.roomEmits.deleteRoomEmit(roomId);

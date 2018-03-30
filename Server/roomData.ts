@@ -5,6 +5,7 @@ import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PasswordInfo } from "./passwordInfo";
 import { PassThrough } from "stream";
+import { RoomDataForClient } from "../Share/roomDataForClient";
 
 export class RoomData {
     private roomId: number;
@@ -22,6 +23,15 @@ export class RoomData {
         this.roomEvents = roomEvents;
 
         this.playerDataList = new PlayerDataList;
+
+        let roomData: RoomDataForClient = {
+            roomName: this.roomName,
+            roomId: this.roomId,
+            playFlag: this.playFlag,
+            playerList: this.playerDataList.getPlayerNameList(),
+            passwordFlag: this.passwordInfo.isNeedPassword()
+        };
+        this.roomEvents.addRoom(roomData);
     }
 
     getRoomId() { return this.roomId; }
