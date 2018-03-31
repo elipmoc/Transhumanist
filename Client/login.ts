@@ -87,7 +87,7 @@ function requestEnter(roomId: number) {
         let requestEnterRoomData: RequestEnterRoomData = {
             roomId: roomId,
             playerName: name,
-            password: "あとまわし"
+            password: (<HTMLInputElement>document.getElementById("pass")).value
         }
         socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
     } else {

@@ -21,7 +21,7 @@ export class LoginSocket {
                 let result: ResultCreateRoomData = this.loginControler.createRoom(request);
 
                 if (result.successFlag) {
-                    socket.emit("sendRoomList", JSON.stringify(this.loginControler.sendRoomList()));
+                    //socket.emit("sendRoomList", JSON.stringify(this.loginControler.sendRoomList()));
                 }
                 socket.emit("resultCreateRoom", JSON.stringify(result));
             });
