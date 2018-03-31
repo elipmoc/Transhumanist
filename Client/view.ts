@@ -1,5 +1,6 @@
 import * as global from "./boardGlobalData"
 import * as viewBase from "./viewBase"
+import { successResultCreateRoomData } from "../Share/resultCreateRoomData";
 
 //player情報
 export class PlayerInfo {
@@ -81,6 +82,17 @@ export class SettingButton extends viewBase.ButtonBase {
 
     public getHeight() { return this.settingButton.image.height; }
 
+}
+
+//オプション罰ボタン
+export class OptionCrossButton extends viewBase.ButtonBase {
+    private crossButton: createjs.Bitmap;
+    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+        super(onClickCallback);
+        this.crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
+        this.crossButton.addEventListener("click", () => onClickCallback());
+        this.addChild(this.crossButton);
+    }
 }
 
 export class Player1Window extends viewBase.PlayerWindowBase {
@@ -261,11 +273,16 @@ export class Player4Window extends viewBase.PlayerWindowBase {
 
 export class OptionWindow extends createjs.Container {
     private optionFrame: createjs.Bitmap;
+    private optionCrossButton: OptionCrossButton;
     constructor(queue: createjs.LoadQueue) {
         super();
         this.optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
         this.optionFrame.regX = this.optionFrame.image.width / 2;
         this.optionFrame.regY = this.optionFrame.image.height / 2;
         this.addChild(this.optionFrame);
+        this.optionCrossButton = new OptionCrossButton(() => { alert("罰") }, queue);
+        this.optionCrossButton.x = 200;
+        this.optionCrossButton.y = - 270;
+        this.addChild(this.optionCrossButton);
     }
 }
