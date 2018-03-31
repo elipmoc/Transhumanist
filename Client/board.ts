@@ -17,7 +17,10 @@ window.onload = () => {
         { id: "logEvent", src: "Img/ui/logEvent.png" },
         { id: "button", src: "Img/ui/button.png" },
         { id: "handTest", src: "Img/ui/handTest.png" },
-        { id: "optionWindow", src: "Img/ui/optionWindow.png" }
+        { id: "optionWindow", src: "Img/ui/optionWindow.png" },
+        { id: "optionCross", src: "Img/ui/optionCross.png" },
+        { id: "optionVolumeBar", src: "Img/ui/optionVolumeBar.png" },
+        { id: "optionVolumeCursor", src: "Img/ui/optionVolumeCursor.png" },
     ]);
 }
 
