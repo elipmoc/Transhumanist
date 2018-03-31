@@ -60,6 +60,10 @@ export class LoginControler {
         if (roomData.getPlayerCount() == 4)
             //部屋満員
             return faildResultEnterRoomData("この部屋は満員のため、入室出来ません。");
+        if (roomData.getPasswordInfo().passwordCheck(requestEnterRoomData.password) == false) {
+            //パスワードが違う
+            return faildResultEnterRoomData("パスワードが違います");
+        }
 
         //プレイヤー入室
         let playerData = new PlayerData(uuid.v4(), request.playerName);
