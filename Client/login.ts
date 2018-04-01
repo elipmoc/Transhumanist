@@ -1,4 +1,5 @@
 import * as io from "socket.io-client";
+import * as cookies from "js-cookie";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { RoomViewList } from "./roomViewList";
@@ -100,6 +101,9 @@ socket.on("resultEnterRoom", (data: string) => {
     let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
     if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
+        if (cookies.get("uuid") == undefined) {
+            cookies.set("uuid", resultEnterRoomData.uuid);
+        } console.log(cookies.get("uuid"));
     }
     else {
         console.log(resultEnterRoomData.errorMsg);
