@@ -94,10 +94,14 @@ export class OptionCrossButton extends viewBase.ButtonBase {
 export class Bar extends createjs.Container {
     constructor(queue: createjs.LoadQueue) {
         super();
-        const optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
-        this.addChild(optionVolumeCursor);
+
         const optionVolumeBar = new createjs.Bitmap(queue.getResult("optionVolumeBar"));
+        optionVolumeBar.regY = optionVolumeBar.image.height / 2;
         this.addChild(optionVolumeBar);
+        const optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
+        optionVolumeCursor.regX = optionVolumeCursor.image.width / 2;
+        optionVolumeCursor.regY = optionVolumeCursor.image.width / 2;
+        this.addChild(optionVolumeCursor);
     }
 }
 
@@ -339,6 +343,16 @@ export class OptionWindow extends createjs.Container {
         developerText.color = "white";
         developerText.font = "30px Arial";
         this.addChild(developerText);
+
+        const BgmBar = new Bar(queue);
+        BgmBar.x = -170;
+        BgmBar.y = -115;
+        this.addChild(BgmBar);
+
+        const SeBar = new Bar(queue);
+        SeBar.x = -170;
+        SeBar.y = -75;
+        this.addChild(SeBar);
 
     }
 }
