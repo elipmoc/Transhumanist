@@ -276,7 +276,7 @@ export class OptionWindow extends createjs.Container {
         this.optionFrame.regX = this.optionFrame.image.width / 2;
         this.optionFrame.regY = this.optionFrame.image.height / 2;
         this.addChild(this.optionFrame);
-        this.optionCrossButton = new OptionCrossButton(() => { alert("罰") }, queue);
+        this.optionCrossButton = new OptionCrossButton(() => { this.visible = false; this.stage.update(); }, queue);
         this.optionCrossButton.x = 200;
         this.optionCrossButton.y = - 270;
         this.addChild(this.optionCrossButton);
