@@ -268,17 +268,15 @@ export class Player4Window extends viewBase.PlayerWindowBase {
 
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
-    private optionFrame: createjs.Bitmap;
-    private optionCrossButton: OptionCrossButton;
     constructor(queue: createjs.LoadQueue) {
         super();
-        this.optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
-        this.optionFrame.regX = this.optionFrame.image.width / 2;
-        this.optionFrame.regY = this.optionFrame.image.height / 2;
-        this.addChild(this.optionFrame);
-        this.optionCrossButton = new OptionCrossButton(() => { this.visible = false; this.stage.update(); }, queue);
-        this.optionCrossButton.x = 200;
-        this.optionCrossButton.y = - 270;
-        this.addChild(this.optionCrossButton);
+        const optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
+        optionFrame.regX = optionFrame.image.width / 2;
+        optionFrame.regY = optionFrame.image.height / 2;
+        this.addChild(optionFrame);
+        const optionCrossButton = new OptionCrossButton(() => { this.visible = false; this.stage.update(); }, queue);
+        optionCrossButton.x = 200;
+        optionCrossButton.y = - 270;
+        this.addChild(optionCrossButton);
     }
 }
