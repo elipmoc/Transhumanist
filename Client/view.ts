@@ -90,6 +90,18 @@ export class OptionCrossButton extends viewBase.ButtonBase {
     }
 }
 
+//バー
+export class Bar extends createjs.Container {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        const optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
+        this.addChild(optionVolumeCursor);
+        const optionVolumeBar = new createjs.Bitmap(queue.getResult("optionVolumeBar"));
+        this.addChild(optionVolumeBar);
+    }
+}
+
+
 export class Player1Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super();
