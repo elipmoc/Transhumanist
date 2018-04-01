@@ -80,6 +80,12 @@ export class SettingButton extends viewBase.ButtonBase {
 export class OptionCrossButton extends viewBase.ButtonBase {
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         const crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
+        var g = new createjs.Graphics()
+            .beginStroke("#000")
+            .beginFill("#000")
+            .rect(0, 0, crossButton.image.width, crossButton.image.height);
+        const rect = new createjs.Shape(g);
+        crossButton.hitArea = rect;
         super(crossButton, onClickCallback);
     }
 }
