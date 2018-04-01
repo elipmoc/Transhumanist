@@ -109,16 +109,23 @@ export class Bar extends createjs.Container {
         this.optionVolumeCursor.regX = this.optionVolumeCursor.image.width / 2;
         this.optionVolumeCursor.regY = this.optionVolumeCursor.image.width / 2;
         this.addEventListener("pressmove", event => {
-            const x = this.globalToLocal(this.stage.mouseX, 0).x;
-            if (x > this.maxX)
-                this.optionVolumeCursor.x = this.maxX;
-            else if (x < this.minX)
-                this.optionVolumeCursor.x = this.minX;
-            else
-                this.optionVolumeCursor.x = x;
-            this.stage.update();
+            this.setBarCursorX(this.stage.mouseX);
         });
+        this.addEventListener("mousedown", event => {
+            this.setBarCursorX(this.stage.mouseX);
+        })
         this.addChild(this.optionVolumeCursor);
+    }
+
+    private setBarCursorX(x: number) {
+        x = this.globalToLocal(x, 0).x;
+        if (x > this.maxX)
+            this.optionVolumeCursor.x = this.maxX;
+        else if (x < this.minX)
+            this.optionVolumeCursor.x = this.minX;
+        else
+            this.optionVolumeCursor.x = x;
+        this.stage.update();
     }
 
     onChangedValue(callBack: (value: number) => void) {
