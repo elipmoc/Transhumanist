@@ -92,16 +92,37 @@ export class OptionCrossButton extends viewBase.ButtonBase {
 
 //バー
 export class Bar extends createjs.Container {
+    private optionVolumeCursor: createjs.Bitmap;
+    private maxValue: number = 100;
+    private minValue: number = 0;
+    private maxX: number;
+    private minX: number = 0;
+    private callBack: (value: number) => void;
     constructor(queue: createjs.LoadQueue) {
         super();
 
         const optionVolumeBar = new createjs.Bitmap(queue.getResult("optionVolumeBar"));
         optionVolumeBar.regY = optionVolumeBar.image.height / 2;
+        this.maxX = optionVolumeBar.image.width;
         this.addChild(optionVolumeBar);
-        const optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
-        optionVolumeCursor.regX = optionVolumeCursor.image.width / 2;
-        optionVolumeCursor.regY = optionVolumeCursor.image.width / 2;
-        this.addChild(optionVolumeCursor);
+        this.optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
+        this.optionVolumeCursor.regX = this.optionVolumeCursor.image.width / 2;
+        this.optionVolumeCursor.regY = this.optionVolumeCursor.image.width / 2;
+        this.addEventListener("pressmove", event => {
+            const x = this.globalToLocal(this.stage.mouseX, 0).x;
+            if (x > this.maxX)
+                this.optionVolumeCursor.x = this.maxX;
+            else if (x < this.minX)
+                this.optionVolumeCursor.x = this.minX;
+            else
+                this.optionVolumeCursor.x = x;
+            this.stage.update();
+        });
+        this.addChild(this.optionVolumeCursor);
+    }
+
+    onChangedValue(callBack: (value: number) => void) {
+        this.callBack = callBack;
     }
 }
 
