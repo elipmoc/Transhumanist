@@ -1,12 +1,9 @@
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
-    private onClickCallback: () => void;
-    protected awakeClickEvent() {
-        this.onClickCallback();
-    }
-    constructor(onClickCallback: () => void) {
+    constructor(buttonSource: createjs.DisplayObject, onClickCallback: () => void) {
         super();
-        this.onClickCallback = onClickCallback;
+        buttonSource.addEventListener("click", () => onClickCallback());
+        this.addChild(buttonSource);
     }
 }
 

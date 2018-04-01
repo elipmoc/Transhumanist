@@ -15,83 +15,72 @@ export class PlayerInfo {
 
 //宣戦布告ボタン
 export class DeclareWarButton extends viewBase.ButtonBase {
-    private declareWarButton: createjs.Bitmap;
-    private declareWarText: createjs.Text;
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        super(onClickCallback);
         //ボタン画像
-        this.declareWarButton = new createjs.Bitmap(queue.getResult("button"));
-        this.declareWarButton.regX = 0;
-        this.declareWarButton.regY = this.declareWarButton.image.height;
-        this.declareWarButton.x = 20;
-        this.declareWarButton.y = global.canvasHeight - 20;
-        this.declareWarButton.addEventListener("click", () => onClickCallback());
-        this.addChild(this.declareWarButton);
+        const declareWarButton = new createjs.Bitmap(queue.getResult("button"));
+        declareWarButton.regX = 0;
+        declareWarButton.regY = declareWarButton.image.height;
+        declareWarButton.x = 20;
+        declareWarButton.y = global.canvasHeight - 20;
+        super(declareWarButton, onClickCallback);
 
         //ボタンテキスト
-        this.declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
-        this.declareWarText.regX = this.declareWarText.getMeasuredWidth() / 2;
-        this.declareWarText.regY = this.declareWarText.getMeasuredHeight() / 2;
-        this.declareWarText.x = this.declareWarButton.x + this.declareWarButton.image.width / 2;
-        this.declareWarText.y = this.declareWarButton.y - this.declareWarButton.image.height / 2;
-        this.addChild(this.declareWarText);
+        const declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
+        declareWarText.regX = declareWarText.getMeasuredWidth() / 2;
+        declareWarText.regY = declareWarText.getMeasuredHeight() / 2;
+        declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
+        declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
+        this.addChild(declareWarText);
     }
 }
 
 //ターン終了ボタン
 export class TurnFinishButton extends viewBase.ButtonBase {
-    private turnFinishButton: createjs.Bitmap;
-    private turnFinishText: createjs.Text;
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        super(onClickCallback);
-        //ターン終了ボタン画像
-        this.turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
-        this.turnFinishButton.regX = this.turnFinishButton.image.width;
-        this.turnFinishButton.regY = this.turnFinishButton.image.height;
-        this.turnFinishButton.x = global.canvasWidth - 20;
-        this.turnFinishButton.y = global.canvasHeight - 20;
-        this.turnFinishButton.addEventListener("click", () => onClickCallback());
-        this.addChild(this.turnFinishButton);
 
+    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+
+        //ターン終了ボタン画像
+        const turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
+        turnFinishButton.regX = turnFinishButton.image.width;
+        turnFinishButton.regY = turnFinishButton.image.height;
+        turnFinishButton.x = global.canvasWidth - 20;
+        turnFinishButton.y = global.canvasHeight - 20;
+        super(turnFinishButton, onClickCallback);
         //ターン終了ボタンテキスト
-        this.turnFinishText = new createjs.Text("ターン終了", "20px Arial");
-        this.turnFinishText.regX = this.turnFinishText.getMeasuredWidth() / 2;
-        this.turnFinishText.regY = this.turnFinishText.getMeasuredHeight() / 2;
-        this.turnFinishText.x = this.turnFinishButton.x - this.turnFinishButton.image.width / 2;
-        this.turnFinishText.y = this.turnFinishButton.y - this.turnFinishButton.image.height / 2;
-        this.addChild(this.turnFinishText);
+        const turnFinishText = new createjs.Text("ターン終了", "20px Arial");
+        turnFinishText.regX = turnFinishText.getMeasuredWidth() / 2;
+        turnFinishText.regY = turnFinishText.getMeasuredHeight() / 2;
+        turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
+        turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
+        this.addChild(turnFinishText);
     }
 }
 
 //設定ボタン
 export class SettingButton extends viewBase.ButtonBase {
-    private settingButton: createjs.Bitmap;
+    private height: number;
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        super(onClickCallback);
-        this.settingButton = new createjs.Bitmap(queue.getResult("setting"));
+        const settingButton = new createjs.Bitmap(queue.getResult("setting"));
         //Graphicsオブジェクトを作成する
         var g = new createjs.Graphics()
             .beginStroke("#000")
             .beginFill("#000")
-            .rect(0, 0, this.settingButton.image.width, this.settingButton.image.height);
+            .rect(0, 0, settingButton.image.width, settingButton.image.height);
         const rect = new createjs.Shape(g);
-        this.settingButton.addEventListener("click", () => onClickCallback());
-        this.settingButton.hitArea = rect;
-        this.addChild(this.settingButton);
+        settingButton.hitArea = rect;
+        super(settingButton, onClickCallback);
+        this.height = settingButton.image.height;
     }
 
-    public getHeight() { return this.settingButton.image.height; }
+    public getHeight() { return this.height; }
 
 }
 
 //オプション罰ボタン
 export class OptionCrossButton extends viewBase.ButtonBase {
-    private crossButton: createjs.Bitmap;
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        super(onClickCallback);
-        this.crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
-        this.crossButton.addEventListener("click", () => onClickCallback());
-        this.addChild(this.crossButton);
+        const crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
+        super(crossButton, onClickCallback);
     }
 }
 
@@ -271,6 +260,7 @@ export class Player4Window extends viewBase.PlayerWindowBase {
     }
 }
 
+//オプションウインドウ
 export class OptionWindow extends createjs.Container {
     private optionFrame: createjs.Bitmap;
     private optionCrossButton: OptionCrossButton;
