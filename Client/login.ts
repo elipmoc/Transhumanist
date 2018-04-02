@@ -101,9 +101,10 @@ socket.on("resultEnterRoom", (data: string) => {
     let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
     if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
-        if (cookies.get("uuid") == undefined) {
+        if (cookies.get("uuid") == undefined || cookies.get("uuid") == "") {
             cookies.set("uuid", resultEnterRoomData.uuid);
         } console.log(cookies.get("uuid"));
+        window.location.href = "../board.html";
     }
     else {
         console.log(resultEnterRoomData.errorMsg);
