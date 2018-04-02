@@ -85,4 +85,8 @@ export class LoginControler {
             return roomDataForClient;
         });
     }
+
+    isExistUuid(uuid: string) {
+        this.uuidGenerator.isExistUuid(uuid);
+    }
 }
