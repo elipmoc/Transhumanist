@@ -28,7 +28,12 @@ export class LoginControler {
         this.boardControler = boardControler;
         this.roomIdGenerator = new RoomIdGenerator;
         this.uuidGenerator = new UuidGenerator;
-        this.roomEvents = new RoomEvents(roomEmits, this.roomIdGenerator.releaseRoomId);
+        this.roomEvents =
+            new RoomEvents(
+                roomEmits,
+                this.roomIdGenerator.releaseRoomId,
+                this.uuidGenerator.releaseUuid
+            );
         this.roomDataMap = new RoomDataMap;
     }
 
