@@ -6,16 +6,22 @@ import { RoomDataForClient } from "../Share/roomDataForClient";
 export class RoomEvents {
     private roomEmits: RoomEmits;
     private releaseRoomIdCallBack: (roomId: number) => void;
-    public constructor(roomEmits: RoomEmits, releaseRoomIdCallBack: (roomId: number) => void) {
+    private releaseUuidCallBack: (uuid: string) => void;
+
+    public constructor(roomEmits: RoomEmits,
+        releaseRoomIdCallBack: (roomId: number) => void,
+        releaseUuidCallBack: (uuid: string) => void) {
         this.roomEmits = roomEmits;
         this.releaseRoomIdCallBack = releaseRoomIdCallBack;
+        this.releaseUuidCallBack = releaseUuidCallBack;
     }
 
     public addMember(playerDataForClient: PlayerDataForClient) {
         this.roomEmits.addMemberEmit(playerDataForClient);
     }
-    public deleteMember(playerDataForClient: PlayerDataForClient) {
+    public deleteMember(playerDataForClient: PlayerDataForClient, uuid: string) {
         this.roomEmits.deleteMemberEmit(playerDataForClient);
+        this.releaseUuidCallBack(uuid);
     }
     public updatePlayFlag(playFlagDataForClient: PlayFlagDataForClient) {
         this.roomEmits.updatePlayFlagEmit(playFlagDataForClient);
