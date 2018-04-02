@@ -48,4 +48,9 @@ export class PlayerDataList {
             .map(x => x!.getName());
     }
 
+    public getPlayerUuidList() {
+        return this.playerDataList.filter(x => x != null)
+            .map(x => x!.getUuid());
+    }
+
 }
