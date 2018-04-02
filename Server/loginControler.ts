@@ -14,7 +14,7 @@ import {
 import { BoardControler } from "./boardControler";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { PasswordInfo } from "./passwordInfo";
-import * as uuid from "node-uuid";
+import { UuidGenerator } from "./uuidGenerator";
 import { RoomEmits } from "./RoomEmits";
 
 export class LoginControler {
@@ -22,10 +22,12 @@ export class LoginControler {
     private boardControler: BoardControler;
     private roomEvents: RoomEvents;
     private roomIdGenerator: RoomIdGenerator;
+    private uuidGenerator: UuidGenerator;
 
     constructor(boardControler: BoardControler, roomEmits: RoomEmits) {
         this.boardControler = boardControler;
         this.roomIdGenerator = new RoomIdGenerator;
+        this.uuidGenerator = new UuidGenerator;
         this.roomEvents = new RoomEvents(roomEmits, this.roomIdGenerator.releaseRoomId);
         this.roomDataMap = new RoomDataMap;
     }
@@ -66,7 +68,7 @@ export class LoginControler {
         }
 
         //プレイヤー入室
-        let playerData = new PlayerData(uuid.v4(), request.playerName);
+        let playerData = new PlayerData(this.uuidGenerator.getUuid(), request.playerName);
         roomData.addMember(playerData);
         return successResultEnterRoomData(playerData.getUuid());
     }
