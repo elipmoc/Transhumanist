@@ -57,7 +57,7 @@ export class RoomData {
                 playerId: this.playerDataList.getPlayerId(uuid),
                 playerName: ""
             };
-        this.roomEvents.deleteMember(playerDataForClient);
+        this.roomEvents.deleteMember(playerDataForClient, uuid);
     }
 
     addMember(playerData: PlayerData) {
@@ -73,7 +73,11 @@ export class RoomData {
 
     getPasswordInfo() { return this.passwordInfo; }
 
-    deleteRoom() { this.roomEvents.deleteRoom(this.roomId); }
+    deleteRoom() {
+        this.playerDataList.getPlayerUuidList()
+            .forEach(x => this.deleteMember(x));
+        this.roomEvents.deleteRoom(this.roomId);
+    }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
 
