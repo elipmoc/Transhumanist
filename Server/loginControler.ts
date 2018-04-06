@@ -35,33 +35,8 @@ export class LoginControler {
         });
     }
 
-<<<<<<< HEAD
-    createRoom(requestCreateRoomData: RequestCreateRoomData) {
-        let request = requestCreateRoomData;
-        let roomId = this.roomIdGenerator.getRoomId();
-
-        //roomIdがnull
-        if (roomId == null)
-            return faildResultCreateRoomData("これ以上は部屋が作れません。");
-
-        let roomData
-            = new RoomData(
-                roomId,
-                request.roomName,
-                new PasswordInfo(request.password, request.passwordFlag),
-                this.roomEvents
-            );
-
-        this.roomDataMap.addRoomData(roomData);
-
-        let playerData = new PlayerData(this.uuidGenerator.getUuid(), request.playerName);
-        roomData.addMember(playerData);
-
-        return successResultCreateRoomData(roomId, playerData.getUuid());
-=======
     addRoom(roomDataForClient: RoomDataForClient) {
         this.loginSocket.emit("addRoom", JSON.stringify(roomDataForClient));
->>>>>>> f1ce24c5a12b72c4322af133d4272e7f0613ce54
     }
 
     deleteMember(playerDataForClient: PlayerDataForClient) {
