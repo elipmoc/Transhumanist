@@ -54,7 +54,11 @@ export class LoginControler {
             );
 
         this.roomDataMap.addRoomData(roomData);
-        return successResultCreateRoomData(roomId);
+
+        let playerData = new PlayerData(this.uuidGenerator.getUuid(), request.playerName);
+        roomData.addMember(playerData);
+
+        return successResultCreateRoomData(roomId, playerData.getUuid());
     }
 
     enterRoom(requestEnterRoomData: RequestEnterRoomData) {
