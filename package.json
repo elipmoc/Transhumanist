@@ -19,6 +19,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node dist/Server/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
