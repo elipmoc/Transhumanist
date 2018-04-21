@@ -1,5 +1,7 @@
 import * as global from "./boardGlobalData"
 import * as view from "./view"
+import * as io from "socket.io-client";
+const socket = io("/board");
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
