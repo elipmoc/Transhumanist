@@ -1,6 +1,8 @@
 import * as global from "./boardGlobalData"
 import * as view from "./view"
 import * as io from "socket.io-client";
+import * as viewBuilder from "./viewBuilder"
+
 const socket = io("/board");
 
 const queue = new createjs.LoadQueue();
@@ -76,7 +78,8 @@ function preloadImage() {
     //宣戦布告ボタン
     const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
     stage.addChild(declareWarButton);
-
+    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
+    /*
     const player1Window = new view.Player1Window(queue);
     player1Window.setPlayerName("輝夜月");
     player1Window.setSpeed(810);
@@ -118,5 +121,6 @@ function preloadImage() {
     stage.addChild(player3Window);
     stage.addChild(player4Window);
     stage.addChild(optionWindow);
+    */
     stage.update();
 }
