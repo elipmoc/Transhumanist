@@ -22,6 +22,10 @@ export class BoardSocket {
                 const playerViewState2 = Object.assign({}, playerViewState);
                 playerViewState2.playerName = "歯ブラシ";
                 setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState2)), 2000);
+
+                socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
+
+                socket.on("declareWarButtonClick", () => console.log("declareWarButtonClick"));
             }
         );
     }

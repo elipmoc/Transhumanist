@@ -11,6 +11,8 @@ export interface BindParams {
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
+    turnFinishButtonBuilder(bindParams);
+    declareWarButtonBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -38,4 +40,22 @@ function playerWindowBuilder(bindParams: BindParams) {
         );
         bindParams.stage.addChild(playerWindowList[i]);
     }
+}
+
+function turnFinishButtonBuilder(bindParams: BindParams) {
+    const turnFinishButton =
+        new view.TurnFinishButton(
+            () => bindParams.socket.emit("turnFinishButtonClick"),
+            bindParams.queue
+        );
+    bindParams.stage.addChild(turnFinishButton);
+}
+
+function declareWarButtonBuilder(bindParams: BindParams) {
+    const declareWarButton =
+        new view.DeclareWarButton(
+            () => bindParams.socket.emit("declareWarButtonClick"),
+            bindParams.queue
+        );
+    bindParams.stage.addChild(declareWarButton);
 }

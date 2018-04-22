@@ -71,14 +71,19 @@ function preloadImage() {
     topWindowsR.x = global.canvasWidth;
     stage.addChild(topWindowsR);
 
+    /*
     //ターン終了ボタン
     let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
     stage.addChild(turnFinishButton);
+    */
 
+    /*
     //宣戦布告ボタン
     const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
     stage.addChild(declareWarButton);
+    */
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
+
     /*
     const player1Window = new view.Player1Window(queue);
     player1Window.setPlayerName("輝夜月");
