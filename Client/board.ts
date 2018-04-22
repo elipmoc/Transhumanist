@@ -125,7 +125,7 @@ function preloadImage() {
     stage.addChild(player2Window);
     stage.addChild(player3Window);
     stage.addChild(player4Window);
-    stage.addChild(optionWindow);
     */
+    stage.addChild(optionWindow);
     stage.update();
 }
