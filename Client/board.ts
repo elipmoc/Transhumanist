@@ -2,6 +2,7 @@ import * as global from "./boardGlobalData"
 import * as view from "./view"
 import * as io from "socket.io-client";
 import * as viewBuilder from "./viewBuilder"
+import { SelectActionWindow } from "./selectActionWindow"
 
 const socket = io("/board");
 
@@ -126,6 +127,7 @@ function preloadImage() {
     stage.addChild(player3Window);
     stage.addChild(player4Window);
     */
+    stage.addChild(new SelectWindow(queue));
     stage.addChild(optionWindow);
     stage.update();
 }
