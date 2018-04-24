@@ -145,39 +145,45 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.x = global.canvasWidth / 2;
         this.y = global.canvasHeight - this.playerFrame.image.height;
 
-        this.playerNameText.color = "blue";
+        this.playerNameText.color = "#00c6db";
         this.playerNameText.font = "20px Arial";
-        this.playerNameText.regX = this.playerNameText.getMeasuredWidth() / 2;
+        this.playerNameText.textAlign = "center";
         this.playerNameText.y = 5;
 
-        this.speedText.x = -180;
+        this.speedText.textAlign = "center";
+        this.speedText.x = (-3.5) * (this.playerFrame.image.width / 10);
         this.speedText.y = 35;
-        this.speedText.color = "white";
+        this.speedText.color = "#f3f3f3";
         this.speedText.font = "15px Arial";
 
-        this.resourceText.x = -80;
+        this.resourceText.textAlign = "center";
+        this.resourceText.x = (-1.2) * (this.playerFrame.image.width / 10);
         this.resourceText.y = 35;
-        this.resourceText.color = "white";
+        this.resourceText.color = "#f3f3f3";
         this.resourceText.font = "15px Arial";
 
-        this.activityRangeText.x = 10;
+        this.activityRangeText.textAlign = "center";
+        this.activityRangeText.x = (1.2) * (this.playerFrame.image.width / 10);
         this.activityRangeText.y = 35;
-        this.activityRangeText.color = "white";
+        this.activityRangeText.color = "#f3f3f3";
         this.activityRangeText.font = "15px Arial";
 
-        this.uncertaintyText.x = 90;
+        this.uncertaintyText.textAlign = "center";
+        this.uncertaintyText.x = (3.5) * (this.playerFrame.image.width / 10);
         this.uncertaintyText.y = 35;
-        this.uncertaintyText.color = "white";
+        this.uncertaintyText.color = "#f3f3f3";
         this.uncertaintyText.font = "15px Arial";
 
-        this.positiveText.x = -80;
+        this.positiveText.textAlign = "center";
+        this.positiveText.x = (-1) * (this.playerFrame.image.width / 8);
         this.positiveText.y = 60;
-        this.positiveText.color = "green";
+        this.positiveText.color = "#00ee00";
         this.positiveText.font = "15px Arial";
 
-        this.negativeText.x = 0;
+        this.negativeText.textAlign = "center";
+        this.negativeText.x = (1) * (this.playerFrame.image.width / 8);
         this.negativeText.y = 60;
-        this.negativeText.color = "red";
+        this.negativeText.color = "#ff0000";
         this.negativeText.font = "15px Arial";
     }
 }
