@@ -133,9 +133,6 @@ function preloadImage() {
     stage.addChild(player3Window);
     stage.addChild(player4Window);
     */
-    const selectActionWindow = new SelectActionWindow(queue);
-    selectActionWindow.onSelectedLevel(level => alert("level" + level))
-    stage.addChild(selectActionWindow);
     stage.addChild(optionWindow);
     stage.update();
 }

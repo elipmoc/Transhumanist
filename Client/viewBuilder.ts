@@ -1,6 +1,7 @@
 import * as view from "./view";
 import { PlayerWindowBase } from "./viewBase";
 import { PlayerViewState } from "../Share/playerViewState";
+import { SelectActionWindow } from "./SelectActionWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -13,6 +14,7 @@ export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
+    selectActionWindowBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -58,4 +60,10 @@ function declareWarButtonBuilder(bindParams: BindParams) {
             bindParams.queue
         );
     bindParams.stage.addChild(declareWarButton);
+}
+
+function selectActionWindowBuilder(bindParams: BindParams) {
+    const selectActionWindow = new SelectActionWindow(bindParams.queue);
+    selectActionWindow.onSelectedLevel(level => bindParams.socket.emit("selectLevel", level));
+    bindParams.stage.addChild(selectActionWindow);
 }

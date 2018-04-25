@@ -26,6 +26,7 @@ export class BoardSocket {
                 socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
 
                 socket.on("declareWarButtonClick", () => console.log("declareWarButtonClick"));
+                socket.on("selectLevel", (level) => console.log("level" + level));
             }
         );
     }
