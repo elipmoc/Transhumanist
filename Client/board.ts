@@ -26,6 +26,12 @@ window.onload = () => {
         { id: "optionCross", src: "Img/ui/optionCross.png" },
         { id: "optionVolumeBar", src: "Img/ui/optionVolumeBar.png" },
         { id: "optionVolumeCursor", src: "Img/ui/optionVolumeCursor.png" },
+        { id: "level1", src: "Img/card/back/level1mb.png" },
+        { id: "level2", src: "Img/card/back/level2mb.png" },
+        { id: "level3", src: "Img/card/back/level3mb.png" },
+        { id: "level4", src: "Img/card/back/level4mb.png" },
+        { id: "level5", src: "Img/card/back/level5mb.png" },
+        { id: "level6", src: "Img/card/back/level6mb.png" },
     ]);
 }
 
