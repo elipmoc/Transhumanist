@@ -5,7 +5,7 @@ export class SelectActionWindow extends createjs.Container {
     constructor(queue: createjs.LoadQueue) {
         super();
         const frame = new createjs.Shape();
-        const frameX = 450;
+        const frameX = 700;
         const frameY = 250;
         frame.graphics.beginFill("white").
             drawRect(0, 0, frameX, frameY);
@@ -23,5 +23,21 @@ export class SelectActionWindow extends createjs.Container {
 
         this.addChild(frame);
         this.addChild(descriptionText);
+
+
+        for (var i = 1; i <= 3; i++) {
+            const level = new createjs.Bitmap(queue.getResult("level" + (4 - i)));
+            level.y = global.canvasHeight / 2 - 40;
+            level.x = global.canvasWidth / 2 - (level.image.width + 20) * (i) + 10;
+            this.addChild(level);
+        }
+
+        for (var i = 4; i <= 6; i++) {
+            const level = new createjs.Bitmap(queue.getResult("level" + i));
+            level.y = global.canvasHeight / 2 - 40;
+            level.x = global.canvasWidth / 2 + (level.image.width + 20) * (i - 4) + 10;
+            this.addChild(level);
+        }
+
     }
 }
