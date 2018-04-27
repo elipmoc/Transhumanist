@@ -94,12 +94,12 @@ function preloadImage() {
     /*
     const player1Window = new view.Player1Window(queue);
     player1Window.setPlayerName("輝夜月");
-    player1Window.setSpeed(810);
-    player1Window.setResource(10);
-    player1Window.setActivityRange(5);
+    player1Window.setSpeed(999);
+    player1Window.setResource(999);
+    player1Window.setActivityRange(999);
     player1Window.setUncertainty(777);
-    player1Window.setPositive(15);
-    player1Window.setNegative(30);
+    player1Window.setPositive(999);
+    player1Window.setNegative(999);
 
     const player2Window = new view.Player2Window(queue);
     player2Window.setPlayerName("スーパーひとしくん");
