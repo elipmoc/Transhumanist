@@ -26,7 +26,12 @@ export class BoardSocket {
                 socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
 
                 socket.on("declareWarButtonClick", () => console.log("declareWarButtonClick"));
-                socket.on("selectLevel", (level) => console.log("level" + level));
+                socket.on("selectLevel", (level) => {
+                    console.log("level" + level);
+                    socket.emit("setSelectActionWindowVisible", JSON.stringify(false));
+                    setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
+                });
+                setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
             }
         );
     }

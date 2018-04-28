@@ -66,4 +66,10 @@ function selectActionWindowBuilder(bindParams: BindParams) {
     const selectActionWindow = new SelectActionWindow(bindParams.queue);
     selectActionWindow.onSelectedLevel(level => bindParams.socket.emit("selectLevel", level));
     bindParams.stage.addChild(selectActionWindow);
+    selectActionWindow.visible = false;
+    bindParams.socket.on("setSelectActionWindowVisible", (str: string) => {
+        const visibleFlag: boolean = JSON.parse(str);
+        selectActionWindow.visible = visibleFlag;
+        bindParams.stage.update();
+    })
 }
