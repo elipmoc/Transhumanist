@@ -187,6 +187,17 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "15px Arial";
     }
 }
+export class Player1Resource extends viewBase.PlayerResourceBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.resourceArea.regX = this.resourceArea.image.width / 2;
+        this.resourceArea.regY = this.resourceArea.image.height;
+        this.resourceArea.x = global.canvasWidth / 2;
+        this.resourceArea.y = (global.canvasHeight - 85) - this.resourceArea.image.height - 4;
+
+    }
+}
 
 export class Player2Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {

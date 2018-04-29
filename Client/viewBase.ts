@@ -58,3 +58,28 @@ export class PlayerWindowBase extends createjs.Container {
         this.negativeText.text = "Negative:" + negative;
     }
 }
+
+//プレイヤーリソース欄のベースクラス
+export class PlayerResourceBase extends createjs.Container {
+    protected resourceArea: createjs.Bitmap;
+    protected resourceList: CardIconBase[] = new Array();
+    constructor() {
+        super();
+        this.resourceArea = new createjs.Bitmap("");
+        this.addChild(this.resourceArea);
+        for (let i = 0; i < this.resourceList.length; i++) {
+            this.addChild(this.resourceList[i]);
+        }
+    }
+}
+
+//アイコンのベースクラス
+export class CardIconBase extends createjs.Bitmap {
+    protected icon: createjs.Bitmap;
+    protected iconId: number;
+    protected event: createjs.MouseEvent;
+    constructor() {
+        super("");
+        this.iconId = 0;
+    }
+} 

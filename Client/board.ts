@@ -39,11 +39,7 @@ function preloadImage() {
     player1buildArea.y = global.canvasHeight - 85;
     stage.addChild(player1buildArea);
     //プレイヤー1のリソース
-    let player1resourceArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
-    player1resourceArea.regX = player1resourceArea.image.width / 2;
-    player1resourceArea.regY = player1resourceArea.image.height;
-    player1resourceArea.x = global.canvasWidth / 2;
-    player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
+    let player1resourceArea = new view.Player1Resource(queue);
     stage.addChild(player1resourceArea);
 
     //オプションウインドウ
