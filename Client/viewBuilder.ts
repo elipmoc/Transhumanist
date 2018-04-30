@@ -1,7 +1,7 @@
 import * as view from "./view";
 import { PlayerWindowBase } from "./viewBase";
 import { PlayerViewState } from "../Share/playerViewState";
-import { SelectActionWindow } from "./SelectActionWindow";
+import { SelectActionWindow } from "./selectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
 export interface BindParams {
