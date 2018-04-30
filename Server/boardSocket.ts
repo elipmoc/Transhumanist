@@ -7,7 +7,7 @@ export class BoardSocket {
     private boardControler: BoardControler;
     constructor(socket: SocketIO.Server, boardControler: BoardControler) {
         const boardSocket = socket.of("/board");
-        const playerViewState: PlayerViewState
+        const playerViewState1: PlayerViewState
             = {
                 playerName: "hoge",
                 speed: 3,
@@ -17,12 +17,45 @@ export class BoardSocket {
                 negative: 44,
                 resource: 77
             };
+        const playerViewState2: PlayerViewState
+            = {
+                playerName: "スーパーひとし",
+                speed: 34,
+                activityRange: 67,
+                uncertainty: 7,
+                positive: 8,
+                negative: 5,
+                resource: 7
+            };
+        const playerViewState3: PlayerViewState
+            = {
+                playerName: "シロ",
+                speed: 8,
+                activityRange: 7,
+                uncertainty: 7,
+                positive: 8,
+                negative: 23,
+                resource: 4
+            };
+        const playerViewState4: PlayerViewState
+            = {
+                playerName: "OOP",
+                speed: 3,
+                activityRange: 9,
+                uncertainty: 7,
+                positive: 8,
+                negative: 1,
+                resource: 9
+            };
         boardSocket.on("connection",
             (socket: SocketIO.Socket) => {
-                setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState)), 1000);
-                const playerViewState2 = Object.assign({}, playerViewState);
-                playerViewState2.playerName = "歯ブラシ";
-                setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState2)), 2000);
+                setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState1)), 1000);
+                setTimeout(() => socket.emit("setPlayerViewState2", JSON.stringify(playerViewState2)), 1000);
+                setTimeout(() => socket.emit("setPlayerViewState3", JSON.stringify(playerViewState3)), 1000);
+                setTimeout(() => socket.emit("setPlayerViewState4", JSON.stringify(playerViewState4)), 1000);
+                const playerViewState1_2 = Object.assign({}, playerViewState1);
+                playerViewState1_2.playerName = "歯ブラシ";
+                setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState1_2)), 2000);
 
                 socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
 
