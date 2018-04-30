@@ -62,19 +62,65 @@ export class PlayerWindowBase extends createjs.Container {
 //プレイヤーリソース欄のベースクラス
 export class PlayerResourceBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
-    protected resourceList: CardIconBase[] = new Array();
+    protected resourceList: ResourceList = new ResourceList;
     constructor() {
         super();
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
-        for (let i = 0; i < this.resourceList.length; i++) {
-            this.addChild(this.resourceList[i]);
+        this.addChild(this.resourceList);
+
+    }
+}
+
+//リソースリストのクラス
+export class ResourceList extends createjs.Container {
+    protected resources: CardIcon[] = new Array();
+    constructor() {
+        super();
+        for (let i = 0; i < this.resources.length; i++) {
+            this.addChild(this.resources[i]);
         }
+    }
+    addResource(icon: CardIcon) {
+        this.resources.push(icon);
+    }
+    deleteResource() {
+
+    }
+}
+
+//プレイヤー設置アクション欄のベースクラス
+export class PlayerBuildBase extends createjs.Container {
+    protected buildArea: createjs.Bitmap;
+    protected buildList: BuildList = new BuildList;
+    constructor() {
+        super();
+        this.buildArea = new createjs.Bitmap("");
+        this.addChild(this.buildArea);
+        this.addChild(this.buildList);
+
+    }
+}
+
+//設置アクションリストのクラス
+export class BuildList extends createjs.Container {
+    protected builds: CardIcon[] = new Array();
+    constructor() {
+        super();
+        for (let i = 0; i < this.builds.length; i++) {
+            this.addChild(this.builds[i]);
+        }
+    }
+    addBuild(icon: CardIcon) {
+        this.builds.push(icon);
+    }
+    deleteBuild() {
+
     }
 }
 
 //アイコンのベースクラス
-export class CardIconBase extends createjs.Bitmap {
+export class CardIcon extends createjs.Bitmap {
     protected icon: createjs.Bitmap;
     protected iconId: number;
     protected event: createjs.MouseEvent;
