@@ -61,6 +61,12 @@ export class SettingButton extends viewBase.ButtonBase {
     private height: number;
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         const settingButton = new createjs.Bitmap(queue.getResult("setting"));
+
+        settingButton.scaleX = 0.5;
+        settingButton.scaleY = 0.5;
+        settingButton.x = settingButton.image.width / 4;
+        settingButton.y = settingButton.image.height / 4;
+
         //Graphicsオブジェクトを作成する
         var g = new createjs.Graphics()
             .beginStroke("#000")
@@ -187,6 +193,28 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "15px Arial";
     }
 }
+export class Player1Resource extends viewBase.PlayerResourceBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.resourceArea.regX = this.resourceArea.image.width / 2;
+        this.resourceArea.regY = this.resourceArea.image.height;
+        this.resourceArea.x = global.canvasWidth / 2;
+        this.resourceArea.y = global.canvasHeight - 85;
+
+    }
+}
+export class Player1Build extends viewBase.PlayerBuildBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.buildArea.regX = this.buildArea.image.width / 2;
+        this.buildArea.regY = this.buildArea.image.height;
+        this.buildArea.x = global.canvasWidth / 2;
+        this.buildArea.y = (global.canvasHeight - 85) - this.buildArea.image.height - 4;
+
+    }
+}
 
 export class Player2Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
@@ -238,6 +266,27 @@ export class Player2Window extends viewBase.PlayerWindowBase {
         this.negativeText.y = 60;
         this.negativeText.color = "#ff0000";
         this.negativeText.font = "12px Arial";
+    }
+}
+export class Player2Resource extends viewBase.PlayerResourceBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.resourceArea.regX = 0;
+        this.resourceArea.regY = this.resourceArea.image.height / 2;
+        this.resourceArea.x = 100;
+        this.resourceArea.y = global.canvasHeight / 2 - (this.resourceArea.image.height / 2) - 2;
+    }
+}
+export class Player2Build extends viewBase.PlayerBuildBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.buildArea.regX = 0;
+        this.buildArea.regY = this.buildArea.image.height / 2;
+        this.buildArea.x = 100;
+        this.buildArea.y = global.canvasHeight / 2 + (this.buildArea.image.height / 2) + 2;
+
     }
 }
 
@@ -292,6 +341,27 @@ export class Player3Window extends viewBase.PlayerWindowBase {
         this.negativeText.y = 60;
         this.negativeText.color = "red";
         this.negativeText.font = "15px Arial";
+    }
+}
+export class Player3Resource extends viewBase.PlayerResourceBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.resourceArea.regX = this.resourceArea.image.width / 2;
+        this.resourceArea.regY = 0;
+        this.resourceArea.x = global.canvasWidth / 2;
+        this.resourceArea.y = 85;
+    }
+}
+export class Player3Build extends viewBase.PlayerBuildBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.buildArea.regX = this.buildArea.image.width / 2;
+        this.buildArea.regY = 0;
+        this.buildArea.x = global.canvasWidth / 2;
+        this.buildArea.y = 85 + this.buildArea.image.height + 4;
+
     }
 }
 
@@ -349,6 +419,27 @@ export class Player4Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "12px Arial";
     }
 }
+export class Player4Resource extends viewBase.PlayerResourceBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.resourceArea.regX = this.resourceArea.image.width;
+        this.resourceArea.regY = this.resourceArea.image.height / 2;
+        this.resourceArea.x = global.canvasWidth - 100;
+        this.resourceArea.y = global.canvasHeight / 2 - (this.resourceArea.image.height / 2) - 2;
+    }
+}
+export class Player4Build extends viewBase.PlayerBuildBase {
+    constructor(queue: createjs.LoadQueue) {
+        super();
+        this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.buildArea.regX = this.buildArea.image.width;
+        this.buildArea.regY = this.buildArea.image.height / 2;
+        this.buildArea.x = global.canvasWidth - 100;
+        this.buildArea.y = global.canvasHeight / 2 + (this.buildArea.image.height / 2) + 2;
+
+    }
+}
 
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
@@ -374,8 +465,8 @@ export class OptionWindow extends createjs.Container {
         this.addChild(optionText);
 
         const optionIcon = new createjs.Bitmap(queue.getResult("setting"));
-        optionIcon.scaleX = 2;
-        optionIcon.scaleY = 2;
+        optionIcon.scaleX = 1;
+        optionIcon.scaleY = 1;
         optionIcon.x = -280;
         optionIcon.y = -280;
         this.addChild(optionIcon);

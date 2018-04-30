@@ -42,20 +42,33 @@ function preloadImage() {
         drawRect(0, 0, global.canvasWidth, global.canvasHeight);
     stage.addChild(background);
 
-    //プレイヤー1の設置アクション
-    let player1buildArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
-    player1buildArea.regX = player1buildArea.image.width / 2;
-    player1buildArea.regY = player1buildArea.image.height;
-    player1buildArea.x = global.canvasWidth / 2;
-    player1buildArea.y = global.canvasHeight - 85;
-    stage.addChild(player1buildArea);
     //プレイヤー1のリソース
-    let player1resourceArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
-    player1resourceArea.regX = player1resourceArea.image.width / 2;
-    player1resourceArea.regY = player1resourceArea.image.height;
-    player1resourceArea.x = global.canvasWidth / 2;
-    player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
+    let player1resourceArea = new view.Player1Resource(queue);
     stage.addChild(player1resourceArea);
+    //プレイヤー1の設置アクション
+    let player1buildArea = new view.Player1Build(queue);
+    stage.addChild(player1buildArea);
+
+    //プレイヤー2のリソース
+    let player2resourceArea = new view.Player2Resource(queue);
+    stage.addChild(player2resourceArea);
+    //プレイヤー2の設置アクション
+    let player2buildArea = new view.Player2Build(queue);
+    stage.addChild(player2buildArea);
+
+    //プレイヤー3のリソース
+    let player3resourceArea = new view.Player3Resource(queue);
+    stage.addChild(player3resourceArea);
+    //プレイヤー3の設置アクション
+    let player3buildArea = new view.Player3Build(queue);
+    stage.addChild(player3buildArea);
+
+    //プレイヤー4のリソース
+    let player4resourceArea = new view.Player4Resource(queue);
+    stage.addChild(player4resourceArea);
+    //プレイヤー4の設置アクション
+    let player4buildArea = new view.Player4Build(queue);
+    stage.addChild(player4buildArea);
 
     //オプションウインドウ
     const optionWindow = new view.OptionWindow(queue);
