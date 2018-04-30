@@ -1,6 +1,7 @@
 import { BoardControler } from "../Server/boardControler";
 import { PlayerViewState } from "../Share/playerViewState"
 import { setTimeout } from "timers";
+import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
 export class BoardSocket {
     private boardControler: BoardControler;
@@ -32,6 +33,18 @@ export class BoardSocket {
                     setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
                 });
                 setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
+                const numberOfActionCardList: NumberOfActionCard[] =
+                    [
+                        { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
+                        { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
+                        { currentNumber: 5, maxNumber: 99, dustNumber: 2 },
+                        { currentNumber: 2, maxNumber: 67, dustNumber: 44 },
+                        { currentNumber: 5, maxNumber: 99, dustNumber: 66 },
+                        { currentNumber: 78, maxNumber: 99, dustNumber: 7 },
+                    ]
+                setTimeout(() => socket.emit("setNumberOfActionCard",
+                    JSON.stringify(numberOfActionCardList)
+                ), 2000)
             }
         );
     }

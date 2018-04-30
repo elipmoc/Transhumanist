@@ -2,6 +2,7 @@ import * as view from "./view";
 import { PlayerWindowBase } from "./viewBase";
 import { PlayerViewState } from "../Share/playerViewState";
 import { SelectActionWindow } from "./SelectActionWindow";
+import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -70,6 +71,11 @@ function selectActionWindowBuilder(bindParams: BindParams) {
     bindParams.socket.on("setSelectActionWindowVisible", (str: string) => {
         const visibleFlag: boolean = JSON.parse(str);
         selectActionWindow.visible = visibleFlag;
+        bindParams.stage.update();
+    })
+    bindParams.socket.on("setNumberOfActionCard", (str: string) => {
+        const numberOfActionCardList: NumberOfActionCard[] = JSON.parse(str);
+        selectActionWindow.setNumberOfActionCard(numberOfActionCardList);
         bindParams.stage.update();
     })
 }

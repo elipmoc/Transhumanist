@@ -87,4 +87,7 @@ export class SelectActionWindow extends createjs.Container {
     onSelectedLevel(callBack: (value: number) => void) {
         this.callBack = callBack;
     }
+    setNumberOfActionCard(numberOfActionCardList: NumberOfActionCard[]) {
+        this.numberOfActionCardTexts.setNumberOfActionCard(numberOfActionCardList);
+    }
 }
