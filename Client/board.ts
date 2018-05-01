@@ -4,8 +4,6 @@ import * as io from "socket.io-client";
 import * as viewBuilder from "./viewBuilder"
 import { SelectActionWindow } from "./selectActionWindow"
 
-const socket = io("/board");
-
 const queue = new createjs.LoadQueue();
 window.onload = () => {
 
@@ -102,6 +100,8 @@ function preloadImage() {
     const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
     stage.addChild(declareWarButton);
     */
+    const socket = io("/board");
+
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
 
     /*
