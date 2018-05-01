@@ -17,8 +17,8 @@ const mainSocket = io(server);
 //メインソケットからログインソケットを作成
 const boardControler = new BoardControler;
 
-const loginSocket = new LoginSocket(mainSocket,boardControler);
-const boardSocket = new BoardSocket(mainSocket,boardControler);
+const loginSocket = new LoginSocket(mainSocket, boardControler);
+const boardSocket = new BoardSocket(mainSocket, boardControler);
 
 //サーバーポート設定
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
