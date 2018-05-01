@@ -15,7 +15,7 @@ import { BoardControler } from "./boardControler";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { PasswordInfo } from "./passwordInfo";
 import { UuidGenerator } from "./uuidGenerator";
-import { RoomEmits } from "./RoomEmits";
+import { RoomEmits } from "./roomEmits";
 
 export class LoginControler {
     private roomDataMap: RoomDataMap;
