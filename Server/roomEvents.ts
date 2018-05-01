@@ -1,6 +1,6 @@
 import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
-import { RoomEmits } from "./RoomEmits";
+import { RoomEmits } from "./roomEmits";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 
 export class RoomEvents {
