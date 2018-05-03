@@ -1,5 +1,5 @@
 //Bitmapから一部を切り取って新しいBitmapを作る関数
-function clipBitmap(
+export function clipBitmap(
     bitmap: createjs.Bitmap,
     clipX: number, clipY: number,
     clipWidth: number, clipHeight: number) {
