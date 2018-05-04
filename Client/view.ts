@@ -202,6 +202,9 @@ export class Player1Resource extends viewBase.PlayerResourceBase {
         this.resourceArea.x = global.canvasWidth / 2;
         this.resourceArea.y = global.canvasHeight - 85;
 
+        this.resourceList.x = global.canvasWidth / 2 - this.resourceArea.image.width / 2;
+        this.resourceList.y = global.canvasHeight - this.resourceArea.image.height - 85;
+
     }
 }
 export class Player1Build extends viewBase.PlayerBuildBase {
