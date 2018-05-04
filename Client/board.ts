@@ -2,7 +2,6 @@ import * as global from "./boardGlobalData"
 import * as view from "./view"
 import * as io from "socket.io-client";
 import * as viewBuilder from "./viewBuilder"
-import { SelectActionWindow } from "./selectActionWindow"
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
