@@ -90,63 +90,10 @@ function preloadImage() {
     topWindowsR.x = global.canvasWidth;
     stage.addChild(topWindowsR);
 
-    /*
-    //ターン終了ボタン
-    let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
-    stage.addChild(turnFinishButton);
-    */
-
-    /*
-    //宣戦布告ボタン
-    const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
-    stage.addChild(declareWarButton);
-    */
     const socket = io("/board");
 
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
 
-    /*
-    const player1Window = new view.Player1Window(queue);
-    player1Window.setPlayerName("輝夜月");
-    player1Window.setSpeed(999);
-    player1Window.setResource(999);
-    player1Window.setActivityRange(999);
-    player1Window.setUncertainty(777);
-    player1Window.setPositive(999);
-    player1Window.setNegative(999);
-
-    const player2Window = new view.Player2Window(queue);
-    player2Window.setPlayerName("スーパーひとしくん");
-    player2Window.setSpeed(931);
-    player2Window.setResource(1919);
-    player2Window.setActivityRange(4545);
-    player2Window.setUncertainty(721);
-    player2Window.setPositive(893);
-    player2Window.setNegative(801);
-
-    const player3Window = new view.Player3Window(queue);
-    player3Window.setPlayerName("イキリオタク");
-    player3Window.setSpeed(99);
-    player3Window.setResource(99);
-    player3Window.setActivityRange(99);
-    player3Window.setUncertainty(99);
-    player3Window.setPositive(999);
-    player3Window.setNegative(999);
-
-    const player4Window = new view.Player4Window(queue);
-    player4Window.setPlayerName("いなむ");
-    player4Window.setSpeed(93);
-    player4Window.setResource(9);
-    player4Window.setActivityRange(9);
-    player4Window.setUncertainty(9);
-    player4Window.setPositive(88);
-    player4Window.setNegative(44);
-
-    stage.addChild(player1Window);
-    stage.addChild(player2Window);
-    stage.addChild(player3Window);
-    stage.addChild(player4Window);
-    */
     stage.addChild(optionWindow);
     stage.update();
 }
