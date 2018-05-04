@@ -9,10 +9,10 @@ export const enum ResourceKind {
     syringe,//注射器
     cpu,//CPU
     bomb,//爆弾
+    believer,//信者
     microchip,//マイクロチップ
     rocket,//ロケット
     genetic_data,//遺伝子データ
-    believer,//信者
     information_on_Mars,//火星の情報
     satellite,//衛星
     robot,//ロボット
