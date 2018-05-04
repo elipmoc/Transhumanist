@@ -1,4 +1,6 @@
 import { CardIconBase, ResourceCardIcon } from "./viewCardIcon"
+import { ResourceKind } from "../Share/resourceKind";
+import * as global from "./boardGlobalData";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
@@ -72,6 +74,10 @@ export class PlayerResourceBase extends createjs.Container {
         this.addChild(this.resourceList);
 
     }
+
+    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        this.resourceList.addResource(resourceKind, queue);
+    }
 }
 
 //リソースリストのクラス
@@ -83,8 +89,12 @@ export class ResourceList extends createjs.Container {
             this.addChild(this.resources[i]);
         }
     }
-    addResource(icon: CardIconBase) {
-        this.resources.push(icon);
+    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        const cardIcon = new ResourceCardIcon(this.resources.length, resourceKind, queue);
+        cardIcon.x = this.resources.length % 15 * global.cardIconSize;
+        cardIcon.y = Math.floor(this.resources.length / 15) * global.cardIconSize;
+        this.resources.push(cardIcon);
+        this.addChild(cardIcon);
     }
     deleteResource() {
 
