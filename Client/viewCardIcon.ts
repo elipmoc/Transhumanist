@@ -1,5 +1,6 @@
 import { ResourceKind } from "../Share/resourceKind";
 import { clipBitmap } from "./utility";
+import * as global from "./boardGlobalData";
 
 //アイコンのベースクラス
 export class CardIconBase extends createjs.Bitmap {
@@ -19,9 +20,9 @@ export class ResourceCardIcon extends CardIconBase {
     constructor(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
         const bitmap = clipBitmap(
             new createjs.Bitmap(<any>queue.getResult("resource")),
-            resourceKind % 5 * 30,
-            Math.floor(resourceKind / 5) * 30,
-            30, 30);
+            resourceKind % 5 * global.cardIconSize,
+            Math.floor(resourceKind / 5) * global.cardIconSize,
+            global.cardIconSize, global.cardIconSize);
         super(bitmap.image);
         this.iconId = iconId;
         this.resourceKind = resourceKind;
