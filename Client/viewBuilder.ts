@@ -3,6 +3,7 @@ import { PlayerWindowBase, PlayerResourceAreaBase } from "./viewBase";
 import { PlayerViewState } from "../Share/playerViewState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
+import { ResourceKind } from "../Share/resourceKind";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -55,6 +56,12 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
+        bindParams.socket.on("player" + String(i) + "AddResource", (str: string) => {
+            const resourceKindList: ResourceKind[] = JSON.parse(str);
+            resourceKindList.forEach(x =>
+                playerResourceAreaList[i].addResource(x, bindParams.queue)
+            );
+        });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
 }

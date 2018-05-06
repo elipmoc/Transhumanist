@@ -1,5 +1,6 @@
 import { BoardControler } from "../Server/boardControler";
 import { PlayerViewState } from "../Share/playerViewState"
+import { ResourceKind } from "../Share/resourceKind"
 import { setTimeout } from "timers";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
@@ -78,6 +79,32 @@ export class BoardSocket {
                 setTimeout(() => socket.emit("setNumberOfActionCard",
                     JSON.stringify(numberOfActionCardList)
                 ), 2000)
+                for (let i = 0; i < 4; i++)
+                    setTimeout(() => {
+                        const resourceKindList: ResourceKind[] = [
+                            ResourceKind.human,
+                            ResourceKind.human,
+                            ResourceKind.human,
+                            ResourceKind.human,
+                            ResourceKind.human,
+                            ResourceKind.bible,
+                            ResourceKind.bible,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.cpu,
+                            ResourceKind.extended_human,
+                            ResourceKind.extended_human,
+                            ResourceKind.extended_human,
+                            ResourceKind.extended_human,
+                            ResourceKind.extended_human,
+                            ResourceKind.extended_human,
+                        ]
+                        socket.emit("player" + String(i) + "AddResource", JSON.stringify(resourceKindList));
+                    }, 1000)
             }
         );
     }
