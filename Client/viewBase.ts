@@ -84,6 +84,10 @@ export class PlayerResourceBase extends createjs.Container {
     addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
         this.resourceList.addResource(resourceKind, queue);
     }
+
+    deleteResource(iconId: number) {
+        this.resourceList.deleteResource(iconId);
+    }
 }
 
 //リソースリストのクラス
@@ -112,8 +116,8 @@ export class ResourceList extends createjs.Container {
         this.addChild(cardIcon);
     }
 
-    deleteResource() {
-
+    deleteResource(iconId: number) {
+        this.removeChild(this.resources[iconId]);
     }
 }
 
