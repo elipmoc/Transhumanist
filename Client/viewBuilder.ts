@@ -1,5 +1,5 @@
 import * as view from "./view";
-import { PlayerWindowBase } from "./viewBase";
+import { PlayerWindowBase, PlayerResourceAreaBase } from "./viewBase";
 import { PlayerViewState } from "../Share/playerViewState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
@@ -16,6 +16,7 @@ export function viewBuilder(bindParams: BindParams) {
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
+    PlayerResourceAreaBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -42,6 +43,19 @@ function playerWindowBuilder(bindParams: BindParams) {
             }
         );
         bindParams.stage.addChild(playerWindowList[i]);
+    }
+}
+
+//プレイヤーのリソース欄生成
+function PlayerResourceAreaBuilder(bindParams: BindParams) {
+    const playerResourceAreaList: PlayerResourceAreaBase[] = [
+        new view.Player1ResourceArea(bindParams.queue),
+        new view.Player2ResourceArea(bindParams.queue),
+        new view.Player3ResourceArea(bindParams.queue),
+        new view.Player4ResourceArea(bindParams.queue)
+    ];
+    for (let i = 0; i < 4; i++) {
+        bindParams.stage.addChild(playerResourceAreaList[i]);
     }
 }
 
