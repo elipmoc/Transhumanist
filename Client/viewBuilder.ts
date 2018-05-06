@@ -13,10 +13,10 @@ export interface BindParams {
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
+    PlayerResourceAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
-    PlayerResourceAreaBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
