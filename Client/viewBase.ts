@@ -66,10 +66,12 @@ export class PlayerWindowBase extends createjs.Container {
 //プレイヤーリソース欄のベースクラス
 export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
-    protected resourceList: ResourceList = new ResourceList;
+    protected resourceList: ResourceList;
 
-    constructor() {
+    //xNum:リソースを横に何個並べるかの数値
+    constructor(xNum: number) {
         super();
+        this.resourceList = new ResourceList(xNum);
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);
@@ -94,9 +96,12 @@ export class PlayerResourceAreaBase extends createjs.Container {
 export class ResourceList extends createjs.Container {
     protected resources: CardIconBase[] = new Array();
     private onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void;
+    private xNum: number;
 
-    constructor() {
+    //xNum:リソースを横に何個並べるかの数値
+    constructor(xNum: number) {
         super();
+        this.xNum = xNum;
         for (let i = 0; i < this.resources.length; i++) {
             this.addChild(this.resources[i]);
         }
@@ -110,8 +115,8 @@ export class ResourceList extends createjs.Container {
     addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
         const cardIcon = new ResourceCardIcon(this.resources.length, resourceKind, queue);
         cardIcon.onClicked(this.onClickIconCallBack);
-        cardIcon.x = this.resources.length % 15 * global.cardIconSize;
-        cardIcon.y = Math.floor(this.resources.length / 15) * global.cardIconSize;
+        cardIcon.x = this.resources.length % this.xNum * global.cardIconSize;
+        cardIcon.y = Math.floor(this.resources.length / this.xNum) * global.cardIconSize;
         this.resources.push(cardIcon);
         this.addChild(cardIcon);
     }
