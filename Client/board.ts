@@ -41,28 +41,28 @@ function preloadImage() {
     stage.addChild(background);
 
     //プレイヤー1のリソース
-    let player1resourceArea = new view.Player1Resource(queue);
+    let player1resourceArea = new view.Player1ResourceArea(queue);
     stage.addChild(player1resourceArea);
     //プレイヤー1の設置アクション
     let player1buildArea = new view.Player1Build(queue);
     stage.addChild(player1buildArea);
 
     //プレイヤー2のリソース
-    let player2resourceArea = new view.Player2Resource(queue);
+    let player2resourceArea = new view.Player2ResourceArea(queue);
     stage.addChild(player2resourceArea);
     //プレイヤー2の設置アクション
     let player2buildArea = new view.Player2Build(queue);
     stage.addChild(player2buildArea);
 
     //プレイヤー3のリソース
-    let player3resourceArea = new view.Player3Resource(queue);
+    let player3resourceArea = new view.Player3ResourceArea(queue);
     stage.addChild(player3resourceArea);
     //プレイヤー3の設置アクション
     let player3buildArea = new view.Player3Build(queue);
     stage.addChild(player3buildArea);
 
     //プレイヤー4のリソース
-    let player4resourceArea = new view.Player4Resource(queue);
+    let player4resourceArea = new view.Player4ResourceArea(queue);
     stage.addChild(player4resourceArea);
     //プレイヤー4の設置アクション
     let player4buildArea = new view.Player4Build(queue);

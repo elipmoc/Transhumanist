@@ -193,7 +193,7 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "15px Arial";
     }
 }
-export class Player1Resource extends viewBase.PlayerResourceBase {
+export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super();
         this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
@@ -271,7 +271,7 @@ export class Player2Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "12px Arial";
     }
 }
-export class Player2Resource extends viewBase.PlayerResourceBase {
+export class Player2ResourceArea extends viewBase.PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super();
         this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");
@@ -346,7 +346,7 @@ export class Player3Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "15px Arial";
     }
 }
-export class Player3Resource extends viewBase.PlayerResourceBase {
+export class Player3ResourceArea extends viewBase.PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super();
         this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
@@ -422,7 +422,7 @@ export class Player4Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "12px Arial";
     }
 }
-export class Player4Resource extends viewBase.PlayerResourceBase {
+export class Player4ResourceArea extends viewBase.PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super();
         this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");

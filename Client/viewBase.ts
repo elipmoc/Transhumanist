@@ -64,7 +64,7 @@ export class PlayerWindowBase extends createjs.Container {
 }
 
 //プレイヤーリソース欄のベースクラス
-export class PlayerResourceBase extends createjs.Container {
+export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
     protected resourceList: ResourceList = new ResourceList;
 
