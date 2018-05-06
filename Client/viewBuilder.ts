@@ -62,6 +62,12 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
                 playerResourceAreaList[i].addResource(x, bindParams.queue)
             );
         });
+        bindParams.socket.on("player" + String(i) + "DeleteResource", (str: string) => {
+            const iconIdList: number[] = JSON.parse(str);
+            iconIdList.forEach(x =>
+                playerResourceAreaList[i].deleteResource(x)
+            );
+        });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
 }

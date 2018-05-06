@@ -104,6 +104,8 @@ export class BoardSocket {
                             ResourceKind.extended_human,
                         ]
                         socket.emit("player" + String(i) + "AddResource", JSON.stringify(resourceKindList));
+                        socket.emit("player" + String(i) + "DeleteResource", JSON.stringify([0, 2]));
+
                     }, 1000)
             }
         );
