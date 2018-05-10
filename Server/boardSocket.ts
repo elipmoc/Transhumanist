@@ -1,6 +1,7 @@
 import { BoardControler } from "../Server/boardControler";
 import { PlayerViewState } from "../Share/playerViewState"
 import { ResourceKind } from "../Share/resourceKind"
+import { SelectResourceData } from "../Share/selectResourceData";
 import { setTimeout } from "timers";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
@@ -79,7 +80,12 @@ export class BoardSocket {
                 setTimeout(() => socket.emit("setNumberOfActionCard",
                     JSON.stringify(numberOfActionCardList)
                 ), 2000)
-                for (let i = 0; i < 4; i++)
+                for (let i = 0; i < 4; i++) {
+                    const j = i;
+                    socket.on("player" + String(i) + "SelectResource", str => {
+                        const selectResourceData: SelectResourceData = JSON.parse(str);
+                        console.log("selectResource " + "player" + String(j) + " iconId " + String(selectResourceData.iconId) + "resource " + String(selectResourceData.resourceKind))
+                    });
                     setTimeout(() => {
                         const resourceKindList: ResourceKind[] = [
                             ResourceKind.human,
@@ -106,7 +112,8 @@ export class BoardSocket {
                         socket.emit("player" + String(i) + "AddResource", JSON.stringify(resourceKindList));
                         socket.emit("player" + String(i) + "DeleteResource", JSON.stringify([0, 2]));
 
-                    }, 1000)
+                    }, 1000);
+                }
             }
         );
     }

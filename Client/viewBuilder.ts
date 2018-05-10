@@ -4,6 +4,7 @@ import { PlayerViewState } from "../Share/playerViewState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { ResourceKind } from "../Share/resourceKind";
+import { SelectResourceData } from "../Share/selectResourceData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -67,6 +68,10 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
             iconIdList.forEach(x =>
                 playerResourceAreaList[i].deleteResource(x)
             );
+        });
+        playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
+            const selectResourceData: SelectResourceData = { iconId, resourceKind };
+            bindParams.socket.emit("player" + String(i) + "SelectResource", JSON.stringify(selectResourceData));
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
