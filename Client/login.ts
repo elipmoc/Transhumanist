@@ -104,6 +104,7 @@ socket.on("resultEnterRoom", (data: string) => {
         if (cookies.get("uuid") == undefined) {
             cookies.set("uuid", resultEnterRoomData.uuid);
         } console.log(cookies.get("uuid"));
+        location.href = "board.html";
     }
     else {
         console.log(resultEnterRoomData.errorMsg);
