@@ -54,6 +54,7 @@ export class LoginControler {
             );
 
         this.roomDataMap.addRoomData(roomData);
+        this.boardControler.addBoardGame(roomData);
         return successResultCreateRoomData(roomId);
     }
 
