@@ -90,6 +90,7 @@ function requestEnter(roomId: number) {
             playerName: name,
             password: (<HTMLInputElement>document.getElementById("pass")).value
         }
+        cookies.set("roomid", String(roomId));
         socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
     } else {
         alert("プレイヤー名が入力されていません！");
@@ -101,9 +102,7 @@ socket.on("resultEnterRoom", (data: string) => {
     let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
     if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
-        if (cookies.get("uuid") == undefined) {
-            cookies.set("uuid", resultEnterRoomData.uuid);
-        } console.log(cookies.get("uuid"));
+        cookies.set("uuid", resultEnterRoomData.uuid);
         location.href = "board.html";
     }
     else {

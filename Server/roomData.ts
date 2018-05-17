@@ -47,7 +47,9 @@ export class RoomData {
         this.roomEvents.updatePlayFlag(playFlagDataForClient);
     }
 
-    getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
+    getPlayerData(uuid: string) {
+        return this.playerDataList.getPlayerData(uuid);
+    }
 
     deleteMember(uuid: string) {
         this.playerDataList.deleteMember(uuid);

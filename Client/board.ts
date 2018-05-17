@@ -2,6 +2,8 @@ import * as global from "./boardGlobalData"
 import * as view from "./view"
 import * as io from "socket.io-client";
 import * as viewBuilder from "./viewBuilder"
+import * as cookies from "js-cookie";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -79,6 +81,9 @@ function preloadImage() {
     stage.addChild(topWindowsR);
 
     const socket = io("/board");
+
+    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
+    socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
 
