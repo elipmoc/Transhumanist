@@ -2,14 +2,16 @@ export type ResultEnterRoomData = {
     successFlag: boolean;
     errorMsg: string;
     uuid: string;
+    playerId: number;
 }
 
 //部屋入室が成功した際のResultEnterRoomDataを作成するビルダー関数
-export function successResultEnterRoomData(uuid: string): ResultEnterRoomData {
+export function successResultEnterRoomData(uuid: string, playerId: number): ResultEnterRoomData {
     return {
         successFlag: true,
         errorMsg: "",
-        uuid: uuid
+        uuid: uuid,
+        playerId,
     };
 }
 
@@ -18,6 +20,7 @@ export function faildResultEnterRoomData(errorMsg: string): ResultEnterRoomData 
     return {
         successFlag: false,
         errorMsg: errorMsg,
-        uuid: ""
+        uuid: "",
+        playerId: 0
     };
 }

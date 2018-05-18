@@ -1,5 +1,6 @@
 import { RoomData } from "./roomData";
 import { BoardPlayerHandle } from "./boardPlayerHandle";
+import { PlayerData } from "./playerData";
 
 export class BoardGame {
     private roomData: RoomData;
@@ -11,4 +12,6 @@ export class BoardGame {
             new BoardPlayerHandle(socket);
         }
     }
+
+    addMember(playerData: PlayerData) { }
 }
