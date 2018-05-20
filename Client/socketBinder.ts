@@ -14,7 +14,12 @@ export class SocketBinder<T>{
     }
 
     set Value(value: T) {
-        this.socket.emit("set" + this.valueName, JSON.stringify(value));
+        this.update();
+    }
+
+    //値を変更したことを手動で伝える
+    update() {
+        this.socket.emit("set" + this.valueName, JSON.stringify(this.value));
     }
 
     constructor(
