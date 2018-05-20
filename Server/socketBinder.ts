@@ -22,6 +22,7 @@ export class SocketBinder<T>{
 
     //値を変更したことを手動で伝える
     update() {
+        this.updateValueCallBack(this.value);
         this.socket.emit("get" + this.valueName, JSON.stringify(this.value));
     }
 
