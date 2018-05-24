@@ -13,22 +13,13 @@ export class SocketBinder<T>{
         return this.value;
     }
 
-    set Value(value: T) {
-        this.update();
-    }
-
-    //値を変更したことを手動で伝える
-    update() {
-        this.socket.emit("set" + this.valueName, JSON.stringify(this.value));
-    }
-
     constructor(
         valueName: string,
         socket: SocketIOClient.Socket,
         updateValueCallBack: (value: T) => void = (_) => { }) {
         this.socket = socket;
         this.valueName = valueName;
-        socket.on("get" + valueName, (str: string) => {
+        socket.on("update" + valueName, (str: string) => {
             this.value = JSON.parse(str);
             updateValueCallBack(this.value);
         });
