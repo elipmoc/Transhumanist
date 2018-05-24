@@ -1,4 +1,4 @@
-export interface PlayerViewState {
+export interface GamePlayerState {
     playerName: string;
     speed: number;
     resource: number;

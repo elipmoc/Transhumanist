@@ -1,6 +1,6 @@
 import * as view from "./view";
 import { PlayerWindowBase, PlayerResourceAreaBase } from "./viewBase";
-import { PlayerViewState } from "../Share/playerViewState";
+import { GamePlayerState } from "../Share/gamePlayerState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { ResourceKind } from "../Share/resourceKind";
@@ -33,7 +33,7 @@ function playerWindowBuilder(bindParams: BindParams) {
         //プレイヤーの状態を更新するソケットイベント
         bindParams.socket.on("setPlayerViewState" + (i + 1),
             (data: string) => {
-                const playerViewState: PlayerViewState = JSON.parse(data);
+                const playerViewState: GamePlayerState = JSON.parse(data);
                 playerWindowList[i].setPlayerName(playerViewState.playerName);
                 playerWindowList[i].setSpeed(playerViewState.speed);
                 playerWindowList[i].setResource(playerViewState.resource);

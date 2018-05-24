@@ -1,11 +1,11 @@
-import { PlayerViewState } from "../Share/playerViewState"
+import { GamePlayerState } from "../Share/gamePlayerState"
 import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
 export class BoardPlayerHandle {
     constructor(socket: SocketIO.Socket) {
-        const playerViewState1: PlayerViewState
+        const playerViewState1: GamePlayerState
             = {
                 playerName: "hoge",
                 speed: 3,
@@ -15,7 +15,7 @@ export class BoardPlayerHandle {
                 negative: 44,
                 resource: 77
             };
-        const playerViewState2: PlayerViewState
+        const playerViewState2: GamePlayerState
             = {
                 playerName: "スーパーひとし",
                 speed: 34,
@@ -25,7 +25,7 @@ export class BoardPlayerHandle {
                 negative: 5,
                 resource: 7
             };
-        const playerViewState3: PlayerViewState
+        const playerViewState3: GamePlayerState
             = {
                 playerName: "シロ",
                 speed: 8,
@@ -35,7 +35,7 @@ export class BoardPlayerHandle {
                 negative: 23,
                 resource: 4
             };
-        const playerViewState4: PlayerViewState
+        const playerViewState4: GamePlayerState
             = {
                 playerName: "OOP",
                 speed: 3,
