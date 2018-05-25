@@ -18,9 +18,11 @@ export class RoomList {
     private roomIdGenerator: RoomIdGenerator = new RoomIdGenerator();
     private uuidGenerator: UuidGenerator = new UuidGenerator();
     private roomListEvents: RoomListEvents;
+    private boardSocket: SocketIO.Namespace;
 
-    constructor(roomListEvents: RoomListEvents) {
+    constructor(roomListEvents: RoomListEvents, boardSocket: SocketIO.Namespace) {
         this.roomListEvents = roomListEvents;
+        this.boardSocket = boardSocket;
     }
 
     private bindRoomMap(roomId: number, f: (room: Room) => void) {
@@ -55,7 +57,7 @@ export class RoomList {
                 this.roomListEvents.updatePlayFlagCallBack({ roomId: roomId!, playFlag: playFlag })
         };
 
-        const room = new Room(roomId, req.roomName, passwordInfo, roomEvents);
+        const room = new Room(roomId, req.roomName, passwordInfo, roomEvents, this.boardSocket);
         this.roomMap.set(roomId, room);
         this.roomListEvents.addRoomCallBack(room.getRoomDataForClient());
         return successResultCreateRoomData(roomId);

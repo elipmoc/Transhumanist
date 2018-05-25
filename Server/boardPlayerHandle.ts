@@ -5,54 +5,6 @@ import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
 export class BoardPlayerHandle {
     constructor(socket: SocketIO.Socket) {
-        const playerViewState1: GamePlayerState
-            = {
-                playerName: "hoge",
-                speed: 3,
-                activityRange: 67,
-                uncertainty: 7,
-                positive: 8,
-                negative: 44,
-                resource: 77
-            };
-        const playerViewState2: GamePlayerState
-            = {
-                playerName: "スーパーひとし",
-                speed: 34,
-                activityRange: 67,
-                uncertainty: 7,
-                positive: 8,
-                negative: 5,
-                resource: 7
-            };
-        const playerViewState3: GamePlayerState
-            = {
-                playerName: "シロ",
-                speed: 8,
-                activityRange: 7,
-                uncertainty: 7,
-                positive: 8,
-                negative: 23,
-                resource: 4
-            };
-        const playerViewState4: GamePlayerState
-            = {
-                playerName: "OOP",
-                speed: 3,
-                activityRange: 9,
-                uncertainty: 7,
-                positive: 8,
-                negative: 1,
-                resource: 9
-            };
-
-        setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState1)), 1000);
-        setTimeout(() => socket.emit("setPlayerViewState2", JSON.stringify(playerViewState2)), 1000);
-        setTimeout(() => socket.emit("setPlayerViewState3", JSON.stringify(playerViewState3)), 1000);
-        setTimeout(() => socket.emit("setPlayerViewState4", JSON.stringify(playerViewState4)), 1000);
-        const playerViewState1_2 = Object.assign({}, playerViewState1);
-        playerViewState1_2.playerName = "歯ブラシ";
-        setTimeout(() => socket.emit("setPlayerViewState1", JSON.stringify(playerViewState1_2)), 2000);
 
         socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
 

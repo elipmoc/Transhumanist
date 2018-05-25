@@ -13,10 +13,10 @@ export class Room {
     private roomData: RoomData;
     private boardGame: BoardGame;
     private roomEvents: RoomEvents;
-    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents) {
+    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, boardSocket: SocketIO.Namespace) {
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
-        this.boardGame = new BoardGame(this.roomData);
+        this.boardGame = new BoardGame(this.roomData, boardSocket);
     }
 
     enterRoom(requestEnterRoomData: RequestEnterRoomData, uuid: string) {
@@ -30,7 +30,7 @@ export class Room {
         //プレイヤー入室
         let playerData = new PlayerData(uuid, requestEnterRoomData.playerName);
         const playerId = this.roomData.addMember(playerData);
-        this.boardGame.addMember(playerData);
+        this.boardGame.addMember(playerData, playerId);
         return successResultEnterRoomData(playerData.getUuid(), playerId);
     }
 

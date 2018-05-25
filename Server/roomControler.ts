@@ -7,8 +7,8 @@ import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 export class RoomControler {
     private roomList: RoomList;
 
-    constructor(roomListEvents: RoomListEvents) {
-        this.roomList = new RoomList(roomListEvents);
+    constructor(roomListEvents: RoomListEvents, boardSocket: SocketIO.Namespace) {
+        this.roomList = new RoomList(roomListEvents, boardSocket);
     }
 
     isExistUuid(uuid: string) {

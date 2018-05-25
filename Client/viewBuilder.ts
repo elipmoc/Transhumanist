@@ -5,6 +5,7 @@ import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { ResourceKind } from "../Share/resourceKind";
 import { SelectResourceData } from "../Share/selectResourceData";
+import { SocketBinder } from "./socketBinder";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -30,20 +31,18 @@ function playerWindowBuilder(bindParams: BindParams) {
     ];
 
     for (let i = 0; i < playerWindowList.length; i++) {
-        //プレイヤーの状態を更新するソケットイベント
-        bindParams.socket.on("setPlayerViewState" + (i + 1),
-            (data: string) => {
-                const playerViewState: GamePlayerState = JSON.parse(data);
-                playerWindowList[i].setPlayerName(playerViewState.playerName);
-                playerWindowList[i].setSpeed(playerViewState.speed);
-                playerWindowList[i].setResource(playerViewState.resource);
-                playerWindowList[i].setPositive(playerViewState.positive);
-                playerWindowList[i].setNegative(playerViewState.negative);
-                playerWindowList[i].setUncertainty(playerViewState.uncertainty);
-                playerWindowList[i].setActivityRange(playerViewState.activityRange);
-                bindParams.stage.update();
-            }
-        );
+        //プレイヤーの状態が更新されたら呼ばれるイベント
+        const updateState = (state: GamePlayerState) => {
+            playerWindowList[i].setPlayerName(state.playerName);
+            playerWindowList[i].setSpeed(state.speed);
+            playerWindowList[i].setResource(state.resource);
+            playerWindowList[i].setPositive(state.positive);
+            playerWindowList[i].setNegative(state.negative);
+            playerWindowList[i].setUncertainty(state.uncertainty);
+            playerWindowList[i].setActivityRange(state.activityRange);
+            bindParams.stage.update();
+        };
+        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + i, bindParams.socket, updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
 }

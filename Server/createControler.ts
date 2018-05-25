@@ -13,7 +13,8 @@ export function createControler(socket: SocketIO.Server) {
         deleteRoomCallBack: (roomId) => loginControler.deleteRoom(roomId),
         updatePlayFlagCallBack: (playFlagDataForClient) => loginControler.updatePlayFlag(playFlagDataForClient)
     };
-    const roomControler = new RoomControler(roomListEvents);
+    const boardSocket = socket.of("/board");
+    const roomControler = new RoomControler(roomListEvents, boardSocket);
     loginControler = new LoginControler(roomControler, socket.of("/login"));
-    boardControler = new BoardControler(roomControler, socket.of("/board"));
+    boardControler = new BoardControler(roomControler, boardSocket);
 }
