@@ -42,7 +42,8 @@ function playerWindowBuilder(bindParams: BindParams) {
             playerWindowList[i].setActivityRange(state.activityRange);
             bindParams.stage.update();
         };
-        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + i, bindParams.socket, updateState);
+        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + i, bindParams.socket);
+        gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
 }

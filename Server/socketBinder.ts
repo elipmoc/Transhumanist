@@ -2,7 +2,7 @@
 //値をクライアントと効率よくシェアできるクラス
 export class SocketBinder<T>{
     private value: T;
-    private socket: SocketIO.Namespace;
+    protected socket: SocketIO.Namespace;
     private valueName: string;
 
     get ValueName() {
