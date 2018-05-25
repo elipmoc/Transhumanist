@@ -6,6 +6,7 @@ import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { ResourceKind } from "../Share/resourceKind";
 import { SelectResourceData } from "../Share/selectResourceData";
 import { SocketBinder } from "./socketBinder";
+import { SocketBinderList } from "./socketBinderList";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -57,18 +58,22 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        bindParams.socket.on("player" + String(i) + "AddResource", (str: string) => {
-            const resourceKindList: ResourceKind[] = JSON.parse(str);
-            resourceKindList.forEach(x =>
-                playerResourceAreaList[i].addResource(x, bindParams.queue)
-            );
+        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + i, bindParams.socket);
+        resourceKindList.onUpdate((list) => {
+            list.forEach(x => playerResourceAreaList[i].addResource(x, bindParams.queue));
         });
-        bindParams.socket.on("player" + String(i) + "DeleteResource", (str: string) => {
-            const iconIdList: number[] = JSON.parse(str);
-            iconIdList.forEach(x =>
-                playerResourceAreaList[i].deleteResource(x)
-            );
+        resourceKindList.onPush((x) => {
+            playerResourceAreaList[i].addResource(x, bindParams.queue);
         });
+        resourceKindList.onSetAt((index: number, x: ResourceKind) => {
+
+        });
+        /*   bindParams.socket.on("player" + String(i) + "DeleteResource", (str: string) => {
+               const iconIdList: number[] = JSON.parse(str);
+               iconIdList.forEach(x =>
+                   playerResourceAreaList[i].deleteResource(x)
+               );
+           });*/
         playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
             const selectResourceData: SelectResourceData = { iconId, resourceKind };
             bindParams.socket.emit("player" + String(i) + "SelectResource", JSON.stringify(selectResourceData));
