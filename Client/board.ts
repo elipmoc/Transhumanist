@@ -2,9 +2,8 @@ import * as global from "./boardGlobalData"
 import * as view from "./view"
 import * as io from "socket.io-client";
 import * as viewBuilder from "./viewBuilder"
-import { SelectActionWindow } from "./selectActionWindow"
-
-const socket = io("/board");
+import * as cookies from "js-cookie";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -32,6 +31,7 @@ window.onload = () => {
         { id: "level4", src: "Img/card/back/level4mb.png" },
         { id: "level5", src: "Img/card/back/level5mb.png" },
         { id: "level6", src: "Img/card/back/level6mb.png" },
+        { id: "resource", src: "Img/resource.png" }
     ]);
 }
 
@@ -42,30 +42,19 @@ function preloadImage() {
         drawRect(0, 0, global.canvasWidth, global.canvasHeight);
     stage.addChild(background);
 
-    //プレイヤー1のリソース
-    let player1resourceArea = new view.Player1Resource(queue);
-    stage.addChild(player1resourceArea);
+
     //プレイヤー1の設置アクション
     let player1buildArea = new view.Player1Build(queue);
     stage.addChild(player1buildArea);
 
-    //プレイヤー2のリソース
-    let player2resourceArea = new view.Player2Resource(queue);
-    stage.addChild(player2resourceArea);
     //プレイヤー2の設置アクション
     let player2buildArea = new view.Player2Build(queue);
     stage.addChild(player2buildArea);
 
-    //プレイヤー3のリソース
-    let player3resourceArea = new view.Player3Resource(queue);
-    stage.addChild(player3resourceArea);
     //プレイヤー3の設置アクション
     let player3buildArea = new view.Player3Build(queue);
     stage.addChild(player3buildArea);
 
-    //プレイヤー4のリソース
-    let player4resourceArea = new view.Player4Resource(queue);
-    stage.addChild(player4resourceArea);
     //プレイヤー4の設置アクション
     let player4buildArea = new view.Player4Build(queue);
     stage.addChild(player4buildArea);
@@ -91,61 +80,13 @@ function preloadImage() {
     topWindowsR.x = global.canvasWidth;
     stage.addChild(topWindowsR);
 
-    /*
-    //ターン終了ボタン
-    let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
-    stage.addChild(turnFinishButton);
-    */
+    const socket = io("/board");
 
-    /*
-    //宣戦布告ボタン
-    const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
-    stage.addChild(declareWarButton);
-    */
+    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
+    socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
+
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
 
-    /*
-    const player1Window = new view.Player1Window(queue);
-    player1Window.setPlayerName("輝夜月");
-    player1Window.setSpeed(999);
-    player1Window.setResource(999);
-    player1Window.setActivityRange(999);
-    player1Window.setUncertainty(777);
-    player1Window.setPositive(999);
-    player1Window.setNegative(999);
-
-    const player2Window = new view.Player2Window(queue);
-    player2Window.setPlayerName("スーパーひとしくん");
-    player2Window.setSpeed(931);
-    player2Window.setResource(1919);
-    player2Window.setActivityRange(4545);
-    player2Window.setUncertainty(721);
-    player2Window.setPositive(893);
-    player2Window.setNegative(801);
-
-    const player3Window = new view.Player3Window(queue);
-    player3Window.setPlayerName("イキリオタク");
-    player3Window.setSpeed(99);
-    player3Window.setResource(99);
-    player3Window.setActivityRange(99);
-    player3Window.setUncertainty(99);
-    player3Window.setPositive(999);
-    player3Window.setNegative(999);
-
-    const player4Window = new view.Player4Window(queue);
-    player4Window.setPlayerName("いなむ");
-    player4Window.setSpeed(93);
-    player4Window.setResource(9);
-    player4Window.setActivityRange(9);
-    player4Window.setUncertainty(9);
-    player4Window.setPositive(88);
-    player4Window.setNegative(44);
-
-    stage.addChild(player1Window);
-    stage.addChild(player2Window);
-    stage.addChild(player3Window);
-    stage.addChild(player4Window);
-    */
     stage.addChild(optionWindow);
     stage.update();
 }

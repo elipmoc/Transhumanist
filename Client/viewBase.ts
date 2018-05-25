@@ -1,3 +1,7 @@
+import { CardIconBase, ResourceCardIcon } from "./viewCardIcon"
+import { ResourceKind } from "../Share/resourceKind";
+import * as global from "./boardGlobalData";
+
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
     constructor(buttonSource: createjs.DisplayObject, onClickCallback: () => void) {
@@ -60,32 +64,65 @@ export class PlayerWindowBase extends createjs.Container {
 }
 
 //プレイヤーリソース欄のベースクラス
-export class PlayerResourceBase extends createjs.Container {
+export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
-    protected resourceList: ResourceList = new ResourceList;
-    constructor() {
+    protected resourceList: ResourceList;
+
+    //xNum:リソースを横に何個並べるかの数値
+    constructor(xNum: number) {
         super();
+        this.resourceList = new ResourceList(xNum);
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);
 
     }
+
+    //リソースアイコンがクリックされた時に呼ばれる関数をセットする
+    onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void) {
+        this.resourceList.onClickIcon(onClickIconCallBack);
+    }
+
+    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        this.resourceList.addResource(resourceKind, queue);
+    }
+
+    deleteResource(iconId: number) {
+        this.resourceList.deleteResource(iconId);
+    }
 }
 
 //リソースリストのクラス
 export class ResourceList extends createjs.Container {
-    protected resources: CardIcon[] = new Array();
-    constructor() {
+    protected resources: CardIconBase[] = new Array();
+    private onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void;
+    private xNum: number;
+
+    //xNum:リソースを横に何個並べるかの数値
+    constructor(xNum: number) {
         super();
+        this.xNum = xNum;
         for (let i = 0; i < this.resources.length; i++) {
             this.addChild(this.resources[i]);
         }
     }
-    addResource(icon: CardIcon) {
-        this.resources.push(icon);
-    }
-    deleteResource() {
 
+    //リソースアイコンがクリックされた時に呼ばれる関数をセットする
+    onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void) {
+        this.onClickIconCallBack = onClickIconCallBack;
+    }
+
+    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        const cardIcon = new ResourceCardIcon(this.resources.length, resourceKind, queue);
+        cardIcon.onClicked(this.onClickIconCallBack);
+        cardIcon.x = this.resources.length % this.xNum * global.cardIconSize;
+        cardIcon.y = Math.floor(this.resources.length / this.xNum) * global.cardIconSize;
+        this.resources.push(cardIcon);
+        this.addChild(cardIcon);
+    }
+
+    deleteResource(iconId: number) {
+        this.removeChild(this.resources[iconId]);
     }
 }
 
@@ -104,28 +141,17 @@ export class PlayerBuildBase extends createjs.Container {
 
 //設置アクションリストのクラス
 export class BuildList extends createjs.Container {
-    protected builds: CardIcon[] = new Array();
+    protected builds: CardIconBase[] = new Array();
     constructor() {
         super();
         for (let i = 0; i < this.builds.length; i++) {
             this.addChild(this.builds[i]);
         }
     }
-    addBuild(icon: CardIcon) {
+    addBuild(icon: CardIconBase) {
         this.builds.push(icon);
     }
     deleteBuild() {
 
     }
 }
-
-//アイコンのベースクラス
-export class CardIcon extends createjs.Bitmap {
-    protected icon: createjs.Bitmap;
-    protected iconId: number;
-    protected event: createjs.MouseEvent;
-    constructor() {
-        super("");
-        this.iconId = 0;
-    }
-} 

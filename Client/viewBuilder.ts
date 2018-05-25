@@ -1,8 +1,12 @@
 import * as view from "./view";
-import { PlayerWindowBase } from "./viewBase";
-import { PlayerViewState } from "../Share/playerViewState";
-import { SelectActionWindow } from "./selectActionWindow";
+import { PlayerWindowBase, PlayerResourceAreaBase } from "./viewBase";
+import { GamePlayerState } from "../Share/gamePlayerState";
+import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
+import { ResourceKind } from "../Share/resourceKind";
+import { SelectResourceData } from "../Share/selectResourceData";
+import { SocketBinder } from "./socketBinder";
+import { SocketBinderList } from "./socketBinderList";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -13,6 +17,7 @@ export interface BindParams {
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
+    PlayerResourceAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -27,21 +32,53 @@ function playerWindowBuilder(bindParams: BindParams) {
     ];
 
     for (let i = 0; i < playerWindowList.length; i++) {
-        //プレイヤーの状態を更新するソケットイベント
-        bindParams.socket.on("setPlayerViewState" + (i + 1),
-            (data: string) => {
-                const playerViewState: PlayerViewState = JSON.parse(data);
-                playerWindowList[i].setPlayerName(playerViewState.playerName);
-                playerWindowList[i].setSpeed(playerViewState.speed);
-                playerWindowList[i].setResource(playerViewState.resource);
-                playerWindowList[i].setPositive(playerViewState.positive);
-                playerWindowList[i].setNegative(playerViewState.negative);
-                playerWindowList[i].setUncertainty(playerViewState.uncertainty);
-                playerWindowList[i].setActivityRange(playerViewState.activityRange);
-                bindParams.stage.update();
-            }
-        );
+        //プレイヤーの状態が更新されたら呼ばれるイベント
+        const updateState = (state: GamePlayerState) => {
+            playerWindowList[i].setPlayerName(state.playerName);
+            playerWindowList[i].setSpeed(state.speed);
+            playerWindowList[i].setResource(state.resource);
+            playerWindowList[i].setPositive(state.positive);
+            playerWindowList[i].setNegative(state.negative);
+            playerWindowList[i].setUncertainty(state.uncertainty);
+            playerWindowList[i].setActivityRange(state.activityRange);
+            bindParams.stage.update();
+        };
+        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + i, bindParams.socket);
+        gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
+    }
+}
+
+//プレイヤーのリソース欄生成
+function PlayerResourceAreaBuilder(bindParams: BindParams) {
+    const playerResourceAreaList: PlayerResourceAreaBase[] = [
+        new view.Player1ResourceArea(bindParams.queue),
+        new view.Player2ResourceArea(bindParams.queue),
+        new view.Player3ResourceArea(bindParams.queue),
+        new view.Player4ResourceArea(bindParams.queue)
+    ];
+    for (let i = 0; i < 4; i++) {
+        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + i, bindParams.socket);
+        resourceKindList.onUpdate((list) => {
+            list.forEach(x => playerResourceAreaList[i].addResource(x, bindParams.queue));
+        });
+        resourceKindList.onPush((x) => {
+            playerResourceAreaList[i].addResource(x, bindParams.queue);
+        });
+        resourceKindList.onSetAt((index: number, x: ResourceKind) => {
+
+        });
+        /*   bindParams.socket.on("player" + String(i) + "DeleteResource", (str: string) => {
+               const iconIdList: number[] = JSON.parse(str);
+               iconIdList.forEach(x =>
+                   playerResourceAreaList[i].deleteResource(x)
+               );
+           });*/
+        playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
+            const selectResourceData: SelectResourceData = { iconId, resourceKind };
+            bindParams.socket.emit("player" + String(i) + "SelectResource", JSON.stringify(selectResourceData));
+        });
+        bindParams.stage.addChild(playerResourceAreaList[i]);
     }
 }
 
