@@ -1,7 +1,7 @@
 //値をサーバと効率よくシェアできるクラス
 export class SocketBinder<T>{
     private value: T;
-    private socket: SocketIOClient.Socket;
+    protected socket: SocketIOClient.Socket;
     private valueName: string;
     private updateValueCallBack: (value: T) => void = (_) => { };
     get ValueName() {
