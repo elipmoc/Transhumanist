@@ -60,22 +60,12 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
     for (let i = 0; i < 4; i++) {
         const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + i, bindParams.socket);
         resourceKindList.onUpdate((list) => {
-            list.forEach(x => playerResourceAreaList[i].addResource(x, bindParams.queue));
+            list.forEach((x, iconId) => playerResourceAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
         });
-        resourceKindList.onPush((x) => {
-            playerResourceAreaList[i].addResource(x, bindParams.queue);
-            bindParams.stage.update();
+        resourceKindList.onSetAt((iconId: number, x: ResourceKind) => {
+            playerResourceAreaList[i].setResource(iconId, x, bindParams.queue);
         });
-        resourceKindList.onSetAt((index: number, x: ResourceKind) => {
-
-        });
-        /*   bindParams.socket.on("player" + String(i) + "DeleteResource", (str: string) => {
-               const iconIdList: number[] = JSON.parse(str);
-               iconIdList.forEach(x =>
-                   playerResourceAreaList[i].deleteResource(x)
-               );
-           });*/
         playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
             const selectResourceData: SelectResourceData = { iconId, resourceKind };
             bindParams.socket.emit("player" + String(i) + "SelectResource", JSON.stringify(selectResourceData));

@@ -18,5 +18,6 @@ export const enum ResourceKind {
     robot,//ロボット
     extended_human,//拡張人間
     terra_forming,//テラフォーミング
-    theological_body//神体
+    theological_body,//神体
+    none//リソースなし
 }
