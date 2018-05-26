@@ -61,9 +61,11 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + i, bindParams.socket);
         resourceKindList.onUpdate((list) => {
             list.forEach(x => playerResourceAreaList[i].addResource(x, bindParams.queue));
+            bindParams.stage.update();
         });
         resourceKindList.onPush((x) => {
             playerResourceAreaList[i].addResource(x, bindParams.queue);
+            bindParams.stage.update();
         });
         resourceKindList.onSetAt((index: number, x: ResourceKind) => {
 
