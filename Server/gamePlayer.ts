@@ -5,13 +5,16 @@ import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
 
 export class GamePlayer {
+    private playerId: number;
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
     private resourceList: SocketBinderList<ResourceKind>;
 
     get Uuid() { return this.uuid; }
+    get PlayerId() { return this.playerId; }
 
     constructor(playerData: PlayerData, playerId: number, boardSocket: SocketIO.Namespace) {
+        this.playerId = playerId;
         this.uuid = playerData.getUuid();
         this.state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, boardSocket);
         this.resourceList = new SocketBinderList<ResourceKind>("ResourceKindList" + playerId, boardSocket);

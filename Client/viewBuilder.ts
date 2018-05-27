@@ -68,7 +68,7 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         });
         playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
             const selectResourceData: SelectResourceData = { iconId, resourceKind };
-            bindParams.socket.emit("player" + String(i) + "SelectResource", JSON.stringify(selectResourceData));
+            bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }

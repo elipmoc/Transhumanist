@@ -3,7 +3,7 @@ import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
-export interface BoardPlayerHandleEvent {
+export interface BoardPlayerHandleEvents {
     turnFinishButtonClickCallBack: () => void;
     declareWarButtonClickCallBack: () => void;
     selectLevelCallBack: (level: number) => void;
@@ -11,17 +11,30 @@ export interface BoardPlayerHandleEvent {
 }
 
 export class BoardPlayerHandle {
-    constructor(socket: SocketIO.Socket) {
 
-        socket.on("turnFinishButtonClick", () => console.log("turnFinishButtonClick"));
+    private socket: SocketIO.Socket;
+    private events: BoardPlayerHandleEvents;
+    //アクションカード選択ウインドウの表示非表示する
+    setSelectActionWindowVisible(flag: boolean) {
+        this.socket.emit("setSelectActionWindowVisible", JSON.stringify(flag));
+    }
 
-        socket.on("declareWarButtonClick", () => console.log("declareWarButtonClick"));
-        socket.on("selectLevel", (level) => {
-            console.log("level" + level);
-            socket.emit("setSelectActionWindowVisible", JSON.stringify(false));
-            setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
-        });
-        setTimeout(() => socket.emit("setSelectActionWindowVisible", JSON.stringify(true)), 3000);
+    //アクションカードの現在枚数、総山札数、捨て札数を変更する
+    setNumberOfActionCard(numberOfActionCardList: NumberOfActionCard[]) {
+        this.socket.emit("setNumberOfActionCard",
+            JSON.stringify(numberOfActionCardList)
+        )
+    }
+
+    constructor(socket: SocketIO.Socket, events: BoardPlayerHandleEvents) {
+        this.socket = socket;
+        this.events = events;
+        socket.on("turnFinishButtonClick", () => this.events.turnFinishButtonClickCallBack());
+
+        socket.on("declareWarButtonClick", () => this.events.declareWarButtonClickCallBack());
+        socket.on("selectLevel", (level) =>
+            this.events.selectLevelCallBack(level));
+        setTimeout(() => this.setSelectActionWindowVisible(true), 3000);
         const numberOfActionCardList: NumberOfActionCard[] =
             [
                 { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
@@ -31,15 +44,8 @@ export class BoardPlayerHandle {
                 { currentNumber: 5, maxNumber: 99, dustNumber: 66 },
                 { currentNumber: 78, maxNumber: 99, dustNumber: 7 },
             ]
-        setTimeout(() => socket.emit("setNumberOfActionCard",
-            JSON.stringify(numberOfActionCardList)
-        ), 2000)
-        for (let i = 0; i < 4; i++) {
-            const j = i;
-            socket.on("player" + String(i) + "SelectResource", str => {
-                const selectResourceData: SelectResourceData = JSON.parse(str);
-                console.log("selectResource " + "player" + String(j) + " iconId " + String(selectResourceData.iconId) + "resource " + String(selectResourceData.resourceKind))
-            });
-        }
+        setTimeout(() => this.setNumberOfActionCard(numberOfActionCardList), 2000);
+        socket.on("SelectResource", str =>
+            this.events.selectResourceCallBack(JSON.parse(str)));
     }
 }

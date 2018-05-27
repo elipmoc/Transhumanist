@@ -1,7 +1,8 @@
 import { RoomData } from "./roomData";
-import { BoardPlayerHandle } from "./boardPlayerHandle";
+import { BoardPlayerHandle, BoardPlayerHandleEvents } from "./boardPlayerHandle";
 import { PlayerData } from "./playerData";
 import { GameMaster } from "./gameMaster";
+import { SelectResourceData } from "../Share/selectResourceData";
 
 export class BoardGame {
     private roomData: RoomData;
@@ -13,8 +14,24 @@ export class BoardGame {
         this.boardSocket = boardSocket;
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
-        if (this.gameMaster.getGamePlayer(uuid)) {
-            new BoardPlayerHandle(socket);
+        const gamePlayer = this.gameMaster.getGamePlayer(uuid);
+        if (gamePlayer) {
+            let handle: BoardPlayerHandle;
+
+            const event: BoardPlayerHandleEvents = {
+                turnFinishButtonClickCallBack: () => console.log("turnFinishButtonClick"),
+                declareWarButtonClickCallBack: () => console.log("declareWarButtonClick"),
+                selectLevelCallBack: (level: number) => {
+                    console.log("level" + level);
+                    handle.setSelectActionWindowVisible(false);
+                    setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
+                },
+                selectResourceCallBack: (data: SelectResourceData) =>
+                    console.log("selectResource player" + String(gamePlayer.PlayerId) + " iconId " + String(data.iconId) + "resource " + String(data.resourceKind))
+
+            }
+
+            handle = new BoardPlayerHandle(socket, event);
         }
     }
 
