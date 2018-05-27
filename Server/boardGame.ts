@@ -8,13 +8,12 @@ export class BoardGame {
     private gameMaster: GameMaster;
     private boardSocket: SocketIO.Namespace;
 
-    constructor(roomData: RoomData, boardSocket: SocketIO.Namespace) {
-        this.roomData = roomData;
+    constructor(boardSocket: SocketIO.Namespace) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
-        if (this.roomData.getPlayerData(uuid)) {
+        if (this.gameMaster.getGamePlayer(uuid)) {
             new BoardPlayerHandle(socket);
         }
     }

@@ -8,6 +8,9 @@ export class GamePlayer {
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
     private resourceList: SocketBinderList<ResourceKind>;
+
+    get Uuid() { return this.uuid; }
+
     constructor(playerData: PlayerData, playerId: number, boardSocket: SocketIO.Namespace) {
         this.uuid = playerData.getUuid();
         this.state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, boardSocket);
