@@ -27,7 +27,7 @@ export class BoardGame {
                     setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
                 },
                 selectResourceCallBack: (data: SelectResourceData) =>
-                    console.log("selectResource player" + String(gamePlayer.PlayerId) + " iconId " + String(data.iconId) + "resource " + String(data.resourceKind))
+                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceKind}`)
 
             }
 
