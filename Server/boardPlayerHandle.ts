@@ -3,6 +3,13 @@ import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 
+export interface BoardPlayerHandleEvent {
+    turnFinishButtonClickCallBack: () => void;
+    declareWarButtonClickCallBack: () => void;
+    selectLevelCallBack: (level: number) => void;
+    selectResourceCallBack: (selectResourceData: SelectResourceData) => void
+}
+
 export class BoardPlayerHandle {
     constructor(socket: SocketIO.Socket) {
 
