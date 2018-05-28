@@ -5,7 +5,6 @@ import { GameMaster } from "./gameMaster";
 import { SelectResourceData } from "../Share/selectResourceData";
 
 export class BoardGame {
-    private roomData: RoomData;
     private gameMaster: GameMaster;
     private boardSocket: SocketIO.Namespace;
 
