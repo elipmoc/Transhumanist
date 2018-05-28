@@ -12,6 +12,7 @@ export interface BindParams {
     stage: createjs.Stage;
     queue: createjs.LoadQueue;
     socket: SocketIOClient.Socket;
+    playerId: number;
 }
 
 //viewを生成してソケットと結びつける関数
@@ -66,12 +67,12 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         resourceKindList.onSetAt((iconId: number, x: ResourceKind) => {
             playerResourceAreaList[i].setResource(iconId, x, bindParams.queue);
         });
-        playerResourceAreaList[i].onClickIcon((iconId, resourceKind) => {
-            const selectResourceData: SelectResourceData = { iconId, resourceKind };
-            bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
-        });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
+    playerResourceAreaList[bindParams.playerId].onClickIcon((iconId, resourceKind) => {
+        const selectResourceData: SelectResourceData = { iconId, resourceKind };
+        bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
+    });
 }
 
 function turnFinishButtonBuilder(bindParams: BindParams) {
