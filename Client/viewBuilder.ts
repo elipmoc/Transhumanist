@@ -32,6 +32,7 @@ function playerWindowBuilder(bindParams: BindParams) {
         new view.Player4Window(bindParams.queue)
     ];
 
+
     for (let i = 0; i < playerWindowList.length; i++) {
         //プレイヤーの状態が更新されたら呼ばれるイベント
         const updateState = (state: GamePlayerState) => {
@@ -44,7 +45,7 @@ function playerWindowBuilder(bindParams: BindParams) {
             playerWindowList[i].setActivityRange(state.activityRange);
             bindParams.stage.update();
         };
-        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + i, bindParams.socket);
+        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
@@ -59,7 +60,7 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + i, bindParams.socket);
+        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
             list.forEach((x, iconId) => playerResourceAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
@@ -69,7 +70,7 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
-    playerResourceAreaList[bindParams.playerId].onClickIcon((iconId, resourceKind) => {
+    playerResourceAreaList[0].onClickIcon((iconId, resourceKind) => {
         const selectResourceData: SelectResourceData = { iconId, resourceKind };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
