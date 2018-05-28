@@ -13,11 +13,11 @@ export class GamePlayer {
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
 
-    constructor(playerData: PlayerData, playerId: number, boardSocket: SocketIO.Namespace) {
+    constructor(playerData: PlayerData, playerId: number, state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceKind>) {
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
-        this.state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, boardSocket);
-        this.resourceList = new SocketBinderList<ResourceKind>("ResourceKindList" + playerId, boardSocket);
+        this.state = state;
+        this.resourceList = resourceList;
         this.state.Value = {
             playerName: playerData.getName(),
             negative: 0, positive: 0,
@@ -46,5 +46,11 @@ export class GamePlayer {
             ResourceKind.extended_human,
             ResourceKind.extended_human,
         ];
+    }
+
+    //ユーザーにsocketBinderの値を送信する
+    sendToSocket(socket: SocketIO.Socket) {
+        this.state.updateAt(socket);
+        this.resourceList.updateAt(socket);
     }
 }

@@ -3,18 +3,25 @@ import { BoardPlayerHandle, BoardPlayerHandleEvents } from "./boardPlayerHandle"
 import { PlayerData } from "./playerData";
 import { GameMaster } from "./gameMaster";
 import { SelectResourceData } from "../Share/selectResourceData";
+import { SocketBinder } from "./socketBinder";
+import { SocketBinderList } from "./socketBinderList";
+import { GamePlayerState } from "../Share/gamePlayerState";
+import { ResourceKind } from "../Share/resourceKind";
 
 export class BoardGame {
     private gameMaster: GameMaster;
     private boardSocket: SocketIO.Namespace;
+    private roomId: number;
 
-    constructor(boardSocket: SocketIO.Namespace) {
+    constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
+        this.roomId = roomId;
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
         const gamePlayer = this.gameMaster.getGamePlayer(uuid);
         if (gamePlayer) {
+            socket = socket.join(`room${this.roomId}`);
             let handle: BoardPlayerHandle;
 
             const event: BoardPlayerHandleEvents = {
@@ -29,12 +36,16 @@ export class BoardGame {
                     console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceKind}`)
 
             }
+            //初期データを送信する
+            this.gameMaster.sendToSocket(socket);
 
             handle = new BoardPlayerHandle(socket, event);
         }
     }
 
     addMember(playerData: PlayerData, playerId: number) {
-        this.gameMaster.addMember(playerData, playerId, this.boardSocket);
+        const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, this.boardSocket);
+        const resourceList = new SocketBinderList<ResourceKind>("ResourceKindList" + playerId, this.boardSocket);
+        this.gameMaster.addMember(playerData, playerId, state, resourceList);
     }
 }

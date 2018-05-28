@@ -16,7 +16,7 @@ export class Room {
     constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, boardSocket: SocketIO.Namespace) {
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
-        this.boardGame = new BoardGame(boardSocket);
+        this.boardGame = new BoardGame(boardSocket.in(`room${roomId}`), roomId);
     }
 
     enterRoom(requestEnterRoomData: RequestEnterRoomData, uuid: string) {

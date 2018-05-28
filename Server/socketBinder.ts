@@ -23,6 +23,10 @@ export class SocketBinder<T>{
         this.socket.emit("update" + this.valueName, JSON.stringify(this.value));
     }
 
+    //値を変更したことを個別のsocketを指定して手動で伝える
+    updateAt(socket: SocketIO.Socket) {
+        socket.emit("update" + this.valueName, JSON.stringify(this.value));
+    }
 
     //この時渡すソケットは一斉送信用の用途で使われる
     constructor(
@@ -30,8 +34,5 @@ export class SocketBinder<T>{
         socket: SocketIO.Namespace) {
         this.socket = socket;
         this.valueName = valueName;
-        this.socket.on("connection", (socket) => {
-            socket.emit("update" + this.valueName, JSON.stringify(this.value));
-        });
     }
 }
