@@ -85,7 +85,7 @@ function preloadImage() {
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket });
+    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket, playerId: Number(cookies.get("playerId")) });
 
     stage.addChild(optionWindow);
     stage.update();

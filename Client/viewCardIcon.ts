@@ -17,21 +17,33 @@ export class ResourceCardIcon extends CardIconBase {
     //リソースをクリックされた時に呼ばれる関数
     private onClickCallBack: (iconId: number, resourceKind: ResourceKind) => void;
 
-    constructor(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+    private static getIconResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        if (resourceKind == ResourceKind.none)
+            return null;
         const bitmap = clipBitmap(
             new createjs.Bitmap(<any>queue.getResult("resource")),
             resourceKind % 5 * global.cardIconSize,
             Math.floor(resourceKind / 5) * global.cardIconSize,
             global.cardIconSize, global.cardIconSize);
-        super(bitmap.image);
-        this.iconId = iconId;
-        this.resourceKind = resourceKind;
-        this.iconId = iconId;
-        this.addEventListener("click", () => this.onClickCallBack(iconId, resourceKind));
+        return bitmap.image;
     }
 
-    getResourceKind() { return this.resourceKind; }
-    getIconId() { return this.iconId; }
+    constructor(iconId: number) {
+
+        super(null);
+        this.resourceKind = ResourceKind.none;
+        this.iconId = iconId;
+        this.addEventListener("click", () => this.onClickCallBack(this.IconId, this.ResourceKind));
+    }
+
+    get ResourceKind() { return this.resourceKind; }
+
+    setResourceKind(value: ResourceKind, queue: createjs.LoadQueue) {
+        this.resourceKind = value;
+        this.image = ResourceCardIcon.getIconResource(value, queue);
+
+    }
+    get IconId() { return this.iconId; }
 
     //クリックされた時に呼ばれる関数を設定
     onClicked(onClickCallBack: (iconId: number, resourceKind: ResourceKind) => void) { this.onClickCallBack = onClickCallBack; }

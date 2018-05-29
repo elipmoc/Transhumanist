@@ -71,7 +71,7 @@ export class PlayerResourceAreaBase extends createjs.Container {
     //xNum:リソースを横に何個並べるかの数値
     constructor(xNum: number) {
         super();
-        this.resourceList = new ResourceList(xNum);
+        this.resourceList = new ResourceList(xNum, 30);
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);
@@ -83,27 +83,28 @@ export class PlayerResourceAreaBase extends createjs.Container {
         this.resourceList.onClickIcon(onClickIconCallBack);
     }
 
-    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
-        this.resourceList.addResource(resourceKind, queue);
-    }
-
-    deleteResource(iconId: number) {
-        this.resourceList.deleteResource(iconId);
+    setResource(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        this.resourceList.setResource(iconId, resourceKind, queue);
     }
 }
 
 //リソースリストのクラス
 export class ResourceList extends createjs.Container {
-    protected resources: CardIconBase[] = new Array();
+    protected resources: ResourceCardIcon[] = new Array();
     private onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void;
     private xNum: number;
 
     //xNum:リソースを横に何個並べるかの数値
-    constructor(xNum: number) {
+    constructor(xNum: number, maxResource: number) {
         super();
         this.xNum = xNum;
-        for (let i = 0; i < this.resources.length; i++) {
-            this.addChild(this.resources[i]);
+        for (let i = 0; i < maxResource; i++) {
+            const cardIcon = new ResourceCardIcon(i);
+            cardIcon.onClicked((iconId, resourceKind) => this.onClickIconCallBack(iconId, resourceKind));
+            cardIcon.x = this.resources.length % this.xNum * global.cardIconSize;
+            cardIcon.y = Math.floor(this.resources.length / this.xNum) * global.cardIconSize;
+            this.resources.push(cardIcon);
+            this.addChild(cardIcon);
         }
     }
 
@@ -112,17 +113,8 @@ export class ResourceList extends createjs.Container {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 
-    addResource(resourceKind: ResourceKind, queue: createjs.LoadQueue) {
-        const cardIcon = new ResourceCardIcon(this.resources.length, resourceKind, queue);
-        cardIcon.onClicked(this.onClickIconCallBack);
-        cardIcon.x = this.resources.length % this.xNum * global.cardIconSize;
-        cardIcon.y = Math.floor(this.resources.length / this.xNum) * global.cardIconSize;
-        this.resources.push(cardIcon);
-        this.addChild(cardIcon);
-    }
-
-    deleteResource(iconId: number) {
-        this.removeChild(this.resources[iconId]);
+    setResource(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+        this.resources[iconId].setResourceKind(resourceKind, queue);
     }
 }
 

@@ -103,6 +103,7 @@ socket.on("resultEnterRoom", (data: string) => {
     if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
         cookies.set("uuid", resultEnterRoomData.uuid);
+        cookies.set("playerId", String(resultEnterRoomData.playerId));
         location.href = "board.html";
     }
     else {
