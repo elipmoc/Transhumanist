@@ -1,4 +1,4 @@
-export const enum BindActionKind {
+export const enum BuildActionKind {
     mining_facility = 0,        //採掘施設
     processing_facility,        //加工施設
     fusion_reactor,             //核融合炉
@@ -11,7 +11,7 @@ export const enum BindActionKind {
     quantum_computer,           //量子コンピュータ
     church,                     //教会
     future_forecasting_device,  //未来予報装置
-    none                        //何もなし
+    none = -1                   //何もなし
 }
 
 

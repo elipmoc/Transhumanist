@@ -1,6 +1,7 @@
 import { CardIconBase, ResourceCardIcon } from "./viewCardIcon"
 import { ResourceKind } from "../Share/resourceKind";
 import * as global from "./boardGlobalData";
+import { BuildActionKind } from "../Share/buildActionKind";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
@@ -114,7 +115,7 @@ export class ResourceList extends createjs.Container {
     }
 
     setResource(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
-        this.resources[iconId].setResourceKind(resourceKind, queue);
+        this.resources[iconId].setKind(resourceKind, queue);
     }
 }
 
@@ -133,14 +134,14 @@ export class PlayerBuildBase extends createjs.Container {
 
 //設置アクションリストのクラス
 export class BuildList extends createjs.Container {
-    protected builds: CardIconBase[] = new Array();
+    protected builds: CardIconBase<BuildActionKind>[] = new Array();
     constructor() {
         super();
         for (let i = 0; i < this.builds.length; i++) {
             this.addChild(this.builds[i]);
         }
     }
-    addBuild(icon: CardIconBase) {
+    addBuild(icon: CardIconBase<BuildActionKind>) {
         this.builds.push(icon);
     }
     deleteBuild() {
