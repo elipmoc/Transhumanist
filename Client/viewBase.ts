@@ -89,6 +89,27 @@ export class PlayerResourceAreaBase extends createjs.Container {
     }
 }
 
+//プレイヤー設置アクション欄のベースクラス
+export class PlayerBuildBase extends createjs.Container {
+    protected buildArea: createjs.Bitmap;
+    protected buildList: IconList<BuildActionCardIcon, BuildActionKind>;
+    constructor(xNum: number) {
+        super();
+        this.buildList = new IconList<BuildActionCardIcon, BuildActionKind>(xNum, 30, BuildActionCardIcon);
+        this.buildArea = new createjs.Bitmap("");
+        this.addChild(this.buildArea);
+        this.addChild(this.buildList);
+    }
+    //リソースアイコンがクリックされた時に呼ばれる関数をセットする
+    onClickIcon(onClickIconCallBack: (iconId: number, buildActionKind: BuildActionKind) => void) {
+        this.buildList.onClickIcon(onClickIconCallBack);
+    }
+
+    setResource(iconId: number, buildActionKind: BuildActionKind, queue: createjs.LoadQueue) {
+        this.buildList.setResource(iconId, buildActionKind, queue);
+    }
+}
+
 //iconリストのクラス
 export class IconList<I extends CardIconBase<K>, K extends number> extends createjs.Container {
     protected icons: I[] = new Array();
@@ -110,41 +131,11 @@ export class IconList<I extends CardIconBase<K>, K extends number> extends creat
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void) {
+    onClickIcon(onClickIconCallBack: (iconId: number, kind: K) => void) {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 
     setResource(iconId: number, kind: K, queue: createjs.LoadQueue) {
         this.icons[iconId].setKind(kind, queue);
-    }
-}
-
-//プレイヤー設置アクション欄のベースクラス
-export class PlayerBuildBase extends createjs.Container {
-    protected buildArea: createjs.Bitmap;
-    protected buildList: BuildList = new BuildList;
-    constructor() {
-        super();
-        this.buildArea = new createjs.Bitmap("");
-        this.addChild(this.buildArea);
-        this.addChild(this.buildList);
-
-    }
-}
-
-//設置アクションリストのクラス
-export class BuildList extends createjs.Container {
-    protected builds: BuildActionCardIcon[] = new Array();
-    constructor() {
-        super();
-        for (let i = 0; i < this.builds.length; i++) {
-            this.addChild(this.builds[i]);
-        }
-    }
-    addBuild(icon: CardIconBase<BuildActionKind>) {
-        this.builds.push(icon);
-    }
-    deleteBuild() {
-
     }
 }

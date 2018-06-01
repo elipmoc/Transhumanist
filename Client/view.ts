@@ -209,7 +209,7 @@ export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
 }
 export class Player1Build extends viewBase.PlayerBuildBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(15);
         this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
         this.buildArea.regX = this.buildArea.image.width / 2;
         this.buildArea.regY = this.buildArea.image.height;
@@ -285,7 +285,7 @@ export class Player2ResourceArea extends viewBase.PlayerResourceAreaBase {
 }
 export class Player2Build extends viewBase.PlayerBuildBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(5);
         this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
         this.buildArea.regX = 0;
         this.buildArea.regY = this.buildArea.image.height / 2;
@@ -362,7 +362,7 @@ export class Player3ResourceArea extends viewBase.PlayerResourceAreaBase {
 }
 export class Player3Build extends viewBase.PlayerBuildBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(15);
         this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
         this.buildArea.regX = this.buildArea.image.width / 2;
         this.buildArea.regY = 0;
@@ -440,7 +440,7 @@ export class Player4ResourceArea extends viewBase.PlayerResourceAreaBase {
 }
 export class Player4Build extends viewBase.PlayerBuildBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(5);
         this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
         this.buildArea.regX = this.buildArea.image.width;
         this.buildArea.regY = this.buildArea.image.height / 2;
