@@ -43,23 +43,6 @@ function preloadImage() {
         drawRect(0, 0, global.canvasWidth, global.canvasHeight);
     stage.addChild(background);
 
-
-    //プレイヤー1の設置アクション
-    let player1buildArea = new view.Player1Build(queue);
-    stage.addChild(player1buildArea);
-
-    //プレイヤー2の設置アクション
-    let player2buildArea = new view.Player2Build(queue);
-    stage.addChild(player2buildArea);
-
-    //プレイヤー3の設置アクション
-    let player3buildArea = new view.Player3Build(queue);
-    stage.addChild(player3buildArea);
-
-    //プレイヤー4の設置アクション
-    let player4buildArea = new view.Player4Build(queue);
-    stage.addChild(player4buildArea);
-
     //オプションウインドウ
     const optionWindow = new view.OptionWindow(queue);
     optionWindow.x = global.canvasWidth / 2;

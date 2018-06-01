@@ -215,6 +215,8 @@ export class Player1Build extends viewBase.PlayerBuildBase {
         this.buildArea.regY = this.buildArea.image.height;
         this.buildArea.x = global.canvasWidth / 2;
         this.buildArea.y = (global.canvasHeight - 85) - this.buildArea.image.height - 4;
+        this.buildList.x = global.canvasWidth / 2 - this.buildArea.image.width / 2;
+        this.buildList.y = global.canvasHeight - this.buildArea.image.height - 85 - this.buildArea.image.height - 4;
 
     }
 }
@@ -291,6 +293,8 @@ export class Player2Build extends viewBase.PlayerBuildBase {
         this.buildArea.regY = this.buildArea.image.height / 2;
         this.buildArea.x = 100;
         this.buildArea.y = global.canvasHeight / 2 + (this.buildArea.image.height / 2) + 2;
+        this.buildList.x = 100;
+        this.buildList.y = global.canvasHeight / 2 + 2;
 
     }
 }
@@ -368,6 +372,8 @@ export class Player3Build extends viewBase.PlayerBuildBase {
         this.buildArea.regY = 0;
         this.buildArea.x = global.canvasWidth / 2;
         this.buildArea.y = 85 + this.buildArea.image.height + 4;
+        this.buildList.x = global.canvasWidth / 2 - this.buildArea.image.width / 2;
+        this.buildList.y = 85 + this.buildArea.image.height + 4;;
 
     }
 }
@@ -446,7 +452,8 @@ export class Player4Build extends viewBase.PlayerBuildBase {
         this.buildArea.regY = this.buildArea.image.height / 2;
         this.buildArea.x = global.canvasWidth - 100;
         this.buildArea.y = global.canvasHeight / 2 + (this.buildArea.image.height / 2) + 2;
-
+        this.buildList.x = global.canvasWidth - 100 - this.buildArea.image.width;
+        this.buildList.y = global.canvasHeight / 2 + 2;
     }
 }
 

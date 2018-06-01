@@ -122,7 +122,7 @@ export class IconList<I extends CardIconBase<K>, K extends number> extends creat
         this.xNum = xNum;
         for (let i = 0; i < maxIcon; i++) {
             const cardIcon = new icon_creator(i);
-            cardIcon.onClicked((iconId, resourceKind) => this.onClickIconCallBack(iconId, resourceKind));
+            cardIcon.onClicked((iconId, kind) => this.onClickIconCallBack(iconId, kind));
             cardIcon.x = this.icons.length % this.xNum * global.cardIconSize;
             cardIcon.y = Math.floor(this.icons.length / this.xNum) * global.cardIconSize;
             this.icons.push(cardIcon);

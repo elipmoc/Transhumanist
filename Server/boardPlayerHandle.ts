@@ -2,12 +2,14 @@ import { GamePlayerState } from "../Share/gamePlayerState"
 import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
+import { SelectBuildActionData } from "../Share/selectBuildActionData";
 
 export interface BoardPlayerHandleEvents {
     turnFinishButtonClickCallBack: () => void;
     declareWarButtonClickCallBack: () => void;
     selectLevelCallBack: (level: number) => void;
     selectResourceCallBack: (selectResourceData: SelectResourceData) => void
+    selectBuildActionCallBack: (selectBuildActionData: SelectBuildActionData) => void
 }
 
 export class BoardPlayerHandle {
@@ -47,5 +49,7 @@ export class BoardPlayerHandle {
         setTimeout(() => this.setNumberOfActionCard(numberOfActionCardList), 2000);
         socket.on("SelectResource", str =>
             this.events.selectResourceCallBack(JSON.parse(str)));
+        socket.on("SelectBuildAction", str =>
+            this.events.selectBuildActionCallBack(JSON.parse(str)));
     }
 }

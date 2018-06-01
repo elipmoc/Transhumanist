@@ -1,5 +1,5 @@
 import * as view from "./view";
-import { PlayerWindowBase, PlayerResourceAreaBase } from "./viewBase";
+import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./viewBase";
 import { GamePlayerState } from "../Share/gamePlayerState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
@@ -7,6 +7,8 @@ import { ResourceKind } from "../Share/resourceKind";
 import { SelectResourceData } from "../Share/selectResourceData";
 import { SocketBinder } from "./socketBinder";
 import { SocketBinderList } from "./socketBinderList";
+import { BuildActionKind } from "../Share/buildActionKind";
+import { SelectBuildActionData } from "../Share/selectBuildActionData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -19,6 +21,7 @@ export interface BindParams {
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
     PlayerResourceAreaBuilder(bindParams);
+    PlayerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -73,6 +76,31 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
     playerResourceAreaList[0].onClickIcon((iconId, resourceKind) => {
         const selectResourceData: SelectResourceData = { iconId, resourceKind };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
+    });
+}
+
+//プレイヤーの設置アクション欄生成
+function PlayerBuildActionAreaBuilder(bindParams: BindParams) {
+    const playerBuildActionAreaList: PlayerBuildBase[] = [
+        new view.Player1Build(bindParams.queue),
+        new view.Player2Build(bindParams.queue),
+        new view.Player3Build(bindParams.queue),
+        new view.Player4Build(bindParams.queue)
+    ];
+    for (let i = 0; i < 4; i++) {
+        const buildActionKindList = new SocketBinderList<BuildActionKind>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        buildActionKindList.onUpdate((list) => {
+            list.forEach((x, iconId) => playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue));
+            bindParams.stage.update();
+        });
+        buildActionKindList.onSetAt((iconId: number, x: BuildActionKind) => {
+            playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue);
+        });
+        bindParams.stage.addChild(playerBuildActionAreaList[i]);
+    }
+    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionKind) => {
+        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionKind };
+        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });
 }
 

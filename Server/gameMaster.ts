@@ -4,6 +4,7 @@ import { SocketBinder } from "./socketBinder";
 import { GamePlayerState } from "../Share/gamePlayerState";
 import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
+import { BuildActionKind } from "../Share/buildActionKind";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -12,8 +13,8 @@ export class GameMaster {
         return this.gamePlayerList.find(x => x.Uuid == uuid);
     }
 
-    addMember(playerData: PlayerData, playerId: number, state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceKind>) {
-        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList));
+    addMember(playerData: PlayerData, playerId: number, state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceKind>, buildActionList: SocketBinderList<BuildActionKind>) {
+        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList));
     }
 
     sendToSocket(socket: SocketIO.Socket) {

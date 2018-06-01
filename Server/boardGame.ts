@@ -7,6 +7,8 @@ import { SocketBinder } from "./socketBinder";
 import { SocketBinderList } from "./socketBinderList";
 import { GamePlayerState } from "../Share/gamePlayerState";
 import { ResourceKind } from "../Share/resourceKind";
+import { BuildActionKind } from "../Share/buildActionKind";
+import { SelectBuildActionData } from "../Share/selectBuildActionData";
 
 export class BoardGame {
     private gameMaster: GameMaster;
@@ -33,7 +35,9 @@ export class BoardGame {
                     setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
                 },
                 selectResourceCallBack: (data: SelectResourceData) =>
-                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceKind}`)
+                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceKind}`),
+                selectBuildActionCallBack: (data: SelectBuildActionData) =>
+                    console.log(`selectBuildAction player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.buildActionKind}`)
 
             }
             //初期データを送信する
@@ -46,6 +50,7 @@ export class BoardGame {
     addMember(playerData: PlayerData, playerId: number) {
         const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, this.boardSocket);
         const resourceList = new SocketBinderList<ResourceKind>("ResourceKindList" + playerId, this.boardSocket);
-        this.gameMaster.addMember(playerData, playerId, state, resourceList);
+        const buildActionList = new SocketBinderList<BuildActionKind>("BuildActionKindList" + playerId, this.boardSocket);
+        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList);
     }
 }
