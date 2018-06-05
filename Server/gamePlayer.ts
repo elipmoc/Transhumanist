@@ -35,7 +35,22 @@ export class GamePlayer {
         };
         this.buildActionList.Value = [
             BuildActionKind.mining_facility,
-            BuildActionKind.church
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.church,
+            BuildActionKind.fusion_reactor,
+            BuildActionKind.robot_factory,
         ];
         this.resourceList.Value = [
             ResourceKind.human,
