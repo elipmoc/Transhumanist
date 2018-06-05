@@ -39,6 +39,7 @@ window.onload = () => {
 
 function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
+    stage.enableMouseOver();
     let background = new createjs.Shape();
     background.graphics.beginFill("black").
         drawRect(0, 0, global.canvasWidth, global.canvasHeight);

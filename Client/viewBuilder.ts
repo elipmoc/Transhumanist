@@ -9,6 +9,7 @@ import { SocketBinder } from "./socketBinder";
 import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
+import { LogWindow } from "./logWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -21,6 +22,7 @@ export interface BindParams {
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
     PlayerResourceAreaBuilder(bindParams);
+    logWindowBuilder(bindParams);
     PlayerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
@@ -137,4 +139,8 @@ function selectActionWindowBuilder(bindParams: BindParams) {
         selectActionWindow.setNumberOfActionCard(numberOfActionCardList);
         bindParams.stage.update();
     })
+}
+
+function logWindowBuilder(bindParams: BindParams) {
+    bindParams.stage.addChild(new LogWindow(bindParams.queue));
 }
