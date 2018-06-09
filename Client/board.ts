@@ -33,16 +33,22 @@ window.onload = () => {
         { id: "level6", src: "Img/card/back/level6mb.png" },
         { id: "resource", src: "Img/resource.png" },
         { id: "buildAction", src: "Img/buildAction.png" },
-        { id: "logFrame", src: "Img/ui/logFrame.png" }
+        { id: "logFrame", src: "Img/ui/logFrame.png" },
+        { id: "bg_level1", src: "Img/background/bg_level1.png" },
+        { id: "bg_level2", src: "Img/background/bg_level2.png" },
+        { id: "bg_level3", src: "Img/background/bg_level3.png" },
+        { id: "bg_level4", src: "Img/background/bg_level4.png" },
+        { id: "bg_level5", src: "Img/background/bg_level5.png" },
+        { id: "bg_level6", src: "Img/background/bg_level6.png" }
     ]);
 }
 
 function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
-    let background = new createjs.Shape();
-    background.graphics.beginFill("black").
-        drawRect(0, 0, global.canvasWidth, global.canvasHeight);
+    let background = new createjs.Bitmap(queue.getResult("bg_level4"));
+    /*    background.graphics.beginFill("black").
+            drawRect(0, 0, global.canvasWidth, global.canvasHeight);*/
     stage.addChild(background);
 
     //オプションウインドウ
