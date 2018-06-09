@@ -1,13 +1,5 @@
 import * as global from "./boardGlobalData";
-
-//ログメッセージタイプ
-export const enum LogMessageType {
-    EventMsg = 0,
-    Player1Msg,
-    Player2Msg,
-    Player3Msg,
-    Player4Msg,
-}
+import { LogMessageType, LogMessage } from "../Share/logMessage";
 
 //ログウインドウ
 export class LogWindow extends createjs.Container {
@@ -20,11 +12,11 @@ export class LogWindow extends createjs.Container {
         const logMessageBox = new LogMessageBox(this.logFrame.image.height);
         logMessageBox.regX = -this.logFrame.x - 15;
         logMessageBox.regY = -this.logFrame.y;
-        logMessageBox.addMessage("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg);
-        logMessageBox.addMessage("スターは「工場」を設置しました。", LogMessageType.Player1Msg);
-        logMessageBox.addMessage("N.Hのターンです。", LogMessageType.Player2Msg);
-        logMessageBox.addMessage("らいぱん鳥のターンです。", LogMessageType.Player3Msg);
-        logMessageBox.addMessage("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg);
+        logMessageBox.addMessage(new LogMessage("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
+        logMessageBox.addMessage(new LogMessage("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
+        logMessageBox.addMessage(new LogMessage("N.Hのターンです。", LogMessageType.Player2Msg));
+        logMessageBox.addMessage(new LogMessage("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
+        logMessageBox.addMessage(new LogMessage("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
         const shape = new createjs.Shape(new createjs.Graphics().beginFill("DarkRed").drawRoundRect(0, 0, 386, 142, 26));
         shape.x = this.logFrame.x;
         shape.y = this.logFrame.y;
@@ -59,12 +51,12 @@ class LogMessageBox extends createjs.Container {
         window.addEventListener("DOMMouseScroll", mouseWheel, false);
     }
 
-    addMessage(msg: string, logMessageType: LogMessageType) {
+    addMessage(logmsg: LogMessage) {
         const text = new createjs.Text();
         text.x = 0;
         text.y = this.bottomY;
-        text.text = msg;
-        text.color = this.logMessageColorList[logMessageType];
+        text.text = logmsg.Msg;
+        text.color = this.logMessageColorList[logmsg.MsgType];
         text.font = "16px Arial";
         this.bottomY += text.getMeasuredHeight();
         this.addChild(text);
