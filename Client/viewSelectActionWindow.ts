@@ -1,5 +1,6 @@
 import * as global from "./boardGlobalData"
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
+import { createMyShadow } from "./utility";
 
 class NumberOfActionCardTexts extends createjs.Container {
     private texts: createjs.Text[] = new Array();
@@ -43,24 +44,24 @@ export class SelectActionWindow extends createjs.Container {
 
         const frame = new createjs.Shape();
         const frameX = 700;
-        const frameY = 250;
-        frame.graphics.beginFill("white").
+        const frameY = 290;
+        frame.graphics.beginFill("gray").
             drawRect(0, 0, frameX, frameY);
-        frame.alpha = 0.5;
         frame.x = global.canvasWidth / 2 - frameX / 2;
         frame.y = global.canvasHeight / 2 - frameY / 2;
 
         this.numberOfActionCardTexts = new NumberOfActionCardTexts();
         this.numberOfActionCardTexts.x = global.canvasWidth / 2 - frameX / 2 + 90;
-        this.numberOfActionCardTexts.y = global.canvasHeight / 2 + frameY / 2 - 30;
+        this.numberOfActionCardTexts.y = global.canvasHeight / 2 + frameY / 2 - 50;
 
         const descriptionText = new createjs.Text();
         descriptionText.textAlign = "center";
         descriptionText.text = "獲得するアクションカードを選択してください。";
         descriptionText.font = "16px Bold ＭＳ ゴシック";
         descriptionText.color = "white";
+        descriptionText.shadow = createMyShadow();
         descriptionText.x = global.canvasWidth / 2;
-        descriptionText.y = global.canvasHeight / 2 - 100;
+        descriptionText.y = global.canvasHeight / 2 - 130;
 
         this.addChild(frame);
         this.addChild(descriptionText);
@@ -68,7 +69,7 @@ export class SelectActionWindow extends createjs.Container {
 
         for (var i = 1; i <= 3; i++) {
             const level = new createjs.Bitmap(queue.getResult("level" + (4 - i)));
-            level.y = global.canvasHeight / 2 - 40;
+            level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 - (level.image.width + 20) * (i) + 10;
             const levelValue = 4 - i;
             level.addEventListener("click", () => this.callBack(levelValue));
@@ -77,7 +78,7 @@ export class SelectActionWindow extends createjs.Container {
 
         for (var i = 4; i <= 6; i++) {
             const level = new createjs.Bitmap(queue.getResult("level" + i));
-            level.y = global.canvasHeight / 2 - 40;
+            level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 + (level.image.width + 20) * (i - 4) + 10;
             const levelValue = i;
             level.addEventListener("click", () => this.callBack(levelValue));

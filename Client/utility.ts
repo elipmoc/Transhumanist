@@ -22,4 +22,8 @@ export function clipBitmap(
 
     //Bitmapを生成
     return new createjs.Bitmap(clipCanvas);
-}       
+}
+
+export function createMyShadow() {
+    return new createjs.Shadow("black", 2, 2, 2);
+}

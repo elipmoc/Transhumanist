@@ -1,5 +1,6 @@
 import * as global from "./boardGlobalData";
 import { LogMessageType, LogMessage } from "../Share/logMessage";
+import { createMyShadow } from "./utility";
 
 //ログウインドウ
 export class LogWindow extends createjs.Container {
@@ -58,6 +59,7 @@ class LogMessageBox extends createjs.Container {
         text.text = logmsg.Msg;
         text.color = this.logMessageColorList[logmsg.MsgType];
         text.font = "16px Arial";
+        text.shadow = createMyShadow();
         this.bottomY += text.getMeasuredHeight();
         this.addChild(text);
     }

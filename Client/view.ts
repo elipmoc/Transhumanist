@@ -1,6 +1,7 @@
 import * as global from "./boardGlobalData"
 import * as viewBase from "./viewBase"
 import { successResultCreateRoomData } from "../Share/resultCreateRoomData";
+import { createMyShadow } from "./utility";
 
 //player情報
 export class PlayerInfo {
@@ -155,42 +156,49 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.playerNameText.font = "20px Arial";
         this.playerNameText.textAlign = "center";
         this.playerNameText.y = 5;
+        this.playerNameText.shadow = createMyShadow();
 
         this.speedText.textAlign = "center";
         this.speedText.x = (-3.5) * (this.playerFrame.image.width / 10);
         this.speedText.y = 35;
         this.speedText.color = "#f3f3f3";
         this.speedText.font = "15px Arial";
+        this.speedText.shadow = createMyShadow();
 
         this.resourceText.textAlign = "center";
         this.resourceText.x = (-1.2) * (this.playerFrame.image.width / 10);
         this.resourceText.y = 35;
         this.resourceText.color = "#f3f3f3";
         this.resourceText.font = "15px Arial";
+        this.resourceText.shadow = createMyShadow();
 
         this.activityRangeText.textAlign = "center";
         this.activityRangeText.x = (1.2) * (this.playerFrame.image.width / 10);
         this.activityRangeText.y = 35;
         this.activityRangeText.color = "#f3f3f3";
         this.activityRangeText.font = "15px Arial";
+        this.activityRangeText.shadow = createMyShadow();
 
         this.uncertaintyText.textAlign = "center";
         this.uncertaintyText.x = (3.5) * (this.playerFrame.image.width / 10);
         this.uncertaintyText.y = 35;
         this.uncertaintyText.color = "#f3f3f3";
         this.uncertaintyText.font = "15px Arial";
+        this.uncertaintyText.shadow = createMyShadow();
 
         this.positiveText.textAlign = "center";
         this.positiveText.x = (-1) * (this.playerFrame.image.width / 8);
         this.positiveText.y = 60;
         this.positiveText.color = "#00ee00";
         this.positiveText.font = "15px Arial";
+        this.positiveText.shadow = createMyShadow();
 
         this.negativeText.textAlign = "center";
         this.negativeText.x = (1) * (this.playerFrame.image.width / 8);
         this.negativeText.y = 60;
         this.negativeText.color = "#ff0000";
         this.negativeText.font = "15px Arial";
+        this.negativeText.shadow = createMyShadow();
     }
 }
 export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
@@ -232,45 +240,52 @@ export class Player2Window extends viewBase.PlayerWindowBase {
 
         this.playerNameText.textAlign = "center";
         this.playerNameText.color = "#00dd00";
-        this.playerNameText.font = "10px Arial";
+        this.playerNameText.font = "14px Arial";
         this.playerNameText.x = (this.playerFrame.image.width / 2);
         this.playerNameText.y = -60;
+        this.playerNameText.shadow = createMyShadow();
 
         this.speedText.textAlign = "center";
         this.speedText.x = (this.playerFrame.image.width / 2);
         this.speedText.y = -30;
         this.speedText.color = "#f3f3f3";
         this.speedText.font = "12px Arial";
+        this.speedText.shadow = createMyShadow();
 
         this.resourceText.textAlign = "center";
         this.resourceText.x = (this.playerFrame.image.width / 2);
         this.resourceText.y = -15;
         this.resourceText.color = "#f3f3f3";
         this.resourceText.font = "12px Arial";
+        this.resourceText.shadow = createMyShadow();
 
         this.activityRangeText.textAlign = "center";
         this.activityRangeText.x = (this.playerFrame.image.width / 2);
         this.activityRangeText.y = 0;
         this.activityRangeText.color = "#f3f3f3";
         this.activityRangeText.font = "12px Arial";
+        this.activityRangeText.shadow = createMyShadow();
 
         this.uncertaintyText.textAlign = "center";
         this.uncertaintyText.x = (this.playerFrame.image.width / 2);
         this.uncertaintyText.y = 15;
         this.uncertaintyText.color = "#f3f3f3";
         this.uncertaintyText.font = "12px Arial";
+        this.uncertaintyText.shadow = createMyShadow();
 
         this.positiveText.textAlign = "center";
         this.positiveText.x = (this.playerFrame.image.width / 2);
         this.positiveText.y = 45;
         this.positiveText.color = "#00ee00";
         this.positiveText.font = "12px Arial";
+        this.positiveText.shadow = createMyShadow();
 
         this.negativeText.textAlign = "center";
         this.negativeText.x = (this.playerFrame.image.width / 2);
         this.negativeText.y = 60;
         this.negativeText.color = "#ff0000";
         this.negativeText.font = "12px Arial";
+        this.negativeText.shadow = createMyShadow();
     }
 }
 export class Player2ResourceArea extends viewBase.PlayerResourceAreaBase {
@@ -314,42 +329,49 @@ export class Player3Window extends viewBase.PlayerWindowBase {
         this.playerNameText.font = "20px Arial";
         this.playerNameText.textAlign = "center";
         this.playerNameText.y = 5;
+        this.playerNameText.shadow = createMyShadow();
 
         this.speedText.textAlign = "center";
         this.speedText.x = (-3.5) * (this.playerFrame.image.width / 10);
         this.speedText.y = 35;
         this.speedText.color = "#f3f3f3";
         this.speedText.font = "15px Arial";
+        this.speedText.shadow = createMyShadow();
 
         this.resourceText.textAlign = "center";
         this.resourceText.x = (-1.2) * (this.playerFrame.image.width / 10);
         this.resourceText.y = 35;
         this.resourceText.color = "#f3f3f3";
         this.resourceText.font = "15px Arial";
+        this.resourceText.shadow = createMyShadow();
 
         this.activityRangeText.textAlign = "center";
         this.activityRangeText.x = (1.2) * (this.playerFrame.image.width / 10);
         this.activityRangeText.y = 35;
         this.activityRangeText.color = "#f3f3f3";
         this.activityRangeText.font = "15px Arial";
+        this.activityRangeText.shadow = createMyShadow();
 
         this.uncertaintyText.textAlign = "center";
         this.uncertaintyText.x = (3.5) * (this.playerFrame.image.width / 10);
         this.uncertaintyText.y = 35;
         this.uncertaintyText.color = "#f3f3f3";
         this.uncertaintyText.font = "15px Arial";
+        this.uncertaintyText.shadow = createMyShadow();
 
         this.positiveText.textAlign = "center";
         this.positiveText.x = (-1) * (this.playerFrame.image.width / 8);
         this.positiveText.y = 60;
         this.positiveText.color = "#00ee00";
         this.positiveText.font = "15px Arial";
+        this.positiveText.shadow = createMyShadow();
 
         this.negativeText.textAlign = "center";
         this.negativeText.x = (1) * (this.playerFrame.image.width / 8);
         this.negativeText.y = 60;
         this.negativeText.color = "red";
         this.negativeText.font = "15px Arial";
+        this.negativeText.shadow = createMyShadow();
     }
 }
 export class Player3ResourceArea extends viewBase.PlayerResourceAreaBase {
@@ -392,44 +414,51 @@ export class Player4Window extends viewBase.PlayerWindowBase {
         this.playerNameText.textAlign = "center";
         this.playerNameText.x = (this.playerFrame.image.width / 2);
         this.playerNameText.color = "#ddee41";
-        this.playerNameText.font = "10px Arial";
+        this.playerNameText.font = "14px Arial";
         this.playerNameText.y = -60;
+        this.playerNameText.shadow = createMyShadow();
 
         this.speedText.textAlign = "center";
         this.speedText.x = (this.playerFrame.image.width / 2);
         this.speedText.y = -30;
         this.speedText.color = "#f3f3f3";
         this.speedText.font = "12px Arial";
+        this.speedText.shadow = createMyShadow();
 
         this.resourceText.textAlign = "center";
         this.resourceText.x = (this.playerFrame.image.width / 2);
         this.resourceText.y = -15;
         this.resourceText.color = "#f3f3f3";
         this.resourceText.font = "12px Arial";
+        this.resourceText.shadow = createMyShadow();
 
         this.activityRangeText.textAlign = "center";
         this.activityRangeText.x = (this.playerFrame.image.width / 2);
         this.activityRangeText.y = 0;
         this.activityRangeText.color = "#f3f3f3";
         this.activityRangeText.font = "12px Arial";
+        this.activityRangeText.shadow = createMyShadow();
 
         this.uncertaintyText.textAlign = "center";
         this.uncertaintyText.x = (this.playerFrame.image.width / 2);
         this.uncertaintyText.y = 15;
         this.uncertaintyText.color = "#f3f3f3";
         this.uncertaintyText.font = "12px Arial";
+        this.uncertaintyText.shadow = createMyShadow();
 
         this.positiveText.textAlign = "center";
         this.positiveText.x = (this.playerFrame.image.width / 2);
         this.positiveText.y = 45;
         this.positiveText.color = "#00ee00";
         this.positiveText.font = "12px Arial";
+        this.positiveText.shadow = createMyShadow();
 
         this.negativeText.textAlign = "center";
         this.negativeText.x = (this.playerFrame.image.width / 2);
         this.negativeText.y = 60;
         this.negativeText.color = "red";
         this.negativeText.font = "12px Arial";
+        this.negativeText.shadow = createMyShadow();
     }
 }
 export class Player4ResourceArea extends viewBase.PlayerResourceAreaBase {

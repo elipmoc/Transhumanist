@@ -47,8 +47,7 @@ function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
-    /*    background.graphics.beginFill("black").
-            drawRect(0, 0, global.canvasWidth, global.canvasHeight);*/
+    background.alpha = 0.5;
     stage.addChild(background);
 
     //オプションウインドウ
