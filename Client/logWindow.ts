@@ -4,28 +4,26 @@ import { createMyShadow } from "./utility";
 
 //ログウインドウ
 export class LogWindow extends createjs.Container {
-    private logFrame: createjs.Bitmap;
+    private logMessageBox: LogMessageBox;
     constructor(queue: createjs.LoadQueue) {
         super();
-        this.logFrame = new createjs.Bitmap(queue.getResult("logFrame"));
-        this.logFrame.x = global.canvasWidth / 2 - this.logFrame.image.width / 2;
-        this.logFrame.y = global.canvasHeight / 2 - this.logFrame.image.height / 2;
-        const logMessageBox = new LogMessageBox(this.logFrame.image.height);
-        logMessageBox.regX = -this.logFrame.x - 15;
-        logMessageBox.regY = -this.logFrame.y;
-        logMessageBox.addMessage(new LogMessage("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
-        logMessageBox.addMessage(new LogMessage("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
-        logMessageBox.addMessage(new LogMessage("N.Hのターンです。", LogMessageType.Player2Msg));
-        logMessageBox.addMessage(new LogMessage("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
-        logMessageBox.addMessage(new LogMessage("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
+        const logFrame = new createjs.Bitmap(queue.getResult("logFrame"));
+        logFrame.x = global.canvasWidth / 2 - logFrame.image.width / 2;
+        logFrame.y = global.canvasHeight / 2 - logFrame.image.height / 2;
+        this.logMessageBox = new LogMessageBox(logFrame.image.height);
+        this.logMessageBox.regX = -logFrame.x - 15;
+        this.logMessageBox.regY = -logFrame.y;
         const shape = new createjs.Shape(new createjs.Graphics().beginFill("DarkRed").drawRoundRect(0, 0, 386, 142, 26));
-        shape.x = this.logFrame.x;
-        shape.y = this.logFrame.y;
-        this.logFrame.addEventListener("mouseover", () => logMessageBox.MouseInFlag = true);
-        this.logFrame.addEventListener("mouseout", () => logMessageBox.MouseInFlag = false);
-        this.addChild(this.logFrame);
-        this.addChild(logMessageBox);
+        shape.x = logFrame.x;
+        shape.y = logFrame.y;
+        logFrame.addEventListener("mouseover", () => this.logMessageBox.MouseInFlag = true);
+        logFrame.addEventListener("mouseout", () => this.logMessageBox.MouseInFlag = false);
+        this.addChild(logFrame);
+        this.addChild(this.logMessageBox);
         this.mask = shape;
+    }
+    addMessaage(msg: LogMessage) {
+        this.logMessageBox.addMessage(msg);
     }
 }
 
@@ -56,8 +54,8 @@ class LogMessageBox extends createjs.Container {
         const text = new createjs.Text();
         text.x = 0;
         text.y = this.bottomY;
-        text.text = logmsg.Msg;
-        text.color = this.logMessageColorList[logmsg.MsgType];
+        text.text = logmsg.msg;
+        text.color = this.logMessageColorList[logmsg.msgType];
         text.font = "16px Arial";
         text.shadow = createMyShadow();
         this.bottomY += text.getMeasuredHeight();

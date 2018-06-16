@@ -9,11 +9,9 @@ export const enum LogMessageType {
 
 
 export class LogMessage {
-    private msg: string;
-    private msgType: LogMessageType;
+    msg: string;
+    msgType: LogMessageType;
 
-    get Msg() { return this.msg; }
-    get MsgType() { return this.msgType; }
 
     constructor(msg: string, msgType: LogMessageType) {
         this.msg = msg;

@@ -10,6 +10,7 @@ import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
 import { LogWindow } from "./logWindow";
+import { LogMessage, LogMessageType } from "../Share/logMessage";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -142,5 +143,15 @@ function selectActionWindowBuilder(bindParams: BindParams) {
 }
 
 function logWindowBuilder(bindParams: BindParams) {
-    bindParams.stage.addChild(new LogWindow(bindParams.queue));
+    const logWindow = new LogWindow(bindParams.queue);
+    const logMessageList = new SocketBinderList<LogMessage>("logMessageList", bindParams.socket);
+    logMessageList.onUpdate(msgList => {
+        msgList.forEach(msg => logWindow.addMessaage(msg));
+        bindParams.stage.update();
+    });
+    logMessageList.onPush(msg => {
+        logWindow.addMessaage(msg);
+        bindParams.stage.update();
+    })
+    bindParams.stage.addChild(logWindow);
 }

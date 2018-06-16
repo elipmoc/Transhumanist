@@ -9,16 +9,26 @@ import { GamePlayerState } from "../Share/gamePlayerState";
 import { ResourceKind } from "../Share/resourceKind";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
+import { LogMessage, LogMessageType } from "../Share/logMessage";
 
 export class BoardGame {
     private gameMaster: GameMaster;
     private boardSocket: SocketIO.Namespace;
     private roomId: number;
+    private logMessageList: SocketBinderList<LogMessage>;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
         this.roomId = roomId;
+        this.logMessageList = new SocketBinderList<LogMessage>("logMessageList", this.boardSocket);
+        this.logMessageList.Value = new Array();
+        this.logMessageList.push(new LogMessage("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
+        this.logMessageList.push(new LogMessage("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
+        this.logMessageList.push(new LogMessage("N.Hのターンです。", LogMessageType.Player2Msg));
+        this.logMessageList.push(new LogMessage("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
+        this.logMessageList.push(new LogMessage("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
+        setInterval(() => this.logMessageList.push(new LogMessage("ようこそ", LogMessageType.EventMsg)), 5000);
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
         const gamePlayer = this.gameMaster.getGamePlayer(uuid);
@@ -42,6 +52,7 @@ export class BoardGame {
             }
             //初期データを送信する
             this.gameMaster.sendToSocket(socket);
+            this.logMessageList.updateAt(socket);
 
             handle = new BoardPlayerHandle(socket, event);
         }
