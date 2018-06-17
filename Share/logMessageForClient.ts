@@ -8,9 +8,9 @@ export const enum LogMessageType {
 }
 
 
-export class LogMessage {
-    msg: string;
-    msgType: LogMessageType;
+export class LogMessageForClient {
+    readonly msg: string;
+    readonly msgType: LogMessageType;
 
 
     constructor(msg: string, msgType: LogMessageType) {

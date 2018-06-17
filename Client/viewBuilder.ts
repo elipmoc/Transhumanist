@@ -9,8 +9,8 @@ import { SocketBinder } from "./socketBinder";
 import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
-import { LogWindow } from "./logWindow";
-import { LogMessage, LogMessageType } from "../Share/logMessage";
+import { LogWindow, LogMessage } from "./logWindow";
+import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -144,13 +144,13 @@ function selectActionWindowBuilder(bindParams: BindParams) {
 
 function logWindowBuilder(bindParams: BindParams) {
     const logWindow = new LogWindow(bindParams.queue);
-    const logMessageList = new SocketBinderList<LogMessage>("logMessageList", bindParams.socket);
+    const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
     logMessageList.onUpdate(msgList => {
-        msgList.forEach(msg => logWindow.addMessaage(msg));
+        msgList.forEach(msg => logWindow.addMessaage(new LogMessage(msg)));
         bindParams.stage.update();
     });
     logMessageList.onPush(msg => {
-        logWindow.addMessaage(msg);
+        logWindow.addMessaage(new LogMessage(msg));
         bindParams.stage.update();
     })
     bindParams.stage.addChild(logWindow);

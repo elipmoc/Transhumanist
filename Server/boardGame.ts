@@ -9,26 +9,26 @@ import { GamePlayerState } from "../Share/gamePlayerState";
 import { ResourceKind } from "../Share/resourceKind";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
-import { LogMessage, LogMessageType } from "../Share/logMessage";
+import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 
 export class BoardGame {
     private gameMaster: GameMaster;
     private boardSocket: SocketIO.Namespace;
     private roomId: number;
-    private logMessageList: SocketBinderList<LogMessage>;
+    private logMessageList: SocketBinderList<LogMessageForClient>;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
         this.roomId = roomId;
-        this.logMessageList = new SocketBinderList<LogMessage>("logMessageList", this.boardSocket);
+        this.logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", this.boardSocket);
         this.logMessageList.Value = new Array();
-        this.logMessageList.push(new LogMessage("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
-        this.logMessageList.push(new LogMessage("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
-        this.logMessageList.push(new LogMessage("N.Hのターンです。", LogMessageType.Player2Msg));
-        this.logMessageList.push(new LogMessage("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
-        this.logMessageList.push(new LogMessage("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
-        setInterval(() => this.logMessageList.push(new LogMessage("ようこそ", LogMessageType.EventMsg)), 5000);
+        this.logMessageList.push(new LogMessageForClient("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
+        this.logMessageList.push(new LogMessageForClient("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
+        this.logMessageList.push(new LogMessageForClient("N.Hのターンです。", LogMessageType.Player2Msg));
+        this.logMessageList.push(new LogMessageForClient("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
+        this.logMessageList.push(new LogMessageForClient("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
+        setInterval(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
         const gamePlayer = this.gameMaster.getGamePlayer(uuid);
