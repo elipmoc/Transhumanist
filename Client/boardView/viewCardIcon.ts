@@ -1,7 +1,7 @@
-import { ResourceKind } from "../Share/resourceKind";
-import { clipBitmap } from "./utility";
-import * as global from "./boardGlobalData";
-import { BuildActionKind } from "../Share/buildActionKind";
+import { ResourceKind } from "../../Share/resourceKind";
+import { clipBitmap } from "../utility";
+import * as global from "../boardGlobalData";
+import { BuildActionKind } from "../../Share/buildActionKind";
 
 //アイコンのベースクラス
 export class CardIconBase<T extends number> extends createjs.Bitmap {

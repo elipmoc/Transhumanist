@@ -1,9 +1,10 @@
 import * as global from "./boardGlobalData"
-import * as view from "./view"
+import * as view from "./boardView/view"
 import * as io from "socket.io-client";
-import * as viewBuilder from "./viewBuilder"
+import * as viewBuilder from "./boardView/viewBuilder"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
+import { OptionWindow } from "./boardView/optionWindow";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -51,7 +52,7 @@ function preloadImage() {
     stage.addChild(background);
 
     //オプションウインドウ
-    const optionWindow = new view.OptionWindow(queue);
+    const optionWindow = new OptionWindow(queue);
     optionWindow.x = global.canvasWidth / 2;
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;

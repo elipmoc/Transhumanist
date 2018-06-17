@@ -1,7 +1,7 @@
 import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./viewCardIcon"
-import { ResourceKind } from "../Share/resourceKind";
-import * as global from "./boardGlobalData";
-import { BuildActionKind } from "../Share/buildActionKind";
+import { ResourceKind } from "../../Share/resourceKind";
+import * as global from "../boardGlobalData";
+import { BuildActionKind } from "../../Share/buildActionKind";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {

@@ -1,18 +1,7 @@
-import * as global from "./boardGlobalData"
+import * as global from "../boardGlobalData"
 import * as viewBase from "./viewBase"
-import { successResultCreateRoomData } from "../Share/resultCreateRoomData";
-import { createMyShadow } from "./utility";
-
-//player情報
-export class PlayerInfo {
-    playerName: string;
-    speed: number;
-    resource: number;
-    activityRange: number;
-    uncertainty: number;
-    positive: number;
-    negative: number;
-}
+import { successResultCreateRoomData } from "../../Share/resultCreateRoomData";
+import { createMyShadow } from "../utility";
 
 //宣戦布告ボタン
 export class DeclareWarButton extends viewBase.ButtonBase {
@@ -82,64 +71,6 @@ export class SettingButton extends viewBase.ButtonBase {
     public getHeight() { return this.height; }
 
 }
-
-//オプション罰ボタン
-export class OptionCrossButton extends viewBase.ButtonBase {
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        const crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
-        var g = new createjs.Graphics()
-            .beginStroke("#000")
-            .beginFill("#000")
-            .rect(0, 0, crossButton.image.width, crossButton.image.height);
-        const rect = new createjs.Shape(g);
-        crossButton.hitArea = rect;
-        super(crossButton, onClickCallback);
-    }
-}
-
-//バー
-export class Bar extends createjs.Container {
-    private optionVolumeCursor: createjs.Bitmap;
-    private maxValue: number = 100;
-    private minValue: number = 0;
-    private maxX: number;
-    private minX: number = 0;
-    private callBack: (value: number) => void;
-    constructor(queue: createjs.LoadQueue) {
-        super();
-
-        const optionVolumeBar = new createjs.Bitmap(queue.getResult("optionVolumeBar"));
-        optionVolumeBar.regY = optionVolumeBar.image.height / 2;
-        this.maxX = optionVolumeBar.image.width;
-        this.addChild(optionVolumeBar);
-        this.optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
-        this.optionVolumeCursor.regX = this.optionVolumeCursor.image.width / 2;
-        this.optionVolumeCursor.regY = this.optionVolumeCursor.image.width / 2;
-        this.addEventListener("pressmove", event => {
-            this.setBarCursorX(this.stage.mouseX);
-        });
-        this.addEventListener("mousedown", event => {
-            this.setBarCursorX(this.stage.mouseX);
-        })
-        this.addChild(this.optionVolumeCursor);
-    }
-
-    private setBarCursorX(x: number) {
-        x = this.globalToLocal(x, 0).x;
-        if (x > this.maxX)
-            this.optionVolumeCursor.x = this.maxX;
-        else if (x < this.minX)
-            this.optionVolumeCursor.x = this.minX;
-        else
-            this.optionVolumeCursor.x = x;
-        this.stage.update();
-    }
-
-    onChangedValue(callBack: (value: number) => void) {
-        this.callBack = callBack;
-    }
-}
-
 
 export class Player1Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
@@ -483,80 +414,5 @@ export class Player4Build extends viewBase.PlayerBuildBase {
         this.buildArea.y = global.canvasHeight / 2 + (this.buildArea.image.height / 2) + 2;
         this.buildList.x = global.canvasWidth - 100 - this.buildArea.image.width;
         this.buildList.y = global.canvasHeight / 2 + 2;
-    }
-}
-
-//オプションウインドウ
-export class OptionWindow extends createjs.Container {
-    constructor(queue: createjs.LoadQueue) {
-        super();
-
-        const optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
-        optionFrame.regX = optionFrame.image.width / 2;
-        optionFrame.regY = optionFrame.image.height / 2;
-        this.addChild(optionFrame);
-
-        const optionCrossButton = new OptionCrossButton(() => { this.visible = false; this.stage.update(); }, queue);
-        optionCrossButton.x = 200;
-        optionCrossButton.y = - 270;
-        this.addChild(optionCrossButton);
-
-        const optionText = new createjs.Text();
-        optionText.x = -180;
-        optionText.y = -260;
-        optionText.text = "オプション";
-        optionText.color = "white";
-        optionText.font = "45px Arial";
-        this.addChild(optionText);
-
-        const optionIcon = new createjs.Bitmap(queue.getResult("setting"));
-        optionIcon.scaleX = 1;
-        optionIcon.scaleY = 1;
-        optionIcon.x = -280;
-        optionIcon.y = -280;
-        this.addChild(optionIcon);
-
-        const volumeText = new createjs.Text();
-        volumeText.x = -270;
-        volumeText.y = -180;
-        volumeText.text = "Volume";
-        volumeText.color = "white";
-        volumeText.font = "45px Arial";
-        this.addChild(volumeText);
-
-        const BgmText = new createjs.Text();
-        BgmText.x = -270;
-        BgmText.y = -130;
-        BgmText.text = "BGM";
-        BgmText.color = "white";
-        BgmText.font = "30px Arial";
-        this.addChild(BgmText);
-
-        const SeText = new createjs.Text();
-        SeText.x = -270;
-        SeText.y = -90;
-        SeText.text = "SE";
-        SeText.color = "white";
-        SeText.font = "30px Arial";
-        this.addChild(SeText);
-
-        const developerText = new createjs.Text();
-        developerText.x = -40;
-        developerText.y = -40;
-        developerText.text = "開発スタッフ";
-        developerText.color = "white";
-        developerText.font = "30px Arial";
-        this.addChild(developerText);
-
-        const BgmBar = new Bar(queue);
-        BgmBar.x = -170;
-        BgmBar.y = -115;
-        this.addChild(BgmBar);
-
-        const SeBar = new Bar(queue);
-        SeBar.x = -170;
-        SeBar.y = -75;
-        this.addChild(SeBar);
-
     }
 }

@@ -1,6 +1,6 @@
-import * as global from "./boardGlobalData"
-import { NumberOfActionCard } from "../Share/numberOfActionCard";
-import { createMyShadow } from "./utility";
+import * as global from "../boardGlobalData"
+import { NumberOfActionCard } from "../../Share/numberOfActionCard";
+import { createMyShadow } from "../utility";
 
 class NumberOfActionCardTexts extends createjs.Container {
     private texts: createjs.Text[] = new Array();

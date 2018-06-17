@@ -1,16 +1,16 @@
 import * as view from "./view";
 import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./viewBase";
-import { GamePlayerState } from "../Share/gamePlayerState";
+import { GamePlayerState } from "../../Share/gamePlayerState";
 import { SelectActionWindow } from "./viewSelectActionWindow";
-import { NumberOfActionCard } from "../Share/numberOfActionCard";
-import { ResourceKind } from "../Share/resourceKind";
-import { SelectResourceData } from "../Share/selectResourceData";
-import { SocketBinder } from "./socketBinder";
-import { SocketBinderList } from "./socketBinderList";
-import { BuildActionKind } from "../Share/buildActionKind";
-import { SelectBuildActionData } from "../Share/selectBuildActionData";
+import { NumberOfActionCard } from "../../Share/numberOfActionCard";
+import { ResourceKind } from "../../Share/resourceKind";
+import { SelectResourceData } from "../../Share/selectResourceData";
+import { SocketBinder } from "../socketBinder";
+import { SocketBinderList } from "../socketBinderList";
+import { BuildActionKind } from "../../Share/buildActionKind";
+import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { LogWindow, LogMessage } from "./logWindow";
-import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
+import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 
 export interface BindParams {
     stage: createjs.Stage;
