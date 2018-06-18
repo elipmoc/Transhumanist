@@ -13,6 +13,7 @@ import { LogWindow, LogMessage } from "./logWindow";
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 import { EventLogWindow } from "./eventLogWindow";
 import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
+import { ActionStorageWindow } from "./actionStorageWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -27,6 +28,7 @@ export function viewBuilder(bindParams: BindParams) {
     PlayerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
+    actionStorageWindowBuilder(bindParams);
     PlayerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
@@ -167,4 +169,9 @@ function eventLogWindowBuilder(bindParams: BindParams) {
         bindParams.stage.update();
     });
     bindParams.stage.addChild(eventLogWindow);
+}
+
+function actionStorageWindowBuilder(bindParams: BindParams) {
+    const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
+    bindParams.stage.addChild(actionStorageWindow);
 }

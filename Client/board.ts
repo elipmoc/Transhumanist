@@ -21,7 +21,7 @@ window.onload = () => {
         { id: "oddPlayerRBArea", src: "Img/ui/oddPlayerRBArea.png" },
         { id: "logEvent", src: "Img/ui/logEvent.png" },
         { id: "button", src: "Img/ui/button.png" },
-        { id: "handTest", src: "Img/ui/handTest.png" },
+        { id: "actionStorageFrame", src: "Img/ui/actionStorageFrame.png" },
         { id: "optionWindow", src: "Img/ui/optionWindow.png" },
         { id: "optionCross", src: "Img/ui/optionCross.png" },
         { id: "optionVolumeBar", src: "Img/ui/optionVolumeBar.png" },
