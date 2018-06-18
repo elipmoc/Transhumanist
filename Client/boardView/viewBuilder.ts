@@ -11,6 +11,8 @@ import { BuildActionKind } from "../../Share/buildActionKind";
 import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { LogWindow, LogMessage } from "./logWindow";
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
+import { EventLogWindow } from "./eventLogWindow";
+import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -24,6 +26,7 @@ export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
     PlayerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
+    eventLogWindowBuilder(bindParams);
     PlayerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
@@ -154,4 +157,14 @@ function logWindowBuilder(bindParams: BindParams) {
         bindParams.stage.update();
     })
     bindParams.stage.addChild(logWindow);
+}
+
+function eventLogWindowBuilder(bindParams: BindParams) {
+    const eventLogWindow = new EventLogWindow(bindParams.queue);
+    const eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage", bindParams.socket);
+    eventLogMessage.onUpdate(msg => {
+        eventLogWindow.setMessaage(msg);
+        bindParams.stage.update();
+    });
+    bindParams.stage.addChild(eventLogWindow);
 }

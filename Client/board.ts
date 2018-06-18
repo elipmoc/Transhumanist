@@ -35,6 +35,7 @@ window.onload = () => {
         { id: "resource", src: "Img/resource.png" },
         { id: "buildAction", src: "Img/buildAction.png" },
         { id: "logFrame", src: "Img/ui/logFrame.png" },
+        { id: "eventFrame", src: "Img/ui/eventFrame.png" },
         { id: "bg_level1", src: "Img/background/bg_level1.png" },
         { id: "bg_level2", src: "Img/background/bg_level2.png" },
         { id: "bg_level3", src: "Img/background/bg_level3.png" },
