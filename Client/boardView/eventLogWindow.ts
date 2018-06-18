@@ -14,7 +14,7 @@ export class EventLogWindow extends createjs.Container {
         super();
         const eventFrame = new createjs.Bitmap(queue.getResult("eventFrame"));
         eventFrame.x = global.canvasWidth / 2 - eventFrame.image.width / 2;
-        eventFrame.y = global.canvasHeight / 2 + eventFrame.image.height - 35;
+        eventFrame.y = global.canvasHeight / 2 + eventFrame.image.height - 35 - 100;
         this.titleText = new createjs.Text();
         this.titleText.x = eventFrame.x + 15;
         this.titleText.y = eventFrame.y + 10;

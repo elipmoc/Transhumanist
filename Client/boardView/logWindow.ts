@@ -11,7 +11,7 @@ export class LogWindow extends createjs.Container {
         super();
         const logFrame = new createjs.Bitmap(queue.getResult("logFrame"));
         logFrame.x = global.canvasWidth / 2 - logFrame.image.width / 2;
-        logFrame.y = global.canvasHeight / 2 - logFrame.image.height / 2;
+        logFrame.y = global.canvasHeight / 2 - logFrame.image.height / 2 - 100;
         this.logMessageBox = new MessageBox<LogMessage>(logFrame.image.height);
         this.logMessageBox.regX = -logFrame.x - 15;
         this.logMessageBox.regY = -logFrame.y;
