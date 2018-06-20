@@ -32,6 +32,7 @@ window.onload = () => {
         { id: "level4", src: "Img/card/back/level4mb.png" },
         { id: "level5", src: "Img/card/back/level5mb.png" },
         { id: "level6", src: "Img/card/back/level6mb.png" },
+        { id: "miningAction", src: "Img/card/front/action/mining.png" },
         { id: "resource", src: "Img/resource.png" },
         { id: "buildAction", src: "Img/buildAction.png" },
         { id: "logFrame", src: "Img/ui/logFrame.png" },
