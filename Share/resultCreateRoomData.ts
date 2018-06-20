@@ -1,15 +1,17 @@
 export type ResultCreateRoomData = {
     successFlag: boolean;
     errorMsg: string;
-    roomId: number
+    roomId: number;
+    uuid: string
 }
 
 //部屋作成が成功した際のResultCreateRoomDataを作成するビルダー関数
-export function successResultCreateRoomData(roomId: number): ResultCreateRoomData {
+export function successResultCreateRoomData(roomId: number, uuid: string): ResultCreateRoomData {
     return {
         successFlag: true,
         errorMsg: "",
-        roomId: roomId
+        roomId: roomId,
+        uuid: uuid
     };
 }
 
@@ -18,6 +20,7 @@ export function faildResultCreateRoomData(errorMsg: string): ResultCreateRoomDat
     return {
         successFlag: false,
         errorMsg: errorMsg,
-        roomId: NaN
+        roomId: NaN,
+        uuid: ""
     };
 }

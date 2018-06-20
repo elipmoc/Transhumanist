@@ -72,7 +72,8 @@ socket.on("resultCreateRoom", (data: string) => {
     let resultCreateRoomData: ResultCreateRoomData = JSON.parse(data);
     if (resultCreateRoomData.successFlag) {
         console.log("部屋が作成できました！");
-        requestEnter(resultCreateRoomData.roomId);
+        cookies.set("uuid", resultCreateRoomData.uuid);
+        window.location.href = "../board.html";
     }
     else {
         console.log(resultCreateRoomData.errorMsg);

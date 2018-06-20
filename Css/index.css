@@ -1,0 +1,32 @@
+.menubar{
+    position:fixed;
+    left:0;
+    top:0;
+    background:#EEE;
+    width:100%;
+    border-bottom:solid 1px #888;
+}
+
+.menubuttons{
+    margin-left:45%;
+}
+
+.menubutton{
+    color:#111;
+    padding:0.5em 1em;
+    border-right:solid 1px #888;
+    float:left;
+    cursor:pointer;
+    /*transition:background-color 0.5s linear 0;*/
+    transition-duration:0.25s;
+
+}
+
+.menubutton:first-child{
+    border-left:solid 1px #888;
+}
+
+.menubutton:hover{
+    background-color:#888;
+    transition-duration:0.25s;
+}
