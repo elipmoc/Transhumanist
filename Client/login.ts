@@ -103,16 +103,9 @@ socket.on("resultEnterRoom", (data: string) => {
     let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
     if (resultEnterRoomData.successFlag) {
         console.log("入室できました！");
-<<<<<<< HEAD
-        if (cookies.get("uuid") == undefined || cookies.get("uuid") == "") {
-            cookies.set("uuid", resultEnterRoomData.uuid);
-        } console.log(cookies.get("uuid"));
-        window.location.href = "../board.html";
-=======
         cookies.set("uuid", resultEnterRoomData.uuid);
         cookies.set("playerId", String(resultEnterRoomData.playerId));
         location.href = "board.html";
->>>>>>> f1ce24c5a12b72c4322af133d4272e7f0613ce54
     }
     else {
         console.log(resultEnterRoomData.errorMsg);
