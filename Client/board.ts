@@ -1,5 +1,10 @@
 import * as global from "./boardGlobalData"
-import * as view from "./view"
+import * as view from "./boardView/view"
+import * as io from "socket.io-client";
+import * as viewBuilder from "./boardView/viewBuilder"
+import * as cookies from "js-cookie";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
+import { OptionWindow } from "./boardView/optionWindow";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -16,38 +21,39 @@ window.onload = () => {
         { id: "oddPlayerRBArea", src: "Img/ui/oddPlayerRBArea.png" },
         { id: "logEvent", src: "Img/ui/logEvent.png" },
         { id: "button", src: "Img/ui/button.png" },
-        { id: "handTest", src: "Img/ui/handTest.png" },
+        { id: "actionStorageFrame", src: "Img/ui/actionStorageFrame.png" },
         { id: "optionWindow", src: "Img/ui/optionWindow.png" },
         { id: "optionCross", src: "Img/ui/optionCross.png" },
         { id: "optionVolumeBar", src: "Img/ui/optionVolumeBar.png" },
         { id: "optionVolumeCursor", src: "Img/ui/optionVolumeCursor.png" },
+        { id: "level1", src: "Img/card/back/level1mb.png" },
+        { id: "level2", src: "Img/card/back/level2mb.png" },
+        { id: "level3", src: "Img/card/back/level3mb.png" },
+        { id: "level4", src: "Img/card/back/level4mb.png" },
+        { id: "level5", src: "Img/card/back/level5mb.png" },
+        { id: "level6", src: "Img/card/back/level6mb.png" },
+        { id: "resource", src: "Img/resource.png" },
+        { id: "buildAction", src: "Img/buildAction.png" },
+        { id: "logFrame", src: "Img/ui/logFrame.png" },
+        { id: "eventFrame", src: "Img/ui/eventFrame.png" },
+        { id: "bg_level1", src: "Img/background/bg_level1.png" },
+        { id: "bg_level2", src: "Img/background/bg_level2.png" },
+        { id: "bg_level3", src: "Img/background/bg_level3.png" },
+        { id: "bg_level4", src: "Img/background/bg_level4.png" },
+        { id: "bg_level5", src: "Img/background/bg_level5.png" },
+        { id: "bg_level6", src: "Img/background/bg_level6.png" }
     ]);
 }
 
 function preloadImage() {
     let stage = new createjs.Stage("myCanvas");
-    let background = new createjs.Shape();
-    background.graphics.beginFill("black").
-        drawRect(0, 0, global.canvasWidth, global.canvasHeight);
+    stage.enableMouseOver();
+    let background = new createjs.Bitmap(queue.getResult("bg_level4"));
+    background.alpha = 0.5;
     stage.addChild(background);
 
-    //プレイヤー1の設置アクション
-    let player1buildArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
-    player1buildArea.regX = player1buildArea.image.width / 2;
-    player1buildArea.regY = player1buildArea.image.height;
-    player1buildArea.x = global.canvasWidth / 2;
-    player1buildArea.y = global.canvasHeight - 85;
-    stage.addChild(player1buildArea);
-    //プレイヤー1のリソース
-    let player1resourceArea = new createjs.Bitmap(queue.getResult("oddPlayerRBArea"));
-    player1resourceArea.regX = player1resourceArea.image.width / 2;
-    player1resourceArea.regY = player1resourceArea.image.height;
-    player1resourceArea.x = global.canvasWidth / 2;
-    player1resourceArea.y = player1buildArea.y - player1buildArea.image.height - 4;
-    stage.addChild(player1resourceArea);
-
     //オプションウインドウ
-    const optionWindow = new view.OptionWindow(queue);
+    const optionWindow = new OptionWindow(queue);
     optionWindow.x = global.canvasWidth / 2;
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;
@@ -67,54 +73,13 @@ function preloadImage() {
     topWindowsR.x = global.canvasWidth;
     stage.addChild(topWindowsR);
 
-    //ターン終了ボタン
-    let turnFinishButton = new view.TurnFinishButton(() => alert("ターン終了!"), queue);
-    stage.addChild(turnFinishButton);
+    const socket = io("/board");
 
-    //宣戦布告ボタン
-    const declareWarButton = new view.DeclareWarButton(() => alert("宣戦布告!"), queue);
-    stage.addChild(declareWarButton);
+    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
+    socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-    const player1Window = new view.Player1Window(queue);
-    player1Window.setPlayerName("輝夜月");
-    player1Window.setSpeed(810);
-    player1Window.setResource(10);
-    player1Window.setActivityRange(5);
-    player1Window.setUncertainty(777);
-    player1Window.setPositive(15);
-    player1Window.setNegative(30);
+    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket, playerId: Number(cookies.get("playerId")) });
 
-    const player2Window = new view.Player2Window(queue);
-    player2Window.setPlayerName("スーパーひとしくん");
-    player2Window.setSpeed(931);
-    player2Window.setResource(1919);
-    player2Window.setActivityRange(4545);
-    player2Window.setUncertainty(721);
-    player2Window.setPositive(893);
-    player2Window.setNegative(801);
-
-    const player3Window = new view.Player3Window(queue);
-    player3Window.setPlayerName("イキリオタク");
-    player3Window.setSpeed(99);
-    player3Window.setResource(99);
-    player3Window.setActivityRange(99);
-    player3Window.setUncertainty(99);
-    player3Window.setPositive(999);
-    player3Window.setNegative(999);
-
-    const player4Window = new view.Player4Window(queue);
-    player4Window.setPlayerName("いなむ");
-    player4Window.setSpeed(93);
-    player4Window.setResource(9);
-    player4Window.setActivityRange(9);
-    player4Window.setUncertainty(9);
-    player4Window.setPositive(88);
-    player4Window.setNegative(44);
-
-    stage.addChild(player1Window);
-    stage.addChild(player2Window);
-    stage.addChild(player3Window);
-    stage.addChild(player4Window);
     stage.addChild(optionWindow);
     stage.update();
 }

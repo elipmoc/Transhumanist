@@ -25,6 +25,12 @@ export function createRouter() {
     myRouter.get("/Img/ui/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/ui/" + req.params.path);
     });
+    myRouter.get("/Img/background/:path", (req: any, res: any) => {
+        sendPng(res, "./Resource/Img/background/" + req.params.path);
+    });
+    myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
+        sendPng(res, "./Resource/Img/card/back/" + req.params.path);
+    });
     myRouter.get("/:path", (req: any, res: any) => {
         sendHtml(res, "./Html/" + req.params.path);
     });

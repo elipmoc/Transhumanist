@@ -1,10 +1,7 @@
-import { RoomEvents } from "../Server/roomEvents";
 import { PlayerData } from "../Server/playerData";
 import { PlayerDataList } from "../Server/playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
-import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { PasswordInfo } from "./passwordInfo";
-import { PassThrough } from "stream";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 
 export class RoomData {
@@ -13,14 +10,14 @@ export class RoomData {
     private playerDataList: PlayerDataList;
     private playFlag: boolean;
     private passwordInfo: PasswordInfo;
-    private roomEvents: RoomEvents;
+    //private roomEvents: RoomEvents;
 
-    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents) {
+    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, /*roomEvents: RoomEvents*/) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.passwordInfo = passwordInfo;
         this.playFlag = false;
-        this.roomEvents = roomEvents;
+        // this.roomEvents = roomEvents;
 
         this.playerDataList = new PlayerDataList;
 
@@ -31,7 +28,7 @@ export class RoomData {
             playerList: this.playerDataList.getPlayerNameList(),
             passwordFlag: this.passwordInfo.isNeedPassword()
         };
-        this.roomEvents.addRoom(roomData);
+        //  this.roomEvents.addRoom(roomData);
     }
 
     getRoomId() { return this.roomId; }
@@ -44,31 +41,20 @@ export class RoomData {
         this.playFlag = playFlag;
         let playFlagDataForClient: PlayFlagDataForClient
             = { playFlag: playFlag, roomId: this.roomId };
-        this.roomEvents.updatePlayFlag(playFlagDataForClient);
+        //this.roomEvents.updatePlayFlag(playFlagDataForClient);
     }
 
-    getPlayerData(uuid: string) { this.playerDataList.getPlayerData(uuid); }
+    getPlayerData(uuid: string) {
+        return this.playerDataList.getPlayerData(uuid);
+    }
 
     deleteMember(uuid: string) {
         this.playerDataList.deleteMember(uuid);
-        const playerDataForClient: PlayerDataForClient =
-            {
-                roomId: this.roomId,
-                playerId: this.playerDataList.getPlayerId(uuid),
-                playerName: ""
-            };
-        this.roomEvents.deleteMember(playerDataForClient, uuid);
     }
 
     addMember(playerData: PlayerData) {
         this.playerDataList.addMember(playerData);
-        const playerDataForClient: PlayerDataForClient =
-            {
-                roomId: this.roomId,
-                playerId: this.playerDataList.getPlayerId(playerData.getUuid()),
-                playerName: playerData.getName()
-            };
-        this.roomEvents.addMember(playerDataForClient);
+        return this.playerDataList.getPlayerId(playerData.getUuid());
     }
 
     getPasswordInfo() { return this.passwordInfo; }
@@ -76,7 +62,7 @@ export class RoomData {
     deleteRoom() {
         this.playerDataList.getPlayerUuidList()
             .forEach(x => this.deleteMember(x));
-        this.roomEvents.deleteRoom(this.roomId);
+        //this.roomEvents.deleteRoom(this.roomId);
     }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
