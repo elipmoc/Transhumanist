@@ -1,7 +1,7 @@
 import * as view from "./view";
 import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./viewBase";
 import { GamePlayerState } from "../../Share/gamePlayerState";
-import { SelectActionWindow } from "./viewSelectActionWindow";
+import { SelectActionWindow } from "./selectActionWindow";
 import { NumberOfActionCard } from "../../Share/numberOfActionCard";
 import { ResourceKind } from "../../Share/resourceKind";
 import { SelectResourceData } from "../../Share/selectResourceData";

@@ -1,4 +1,4 @@
-import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./viewCardIcon"
+import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./cardIcon"
 import { ResourceKind } from "../../Share/resourceKind";
 import * as global from "../boardGlobalData";
 import { BuildActionKind } from "../../Share/buildActionKind";
