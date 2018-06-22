@@ -25,11 +25,11 @@ export interface BindParams {
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
-    PlayerResourceAreaBuilder(bindParams);
+    playerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
     actionStorageWindowBuilder(bindParams);
-    PlayerBuildActionAreaBuilder(bindParams);
+    playerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -63,7 +63,7 @@ function playerWindowBuilder(bindParams: BindParams) {
 }
 
 //プレイヤーのリソース欄生成
-function PlayerResourceAreaBuilder(bindParams: BindParams) {
+function playerResourceAreaBuilder(bindParams: BindParams) {
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new view.Player1ResourceArea(bindParams.queue),
         new view.Player2ResourceArea(bindParams.queue),
@@ -88,7 +88,7 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
 }
 
 //プレイヤーの設置アクション欄生成
-function PlayerBuildActionAreaBuilder(bindParams: BindParams) {
+function playerBuildActionAreaBuilder(bindParams: BindParams) {
     const playerBuildActionAreaList: PlayerBuildBase[] = [
         new view.Player1Build(bindParams.queue),
         new view.Player2Build(bindParams.queue),
