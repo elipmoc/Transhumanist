@@ -1,3 +1,12 @@
+body{
+    color:#111;
+}
+
+a{
+    color:#111;
+    text-decoration:none;
+}
+
 .menubar{
     position:fixed;
     left:0;
@@ -8,25 +17,34 @@
 }
 
 .menubuttons{
-    margin-left:45%;
+    display: flex;
+    justify-content: center;
+    margin:0;
+    padding:0;
 }
 
 .menubutton{
-    color:#111;
-    padding:0.5em 1em;
     border-right:solid 1px #888;
-    float:left;
     cursor:pointer;
+    list-style-type:none;
     /*transition:background-color 0.5s linear 0;*/
     transition-duration:0.25s;
-
 }
-
+.menubutton a{
+    display:block;
+    padding:0.5em 1em;
+}
+.menubutton:nth-child(1){
+    font-weight:bold;
+}
 .menubutton:first-child{
     border-left:solid 1px #888;
 }
-
 .menubutton:hover{
     background-color:#888;
     transition-duration:0.25s;
+}
+
+.content{
+    padding-top:40px;
 }
