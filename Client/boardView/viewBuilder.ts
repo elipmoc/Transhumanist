@@ -14,6 +14,7 @@ import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForCl
 import { EventLogWindow } from "./eventLogWindow";
 import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { ActionStorageWindow } from "./actionStorageWindow";
+import { SelectDiceWindow } from "./selectDiceWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -33,6 +34,7 @@ export function viewBuilder(bindParams: BindParams) {
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
+    selectDiceWindowBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -145,6 +147,12 @@ function selectActionWindowBuilder(bindParams: BindParams) {
         selectActionWindow.setNumberOfActionCard(numberOfActionCardList);
         bindParams.stage.update();
     })
+}
+
+function selectDiceWindowBuilder(bindParams: BindParams) {
+    const selectDiceWindow = new SelectDiceWindow(bindParams.queue);
+    bindParams.stage.addChild(selectDiceWindow);
+    //    selectDiceWindow.visible = false;
 }
 
 function logWindowBuilder(bindParams: BindParams) {
