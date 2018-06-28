@@ -1,5 +1,5 @@
 body{
-    background:linear-gradient(#222,#000);
+    background:#222;
     color:#EEE;
 }
 
@@ -39,7 +39,7 @@ a{
     display:block;
     padding:0.5em 1em;
 }
-.menubutton:nth-child(1){
+.menubutton:nth-child(4){
     font-weight:bold;
 }
 .menubutton:first-child{
@@ -51,54 +51,68 @@ a{
 }
 
 .content{
+    background-image:url("Img/page/bg_level6.png");
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-size:cover;
     padding-top:120px;
+    padding-bottom:1em;
 }
 .content>div{
-    margin-bottom:60px;
+    margin-bottom:40px;
 }
 
-.title{
-    text-align: center;
-}
-.title img{
-    display:block;
-    margin:0 auto;
-}
-
-.text{
+.intro{
     margin:0 auto;
     padding:1em;
     max-width:30em;
     background:#EEE;
     color:#111;
 }
-.intro>ul{
-    margin:0;
-}
-.introduction{
-    background:rgb(241, 238, 196);
+
+.staff{
+    background:#EEE;
+    max-width:40em;
+    margin:0 auto;
     color:#111;
     padding:1em;
-    max-width:26em;
-    margin:0 auto 1em auto;
-    border-radius:1em;
-    box-shadow:0.5em 0.5em #888;
-    border:1px solid #111;
+    z-index:0;
+    overflow:auto;
+}
+.staff img{
+    display:block;
+    width:128px;
+    height:128px;
+    float:left;
+    margin-right:1em;
 }
 
-.int-game{
-    text-align: center;
+.Nagisa{
+    position:relative;
+    opacity:0;
+    transition-duration:0.25s;
 }
-.btn{
-    width:350px;
-    height:120px;
-    background:#333;
-    margin:0.5em auto 0 auto;
-    box-shadow:0 0 2px 2px rgba(0,0,0,1);
-    transition-duration:0.2s;
+
+.Nagisa:hover{
+    opacity:1;
 }
-.btn:hover{
-    opacity:0.8;
+
+.twitter{
+    position:sticky;
+    background:rgba(62, 216, 255, 0.5);
+    color:white;
+    width:2em;
+    height:2em;
+    display:block;
+    text-align:center;
+    border-radius:0.5em;
+    transition-duration:0.25s;
+    font-weight:bold;
+    border:1px solid #EEE;
+    cursor:pointer;
+}
+.twitter:hover{
+    background:rgb(71, 202, 238);
 }
 
 footer{
