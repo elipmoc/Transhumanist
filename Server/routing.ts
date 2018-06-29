@@ -25,6 +25,9 @@ export function createRouter() {
     myRouter.get("/Img/ui/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/ui/" + req.params.path);
     });
+    myRouter.get("/Img/page/:path", (req: any, res: any) => {
+        sendPng(res, "./Resource/Img/page/" + req.params.path);
+    });
     myRouter.get("/Img/background/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/background/" + req.params.path);
     });
