@@ -39,7 +39,7 @@ a{
     display:block;
     padding:0.5em 1em;
 }
-.menubutton:nth-child(4){
+.menubutton:nth-child(2){
     font-weight:bold;
 }
 .menubutton:first-child{
@@ -51,10 +51,6 @@ a{
 }
 
 .content{
-    background-image:url("/Img/page/bg_level6.png");
-    background-repeat:no-repeat;
-    background-attachment:fixed;
-    background-size:cover;
     padding-top:120px;
     padding-bottom:1em;
 }
@@ -62,57 +58,38 @@ a{
     margin-bottom:40px;
 }
 
-.intro{
+.document{
     margin:0 auto;
     padding:1em;
-    max-width:30em;
-    background:#EEE;
+    max-width:35em;
+    background:rgb(241, 237, 217);
     color:#111;
 }
-
-.staff{
-    background:#EEE;
-    max-width:40em;
-    margin:0 auto;
+.document a{
     color:#111;
-    padding:1em;
-    z-index:0;
-    overflow:auto;
 }
-.staff img{
-    display:block;
-    width:128px;
-    height:128px;
-    float:left;
-    margin-right:1em;
+.document h4{
+    margin-bottom:0;
 }
-
-.Nagisa{
-    position:relative;
-    opacity:0;
-    transition-duration:0.25s;
+.document ol{
+    margin-top:0;
 }
-
-.Nagisa:hover{
-    opacity:1;
+.data{
+    font-size:14px;
+    text-align:right;
 }
-
-.twitter{
-    position:sticky;
-    background:rgba(62, 216, 255, 0.5);
-    color:white;
-    width:2em;
-    height:2em;
-    display:block;
-    text-align:center;
-    border-radius:0.5em;
-    transition-duration:0.25s;
+.to{
+    font-size:14px;
+}
+.from{
+    font-size:14px;
+    text-align:right;
+}
+.title{
+    font-size:20px;
     font-weight:bold;
-    border:1px solid #EEE;
-    cursor:pointer;
-}
-.twitter:hover{
-    background:rgb(71, 202, 238);
+    margin:1em 0;
+    text-align:center;
 }
 
 footer{
@@ -125,5 +102,4 @@ footer{
     color:#111;
     text-align:right;
     padding-right:2em;
-
 }
