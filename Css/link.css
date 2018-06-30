@@ -51,7 +51,7 @@ a{
 }
 
 .content{
-    background-image:url("Img/page/bg_level6.png");
+    background-image:url("/Img/page/bg_level6.png");
     background-repeat:no-repeat;
     background-attachment:fixed;
     background-size:cover;
