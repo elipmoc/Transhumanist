@@ -14,7 +14,7 @@ import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForCl
 import { EventLogWindow } from "./eventLogWindow";
 import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { ActionStorageWindow } from "./actionStorageWindow";
-import { SelectDiceWindow } from "./selectDiceWindow";
+import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -151,6 +151,10 @@ function selectActionWindowBuilder(bindParams: BindParams) {
 
 function selectDiceWindowBuilder(bindParams: BindParams) {
     const selectDiceWindow = new SelectDiceWindow(bindParams.queue);
+    selectDiceWindow.setDiceList([new DiceIcon(0), new DiceIcon(5), new DiceIcon(3)]);
+    selectDiceWindow.onSelectedDise((index: number) => {
+        alert(index);
+    });
     bindParams.stage.addChild(selectDiceWindow);
     //    selectDiceWindow.visible = false;
 }

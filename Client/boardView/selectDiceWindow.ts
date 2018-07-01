@@ -15,12 +15,20 @@ export class DiceIcon extends createjs.Container {
         text.y = -45;
         text.textAlign = "center";
         this.addChild(text);
+        dise.addEventListener("click", () => this.callBack());
+    }
+
+    private callBack: () => void;
+
+    onClicked(callBack: () => void) {
+        this.callBack = callBack;
     }
 }
 
 //獲得するアクションカードを選択するウインドウ
 export class SelectDiceWindow extends createjs.Container {
     private diceList: DiceIcon[] = new Array();
+    private callBack: (index: number) => void;
 
     setDiceList(diceList: DiceIcon[]) {
         this.diceList.forEach(x => this.removeChild(x));
@@ -32,8 +40,13 @@ export class SelectDiceWindow extends createjs.Container {
         diceList.forEach((dice, index) => {
             dice.x = global.canvasWidth / 2 - fixWidth + index * (DiceIcon.size + 10);
             dice.y = global.canvasHeight / 2;
+            dice.onClicked(() => this.callBack(index));
             this.addChild(dice);
         });
+    }
+
+    onSelectedDise(callBack: (index: number) => void) {
+        this.callBack = callBack;
     }
 
     constructor(queue: createjs.LoadQueue) {
@@ -58,9 +71,5 @@ export class SelectDiceWindow extends createjs.Container {
 
         this.addChild(frame);
         this.addChild(descriptionText);
-        this.setDiceList([new DiceIcon(3), new DiceIcon(2), new DiceIcon(1), new DiceIcon(5)]);
-        this.setDiceList([new DiceIcon(3)]);
-        // this.setDiceList([new DiceIcon(3), new DiceIcon(2)]);
-
     }
 }
