@@ -1,5 +1,6 @@
 import * as global from "../boardGlobalData";
 import { createMyShadow } from "../utility";
+import { DiceNumber } from "../../Share/diceNumber";
 
 
 //ダイスアイコン
@@ -27,17 +28,17 @@ export class DiceIcon extends createjs.Container {
 
 //獲得するアクションカードを選択するウインドウ
 export class SelectDiceWindow extends createjs.Container {
-    private diceList: DiceIcon[] = new Array();
+    private diceIconList: DiceIcon[] = new Array();
     private callBack: (index: number) => void;
 
-    setDiceList(diceList: DiceIcon[]) {
-        this.diceList.forEach(x => this.removeChild(x));
-        this.diceList = diceList;
+    setDiceList(diceList: DiceNumber[]) {
+        this.diceIconList.forEach(x => this.removeChild(x));
+        this.diceIconList = diceList.map(x => new DiceIcon(x));
         const diceOdd = diceList.length % 2 != 0;
         const fixWidth = diceOdd ?
             Math.floor(diceList.length / 2) * (DiceIcon.size + 10) :
             ((diceList.length / 2) - 1) * (DiceIcon.size + 10) + DiceIcon.size / 2 + 5;
-        diceList.forEach((dice, index) => {
+        this.diceIconList.forEach((dice, index) => {
             dice.x = global.canvasWidth / 2 - fixWidth + index * (DiceIcon.size + 10);
             dice.y = global.canvasHeight / 2;
             dice.onClicked(() => this.callBack(index));

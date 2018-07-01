@@ -11,6 +11,7 @@ import { BuildActionKind } from "../Share/buildActionKind";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
 import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
+import { DiceNumber } from "../Share/diceNumber";
 
 export class BoardGame {
     private gameMaster: GameMaster;
@@ -67,6 +68,7 @@ export class BoardGame {
         const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, this.boardSocket);
         const resourceList = new SocketBinderList<ResourceKind>("ResourceKindList" + playerId, this.boardSocket);
         const buildActionList = new SocketBinderList<BuildActionKind>("BuildActionKindList" + playerId, this.boardSocket);
-        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList);
+        const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId, this.boardSocket);
+        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList);
     }
 }

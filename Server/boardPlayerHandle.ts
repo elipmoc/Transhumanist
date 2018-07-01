@@ -51,5 +51,6 @@ export class BoardPlayerHandle {
             this.events.selectResourceCallBack(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
             this.events.selectBuildActionCallBack(JSON.parse(str)));
+        socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
     }
 }

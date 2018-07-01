@@ -4,6 +4,7 @@ import { PlayerData } from "./playerData";
 import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
+import { DiceNumber } from "../Share/diceNumber";
 
 export class GamePlayer {
     private playerId: number;
@@ -11,6 +12,7 @@ export class GamePlayer {
     private state: SocketBinder<GamePlayerState>;
     private resourceList: SocketBinderList<ResourceKind>;
     private buildActionList: SocketBinderList<BuildActionKind>;
+    private diceList: SocketBinder<DiceNumber[]>;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -20,8 +22,11 @@ export class GamePlayer {
         playerId: number,
         state: SocketBinder<GamePlayerState>,
         resourceList: SocketBinderList<ResourceKind>,
-        buildActionList: SocketBinderList<BuildActionKind>
+        buildActionList: SocketBinderList<BuildActionKind>,
+        diceList: SocketBinder<DiceNumber[]>
     ) {
+        this.diceList = diceList;
+        this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
         this.state = state;
@@ -81,5 +86,6 @@ export class GamePlayer {
         this.state.updateAt(socket);
         this.resourceList.updateAt(socket);
         this.buildActionList.updateAt(socket);
+        this.diceList.updateAt(socket);
     }
 }
