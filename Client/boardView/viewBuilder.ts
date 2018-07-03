@@ -16,6 +16,7 @@ import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { ActionStorageWindow } from "./actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
+import { ActionCardUseDecisionWindow } from "./actionCardUseDecisionWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -30,8 +31,8 @@ export function viewBuilder(bindParams: BindParams) {
     playerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
-    actionStorageWindowBuilder(bindParams);
     playerBuildActionAreaBuilder(bindParams);
+    actionStorageWindowBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -158,7 +159,7 @@ function selectDiceWindowBuilder(bindParams: BindParams) {
     });
     diceIconList.onUpdate(diceList => selectDiceWindow.setDiceList(diceList));
     bindParams.stage.addChild(selectDiceWindow);
-    //    selectDiceWindow.visible = false;
+    selectDiceWindow.visible = false;
 }
 
 function logWindowBuilder(bindParams: BindParams) {
@@ -187,5 +188,14 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 
 function actionStorageWindowBuilder(bindParams: BindParams) {
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
+    const decision = new ActionCardUseDecisionWindow();
+    decision.visible = false;
+    actionStorageWindow.onSelectedCard((index, name) => {
+        decision.setCardName(name);
+        decision.visible = true;
+        bindParams.stage.update();
+    });
+
     bindParams.stage.addChild(actionStorageWindow);
+    bindParams.stage.addChild(decision);
 }
