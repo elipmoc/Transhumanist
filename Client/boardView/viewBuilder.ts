@@ -16,7 +16,7 @@ import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { ActionStorageWindow } from "./actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
-import { ActionCardUseDecisionWindow } from "./actionCardUseDecisionWindow";
+import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -190,6 +190,11 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
     decision.visible = false;
+    decision.onClicked((r) => {
+        if (r == DialogResult.Yes) 0;
+        decision.visible = false;
+        bindParams.stage.update();
+    });
     actionStorageWindow.onSelectedCard((index, name) => {
         decision.setCardName(name);
         decision.visible = true;

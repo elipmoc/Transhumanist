@@ -19,9 +19,16 @@ class DecisionButton extends createjs.Container {
     }
 }
 
+export const enum DialogResult {
+    Yes,
+    No
+}
+export type ResultFunc = (r: DialogResult) => void;
+
 //アクションカードを使用するかの最終確認ウインドウ
 export class ActionCardUseDecisionWindow extends createjs.Container {
     private label: createjs.Text;
+    private callBack: ResultFunc;
     constructor() {
         super();
         const width = 500;
@@ -38,13 +45,18 @@ export class ActionCardUseDecisionWindow extends createjs.Container {
         const yes = new DecisionButton("はい");
         yes.x = global.canvasWidth / 2 - width / 2 + 30 + yes.width / 2;
         yes.y = global.canvasHeight / 2 + height / 2 - 30 - yes.height / 2;
+        yes.addEventListener("click", () => this.callBack(DialogResult.Yes));
         const no = new DecisionButton("いいえ");
         no.x = global.canvasWidth / 2 + width / 2 - 30 - no.width / 2;
         no.y = global.canvasHeight / 2 + height / 2 - 30 - yes.height / 2;
+        no.addEventListener("click", () => this.callBack(DialogResult.No));
         this.addChild(background, this.label, yes, no);
     }
     setCardName(name: string) {
         this.label.text = `${name}を使用する？`;
+    }
+    onClicked(callBack: ResultFunc) {
+        this.callBack = callBack;
     }
 
 }
