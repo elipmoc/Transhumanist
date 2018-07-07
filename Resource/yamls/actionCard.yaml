@@ -1,0 +1,71 @@
+- name: 採掘施設
+  level: 1
+  build_use: true
+  cost:
+    - name: 人間
+      number: 2
+  commands:
+    - kind: rand_get
+      body: 
+        select_number: 1
+        items:
+          - name: メタル
+            number: 1
+          - name: ガス
+            number: 1
+          - name: ケイ素
+            number: 1
+          - name: 硫黄
+            number: 1
+
+- name: 加工施設
+  level: 2
+  build_use: true
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 1
+  commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: ケイ素
+            number: 2
+        get:
+          - name: 注射器
+            number: 1
+
+    - kind: create_get
+      body:
+        cost:
+          - name: ケイ素
+            number: 1
+          - name: メタル
+            number: 1
+        get:
+          - name: CPU
+            number: 1
+
+    - kind: create_get
+      body:
+        cost:
+          - name: 硫黄
+            number: 2
+        get:
+          - name: 爆弾
+            number: 1
+
+- name: 核融合炉
+  level: 2
+  build_use: true
+  cost:
+    - name: 人間
+      number: 2
+    - name: ガス
+      number: 2
+  commands:
+    - kind: cost_take_over
+      body:
+        name: ガス
+        max_cost: 2
