@@ -5,7 +5,7 @@ import { CheckUndefined } from "./check_func";
 export function ActionCardYamlDataCheck(data: ActionCardYamlData[]) {
     let actionCardHash: ActionCardHash = {};
     CheckUndefined(data.length, "最上位の式は配列ですか？");
-    data.forEach(x => {
+    data.forEach((x, index) => {
         CheckUndefined(x.description, "descriptionがありませんよ？");
         CheckUndefined(x.build_use, "build_useがありませんよ？");
         CheckUndefined(x.commands, "commandsがありませんよ？");
@@ -17,6 +17,7 @@ export function ActionCardYamlDataCheck(data: ActionCardYamlData[]) {
         CheckUndefined(x.level, "levelがありませんよ？");
         CheckUndefined(x.name, "nameがありませんよ？");
         actionCardHash[x.name] = x;
+        x.index = index;
     });
     return actionCardHash;
 }

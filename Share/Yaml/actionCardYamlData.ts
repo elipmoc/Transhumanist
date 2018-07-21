@@ -4,6 +4,7 @@ export interface ActionCardHash {
 
 export interface ActionCardYamlData {
     name: string;
+    index: number;
     level: number;
     build_use: boolean;
     description: string;

@@ -3,10 +3,11 @@ import { CheckUndefined } from "./check_func";
 export function GenerateResourceYamlData(yamlData: Resource[]) {
     CheckUndefined(yamlData.length, "resourceのyamlが配列ではありません");
     let resourceHash: ResourceHash = {};
-    yamlData.forEach(x => {
+    yamlData.forEach((x, index) => {
         CheckUndefined(x.name, "resourceのyamlにnameがありません");
         CheckUndefined(x.description, "resourceのyamlにdescriptionがありません");
         CheckUndefined(x.level, "resourceのyamlにlevelがありません");
+        x.index = index;
         resourceHash[x.name] = x;
     });
     return resourceHash;
@@ -18,6 +19,7 @@ export interface ResourceHash {
 
 export interface Resource {
     name: string,
+    index: number,
     level: number,
     description: string
 }
