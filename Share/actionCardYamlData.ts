@@ -2,6 +2,7 @@ export interface ActionCardYamlData {
     name: string;
     level: number;
     build_use: boolean;
+    description: string;
     cost: ResourceItem[];
     commands: Command[];
 }
@@ -13,10 +14,8 @@ export interface ResourceItem {
 
 export interface Command {
     kind: string;
-    body: RandGet | CreateGet | CostTakeOver;
+    body: RandGet | CreateGet | CostTakeOver | ResourcePlus | ResourceGuard | Get | Trade | SpeedPlus;
 }
-
-export const commandList: string[] = ["rand_get", "create_get", "cost_take_over"];
 
 export interface RandGet {
     select_number: 1;
@@ -31,4 +30,26 @@ export interface CreateGet {
 export interface CostTakeOver {
     name: string;
     max_cost: number;
+}
+
+export interface ResourcePlus {
+    add: number;
+}
+
+export interface ResourceGuard {
+    number: number;
+}
+
+export interface Get {
+    items: ResourceItem[];
+}
+
+export interface Trade {
+    cost_items: ResourceItem[];
+    from_item: ResourceItem;
+    to_item: ResourceItem;
+}
+
+export interface SpeedPlus {
+    plus: number;
 }
