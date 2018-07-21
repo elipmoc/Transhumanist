@@ -1,16 +1,17 @@
 import { SocketBinder } from "./socketBinder";
 import { GamePlayerState } from "../Share/gamePlayerState";
 import { PlayerData } from "./playerData";
-import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { DiceNumber } from "../Share/diceNumber";
+import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
+import { yamlGet } from "../Share/Yaml/yamlGet";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
-    private resourceList: SocketBinderList<ResourceKind>;
+    private resourceList: SocketBinderList<ResourceIndex>;
     private buildActionList: SocketBinderList<BuildActionKind>;
     private diceList: SocketBinder<DiceNumber[]>;
 
@@ -21,7 +22,7 @@ export class GamePlayer {
         playerData: PlayerData,
         playerId: number,
         state: SocketBinder<GamePlayerState>,
-        resourceList: SocketBinderList<ResourceKind>,
+        resourceList: SocketBinderList<ResourceIndex>,
         buildActionList: SocketBinderList<BuildActionKind>,
         diceList: SocketBinder<DiceNumber[]>
     ) {
@@ -57,27 +58,29 @@ export class GamePlayer {
             BuildActionKind.fusion_reactor,
             BuildActionKind.robot_factory,
         ];
+        const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/yamls/resource.yaml"));
         this.resourceList.Value = [
-            ResourceKind.human,
-            ResourceKind.human,
-            ResourceKind.human,
-            ResourceKind.human,
-            ResourceKind.human,
-            ResourceKind.bible,
-            ResourceKind.bible,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.cpu,
-            ResourceKind.extended_human,
-            ResourceKind.extended_human,
-            ResourceKind.extended_human,
-            ResourceKind.extended_human,
-            ResourceKind.extended_human,
-            ResourceKind.extended_human,
+            resourceAction["人間"].index,
+            resourceAction["人間"].index,
+            resourceAction["人間"].index,
+            resourceAction["人間"].index,
+            resourceAction["人間"].index,
+            resourceAction["聖書"].index,
+            resourceAction["聖書"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["CPU"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
+            resourceAction["拡張人間"].index,
         ];
     }
 

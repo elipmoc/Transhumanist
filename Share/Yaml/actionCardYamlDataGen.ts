@@ -2,7 +2,7 @@ import { ActionCardYamlData, Command, RandGet, CreateGet, CostTakeOver, Resource
 import { CheckUndefined } from "./check_func";
 
 
-export function ActionCardYamlDataCheck(data: ActionCardYamlData[]) {
+export function GenerateActionCardYamlData(data: ActionCardYamlData[]) {
     let actionCardHash: ActionCardHash = {};
     CheckUndefined(data.length, "最上位の式は配列ですか？");
     data.forEach((x, index) => {

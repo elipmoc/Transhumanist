@@ -3,7 +3,6 @@ import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./vie
 import { GamePlayerState } from "../../Share/gamePlayerState";
 import { SelectActionWindow } from "./selectActionWindow";
 import { NumberOfActionCard } from "../../Share/numberOfActionCard";
-import { ResourceKind } from "../../Share/resourceKind";
 import { SelectResourceData } from "../../Share/selectResourceData";
 import { SocketBinder } from "../socketBinder";
 import { SocketBinderList } from "../socketBinderList";
@@ -17,6 +16,7 @@ import { ActionStorageWindow } from "./actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
+import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -75,18 +75,18 @@ function playerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const resourceKindList = new SocketBinderList<ResourceIndex>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
             list.forEach((x, iconId) => playerResourceAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
         });
-        resourceKindList.onSetAt((iconId: number, x: ResourceKind) => {
+        resourceKindList.onSetAt((iconId: number, x: ResourceIndex) => {
             playerResourceAreaList[i].setResource(iconId, x, bindParams.queue);
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
-    playerResourceAreaList[0].onClickIcon((iconId, resourceKind) => {
-        const selectResourceData: SelectResourceData = { iconId, resourceKind };
+    playerResourceAreaList[0].onClickIcon((iconId, resourceIndex) => {
+        const selectResourceData: SelectResourceData = { iconId, resourceIndex };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
 }

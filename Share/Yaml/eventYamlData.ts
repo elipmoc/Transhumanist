@@ -17,10 +17,11 @@ export function GenerateEventYamlData(yamlData: Event[]) {
 export interface EventHash {
     [index: string]: Event;
 }
+export type EventIndex = number;
 
 export interface Event {
     name: string,
-    index: number,
+    index: EventIndex,
     level: number,
     description: string,
     forever: boolean

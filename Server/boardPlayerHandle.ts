@@ -1,5 +1,4 @@
 import { GamePlayerState } from "../Share/gamePlayerState"
-import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";

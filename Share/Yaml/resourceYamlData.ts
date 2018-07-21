@@ -17,9 +17,11 @@ export interface ResourceHash {
     [index: string]: Resource;
 }
 
+export type ResourceIndex = number;
+
 export interface Resource {
     name: string,
-    index: number,
+    index: ResourceIndex,
     level: number,
     description: string
 }

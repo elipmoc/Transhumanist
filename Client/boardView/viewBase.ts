@@ -1,7 +1,7 @@
 import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./cardIcon"
-import { ResourceKind } from "../../Share/resourceKind";
 import * as global from "../boardGlobalData";
 import { BuildActionKind } from "../../Share/buildActionKind";
+import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
@@ -67,12 +67,12 @@ export class PlayerWindowBase extends createjs.Container {
 //プレイヤーリソース欄のベースクラス
 export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
-    protected resourceList: IconList<ResourceCardIcon, ResourceKind>;
+    protected resourceList: IconList<ResourceCardIcon, ResourceIndex>;
 
     //xNum:リソースを横に何個並べるかの数値
     constructor(xNum: number) {
         super();
-        this.resourceList = new IconList<ResourceCardIcon, ResourceKind>(xNum, 30, ResourceCardIcon)
+        this.resourceList = new IconList<ResourceCardIcon, ResourceIndex>(xNum, 30, ResourceCardIcon)
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);
@@ -80,11 +80,11 @@ export class PlayerResourceAreaBase extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceKind) => void) {
+    onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceIndex) => void) {
         this.resourceList.onClickIcon(onClickIconCallBack);
     }
 
-    setResource(iconId: number, resourceKind: ResourceKind, queue: createjs.LoadQueue) {
+    setResource(iconId: number, resourceKind: ResourceIndex, queue: createjs.LoadQueue) {
         this.resourceList.setResource(iconId, resourceKind, queue);
     }
 }

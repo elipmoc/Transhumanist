@@ -2,10 +2,10 @@ import { GamePlayer } from "./gamePlayer";
 import { PlayerData } from "./playerData";
 import { SocketBinder } from "./socketBinder";
 import { GamePlayerState } from "../Share/gamePlayerState";
-import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
 import { BuildActionKind } from "../Share/buildActionKind";
 import { DiceNumber } from "../Share/diceNumber";
+import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -16,7 +16,7 @@ export class GameMaster {
 
     addMember(
         playerData: PlayerData, playerId: number,
-        state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceKind>
+        state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceIndex>
         , buildActionList: SocketBinderList<BuildActionKind>, diceList: SocketBinder<DiceNumber[]>
     ) {
         this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList));
