@@ -1,3 +1,7 @@
+export interface ActionCardHash {
+    [index: string]: ActionCardYamlData
+}
+
 export interface ActionCardYamlData {
     name: string;
     level: number;
