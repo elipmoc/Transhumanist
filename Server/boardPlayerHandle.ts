@@ -51,5 +51,7 @@ export class BoardPlayerHandle {
         socket.on("SelectBuildAction", str =>
             this.events.selectBuildActionCallBack(JSON.parse(str)));
         socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
+        socket.on("useActionCard", buildActionIndex =>
+            console.log(`useActionCard:${buildActionIndex}`));
     }
 }

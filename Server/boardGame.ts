@@ -11,7 +11,7 @@ import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClien
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../Share/Yaml/actionCardYamlDataGen";
+import { BuildActionIndex } from "../Share/Yaml/actionCardYamlData";
 
 export class BoardGame {
     private gameMaster: GameMaster;

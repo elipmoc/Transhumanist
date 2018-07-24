@@ -1,13 +1,12 @@
 import * as global from "../boardGlobalData";
 import { createMyShadow } from "../utility";
-
+import { ActionIndex } from "../../Share/Yaml/actionCardYamlData";
 
 class DecisionButton extends createjs.Container {
     readonly width = 150;
     readonly height = 50;
     constructor(_text: string) {
         super();
-
         const background = new createjs.Shape(new createjs.Graphics().beginFill("white").drawRect(-this.width / 2, -this.height / 2, this.width, this.height));
         const text = new createjs.Text(_text);
         text.color = "black";
@@ -29,6 +28,9 @@ export type ResultFunc = (r: DialogResult) => void;
 export class ActionCardUseDecisionWindow extends createjs.Container {
     private label: createjs.Text;
     private callBack: ResultFunc;
+    selectedIndex: ActionIndex = -1;
+    get SelectedIndex() { return this.selectedIndex; }
+    set SelectedIndex(value: ActionIndex) { this.selectedIndex = value };
     constructor() {
         super();
         const width = 500;

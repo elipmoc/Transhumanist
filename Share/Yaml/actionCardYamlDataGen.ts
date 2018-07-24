@@ -1,9 +1,6 @@
 import { ActionCardYamlData, Command, RandGet, CreateGet, CostTakeOver, ResourcePlus, ResourceGuard, Get, Trade, SpeedPlus, ResourceItem, ActionCardHash } from "./actionCardYamlData";
 import { CheckUndefined } from "./check_func";
 
-export type BuildActionIndex = number;
-export type ActionIndex = number;
-
 export function GenerateActionCardYamlData(data: ActionCardYamlData[], buildFlag: boolean) {
     let actionCardHash: ActionCardHash = {};
     CheckUndefined(data.length, "最上位の式は配列ですか？");

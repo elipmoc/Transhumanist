@@ -1,8 +1,9 @@
 import * as global from "../boardGlobalData";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
 
 //アクションカード置き場のウィンドウ
 export class ActionStorageWindow extends createjs.Container {
-    private callBack: (index: number, cardName: string) => void;
+    private callBack: (index: BuildActionIndex, cardName: string) => void;
     constructor(queue: createjs.LoadQueue) {
         super();
         const actionStorageFrame = new createjs.Bitmap(queue.getResult("actionStorageFrame"));
@@ -22,7 +23,7 @@ export class ActionStorageWindow extends createjs.Container {
         }
     }
 
-    onSelectedCard(callBack: (index: number, cardName: string) => void) {
+    onSelectedCard(callBack: (index: BuildActionIndex, cardName: string) => void) {
         this.callBack = callBack;
     }
 }

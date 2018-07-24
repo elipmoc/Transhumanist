@@ -2,11 +2,12 @@ export interface ActionCardHash {
     [index: string]: ActionCardYamlData
 }
 
-export type ActionCardIndex = number;
+export type BuildActionIndex = number;
+export type ActionIndex = number;
 
 export interface ActionCardYamlData {
     name: string;
-    index: ActionCardIndex;
+    index: ActionIndex;
     level: number;
     build_use: boolean;
     description: string;

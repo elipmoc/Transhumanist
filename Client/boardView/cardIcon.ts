@@ -1,7 +1,7 @@
 import { clipBitmap } from "../utility";
 import * as global from "../boardGlobalData";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlDataGen";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
 
 //アイコンのベースクラス
 export class CardIconBase<T extends number> extends createjs.Bitmap {

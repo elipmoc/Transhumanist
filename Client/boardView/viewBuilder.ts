@@ -16,7 +16,7 @@ import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlDataGen";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -191,11 +191,14 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
     const decision = new ActionCardUseDecisionWindow();
     decision.visible = false;
     decision.onClicked((r) => {
-        if (r == DialogResult.Yes) 0;
+        if (r == DialogResult.Yes) {
+            bindParams.socket.emit("useActionCard", decision.selectedIndex);
+        }
         decision.visible = false;
         bindParams.stage.update();
     });
     actionStorageWindow.onSelectedCard((index, name) => {
+        decision.selectedIndex = index;
         decision.setCardName(name);
         decision.visible = true;
         bindParams.stage.update();

@@ -5,7 +5,7 @@ import { GamePlayerState } from "../Share/gamePlayerState";
 import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../Share/Yaml/actionCardYamlDataGen";
+import { BuildActionIndex } from "../Share/Yaml/actionCardYamlData";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
