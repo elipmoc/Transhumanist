@@ -363,7 +363,7 @@
   commands:
     - kind: bacterial_weapon
 
-- name: 協会
+- name: 教会
   level: 4
   build_use: true
   description: 

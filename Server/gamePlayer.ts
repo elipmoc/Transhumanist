@@ -2,17 +2,17 @@ import { SocketBinder } from "./socketBinder";
 import { GamePlayerState } from "../Share/gamePlayerState";
 import { PlayerData } from "./playerData";
 import { SocketBinderList } from "./socketBinderList";
-import { BuildActionKind } from "../Share/buildActionKind";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
 import { yamlGet } from "../Share/Yaml/yamlGet";
+import { BuildActionIndex, GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
     private resourceList: SocketBinderList<ResourceIndex>;
-    private buildActionList: SocketBinderList<BuildActionKind>;
+    private buildActionList: SocketBinderList<BuildActionIndex>;
     private diceList: SocketBinder<DiceNumber[]>;
 
     get Uuid() { return this.uuid; }
@@ -23,7 +23,7 @@ export class GamePlayer {
         playerId: number,
         state: SocketBinder<GamePlayerState>,
         resourceList: SocketBinderList<ResourceIndex>,
-        buildActionList: SocketBinderList<BuildActionKind>,
+        buildActionList: SocketBinderList<BuildActionIndex>,
         diceList: SocketBinder<DiceNumber[]>
     ) {
         this.diceList = diceList;
@@ -39,24 +39,26 @@ export class GamePlayer {
             uncertainty: 0, resource: 0,
             activityRange: 0, speed: 0
         };
+        const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/yamls/actionCard.yaml"), true);
         this.buildActionList.Value = [
-            BuildActionKind.mining_facility,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.church,
-            BuildActionKind.fusion_reactor,
-            BuildActionKind.robot_factory,
+            buildAction["採掘施設"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["教会"].index,
+            buildAction["核融合炉"].index,
+            buildAction["ロボット工場"].index,
         ];
         const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/yamls/resource.yaml"));
         this.resourceList.Value = [

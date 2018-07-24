@@ -1,11 +1,14 @@
 import { ActionCardYamlData, Command, RandGet, CreateGet, CostTakeOver, ResourcePlus, ResourceGuard, Get, Trade, SpeedPlus, ResourceItem, ActionCardHash } from "./actionCardYamlData";
 import { CheckUndefined } from "./check_func";
 
+export type BuildActionIndex = number;
+export type ActionIndex = number;
 
-export function GenerateActionCardYamlData(data: ActionCardYamlData[]) {
+export function GenerateActionCardYamlData(data: ActionCardYamlData[], buildFlag: boolean) {
     let actionCardHash: ActionCardHash = {};
     CheckUndefined(data.length, "最上位の式は配列ですか？");
-    data.forEach((x, index) => {
+    let index = 0;
+    data.forEach(x => {
         CheckUndefined(x.description, "descriptionがありませんよ？");
         CheckUndefined(x.build_use, "build_useがありませんよ？");
         CheckUndefined(x.commands, "commandsがありませんよ？");
@@ -16,8 +19,10 @@ export function GenerateActionCardYamlData(data: ActionCardYamlData[]) {
         CheckUndefined(x.cost, "constがありませんよ？");
         CheckUndefined(x.level, "levelがありませんよ？");
         CheckUndefined(x.name, "nameがありませんよ？");
+        if (buildFlag && x.build_use == false) return;
         actionCardHash[x.name] = x;
         x.index = index;
+        index++;
     });
     return actionCardHash;
 }

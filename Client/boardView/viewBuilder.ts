@@ -6,7 +6,6 @@ import { NumberOfActionCard } from "../../Share/numberOfActionCard";
 import { SelectResourceData } from "../../Share/selectResourceData";
 import { SocketBinder } from "../socketBinder";
 import { SocketBinderList } from "../socketBinderList";
-import { BuildActionKind } from "../../Share/buildActionKind";
 import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { LogWindow, LogMessage } from "./logWindow";
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
@@ -17,6 +16,7 @@ import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlDataGen";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -100,18 +100,18 @@ function playerBuildActionAreaBuilder(bindParams: BindParams) {
         new view.Player4Build(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const buildActionKindList = new SocketBinderList<BuildActionKind>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const buildActionKindList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         buildActionKindList.onUpdate((list) => {
             list.forEach((x, iconId) => playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
         });
-        buildActionKindList.onSetAt((iconId: number, x: BuildActionKind) => {
+        buildActionKindList.onSetAt((iconId: number, x: BuildActionIndex) => {
             playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue);
         });
         bindParams.stage.addChild(playerBuildActionAreaList[i]);
     }
-    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionKind) => {
-        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionKind };
+    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionIndex) => {
+        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionIndex };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });
 }

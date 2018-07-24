@@ -1,7 +1,7 @@
 import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./cardIcon"
 import * as global from "../boardGlobalData";
-import { BuildActionKind } from "../../Share/buildActionKind";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlDataGen";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
@@ -92,20 +92,20 @@ export class PlayerResourceAreaBase extends createjs.Container {
 //プレイヤー設置アクション欄のベースクラス
 export class PlayerBuildBase extends createjs.Container {
     protected buildArea: createjs.Bitmap;
-    protected buildList: IconList<BuildActionCardIcon, BuildActionKind>;
+    protected buildList: IconList<BuildActionCardIcon, BuildActionIndex>;
     constructor(xNum: number) {
         super();
-        this.buildList = new IconList<BuildActionCardIcon, BuildActionKind>(xNum, 30, BuildActionCardIcon);
+        this.buildList = new IconList<BuildActionCardIcon, BuildActionIndex>(xNum, 30, BuildActionCardIcon);
         this.buildArea = new createjs.Bitmap("");
         this.addChild(this.buildArea);
         this.addChild(this.buildList);
     }
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, buildActionKind: BuildActionKind) => void) {
+    onClickIcon(onClickIconCallBack: (iconId: number, buildActionKind: BuildActionIndex) => void) {
         this.buildList.onClickIcon(onClickIconCallBack);
     }
 
-    setResource(iconId: number, buildActionKind: BuildActionKind, queue: createjs.LoadQueue) {
+    setResource(iconId: number, buildActionKind: BuildActionIndex, queue: createjs.LoadQueue) {
         this.buildList.setResource(iconId, buildActionKind, queue);
     }
 }

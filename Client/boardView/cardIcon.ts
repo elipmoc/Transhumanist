@@ -1,7 +1,7 @@
 import { clipBitmap } from "../utility";
 import * as global from "../boardGlobalData";
-import { BuildActionKind } from "../../Share/buildActionKind";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlDataGen";
 
 //アイコンのベースクラス
 export class CardIconBase<T extends number> extends createjs.Bitmap {
@@ -55,9 +55,9 @@ export class ResourceCardIcon extends CardIconBase<ResourceIndex> {
 }
 
 //設置アクションアイコンクラス
-export class BuildActionCardIcon extends CardIconBase<BuildActionKind> {
+export class BuildActionCardIcon extends CardIconBase<BuildActionIndex> {
 
     constructor(iconId: number) {
-        super(null, iconId, BuildActionKind.none, "buildAction");
+        super(null, iconId, -1, "buildAction");
     }
 }
