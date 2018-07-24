@@ -192,13 +192,13 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
     decision.visible = false;
     decision.onClicked((r) => {
         if (r == DialogResult.Yes) {
-            bindParams.socket.emit("useActionCard", decision.selectedIndex);
+            bindParams.socket.emit("useActionCard", decision.SelectedIndex);
         }
         decision.visible = false;
         bindParams.stage.update();
     });
     actionStorageWindow.onSelectedCard((index, name) => {
-        decision.selectedIndex = index;
+        decision.SelectedIndex = index;
         decision.setCardName(name);
         decision.visible = true;
         bindParams.stage.update();

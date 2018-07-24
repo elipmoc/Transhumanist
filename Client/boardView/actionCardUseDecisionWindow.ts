@@ -28,7 +28,7 @@ export type ResultFunc = (r: DialogResult) => void;
 export class ActionCardUseDecisionWindow extends createjs.Container {
     private label: createjs.Text;
     private callBack: ResultFunc;
-    selectedIndex: ActionIndex = -1;
+    private selectedIndex: ActionIndex = -1;
     get SelectedIndex() { return this.selectedIndex; }
     set SelectedIndex(value: ActionIndex) { this.selectedIndex = value };
     constructor() {
