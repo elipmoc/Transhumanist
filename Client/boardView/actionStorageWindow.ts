@@ -1,9 +1,10 @@
 import * as global from "../boardGlobalData";
-import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
+import { ActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 
 //アクションカード置き場のウィンドウ
 export class ActionStorageWindow extends createjs.Container {
-    private callBack: (index: BuildActionIndex, cardName: string) => void;
+    private callBack: (cardName: string) => void;
+
     constructor(queue: createjs.LoadQueue) {
         super();
         const actionStorageFrame = new createjs.Bitmap(queue.getResult("actionStorageFrame"));
@@ -19,11 +20,11 @@ export class ActionStorageWindow extends createjs.Container {
             card.y = actionStorageFrame.y;
             this.addChild(card);
             x += card.image.width / 2 + 1;
-            card.addEventListener("click", () => this.callBack(0, "採掘施設"));
+            card.addEventListener("click", () => this.callBack("採掘施設"));
         }
     }
 
-    onSelectedCard(callBack: (index: BuildActionIndex, cardName: string) => void) {
+    onSelectedCard(callBack: (cardName: string) => void) {
         this.callBack = callBack;
     }
 }

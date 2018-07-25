@@ -28,9 +28,7 @@ export type ResultFunc = (r: DialogResult) => void;
 export class ActionCardUseDecisionWindow extends createjs.Container {
     private label: createjs.Text;
     private callBack: ResultFunc;
-    private selectedIndex: ActionIndex = -1;
-    get SelectedIndex() { return this.selectedIndex; }
-    set SelectedIndex(value: ActionIndex) { this.selectedIndex = value };
+    private cardName: string;
     constructor() {
         super();
         const width = 500;
@@ -54,9 +52,12 @@ export class ActionCardUseDecisionWindow extends createjs.Container {
         no.addEventListener("click", () => this.callBack(DialogResult.No));
         this.addChild(background, this.label, yes, no);
     }
-    setCardName(name: string) {
+    set CardName(name: string) {
         this.label.text = `${name}を使用する？`;
+        this.cardName = name;
     }
+    get CardName() { return this.cardName; }
+
     onClicked(callBack: ResultFunc) {
         this.callBack = callBack;
     }
