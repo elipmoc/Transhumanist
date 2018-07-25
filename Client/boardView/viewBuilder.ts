@@ -16,7 +16,7 @@ import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -189,6 +189,7 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 function actionStorageWindowBuilder(bindParams: BindParams) {
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
+    actionStorageWindow.setActionCardList([<ActionCardYamlData><any>{ name: "hoge" }])
     decision.visible = false;
     decision.onClicked((r) => {
         if (r == DialogResult.Yes) {
