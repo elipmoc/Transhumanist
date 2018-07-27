@@ -1,6 +1,6 @@
-import * as global from "../boardGlobalData";
-import { createMyShadow } from "../utility";
-import { ActionIndex } from "../../Share/Yaml/actionCardYamlData";
+import * as global from "../../boardGlobalData";
+import { createMyShadow } from "../../utility";
+import { ActionIndex } from "../../../Share/Yaml/actionCardYamlData";
 
 class DecisionButton extends createjs.Container {
     readonly width = 150;
@@ -29,6 +29,7 @@ export class ActionCardUseDecisionWindow extends createjs.Container {
     private label: createjs.Text;
     private callBack: ResultFunc;
     private cardName: string;
+    private cardIndex: number;
     constructor() {
         super();
         const width = 500;
@@ -57,6 +58,11 @@ export class ActionCardUseDecisionWindow extends createjs.Container {
         this.cardName = name;
     }
     get CardName() { return this.cardName; }
+
+    set CardIndex(index: number) {
+        this.cardIndex = index;
+    }
+    get CardIndex() { return this.cardIndex; }
 
     onClicked(callBack: ResultFunc) {
         this.callBack = callBack;

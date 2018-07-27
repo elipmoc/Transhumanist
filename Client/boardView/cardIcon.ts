@@ -22,7 +22,6 @@ export class CardIconBase<T extends number> extends createjs.Bitmap {
     //リソースをクリックされた時に呼ばれる関数
     private onClickCallBack: (iconId: number, kind: T) => void;
 
-    private hoge() { }
     constructor(image: any, iconId: number, kind: T, img_name: string) {
         super(image);
         this.img_name = img_name;

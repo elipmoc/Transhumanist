@@ -11,7 +11,7 @@ import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClien
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 
 export class BoardGame {
     private gameMaster: GameMaster;
@@ -69,6 +69,7 @@ export class BoardGame {
         const resourceList = new SocketBinderList<ResourceIndex>("ResourceKindList" + playerId, this.boardSocket);
         const buildActionList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + playerId, this.boardSocket);
         const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId, this.boardSocket);
-        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList);
+        const actionCardList = new SocketBinderList<ActionCardYamlData | null>("actionCardList" + playerId, this.boardSocket);
+        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList);
     }
 }

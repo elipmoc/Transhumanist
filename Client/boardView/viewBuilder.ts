@@ -11,10 +11,10 @@ import { LogWindow, LogMessage } from "./logWindow";
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 import { EventLogWindow } from "./eventLogWindow";
 import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
-import { ActionStorageWindow } from "./actionStorageWindow";
+import { ActionStorageWindow } from "./actionCard/actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
-import { ActionCardUseDecisionWindow, DialogResult } from "./actionCardUseDecisionWindow";
+import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 
@@ -187,19 +187,26 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 }
 
 function actionStorageWindowBuilder(bindParams: BindParams) {
+    const actionCardList = new SocketBinderList<ActionCardYamlData>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
-    actionStorageWindow.setActionCardList([<ActionCardYamlData><any>{ name: "hoge" }])
+    actionCardList.onUpdate(list =>
+        list.forEach((x, index) =>
+            actionStorageWindow.setActionCard(index, x)
+        )
+    );
+    actionCardList.onSetAt((index, x) => actionStorageWindow.setActionCard(index, x));
     decision.visible = false;
     decision.onClicked((r) => {
         if (r == DialogResult.Yes) {
-            bindParams.socket.emit("useActionCard", decision.CardName);
+            bindParams.socket.emit("useActionCardIndex", decision.CardIndex);
         }
         decision.visible = false;
         bindParams.stage.update();
     });
-    actionStorageWindow.onSelectedCard(name => {
+    actionStorageWindow.onSelectedCard((index, name) => {
         decision.CardName = name;
+        decision.CardIndex = index;
         decision.visible = true;
         bindParams.stage.update();
     });

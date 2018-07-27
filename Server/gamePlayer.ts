@@ -6,7 +6,7 @@ import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
 import { yamlGet } from "../Share/Yaml/yamlGet";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
-import { BuildActionIndex } from "../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 
 export class GamePlayer {
     private playerId: number;
@@ -15,6 +15,7 @@ export class GamePlayer {
     private resourceList: SocketBinderList<ResourceIndex>;
     private buildActionList: SocketBinderList<BuildActionIndex>;
     private diceList: SocketBinder<DiceNumber[]>;
+    private actionCardList: SocketBinderList<ActionCardYamlData | null>;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -25,7 +26,8 @@ export class GamePlayer {
         state: SocketBinder<GamePlayerState>,
         resourceList: SocketBinderList<ResourceIndex>,
         buildActionList: SocketBinderList<BuildActionIndex>,
-        diceList: SocketBinder<DiceNumber[]>
+        diceList: SocketBinder<DiceNumber[]>,
+        actionCardList: SocketBinderList<ActionCardYamlData | null>
     ) {
         this.diceList = diceList;
         this.diceList.Value = [0, 1, 2];
@@ -34,6 +36,7 @@ export class GamePlayer {
         this.state = state;
         this.resourceList = resourceList;
         this.buildActionList = buildActionList;
+        this.actionCardList = actionCardList;
         this.state.Value = {
             playerName: playerData.getName(),
             negative: 0, positive: 0,
@@ -85,6 +88,10 @@ export class GamePlayer {
             resourceAction["拡張人間"].index,
             resourceAction["拡張人間"].index,
         ];
+        const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/yamls/actionCard.yaml"), false);
+        actionCardList.Value = [null, null, actionCard["神の杖"], null, null]
+        actionCardList.setAt(0, actionCard["意識操作のテスト"])
+
     }
 
     //ユーザーにsocketBinderの値を送信する
@@ -93,5 +100,6 @@ export class GamePlayer {
         this.resourceList.updateAt(socket);
         this.buildActionList.updateAt(socket);
         this.diceList.updateAt(socket);
+        this.actionCardList.updateAt(socket);
     }
 }
