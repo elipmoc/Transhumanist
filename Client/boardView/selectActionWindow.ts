@@ -68,7 +68,7 @@ export class SelectActionWindow extends createjs.Container {
         this.addChild(this.numberOfActionCardTexts);
 
         for (var i = 1; i <= 3; i++) {
-            const level = new createjs.Bitmap(queue.getResult("level" + (4 - i)));
+            const level = new createjs.Bitmap(queue.getResult("b_level" + (4 - i)));
             level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 - (level.image.width + 20) * (i) + 10;
             const levelValue = 4 - i;
@@ -77,7 +77,7 @@ export class SelectActionWindow extends createjs.Container {
         }
 
         for (var i = 4; i <= 6; i++) {
-            const level = new createjs.Bitmap(queue.getResult("level" + i));
+            const level = new createjs.Bitmap(queue.getResult("b_level" + i));
             level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 + (level.image.width + 20) * (i - 4) + 10;
             const levelValue = i;

@@ -13,8 +13,8 @@ export class ActionStorageCard extends createjs.Container {
         super();
         this.index = index;
         this.image = new createjs.Bitmap(null);
-        this.image.scaleX = 0.5;
-        this.image.scaleY = 0.5;
+        this.image.scaleX = 1 / 3;
+        this.image.scaleY = 1 / 3;
         this.addChild(this.image);
         this.image.addEventListener("click", () => {
             if (this.yamlData != null)
@@ -24,8 +24,11 @@ export class ActionStorageCard extends createjs.Container {
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         this.yamlData = yamlData;
         if (yamlData != null) {
-            this.image.image = new createjs.Bitmap(queue.getResult("miningAction")).image;
-        } else { this.image.image = null; }
+            this.image.image = new createjs.Bitmap(queue.getResult("f_level1")).image;
+        } else {
+            //ここは手札がないことを表すので、画像はすべてなくしておく
+            this.image.image = null;
+        }
     }
     get YamlData() { return this.yamlData; }
     setClickCallBack(callback: (index: number, cardName: string) => void) {
