@@ -29,7 +29,7 @@
     "test": "jasmine",
     "postinstall": "webpack && tsc -p Server",
     "build": "webpack && tsc -p Server && npm start",
-    "build_only": "webpack && tsc -p Server"
+    "build_only": "webpack && tsc -p Server && tsc -p Test"
   },
   "repository": {
     "type": "git",
