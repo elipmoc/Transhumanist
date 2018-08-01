@@ -34,6 +34,9 @@ export function createRouter() {
     myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/card/back/" + req.params.path);
     });
+    myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
+        sendPng(res, "./Resource/Img/card/front/action/" + req.params.path);
+    });
     myRouter.get("/:path", (req: any, res: any) => {
         sendHtml(res, "./Html/" + req.params.path);
     });

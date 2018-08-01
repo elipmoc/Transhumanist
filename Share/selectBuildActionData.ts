@@ -1,6 +1,6 @@
-import { BuildActionKind } from "./buildActionKind";
+import { BuildActionIndex } from "./Yaml/actionCardYamlData";
 
 export interface SelectBuildActionData {
     iconId: number;
-    buildActionKind: BuildActionKind;
+    buildActionIndex: BuildActionIndex;
 }

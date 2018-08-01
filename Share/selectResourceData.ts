@@ -1,6 +1,6 @@
-import { ResourceKind } from "./resourceKind";
+import { ResourceIndex } from "./Yaml/resourceYamlData";
 
 export interface SelectResourceData {
     iconId: number;
-    resourceKind: ResourceKind;
+    resourceIndex: ResourceIndex;
 }
