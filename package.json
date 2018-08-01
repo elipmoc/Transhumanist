@@ -28,7 +28,8 @@
     "start": "node dist/Server/main.js",
     "test": "jasmine",
     "postinstall": "webpack && tsc -p Server",
-    "build": "webpack && tsc -p Server && npm start"
+    "build": "webpack && tsc -p Server && npm start",
+    "build_only": "webpack && tsc -p Server"
   },
   "repository": {
     "type": "git",
