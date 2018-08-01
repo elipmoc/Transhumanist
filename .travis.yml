@@ -3,7 +3,7 @@ node_js:
   - "iojs"
   - "8.11.3"
 before_install:
-  - npm install -g
+  - npm install
   - npm install -g webpack
   - npm install -g webpack-cli
   - npm run build_only
