@@ -28,7 +28,8 @@ describe("GenerateEventYamlData", () => {
 
 describe("ActionCardYamlDataCheck", () => {
     it("", () => {
-        const actionCardHash = yamlGet("./Resource/yamls/actionCard.yaml");
+        const data = yamlGet("./Resource/yamls/actionCard.yaml");
+        const actionCardHash = GenerateActionCardYamlData(data, false);
         expect(actionCardHash["採掘施設"].name).toBeDefined();
         expect(actionCardHash["採掘施設"].level).toBeDefined();
         expect(actionCardHash["採掘施設"].build_use).toBeDefined();
