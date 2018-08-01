@@ -4,6 +4,8 @@ node_js:
   - "8.11.3"
 before_install:
   - npm install -g
+  - npm install -g webpack
+  - npm install -g webpack-cli
   - npm run build_only
 cache:
   directories:
