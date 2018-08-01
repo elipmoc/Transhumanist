@@ -1,0 +1,85 @@
+# レベル1
+- name: 人間
+  level: 1
+  description: 二足歩行をし、地球全体で社会を営んでいる生命体。
+  
+- name: 病人
+  level: 1
+  description: 病気に罹り、行動を出来ない人間。
+ 
+# レベル2
+- name: メタル
+  level: 2
+  description: あらゆる物に加工する為の金属。
+  
+- name: ガス
+  level: 2
+  description: 可燃性を持つ目には見えない気体。
+ 
+- name: ケイ素
+  level: 2
+  description: シリコンとも呼ばれる、半導体に必要な元素。
+  
+- name: 硫黄
+  level: 2
+  description: 大昔から存在する、硫酸の元となる元素。
+ 
+- name: 聖書
+  level: 2
+  description: 教えや原点を説く書物。
+
+# レベル3
+- name: 注射器
+  level: 3
+  description: 液体を注入、または吸引する為の器具。
+  
+- name: CPU
+  level: 3
+  description: コンピュータの中心的な処理装置。
+ 
+- name: 爆弾
+  level: 3
+  description: 爆発による熱や衝撃を起こす為の道具。
+ 
+# レベル4
+- name: マイクロチップ
+  level: 4
+  description: 生物の皮下に挿入される超小型集積回路。
+  
+- name: ロケット
+  level: 4
+  description: 推力を利用して移動する装置。
+  
+- name: 遺伝子データ
+  level: 4
+  description: 生物の研究の為に回収した、DNAの情報。
+ 
+- name: 信者
+  level: 4
+  description: 聖書の教えを信ずる人間。
+ 
+# レベル5
+- name: 火星の情報
+  level: 5
+  description: 火星探査により入手した、火星その物に関する情報。
+  
+- name: 衛星
+  level: 5
+  description: 宇宙空間を周回する人工衛星。
+  
+- name: ロボット
+  level: 5
+  description: 人間の代わりに作業を行う機械。
+ 
+- name: 拡張人間
+  level: 5
+  description: マイクロチップを埋める事で、アップデートされた人間。
+ 
+# レベル6
+- name: テラフォーミング
+  level: 6
+  description: 人間の住む事が可能になった惑星。
+  
+- name: 神体
+  level: 6
+  description: 書物や伝聞に基づき、記憶と体が再生された神。

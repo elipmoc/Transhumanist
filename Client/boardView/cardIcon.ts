@@ -1,7 +1,7 @@
-import { ResourceKind } from "../../Share/resourceKind";
 import { clipBitmap } from "../utility";
 import * as global from "../boardGlobalData";
-import { BuildActionKind } from "../../Share/buildActionKind";
+import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
 
 //アイコンのベースクラス
 export class CardIconBase<T extends number> extends createjs.Bitmap {
@@ -22,7 +22,6 @@ export class CardIconBase<T extends number> extends createjs.Bitmap {
     //リソースをクリックされた時に呼ばれる関数
     private onClickCallBack: (iconId: number, kind: T) => void;
 
-    private hoge() { }
     constructor(image: any, iconId: number, kind: T, img_name: string) {
         super(image);
         this.img_name = img_name;
@@ -47,17 +46,17 @@ export class CardIconBase<T extends number> extends createjs.Bitmap {
 }
 
 //リソースアイコンクラス
-export class ResourceCardIcon extends CardIconBase<ResourceKind> {
+export class ResourceCardIcon extends CardIconBase<ResourceIndex> {
 
     constructor(iconId: number) {
-        super(null, iconId, ResourceKind.none, "resource");
+        super(null, iconId, -1, "resource");
     }
 }
 
 //設置アクションアイコンクラス
-export class BuildActionCardIcon extends CardIconBase<BuildActionKind> {
+export class BuildActionCardIcon extends CardIconBase<BuildActionIndex> {
 
     constructor(iconId: number) {
-        super(null, iconId, BuildActionKind.none, "buildAction");
+        super(null, iconId, -1, "buildAction");
     }
 }
