@@ -20,11 +20,17 @@ export class ActionStorageCard extends createjs.Container {
             if (this.yamlData != null)
                 this.onClickCallBack(index, this.yamlData.name);
         });
+        this.image.addEventListener("mouseover", () => { 
+        });
+        this.image.addEventListener("mouseout", () => {
+
+        });
+
     }
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         this.yamlData = yamlData;
         if (yamlData != null) {
-            this.image.image = new createjs.Bitmap(queue.getResult("f_level1")).image;
+            this.image.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
         } else {
             //ここは手札がないことを表すので、画像はすべてなくしておく
             this.image.image = null;
