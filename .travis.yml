@@ -3,6 +3,7 @@ node_js:
   - "iojs"
   - "8.11.3"
 before_install:
+  - npm install -g
   - npm run build_only
 cache:
   directories:
