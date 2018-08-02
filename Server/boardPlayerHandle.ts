@@ -1,5 +1,4 @@
 import { GamePlayerState } from "../Share/gamePlayerState"
-import { ResourceKind } from "../Share/resourceKind"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
@@ -51,5 +50,8 @@ export class BoardPlayerHandle {
             this.events.selectResourceCallBack(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
             this.events.selectBuildActionCallBack(JSON.parse(str)));
+        socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
+        socket.on("useActionCardIndex", actionIndex =>
+            console.log(`useActionCardIndex:${actionIndex}`));
     }
 }

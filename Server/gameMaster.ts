@@ -2,9 +2,10 @@ import { GamePlayer } from "./gamePlayer";
 import { PlayerData } from "./playerData";
 import { SocketBinder } from "./socketBinder";
 import { GamePlayerState } from "../Share/gamePlayerState";
-import { ResourceKind } from "../Share/resourceKind";
 import { SocketBinderList } from "./socketBinderList";
-import { BuildActionKind } from "../Share/buildActionKind";
+import { DiceNumber } from "../Share/diceNumber";
+import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
+import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -13,8 +14,13 @@ export class GameMaster {
         return this.gamePlayerList.find(x => x.Uuid == uuid);
     }
 
-    addMember(playerData: PlayerData, playerId: number, state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceKind>, buildActionList: SocketBinderList<BuildActionKind>) {
-        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList));
+    addMember(
+        playerData: PlayerData, playerId: number,
+        state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceIndex>
+        , buildActionList: SocketBinderList<BuildActionIndex>, diceList: SocketBinder<DiceNumber[]>
+        , actionCardList: SocketBinderList<ActionCardYamlData | null>
+    ) {
+        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList));
     }
 
     sendToSocket(socket: SocketIO.Socket) {

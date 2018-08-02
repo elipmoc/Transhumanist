@@ -1,19 +1,22 @@
 import * as view from "./view";
 import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./viewBase";
 import { GamePlayerState } from "../../Share/gamePlayerState";
-import { SelectActionWindow } from "./viewSelectActionWindow";
+import { SelectActionWindow } from "./selectActionWindow";
 import { NumberOfActionCard } from "../../Share/numberOfActionCard";
-import { ResourceKind } from "../../Share/resourceKind";
 import { SelectResourceData } from "../../Share/selectResourceData";
 import { SocketBinder } from "../socketBinder";
 import { SocketBinderList } from "../socketBinderList";
-import { BuildActionKind } from "../../Share/buildActionKind";
 import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { LogWindow, LogMessage } from "./logWindow";
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 import { EventLogWindow } from "./eventLogWindow";
 import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
-import { ActionStorageWindow } from "./actionStorageWindow";
+import { ActionStorageWindow } from "./actionCard/actionStorageWindow";
+import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
+import { DiceNumber } from "../../Share/diceNumber";
+import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
+import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -25,14 +28,15 @@ export interface BindParams {
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
     playerWindowBuilder(bindParams);
-    PlayerResourceAreaBuilder(bindParams);
+    playerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
+    playerBuildActionAreaBuilder(bindParams);
     actionStorageWindowBuilder(bindParams);
-    PlayerBuildActionAreaBuilder(bindParams);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
+    selectDiceWindowBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -63,7 +67,7 @@ function playerWindowBuilder(bindParams: BindParams) {
 }
 
 //プレイヤーのリソース欄生成
-function PlayerResourceAreaBuilder(bindParams: BindParams) {
+function playerResourceAreaBuilder(bindParams: BindParams) {
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new view.Player1ResourceArea(bindParams.queue),
         new view.Player2ResourceArea(bindParams.queue),
@@ -71,24 +75,24 @@ function PlayerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceKind>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const resourceKindList = new SocketBinderList<ResourceIndex>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
             list.forEach((x, iconId) => playerResourceAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
         });
-        resourceKindList.onSetAt((iconId: number, x: ResourceKind) => {
+        resourceKindList.onSetAt((iconId: number, x: ResourceIndex) => {
             playerResourceAreaList[i].setResource(iconId, x, bindParams.queue);
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
     }
-    playerResourceAreaList[0].onClickIcon((iconId, resourceKind) => {
-        const selectResourceData: SelectResourceData = { iconId, resourceKind };
+    playerResourceAreaList[0].onClickIcon((iconId, resourceIndex) => {
+        const selectResourceData: SelectResourceData = { iconId, resourceIndex };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
 }
 
 //プレイヤーの設置アクション欄生成
-function PlayerBuildActionAreaBuilder(bindParams: BindParams) {
+function playerBuildActionAreaBuilder(bindParams: BindParams) {
     const playerBuildActionAreaList: PlayerBuildBase[] = [
         new view.Player1Build(bindParams.queue),
         new view.Player2Build(bindParams.queue),
@@ -96,18 +100,18 @@ function PlayerBuildActionAreaBuilder(bindParams: BindParams) {
         new view.Player4Build(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const buildActionKindList = new SocketBinderList<BuildActionKind>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const buildActionKindList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         buildActionKindList.onUpdate((list) => {
             list.forEach((x, iconId) => playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue));
             bindParams.stage.update();
         });
-        buildActionKindList.onSetAt((iconId: number, x: BuildActionKind) => {
+        buildActionKindList.onSetAt((iconId: number, x: BuildActionIndex) => {
             playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue);
         });
         bindParams.stage.addChild(playerBuildActionAreaList[i]);
     }
-    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionKind) => {
-        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionKind };
+    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionIndex) => {
+        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionIndex };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });
 }
@@ -147,6 +151,17 @@ function selectActionWindowBuilder(bindParams: BindParams) {
     })
 }
 
+function selectDiceWindowBuilder(bindParams: BindParams) {
+    const diceIconList = new SocketBinder<DiceNumber[]>("diceList" + bindParams.playerId, bindParams.socket);
+    const selectDiceWindow = new SelectDiceWindow(bindParams.queue);
+    selectDiceWindow.onSelectedDise((index: number) => {
+        bindParams.socket.emit("selectDice", index);
+    });
+    diceIconList.onUpdate(diceList => selectDiceWindow.setDiceList(diceList));
+    bindParams.stage.addChild(selectDiceWindow);
+    selectDiceWindow.visible = false;
+}
+
 function logWindowBuilder(bindParams: BindParams) {
     const logWindow = new LogWindow(bindParams.queue);
     const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
@@ -172,6 +187,30 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 }
 
 function actionStorageWindowBuilder(bindParams: BindParams) {
+    const actionCardList = new SocketBinderList<ActionCardYamlData>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
+    const decision = new ActionCardUseDecisionWindow();
+    actionCardList.onUpdate(list =>
+        list.forEach((x, index) =>
+            actionStorageWindow.setActionCard(index, x)
+        )
+    );
+    actionCardList.onSetAt((index, x) => actionStorageWindow.setActionCard(index, x));
+    decision.visible = false;
+    decision.onClicked((r) => {
+        if (r == DialogResult.Yes) {
+            bindParams.socket.emit("useActionCardIndex", decision.CardIndex);
+        }
+        decision.visible = false;
+        bindParams.stage.update();
+    });
+    actionStorageWindow.onSelectedCard((index, name) => {
+        decision.CardName = name;
+        decision.CardIndex = index;
+        decision.visible = true;
+        bindParams.stage.update();
+    });
+
     bindParams.stage.addChild(actionStorageWindow);
+    bindParams.stage.addChild(decision);
 }
