@@ -100,6 +100,6 @@ export class GamePlayer {
         this.resourceList.updateAt(socket);
         this.buildActionList.updateAt(socket);
         this.diceList.updateAt(socket);
-        this.actionCardList.updateAt(socket);
+        this.actionCardList.addSocket(socket);
     }
 }
