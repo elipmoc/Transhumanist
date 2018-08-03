@@ -2,7 +2,8 @@ import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 
 //手札カードのクラス
 export class ActionStorageCard extends createjs.Container {
-    private image: createjs.Bitmap;
+    private cardFrame: createjs.Bitmap;
+    private cardImage: createjs.Bitmap;
     private yamlData: ActionCardYamlData = null;
     private index: number
     readonly width: number = 84;
@@ -12,17 +13,23 @@ export class ActionStorageCard extends createjs.Container {
     constructor(index: number) {
         super();
         this.index = index;
-        this.image = new createjs.Bitmap(null);
-        this.image.scaleX = 1 / 3;
-        this.image.scaleY = 1 / 3;
-        this.addChild(this.image);
-        this.image.addEventListener("click", () => {
+        this.cardFrame = new createjs.Bitmap(null);
+        this.cardFrame.scaleX = 1 / 3;
+        this.cardFrame.scaleY = 1 / 3;
+        this.cardImage = new createjs.Bitmap(null);
+        this.cardImage.x = 3;
+        this.cardImage.y = 26;
+        this.cardImage.scaleX = 0.25;
+        this.cardImage.scaleY = 0.25;
+        this.addChild(this.cardFrame);
+        this.addChild(this.cardImage);
+        this.cardFrame.addEventListener("click", () => {
             if (this.yamlData != null)
                 this.onClickCallBack(index, this.yamlData.name);
         });
-        this.image.addEventListener("mouseover", () => { 
+        this.cardFrame.addEventListener("mouseover", () => { 
         });
-        this.image.addEventListener("mouseout", () => {
+        this.cardFrame.addEventListener("mouseout", () => {
 
         });
 
@@ -30,10 +37,11 @@ export class ActionStorageCard extends createjs.Container {
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         this.yamlData = yamlData;
         if (yamlData != null) {
-            this.image.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
+            this.cardFrame.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
+            this.cardImage.image = new createjs.Bitmap(queue.getResult(yamlData.name)).image;
         } else {
             //ここは手札がないことを表すので、画像はすべてなくしておく
-            this.image.image = null;
+            this.cardFrame.image = null;
         }
     }
     get YamlData() { return this.yamlData; }
