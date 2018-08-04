@@ -58,7 +58,6 @@ typings/
 .env
 
 #elipmoc
-Test/*
 !.gitkeep
 !/Test/tsconfig.json
 /Client/*.js

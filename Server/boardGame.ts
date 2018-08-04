@@ -24,7 +24,8 @@ export class BoardGame {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
         this.roomId = roomId;
-        this.logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", this.boardSocket);
+        this.logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList");
+        this.logMessageList.setNamespaceSocket(this.boardSocket)
         this.logMessageList.Value = new Array();
         this.logMessageList.push(new LogMessageForClient("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
         this.logMessageList.push(new LogMessageForClient("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
@@ -32,7 +33,8 @@ export class BoardGame {
         this.logMessageList.push(new LogMessageForClient("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
         this.logMessageList.push(new LogMessageForClient("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
         setTimeout(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
-        this.eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage", this.boardSocket);
+        this.eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage");
+        this.eventLogMessage.setNamespaceSocket(this.boardSocket);
         this.eventLogMessage.Value = new EventLogMessageForClient("イベント【人口爆発】が発生しました", "リソース欄にある『人間の』2倍の\n新たな『人間』を追加する。\n新たに追加する時、『人間』は削除対象に出来ない。");
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
@@ -59,17 +61,20 @@ export class BoardGame {
             this.gameMaster.sendToSocket(socket);
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
-
             handle = new BoardPlayerHandle(socket, event);
         }
     }
 
     addMember(playerData: PlayerData, playerId: number) {
-        const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId, this.boardSocket);
-        const resourceList = new SocketBinderList<ResourceIndex>("ResourceKindList" + playerId, this.boardSocket);
-        const buildActionList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + playerId, this.boardSocket);
-        const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId, this.boardSocket);
-        const actionCardList = new SocketBinderList<ActionCardYamlData | null>("actionCardList" + playerId, this.boardSocket);
+        const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId);
+        state.setNamespaceSocket(this.boardSocket);
+        const resourceList = new SocketBinderList<ResourceIndex>("ResourceKindList" + playerId);
+        resourceList.setNamespaceSocket(this.boardSocket);
+        const buildActionList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + playerId);
+        buildActionList.setNamespaceSocket(this.boardSocket);
+        const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId);
+        diceList.setNamespaceSocket(this.boardSocket);
+        const actionCardList = new SocketBinderList<ActionCardYamlData | null>("actionCardList" + playerId);
         this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList);
     }
 }

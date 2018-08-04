@@ -16,10 +16,10 @@
     },
     "include": [
         "../Server/**/*",
-        "../Share/**/*"
     ],
     "exclude": [
         "../node_modules",
-        "../Client"
+        "../Client",
+        "../Share"
     ]
 }
