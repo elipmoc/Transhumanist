@@ -2,7 +2,6 @@ var gulp = require("gulp");
 var typescript = require('gulp-typescript');
 var runSequence = require('run-sequence');
 var concat = require('gulp-concat');
-var watch = require('gulp-watch');
 var spawn = require('child_process').spawn;
 var node;
 const webpackStream = require("webpack-stream");
@@ -69,15 +68,15 @@ gulp.task("start", () => {
     });
 });
 
+gulp.task("server", () =>
+    new Promise((resolve, reject) => runSequence('build', 'start', resolve))
+);
+
 gulp.task('watch', () => {
     return new Promise((resolve, reject) => {
         runSequence('build', 'webpack', 'start', () => {
-            watch(['./Server/**/*.ts', './Share/**/*.ts'], () =>
-                new Promise((resolve, reject) => runSequence('build', 'webpack', 'start', resolve))
-            );
-            watch(['./Client/**/*.ts'], () =>
-                new Promise((resolve, reject) => runSequence('webpack', resolve))
-            );
+            gulp.watch(['./Server/**/*.ts', './Share/**/*.ts'], ['server'])
+            gulp.watch('./Client/**/*.ts', ['webpack']);
             resolve();
         });
     });
