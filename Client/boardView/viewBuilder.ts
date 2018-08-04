@@ -225,10 +225,5 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
 }
 
 function warLineBuilder(bindParams: BindParams) {
-    bindParams.stage.addChild(new WarLine(0, 1));
-    bindParams.stage.addChild(new WarLine(0, 2));
-    bindParams.stage.addChild(new WarLine(0, 3));
-    bindParams.stage.addChild(new WarLine(1, 2));
-    bindParams.stage.addChild(new WarLine(1, 3));
-    bindParams.stage.addChild(new WarLine(2, 3));
+    bindParams.stage.addChild(new WarLine(0, 1, bindParams.playerId));
 }
