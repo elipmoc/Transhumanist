@@ -75,8 +75,8 @@ gulp.task("server", () =>
 gulp.task('watch', () => {
     return new Promise((resolve, reject) => {
         runSequence('build', 'webpack', 'start', () => {
-            gulp.watch(['./Server/**/*.ts', './Share/**/*.ts'], ['server'])
-            gulp.watch('./Client/**/*.ts', ['webpack']);
+            gulp.watch(['Server/**/*.ts', 'Share/**/*.ts'], ['server'])
+            gulp.watch('Client/**/*.ts', ['webpack']);
             resolve();
         });
     });
