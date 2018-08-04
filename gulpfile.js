@@ -70,12 +70,16 @@ gulp.task("start", () => {
 });
 
 gulp.task('watch', () => {
-    runSequence('build', 'webpack', 'start');
-    watch(['./Server/**/*.ts', './Share/**/*.ts'], () => {
-        runSequence('build', 'webpack', 'start');
-    });
-    watch(['./Client/**/*.ts'], () => {
-        runSequence('webpack');
+    return new Promise((resolve, reject) => {
+        runSequence('build', 'webpack', 'start', () => {
+            watch(['./Server/**/*.ts', './Share/**/*.ts'], () =>
+                new Promise((resolve, reject) => runSequence('build', 'webpack', 'start', resolve))
+            );
+            watch(['./Client/**/*.ts'], () =>
+                new Promise((resolve, reject) => runSequence('webpack', resolve))
+            );
+            resolve();
+        });
     });
 });
 
