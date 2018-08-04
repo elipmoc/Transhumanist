@@ -7,13 +7,16 @@ var spawn = require('child_process').spawn;
 var node;
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
+var plumber = require('gulp-plumber');
 
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
 
 gulp.task("webpack", () => {
     return new Promise((resolve, reject) => {
-        webpackStream(webpackConfig, webpack)
+        gulp.src("./Client/**/*.ts")
+            .pipe(plumber())
+            .pipe(webpackStream(webpackConfig, webpack))
             .pipe(gulp.dest("./"))
             .on("end", resolve);
     });
@@ -28,6 +31,7 @@ gulp.task("build", () => {
                 "./Share/**/*.ts",
                 "!./node_modules/**"
             ])
+                .pipe(plumber())
                 .pipe(pj_share())
                 .js
                 .pipe(gulp.dest("./dist/Share/"))
@@ -39,6 +43,7 @@ gulp.task("build", () => {
                 "./Share/**/*.ts",
                 "!./node_modules/**"
             ])
+                .pipe(plumber())
                 .pipe(pj_server())
                 .js
                 .pipe(gulp.dest("./dist/Server/"))
