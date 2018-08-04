@@ -17,6 +17,7 @@ import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { WarLine } from "./warLine";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -27,6 +28,7 @@ export interface BindParams {
 
 //viewを生成してソケットと結びつける関数
 export function viewBuilder(bindParams: BindParams) {
+    warLineBuilder(bindParams);
     playerWindowBuilder(bindParams);
     playerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
@@ -116,6 +118,7 @@ function playerBuildActionAreaBuilder(bindParams: BindParams) {
     });
 }
 
+//ターン終了ボタン生成
 function turnFinishButtonBuilder(bindParams: BindParams) {
     const turnFinishButton =
         new view.TurnFinishButton(
@@ -125,6 +128,7 @@ function turnFinishButtonBuilder(bindParams: BindParams) {
     bindParams.stage.addChild(turnFinishButton);
 }
 
+//宣戦布告ボタン生成
 function declareWarButtonBuilder(bindParams: BindParams) {
     const declareWarButton =
         new view.DeclareWarButton(
@@ -134,6 +138,7 @@ function declareWarButtonBuilder(bindParams: BindParams) {
     bindParams.stage.addChild(declareWarButton);
 }
 
+//ドローするアクションカードのレベル選択ウインドウの生成
 function selectActionWindowBuilder(bindParams: BindParams) {
     const selectActionWindow = new SelectActionWindow(bindParams.queue);
     selectActionWindow.onSelectedLevel(level => bindParams.socket.emit("selectLevel", level));
@@ -151,6 +156,7 @@ function selectActionWindowBuilder(bindParams: BindParams) {
     })
 }
 
+//ダイス選択ウインドウの生成
 function selectDiceWindowBuilder(bindParams: BindParams) {
     const diceIconList = new SocketBinder<DiceNumber[]>("diceList" + bindParams.playerId, bindParams.socket);
     const selectDiceWindow = new SelectDiceWindow(bindParams.queue);
@@ -162,6 +168,7 @@ function selectDiceWindowBuilder(bindParams: BindParams) {
     selectDiceWindow.visible = false;
 }
 
+//ログウインドウの生成
 function logWindowBuilder(bindParams: BindParams) {
     const logWindow = new LogWindow(bindParams.queue);
     const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
@@ -176,6 +183,7 @@ function logWindowBuilder(bindParams: BindParams) {
     bindParams.stage.addChild(logWindow);
 }
 
+//イベントログウインドウの生成
 function eventLogWindowBuilder(bindParams: BindParams) {
     const eventLogWindow = new EventLogWindow(bindParams.queue);
     const eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage", bindParams.socket);
@@ -186,6 +194,7 @@ function eventLogWindowBuilder(bindParams: BindParams) {
     bindParams.stage.addChild(eventLogWindow);
 }
 
+//手札ウインドウの生成
 function actionStorageWindowBuilder(bindParams: BindParams) {
     const actionCardList = new SocketBinderList<ActionCardYamlData>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
@@ -213,4 +222,13 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
 
     bindParams.stage.addChild(actionStorageWindow);
     bindParams.stage.addChild(decision);
+}
+
+function warLineBuilder(bindParams: BindParams) {
+    bindParams.stage.addChild(new WarLine(0, 1));
+    bindParams.stage.addChild(new WarLine(0, 2));
+    bindParams.stage.addChild(new WarLine(0, 3));
+    bindParams.stage.addChild(new WarLine(1, 2));
+    bindParams.stage.addChild(new WarLine(1, 3));
+    bindParams.stage.addChild(new WarLine(2, 3));
 }
