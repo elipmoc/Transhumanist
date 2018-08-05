@@ -61,7 +61,7 @@ a{
 .document{
     margin:0 auto;
     padding:1em;
-    max-width:35em;
+    max-width:45em;
     background:rgb(241, 237, 217);
     color:#111;
 }
@@ -73,6 +73,12 @@ a{
 }
 .document ol{
     margin-top:0;
+}
+.document ul{
+    margin-top:0;
+}
+.document h5{
+    margin:0;
 }
 .data{
     font-size:14px;
@@ -92,6 +98,23 @@ a{
     text-align:center;
 }
 
+
+.caution{
+    color:#B11;
+    text-decoration-line: underline;
+}
+.colorA{
+    color:#15C;
+}
+.colorB{
+    color:#6aa84f;
+}
+.colorC{
+    color:#ff5130;
+}
+.colorD{
+    color:#bf9000;
+}
 footer{
     width:100%;
     position:fixed;
