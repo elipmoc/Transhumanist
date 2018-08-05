@@ -1,11 +1,9 @@
 language: node_js
 node_js:
   - "7"
-before_install:
-  - npm install
-  - npm install -g webpack
-  - npm install -g webpack-cli
+before_script:
   - npm run build_only
+  - npm test
 cache:
   directories:
     - "node_modules"

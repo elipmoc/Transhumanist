@@ -5,6 +5,7 @@ export class SocketBinderList<T> extends SocketBinder<T[]> {
     constructor(
         valueName: string) {
         super(valueName);
+        this.Value = [];
     }
 
     push(x: T) {

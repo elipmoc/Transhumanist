@@ -12,6 +12,7 @@ import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
+import { WarPair } from "../Share/warPair";
 
 export class BoardGame {
     private gameMaster: GameMaster;
@@ -19,13 +20,17 @@ export class BoardGame {
     private roomId: number;
     private logMessageList: SocketBinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
+    private warPairList: SocketBinderList<WarPair>;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
         this.roomId = roomId;
+        this.warPairList = new SocketBinderList<WarPair>("warPairList");
+        this.warPairList.setNamespaceSocket(this.boardSocket);
+        setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
         this.logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList");
-        this.logMessageList.setNamespaceSocket(this.boardSocket)
+        this.logMessageList.setNamespaceSocket(this.boardSocket);
         this.logMessageList.Value = new Array();
         this.logMessageList.push(new LogMessageForClient("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
         this.logMessageList.push(new LogMessageForClient("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
@@ -61,6 +66,7 @@ export class BoardGame {
             this.gameMaster.sendToSocket(socket);
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
+            this.warPairList.updateAt(socket);
             handle = new BoardPlayerHandle(socket, event);
         }
     }
