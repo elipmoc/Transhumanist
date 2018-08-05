@@ -52,8 +52,8 @@ export class SettingButton extends viewBase.ButtonBase {
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         const settingButton = new createjs.Bitmap(queue.getResult("setting"));
 
-        settingButton.scaleX = 0.5;
-        settingButton.scaleY = 0.5;
+        settingButton.scaleX = 0.6;
+        settingButton.scaleY = 0.6;
         settingButton.x = settingButton.image.width / 4;
         settingButton.y = settingButton.image.height / 4;
 

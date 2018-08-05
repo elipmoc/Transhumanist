@@ -5,6 +5,7 @@ import * as viewBuilder from "./boardView/viewBuilder"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { OptionWindow } from "./boardView/optionWindow";
+import { TopWindowL } from "./boardView/topWindowL";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -68,14 +69,9 @@ function preloadImage() {
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;
 
-    //設定枠
-    let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
-    stage.addChild(topWindowsL);
-    //設定ボタン
-    const settingButton = new view.SettingButton(() => { optionWindow.visible = true; stage.update(); }, queue);
-    settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2;
-    settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2;
-    stage.addChild(settingButton);
+    //左上のやつ生成
+    stage.addChild(new TopWindowL(queue, optionWindow));
+
 
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
