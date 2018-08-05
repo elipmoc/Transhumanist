@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - "7"
-before_install:
-  - npm install
+after_install:
   - npm run build_only
+  - npm test
 cache:
   directories:
     - "node_modules"
