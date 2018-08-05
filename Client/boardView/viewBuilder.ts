@@ -17,8 +17,7 @@ import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { WarLine } from "./warLine";
-
+import { WarLineControl } from "./warLine";
 export interface BindParams {
     stage: createjs.Stage;
     queue: createjs.LoadQueue;
@@ -225,5 +224,9 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
 }
 
 function warLineBuilder(bindParams: BindParams) {
-    bindParams.stage.addChild(new WarLine(0, 1, bindParams.playerId));
+    const warLineControl = new WarLineControl();
+    bindParams.stage.addChild(warLineControl);
+    warLineControl.addWarLine(2, 0, bindParams.playerId);
+    warLineControl.addWarLine(2, 1, bindParams.playerId);
+    warLineControl.deleteWarLine(2, 0);
 }
