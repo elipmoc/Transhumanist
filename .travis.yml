@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "7"
-after_install:
+before_script:
   - npm run build_only
   - npm test
 cache:
