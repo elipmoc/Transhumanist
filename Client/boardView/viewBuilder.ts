@@ -18,6 +18,7 @@ import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCa
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
+import { WarPair } from "../../Share/warPair";
 export interface BindParams {
     stage: createjs.Stage;
     queue: createjs.LoadQueue;
@@ -224,9 +225,19 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
 }
 
 function warLineBuilder(bindParams: BindParams) {
+    const warPairList = new SocketBinderList<WarPair>("warPairList", bindParams.socket);
     const warLineControl = new WarLineControl();
+    warPairList.onUpdate(xs => {
+        xs.forEach(x => warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId))
+        bindParams.stage.update();
+    });
+    warPairList.onPush(x => {
+        warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId)
+        bindParams.stage.update();
+    });
+    warPairList.onPop(x => {
+        warLineControl.deleteWarLine(x.playerId1, x.playerId2)
+        bindParams.stage.update();
+    });
     bindParams.stage.addChild(warLineControl);
-    warLineControl.addWarLine(2, 0, bindParams.playerId);
-    warLineControl.addWarLine(2, 1, bindParams.playerId);
-    warLineControl.deleteWarLine(2, 0);
 }
