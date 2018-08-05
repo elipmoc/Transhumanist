@@ -3,8 +3,6 @@ node_js:
   - "7"
 before_install:
   - npm install
-  - npm install -g webpack
-  - npm install -g webpack-cli
   - npm run build_only
 cache:
   directories:
