@@ -1,3 +1,5 @@
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+
 export class MakeCard extends createjs.Container {
     cardFrame: createjs.Bitmap;
     cardImage: createjs.Bitmap;
@@ -43,5 +45,20 @@ export class MakeCard extends createjs.Container {
         this.addChild(this.cardCap);
         this.addChild(this.cardLevel);
         this.addChild(this.cardType);
+    }
+
+    setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
+        if (yamlData != null) {
+            this.cardFrame.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
+            this.cardImage.image = new createjs.Bitmap(queue.getResult(yamlData.name)).image;
+            this.cardName.text = yamlData.name;
+            this.cardCap.text = yamlData.description;
+            this.cardLevel.text = "LEVEL " + yamlData.level;
+            this.cardType.text = yamlData.build_use ? "設置使用" : "使い切り";
+        } else {
+            //ここは手札がないことを表すので、画像はすべてなくしておく
+            this.cardFrame.image = null;
+        }
+
     }
 }

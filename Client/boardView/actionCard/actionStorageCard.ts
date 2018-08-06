@@ -31,15 +31,10 @@ export class ActionStorageCard extends createjs.Container {
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         this.yamlData = yamlData;
         if (yamlData != null) {
-            this.cardInfo.cardFrame.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
-            this.cardInfo.cardImage.image = new createjs.Bitmap(queue.getResult(yamlData.name)).image;
-            this.cardInfo.cardName.text = yamlData.name;
-            this.cardInfo.cardCap.text = yamlData.description;
-            this.cardInfo.cardLevel.text = "LEVEL " + yamlData.level;
-            this.cardInfo.cardType.text = yamlData.build_use ? "設置使用" : "使い切り";
+            this.cardInfo.setYamlData(yamlData,queue);
         } else {
             //ここは手札がないことを表すので、画像はすべてなくしておく
-            this.cardInfo.cardFrame.image = null;
+            this.cardInfo.visible = false;
         }
     }
     get YamlData() { return this.yamlData; }
