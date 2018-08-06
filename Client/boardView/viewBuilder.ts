@@ -19,6 +19,10 @@ import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
 import { WarPair } from "../../Share/warPair";
+import { TopWindowL } from "./topWindowL";
+import { OptionWindow } from "./optionWindow";
+import * as global from "../boardGlobalData";
+
 export interface BindParams {
     stage: createjs.Stage;
     queue: createjs.LoadQueue;
@@ -39,6 +43,7 @@ export function viewBuilder(bindParams: BindParams) {
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
     selectDiceWindowBuilder(bindParams);
+    topWindowLBuilder(bindParams);
 }
 
 function playerWindowBuilder(bindParams: BindParams) {
@@ -224,6 +229,7 @@ function actionStorageWindowBuilder(bindParams: BindParams) {
     bindParams.stage.addChild(decision);
 }
 
+//戦争ライン表示の生成
 function warLineBuilder(bindParams: BindParams) {
     const warPairList = new SocketBinderList<WarPair>("warPairList", bindParams.socket);
     const warLineControl = new WarLineControl();
@@ -240,4 +246,18 @@ function warLineBuilder(bindParams: BindParams) {
         bindParams.stage.update();
     });
     bindParams.stage.addChild(warLineControl);
+}
+
+//左上のやつ生成
+function topWindowLBuilder(bindParams: BindParams) {
+    //オプションウインドウ生成
+    const optionWindow = new OptionWindow(bindParams.queue);
+    optionWindow.x = global.canvasWidth / 2;
+    optionWindow.y = global.canvasHeight / 2;
+    optionWindow.visible = false;
+    bindParams.stage.addChild(optionWindow);
+
+    const topWindowL = new TopWindowL(bindParams.queue, optionWindow);
+    topWindowL.setTern(5);
+    bindParams.stage.addChild(topWindowL);
 }

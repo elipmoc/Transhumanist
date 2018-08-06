@@ -1,11 +1,8 @@
 import * as global from "./boardGlobalData"
-import * as view from "./boardView/view"
 import * as io from "socket.io-client";
 import * as viewBuilder from "./boardView/viewBuilder"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
-import { OptionWindow } from "./boardView/optionWindow";
-import { TopWindowL } from "./boardView/topWindowL";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
@@ -63,16 +60,6 @@ function preloadImage() {
     background.alpha = 0.5;
     stage.addChild(background);
 
-    //オプションウインドウ
-    const optionWindow = new OptionWindow(queue);
-    optionWindow.x = global.canvasWidth / 2;
-    optionWindow.y = global.canvasHeight / 2;
-    optionWindow.visible = false;
-
-    //左上のやつ生成
-    stage.addChild(new TopWindowL(queue, optionWindow));
-
-
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
     topWindowsR.scaleX = -1;
@@ -86,6 +73,5 @@ function preloadImage() {
 
     viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket, playerId: Number(cookies.get("playerId")) });
 
-    stage.addChild(optionWindow);
     stage.update();
 }
