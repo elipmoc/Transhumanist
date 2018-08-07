@@ -54,7 +54,7 @@ export class BoardGame {
                 selectLevelCallBack: (level: number) => {
                     console.log("level" + level);
                     handle.setSelectActionWindowVisible(false);
-                    setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
+                    //setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
                 },
                 selectResourceCallBack: (data: SelectResourceData) =>
                     console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceIndex}`),
