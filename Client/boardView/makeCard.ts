@@ -2,13 +2,15 @@ import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 
 export class MakeCard extends createjs.Container {
     cardFrame: createjs.Bitmap;
-    cardImage: createjs.Bitmap;
-    cardName: createjs.Text;
-    cardCap: createjs.Text;
-    cardLevel: createjs.Text;
-    cardType: createjs.Text;
+    private cardImage: createjs.Bitmap;
+    private cardName: createjs.Text;
+    private cardCap: createjs.Text;
+    private cardLevel: createjs.Text;
+    private cardType: createjs.Text;
     private size: number;
-    
+    width: number;
+    height: number;
+
     constructor(size: number) {
         super();
         this.size = size;
@@ -59,6 +61,29 @@ export class MakeCard extends createjs.Container {
             //ここは手札がないことを表すので、画像はすべてなくしておく
             this.cardFrame.image = null;
         }
+    }
 
+    setCardSize(size: number) {
+        this.size = size;
+        this.cardFrame.scaleX = this.size / 3;
+        this.cardFrame.scaleY = this.size / 3;
+        this.cardImage.x = this.size * 2.5;
+        this.cardImage.y = this.size * 26;
+        this.cardImage.scaleX = this.size * 0.25;
+        this.cardImage.scaleY = this.size * 0.25;
+        this.cardName.textAlign = "center";
+        this.cardName.font = (this.size * 8.5) + "px Arial";
+        this.cardName.x = this.size * 42;
+        this.cardName.y = this.size * 5;
+        this.cardCap.x = this.size * 4;
+        this.cardCap.y = this.size * 69;
+        this.cardCap.font = (this.size * 5.4) + "px Arial";
+        this.cardCap.lineHeight = this.size * 5.4;
+        this.cardLevel.font = (this.size * 7) + "px Arial";
+        this.cardLevel.x = this.size * 3.5;
+        this.cardLevel.y = this.size * 16.5;
+        this.cardType.font = (this.size * 6.4) + "px Arial";
+        this.cardType.x = this.size * 56;
+        this.cardType.y = this.size * 17;
     }
 }
