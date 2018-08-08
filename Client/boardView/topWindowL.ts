@@ -24,7 +24,7 @@ export class TopWindowL extends createjs.Container {
         this.text.y = topWindowsL.y + topWindowsL.image.height / 2 - 10;
         this.addChild(this.text);
     }
-    setTern(tern: number) {
-        this.text.text = `ターン${tern}`;
+    setTurn(turn: number) {
+        this.text.text = `ターン${turn}`;
     }
 }

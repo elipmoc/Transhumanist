@@ -21,11 +21,15 @@ export class BoardGame {
     private logMessageList: SocketBinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
     private warPairList: SocketBinderList<WarPair>;
+    private turn: SocketBinder<number>;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.gameMaster = new GameMaster();
         this.boardSocket = boardSocket;
         this.roomId = roomId;
+        this.turn = new SocketBinder<number>("turn");
+        this.turn.setNamespaceSocket(this.boardSocket);
+        this.turn.Value = 5;
         this.warPairList = new SocketBinderList<WarPair>("warPairList");
         this.warPairList.setNamespaceSocket(this.boardSocket);
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
@@ -67,6 +71,7 @@ export class BoardGame {
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
             this.warPairList.updateAt(socket);
+            this.turn.updateAt(socket);
             handle = new BoardPlayerHandle(socket, event);
         }
     }

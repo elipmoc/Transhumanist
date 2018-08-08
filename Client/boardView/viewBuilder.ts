@@ -257,7 +257,9 @@ function topWindowLBuilder(bindParams: BindParams) {
     optionWindow.visible = false;
     bindParams.stage.addChild(optionWindow);
 
+    //左上のやつ生成
     const topWindowL = new TopWindowL(bindParams.queue, optionWindow);
-    topWindowL.setTern(5);
+    const turn = new SocketBinder<number>("turn", bindParams.socket);
+    turn.onUpdate(x => topWindowL.setTurn(x));
     bindParams.stage.addChild(topWindowL);
 }
