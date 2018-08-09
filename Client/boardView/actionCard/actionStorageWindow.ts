@@ -1,7 +1,7 @@
 import * as global from "../../boardGlobalData";
 import { ActionIndex, ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { ActionStorageCard } from "./actionStorageCard";
-import { ActionCardHover } from "../ActionCardHover";
+import { ActionCardHover } from "../actionCardHover";
 
 //アクションカード置き場のウィンドウ
 export class ActionStorageWindow extends createjs.Container {
