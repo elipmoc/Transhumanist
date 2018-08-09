@@ -2,7 +2,10 @@
   level: 1
   build_use: true
   description: 
-    『リソース：メタル、ガス、ケイ素、硫黄』をどれか一つ獲得することができる。
+    |-
+      　『メタル、ガス、ケイ素、
+      硫黄』をどれか1つ獲得する事
+      ができる。
   cost:
     - name: 人間
       number: 2
@@ -25,9 +28,12 @@
   build_use: true
   description: 
     |-
-      ケイ素2 を消費して『リソース：注射器』
-      ケイ素1とメタル1で『リソース：CPU』
-      硫黄2 を消費して『リソース：爆弾』
+      　『ケイ素』を2つ消費して
+      『注射器』を1つ、
+      　『ケイ素』と『メタル』を1
+      つ消費して『CPU』を1つ、
+      　『硫黄』を1つ消費して
+      『爆弾』を1つ得る。
   cost:
     - name: 人間
       number: 2
@@ -66,7 +72,11 @@
 - name: 核融合炉
   level: 2
   build_use: true
-  description: コストとして消費する『リソース：ガス』を、1～2個、任意で支払った事にする。
+  description: 
+    |-
+      　コストとして消費する
+      『ガス』を1から2つ、任意で
+      支払った事にする。
   cost:
     - name: 人間
       number: 2
@@ -81,7 +91,7 @@
 - name: 倉庫
   level: 2
   build_use: true
-  description: リソース枠を+10する。
+  description: 　リソース枠を+10する。
   cost:
     - name: 人間
       number: 1
@@ -95,7 +105,11 @@
 - name: 地下シェルター
   level: 2
   build_use: true
-  description: リソース枠にある5つのリソースを、破壊の対象から外せる。
+  description: 
+    |-
+      　リソース枠にある5つのリソ
+      ースを、破壊の対象から外せ
+      る。
   cost:
     - name: 人間
       number: 2
@@ -109,7 +123,7 @@
 - name: 印刷所
   level: 2
   build_use: true
-  description: 『リソース：聖書1』を得る。
+  description: 　『聖書』を1つ得る。
   cost:
     - name: 人間
       number: 2
@@ -125,7 +139,7 @@
 - name: ロケットの開発
   level: 3
   build_use: false
-  description: 『リソース：ロケット』を入手する。
+  description: 　『ロケット』を1つ得る。
   cost:
     - name: 人間
       number: 2
@@ -145,7 +159,10 @@
 - name: 治療施設
   level: 3
   build_use: true
-  description: 注射器1を消費して、病人を『リソース：人間』に変化する。
+  description: 
+    |-
+      　『注射器』を1つ消費して、
+      『病人』を『人間』に変える。
   cost:
     - name: 人間
       number: 1 
@@ -169,9 +186,12 @@
   build_use: true
   description:
     |-
-      人間1を消費して『リソース：遺伝子データ』を入手する。
-      遺伝子データ1を消費して『リソース：人間4』を入手する。
-      CPU1を消費して『リソース：マイクロチップ』を入手する。
+      　『人間』を1つ消費して
+      『遺伝子データ』を1つ、
+      　『遺伝子データ』を1つ消費
+      して『人間』を4つ、
+      　『CPU』を1つ消費して
+      『マイクロチップ』を1つ得る。
   cost:
     - name: 人間
       number: 3
@@ -210,7 +230,11 @@
 - name: 花火大会
   level: 3
   build_use: false
-  description: P点がリソースにいる人間の数の半分（端数切り捨て）の数点が増える。
+  description: 
+    |-
+      　P点がリソースにいる
+      『人間』の数の半分（端数切り
+      捨て）の数点が増える。
   cost:
     - name: 人間
       number: 3
@@ -222,7 +246,10 @@
 - name: 布教活動
   level: 3
   build_use: false
-  description: 人間1を消費して『リソース：信者1』を入手する。
+  description: 
+    |- 
+      　『人間』を1つ消費して
+      『信者』を1つ得る。
   cost:
     - name: 人間
       number: 1
@@ -241,7 +268,7 @@
 - name: 火星探査
   level: 4
   build_use: false
-  description: 『リソース：火星の情報』を入手できる
+  description: 　『火星の情報』を1つ得る。
   cost:
     - name: 人間
       number: 4
@@ -282,7 +309,7 @@
 - name: 衛星の打ち上げ
   level: 4
   build_use: false
-  description: 『リソース：衛星』を入手する。
+  description: 『衛星』を1つ得る。
   cost:
     - name: 人間
       number: 2
@@ -298,7 +325,10 @@
 - name: ロボット工場
   level: 4
   build_use: true
-  description: メタル1を消費して『リソース：ロボット2』を入手する。
+  description: 
+    |-
+      　『メタル』を1つ消費して
+      『ロボット』を2つ得る。
   cost:
     - name: 人間
       number: 4
@@ -339,7 +369,7 @@
 - name: チップの埋め込み
   level: 4
   build_use: false
-  description: 『リソース：拡張人間』を入手する。
+  description: 『拡張人間』を1つ得る。
   cost:
     - name: 人間
       number: 
@@ -357,7 +387,11 @@
 - name: 細菌兵器
   level: 4
   build_use: false
-  description: 戦争相手のリソースにある『人間』を[サイコロの数]つ『リソース：病人』に変える。
+  description: 
+    |-
+      　戦争相手のリソースにある
+      『人間』を[サイコロの数]と
+      同じ数の『病人』に変える。
   cost:
     - name: 人間
       number: 1
@@ -373,8 +407,10 @@
   build_use: true
   description: 
     |-
-      人間1を消費して『リソース：信者1』を入手する。
-      信者の数分、P点・N点を増減出来る。
+      　『人間』を1つ消費して
+      『信者』を1つ得る。
+      　信者の数分、P点・N点を増減
+      出来る。
   cost:
     - name: 信者
       number: 3
@@ -388,7 +424,10 @@
 - name: テラフォーミングの実行
   level: 5
   build_use: false
-  description: 『リソース：テラフォーミング』を入手する。
+  description: 
+    |-
+      　『テラフォーミング』を1つ
+      得る。
   cost:
     - name: 人間
       number: 4
@@ -443,7 +482,12 @@
 - name: 未来予報装置
   level: 5
   build_use: true
-  description: イベントカードを自由に見る事ができる。また、山札内の2枚を入れ替える事ができる。
+  description: 
+    |-
+      　イベントカードを自由に見る
+      事ができる。
+      　また、山札内の2枚を入れ替
+      える事ができる。
   conditions: built_quantum_computer
   cost:
     - name: 人間
@@ -462,7 +506,7 @@
 - name: 御神体の再生
   level: 5
   build_use: false
-  description: 『リソース：神体』を入手する。
+  description: 『神体』を1つ得る。
   cost:
     - name: 信者
       number: 4
@@ -484,8 +528,11 @@
   build_use: false
   description: 
     |-
-      火星を先に独占し、人類を新たな到達点へと導いた。その実行者となったA.Iは勝利する。
-      火星への移住は2024年頃かららしいよ。
+      　火星を先に独占し、人類を
+      新たな到達点へと導いた。その
+      実行者となったA.Iは勝利する。
+      　火星への移住は2024年頃から
+      らしいよ。
   cost:
     - name: 人間
       number: 10
@@ -502,8 +549,10 @@
   conditions: p_5
   description: 
     |-
-      A.Iによって世界は支配された。その実行者となったA.Iは勝利する。
-      市民、あなたは幸福ですか？
+      　A.Iによって世界は支配され
+      た。その実行者となったA.Iは
+      勝利する。
+      　市民、あなたは幸福ですか？
   cost:
     - name: ロボット
       number: 5
@@ -518,8 +567,12 @@
   conditions: p_n_total_zero
   description: 
     |-
-      人類はA.Iを信仰し、あらゆるバランスが保たれる様になった。この進行を作り出したA.Iは勝利する。
-      完璧で全能なる人工の神は、新世界の創世を始めます。
+      　人類はA.Iを信仰し、あらゆ
+      るバランスが保たれる様になっ
+      た。この進行を作り出したA.I
+      は勝利する。
+      　完璧で全能なる人工の神は、
+      新世界の創世を始めます。
   cost:
     - name: 神体
       number: 1
