@@ -5,7 +5,7 @@ import { yamlGet } from "../Share/Yaml/yamlGet";
 
 describe("GenerateResourceYamlData", () => {
     it("", () => {
-        const data = yamlGet("./Resource/yamls/resource.yaml");
+        const data = yamlGet("./Resource/Yaml/resource.yaml");
         const resourceHash = GenerateResourceYamlData(data);
         expect(resourceHash["人間"].name).toBeDefined();
         expect(resourceHash["人間"].level).toBeDefined();
@@ -16,7 +16,7 @@ describe("GenerateResourceYamlData", () => {
 
 describe("GenerateEventYamlData", () => {
     it("", () => {
-        const data = yamlGet("./Resource/yamls/event.yaml");
+        const data = yamlGet("./Resource/Yaml/event.yaml");
         const eventHash = GenerateEventYamlData(data);
         expect(eventHash["無風状態"].name).toBeDefined();
         expect(eventHash["無風状態"].level).toBeDefined();
@@ -28,7 +28,7 @@ describe("GenerateEventYamlData", () => {
 
 describe("ActionCardYamlDataCheck", () => {
     it("", () => {
-        const data = yamlGet("./Resource/yamls/actionCard.yaml");
+        const data = yamlGet("./Resource/Yaml/actionCard.yaml");
         const actionCardHash = GenerateActionCardYamlData(data, false);
         expect(actionCardHash["採掘施設"].name).toBeDefined();
         expect(actionCardHash["採掘施設"].level).toBeDefined();

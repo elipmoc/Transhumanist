@@ -43,7 +43,7 @@ export class GamePlayer {
             uncertainty: 0, resource: 0,
             activityRange: 0, speed: 0
         };
-        const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/yamls/actionCard.yaml"), true);
+        const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true);
         this.buildActionList.Value = [
             buildAction["採掘施設"].index,
             buildAction["教会"].index,
@@ -64,7 +64,7 @@ export class GamePlayer {
             buildAction["核融合炉"].index,
             buildAction["ロボット工場"].index,
         ];
-        const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/yamls/resource.yaml"));
+        const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
         this.resourceList.Value = [
             resourceAction["人間"].index,
             resourceAction["人間"].index,
@@ -88,7 +88,7 @@ export class GamePlayer {
             resourceAction["拡張人間"].index,
             resourceAction["拡張人間"].index,
         ];
-        const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/yamls/actionCard.yaml"), false);
+        const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         actionCardList.Value = [null, null, actionCard["神の杖"], null, null]
         actionCardList.setAt(0, actionCard["意識操作のテスト"])
 
