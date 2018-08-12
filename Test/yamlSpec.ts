@@ -1,7 +1,7 @@
 import { GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
 import { GenerateEventYamlData } from "../Share/Yaml/eventYamlData";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
-import { yamlGet } from "../Share/Yaml/yamlGet";
+import { yamlGet } from "../Server/yamlGet";
 
 describe("GenerateResourceYamlData", () => {
     it("", () => {
