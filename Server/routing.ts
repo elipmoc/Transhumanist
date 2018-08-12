@@ -1,3 +1,5 @@
+import { yamlGet } from "./yamlGet";
+
 const fs = require('fs');
 const router = require('router');
 const finalhandler = require('finalhandler');
@@ -37,8 +39,8 @@ export function createRouter() {
     myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/card/front/action/" + req.params.path);
     });
-    myRouter.get("/Yaml/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Yaml/" + req.params.path);
+    myRouter.get("/Json/:path", (req: any, res: any) => {
+        sendYaml(res, "./Resource/Yaml/" + req.params.path);
     });
     myRouter.get("/:path", (req: any, res: any) => {
         sendHtml(res, "./Html/" + req.params.path);
@@ -74,4 +76,10 @@ function sendPng(res: any, path: string) {
         'Content-Type': 'image/png'
     });
     res.end(fs.readFileSync(path));
+}
+function sendYaml(res: any, path: string) {
+    res.writeHead(200, {
+        'Content-Type': 'text/plain'
+    });
+    res.end(JSON.stringify(yamlGet(path)));
 }

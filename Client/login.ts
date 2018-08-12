@@ -8,6 +8,10 @@ import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import * as $ from "jquery";
+import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
+
+$.get("/Json/actionCard.yaml", (data) => console.log(GenerateActionCardYamlData(JSON.parse(data), false)));
 
 //サンプルソケットに繋げる
 const socket = io("/login");

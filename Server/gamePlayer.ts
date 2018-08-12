@@ -4,7 +4,7 @@ import { PlayerData } from "./playerData";
 import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
-import { yamlGet } from "../Share/Yaml/yamlGet";
+import { yamlGet } from "./yamlGet";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
 import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 
