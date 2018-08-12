@@ -3,11 +3,15 @@ import * as io from "socket.io-client";
 import * as viewBuilder from "./boardView/viewBuilder"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
+import { Yamls, getYamls } from "./getYaml";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
 
-    queue.on("complete", preloadImage);
+    queue.on("complete", () => getYamls().then(yamls => {
+        preloadImage(yamls);
+        return Promise.resolve();
+    }));
     queue.loadManifest([
         { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },
         { id: "evenPlayerFrame2", src: "Img/ui/evenPlayerFrame2.png" },
@@ -53,7 +57,7 @@ window.onload = () => {
     ]);
 }
 
-function preloadImage() {
+function preloadImage(yamls: Yamls) {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
@@ -71,7 +75,13 @@ function preloadImage() {
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket, playerId: Number(cookies.get("playerId")) });
+    viewBuilder.viewBuilder({
+        queue,
+        stage,
+        socket,
+        playerId: Number(cookies.get("playerId")),
+        yamls
+    });
 
     stage.update();
 }

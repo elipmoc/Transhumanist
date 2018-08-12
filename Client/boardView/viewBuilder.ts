@@ -22,12 +22,14 @@ import { WarPair } from "../../Share/warPair";
 import { TopWindowL } from "./topWindowL";
 import { OptionWindow } from "./optionWindow";
 import * as global from "../boardGlobalData";
+import { Yamls } from "../getYaml";
 
 export interface BindParams {
     stage: createjs.Stage;
     queue: createjs.LoadQueue;
     socket: SocketIOClient.Socket;
     playerId: number;
+    yamls: Yamls;
 }
 
 //viewを生成してソケットと結びつける関数
