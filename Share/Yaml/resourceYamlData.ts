@@ -14,7 +14,7 @@ export function GenerateResourceYamlData(yamlData: Resource[]) {
 }
 
 export interface ResourceHash {
-    [index: string]: Resource;
+    [index: string]: Resource | undefined;
 }
 
 export type ResourceIndex = number;

@@ -18,7 +18,7 @@ export class GameMaster {
         playerData: PlayerData, playerId: number,
         state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceIndex>
         , buildActionList: SocketBinderList<BuildActionIndex>, diceList: SocketBinder<DiceNumber[]>
-        , actionCardList: SocketBinderList<ActionCardYamlData | null>
+        , actionCardList: SocketBinderList<string | null>
     ) {
         this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList));
     }

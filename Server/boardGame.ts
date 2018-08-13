@@ -85,7 +85,7 @@ export class BoardGame {
         buildActionList.setNamespaceSocket(this.boardSocket);
         const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId);
         diceList.setNamespaceSocket(this.boardSocket);
-        const actionCardList = new SocketBinderList<ActionCardYamlData | null>("actionCardList" + playerId);
+        const actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId);
         this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList);
     }
 }

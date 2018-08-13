@@ -15,7 +15,7 @@ export class GamePlayer {
     private resourceList: SocketBinderList<ResourceIndex>;
     private buildActionList: SocketBinderList<BuildActionIndex>;
     private diceList: SocketBinder<DiceNumber[]>;
-    private actionCardList: SocketBinderList<ActionCardYamlData | null>;
+    private actionCardList: SocketBinderList<string | null>;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -27,7 +27,7 @@ export class GamePlayer {
         resourceList: SocketBinderList<ResourceIndex>,
         buildActionList: SocketBinderList<BuildActionIndex>,
         diceList: SocketBinder<DiceNumber[]>,
-        actionCardList: SocketBinderList<ActionCardYamlData | null>
+        actionCardList: SocketBinderList<string | null>
     ) {
         this.diceList = diceList;
         this.diceList.Value = [0, 1, 2];
@@ -45,52 +45,52 @@ export class GamePlayer {
         };
         const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true);
         this.buildActionList.Value = [
-            buildAction["採掘施設"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["教会"].index,
-            buildAction["核融合炉"].index,
-            buildAction["ロボット工場"].index,
+            buildAction["採掘施設"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["教会"]!.index,
+            buildAction["核融合炉"]!.index,
+            buildAction["ロボット工場"]!.index,
         ];
         const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
         this.resourceList.Value = [
-            resourceAction["人間"].index,
-            resourceAction["人間"].index,
-            resourceAction["人間"].index,
-            resourceAction["人間"].index,
-            resourceAction["人間"].index,
-            resourceAction["聖書"].index,
-            resourceAction["聖書"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["CPU"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
-            resourceAction["拡張人間"].index,
+            resourceAction["人間"]!.index,
+            resourceAction["人間"]!.index,
+            resourceAction["人間"]!.index,
+            resourceAction["人間"]!.index,
+            resourceAction["人間"]!.index,
+            resourceAction["聖書"]!.index,
+            resourceAction["聖書"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["CPU"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
+            resourceAction["拡張人間"]!.index,
         ];
         const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
-        actionCardList.Value = [null, null, actionCard["神の杖"], null, null]
-        actionCardList.setAt(0, actionCard["意識操作のテスト"])
+        actionCardList.Value = [null, null, "神の杖", null, null];
+        actionCardList.setAt(0, "意識操作のテスト")
 
     }
 

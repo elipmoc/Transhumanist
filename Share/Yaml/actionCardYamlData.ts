@@ -1,5 +1,5 @@
 export interface ActionCardHash {
-    [index: string]: ActionCardYamlData
+    [index: string]: ActionCardYamlData | undefined
 }
 
 export type BuildActionIndex = number;

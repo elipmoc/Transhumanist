@@ -16,7 +16,7 @@ import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardYamlData, ActionIndex } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
 import { WarPair } from "../../Share/warPair";
 import { TopWindowL } from "./topWindowL";
@@ -203,15 +203,16 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 
 //手札ウインドウの生成
 function actionStorageWindowBuilder(bindParams: BindParams) {
-    const actionCardList = new SocketBinderList<ActionCardYamlData>("actionCardList" + bindParams.playerId, bindParams.socket);
+    const actionCardList = new SocketBinderList<string | null>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
     actionCardList.onUpdate(list =>
-        list.forEach((x, index) =>
-            actionStorageWindow.setActionCard(index, x)
+        list.forEach((actionCardName, index) =>
+            actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName])
         )
     );
-    actionCardList.onSetAt((index, x) => actionStorageWindow.setActionCard(index, x));
+    actionCardList.onSetAt((index, actionCardName) =>
+        actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName]));
     decision.visible = false;
     decision.onClicked((r) => {
         if (r == DialogResult.Yes) {
