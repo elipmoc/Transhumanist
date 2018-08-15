@@ -1,6 +1,5 @@
 import * as global from "../boardGlobalData"
 import * as viewBase from "./viewBase"
-import { successResultCreateRoomData } from "../../Share/resultCreateRoomData";
 import { createMyShadow } from "../utility";
 
 //宣戦布告ボタン

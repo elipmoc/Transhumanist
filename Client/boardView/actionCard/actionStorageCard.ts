@@ -6,14 +6,12 @@ import { ActionCardHover } from "../../../Client/boardView/actionCardHover";
 export class ActionStorageCard extends createjs.Container {
     private cardInfo: MakeCard = new MakeCard(1);
     private yamlData: ActionCardYamlData = null;
-    private index: number;
     readonly width: number = 84;
     readonly height: number = 126;
     //カードをクリックされた時に呼ばれる関数
     private onClickCallBack: (index: number, cardName: string) => void;
     constructor(index: number, actionCardHover: ActionCardHover, queue: createjs.LoadQueue) {
         super();
-        this.index = index;
         this.addChild(this.cardInfo);
 
         this.cardInfo.cardFrame.addEventListener("click", () => {

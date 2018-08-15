@@ -11,9 +11,9 @@ export class ActionStorageWindow extends createjs.Container {
     private cardImageList: ActionStorageCard[];
     private actionCardHover: ActionCardHover;
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor(actionCardHover: ActionCardHover, queue: createjs.LoadQueue) {
         super();
-        this.actionCardHover = new ActionCardHover(null, queue, 3);
+        this.actionCardHover = actionCardHover;
         this.queue = queue;
         this.frame = new createjs.Bitmap(queue.getResult("actionStorageFrame"));
         this.frame.x = global.canvasWidth / 2 - this.frame.image.width / 2;

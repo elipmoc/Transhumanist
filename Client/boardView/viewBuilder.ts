@@ -16,13 +16,14 @@ import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex, ActionCardYamlData, ActionIndex } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
 import { WarPair } from "../../Share/warPair";
 import { TopWindowL } from "./topWindowL";
 import { OptionWindow } from "./optionWindow";
 import * as global from "../boardGlobalData";
 import { Yamls } from "../getYaml";
+import { ActionCardHover } from "./actionCardHover";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -39,8 +40,10 @@ export function viewBuilder(bindParams: BindParams) {
     playerResourceAreaBuilder(bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
-    playerBuildActionAreaBuilder(bindParams);
-    actionStorageWindowBuilder(bindParams);
+    const actionCardHover = new ActionCardHover(null, bindParams.queue, 3);
+    playerBuildActionAreaBuilder(actionCardHover, bindParams);
+    actionStorageWindowBuilder(actionCardHover, bindParams);
+    bindParams.stage.addChild(actionCardHover);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -101,7 +104,7 @@ function playerResourceAreaBuilder(bindParams: BindParams) {
 }
 
 //プレイヤーの設置アクション欄生成
-function playerBuildActionAreaBuilder(bindParams: BindParams) {
+function playerBuildActionAreaBuilder(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const playerBuildActionAreaList: PlayerBuildBase[] = [
         new view.Player1Build(bindParams.queue),
         new view.Player2Build(bindParams.queue),
@@ -109,18 +112,34 @@ function playerBuildActionAreaBuilder(bindParams: BindParams) {
         new view.Player4Build(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const buildActionKindList = new SocketBinderList<BuildActionIndex>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const buildActionKindList = new SocketBinderList<ActionCardName>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         buildActionKindList.onUpdate((list) => {
-            list.forEach((x, iconId) => playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue));
+            list.forEach((cardName, iconId) =>
+                playerBuildActionAreaList[i].setResource(
+                    iconId, cardName,
+                    bindParams.yamls.buildActionCardHash[cardName].index,
+                    bindParams.queue
+                ));
             bindParams.stage.update();
         });
-        buildActionKindList.onSetAt((iconId: number, x: BuildActionIndex) => {
-            playerBuildActionAreaList[i].setResource(iconId, x, bindParams.queue);
+        buildActionKindList.onSetAt((iconId: number, cardName: ActionCardName) => {
+            playerBuildActionAreaList[i].setResource(
+                iconId, cardName, bindParams.yamls.buildActionCardHash[cardName].index, bindParams.queue);
         });
         bindParams.stage.addChild(playerBuildActionAreaList[i]);
+        playerBuildActionAreaList[i].onMouseOveredIcon(cardName => {
+            actionCardHover.visible = true;
+            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[cardName], bindParams.queue);
+            bindParams.stage.update();
+        });
+        playerBuildActionAreaList[i].onMouseOutedIcon(() => {
+            actionCardHover.visible = false;
+            actionCardHover.setYamlData(null, bindParams.queue);
+            bindParams.stage.update();
+        });
     }
-    playerBuildActionAreaList[0].onClickIcon((iconId, buildActionIndex) => {
-        const selectBuildActionData: SelectBuildActionData = { iconId, buildActionIndex };
+    playerBuildActionAreaList[0].onClickedIcon((iconId, actionCardName) => {
+        const selectBuildActionData: SelectBuildActionData = { iconId };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });
 }
@@ -202,9 +221,9 @@ function eventLogWindowBuilder(bindParams: BindParams) {
 }
 
 //手札ウインドウの生成
-function actionStorageWindowBuilder(bindParams: BindParams) {
-    const actionCardList = new SocketBinderList<string | null>("actionCardList" + bindParams.playerId, bindParams.socket);
-    const actionStorageWindow = new ActionStorageWindow(bindParams.queue);
+function actionStorageWindowBuilder(actionCardHover: ActionCardHover, bindParams: BindParams) {
+    const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
+    const actionStorageWindow = new ActionStorageWindow(actionCardHover, bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
     actionCardList.onUpdate(list =>
         list.forEach((actionCardName, index) =>

@@ -4,6 +4,7 @@ export interface ActionCardHash {
 
 export type BuildActionIndex = number;
 export type ActionIndex = number;
+export type ActionCardName = string;
 
 export interface ActionCardYamlData {
     name: string;

@@ -1,7 +1,7 @@
 import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./cardIcon"
 import * as global from "../boardGlobalData";
 import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex } from "../../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {
@@ -81,39 +81,51 @@ export class PlayerResourceAreaBase extends createjs.Container {
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
     onClickIcon(onClickIconCallBack: (iconId: number, resourceKind: ResourceIndex) => void) {
-        this.resourceList.onClickIcon(onClickIconCallBack);
+        this.resourceList.onClickedIcon(onClickIconCallBack);
     }
 
     setResource(iconId: number, resourceKind: ResourceIndex, queue: createjs.LoadQueue) {
-        this.resourceList.setResource(iconId, resourceKind, queue);
+        this.resourceList.setResource(iconId, resourceKind, resourceKind, queue);
     }
 }
 
 //プレイヤー設置アクション欄のベースクラス
 export class PlayerBuildBase extends createjs.Container {
     protected buildArea: createjs.Bitmap;
-    protected buildList: IconList<BuildActionCardIcon, BuildActionIndex>;
+    protected buildList: IconList<BuildActionCardIcon, ActionCardName | null>;
     constructor(xNum: number) {
         super();
-        this.buildList = new IconList<BuildActionCardIcon, BuildActionIndex>(xNum, 30, BuildActionCardIcon);
+        this.buildList = new IconList<BuildActionCardIcon, ActionCardName | null>(xNum, 30, BuildActionCardIcon);
         this.buildArea = new createjs.Bitmap("");
         this.addChild(this.buildArea);
         this.addChild(this.buildList);
     }
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, buildActionKind: BuildActionIndex) => void) {
-        this.buildList.onClickIcon(onClickIconCallBack);
+    onClickedIcon(onClickIconCallBack: (iconId: number, buildActionCardName: ActionCardName) => void) {
+        this.buildList.onClickedIcon(onClickIconCallBack);
     }
 
-    setResource(iconId: number, buildActionKind: BuildActionIndex, queue: createjs.LoadQueue) {
-        this.buildList.setResource(iconId, buildActionKind, queue);
+    //リソースアイコンがマウスオーバーされた時に呼ばれる関数をセットする
+    onMouseOveredIcon(onMouseOverIconCallBack: (buildActionCardName: ActionCardName) => void) {
+        this.buildList.onMouseOveredIcon(onMouseOverIconCallBack);
+    }
+
+    //リソースアイコンがマウスアウトされた時に呼ばれる関数をセットする
+    onMouseOutedIcon(onMouseOutIconCallBack: () => void) {
+        this.buildList.onMouseOutedIcon(onMouseOutIconCallBack);
+    }
+
+    setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: createjs.LoadQueue) {
+        this.buildList.setResource(iconId, buildActionCardName, buildActionIndex, queue);
     }
 }
 
 //iconリストのクラス
-export class IconList<I extends CardIconBase<K>, K extends number> extends createjs.Container {
+export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     protected icons: I[] = new Array();
     private onClickIconCallBack: (iconId: number, kind: K) => void;
+    private onMouseOverIconCallBack: (kind: K) => void;
+    private onMouseOutIconCallBack: () => void;
     private xNum: number;
 
     //xNum:iconを横に何個並べるかの数値
@@ -123,6 +135,8 @@ export class IconList<I extends CardIconBase<K>, K extends number> extends creat
         for (let i = 0; i < maxIcon; i++) {
             const cardIcon = new icon_creator(i);
             cardIcon.onClicked((iconId, kind) => this.onClickIconCallBack(iconId, kind));
+            cardIcon.onMouseOuted(() => this.onMouseOutIconCallBack());
+            cardIcon.onMouseOvered((kind) => this.onMouseOverIconCallBack(kind));
             cardIcon.x = this.icons.length % this.xNum * global.cardIconSize;
             cardIcon.y = Math.floor(this.icons.length / this.xNum) * global.cardIconSize;
             this.icons.push(cardIcon);
@@ -131,11 +145,21 @@ export class IconList<I extends CardIconBase<K>, K extends number> extends creat
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, kind: K) => void) {
+    onClickedIcon(onClickIconCallBack: (iconId: number, kind: K) => void) {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 
-    setResource(iconId: number, kind: K, queue: createjs.LoadQueue) {
-        this.icons[iconId].setKind(kind, queue);
+    //リソースアイコンがクリックされた時に呼ばれる関数をセットする
+    onMouseOutedIcon(onMouseOutCallBack: () => void) {
+        this.onMouseOutIconCallBack = onMouseOutCallBack;
+    }
+
+    //リソースアイコンがクリックされた時に呼ばれる関数をセットする
+    onMouseOveredIcon(onMouseOverIconCallBack: (kind: K) => void) {
+        this.onMouseOverIconCallBack = onMouseOverIconCallBack;
+    }
+
+    setResource(iconId: number, kind: K, imgIndex: number, queue: createjs.LoadQueue) {
+        this.icons[iconId].setKind(kind, imgIndex, queue);
     }
 }

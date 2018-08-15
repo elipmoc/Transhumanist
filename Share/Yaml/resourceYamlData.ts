@@ -18,6 +18,7 @@ export interface ResourceHash {
 }
 
 export type ResourceIndex = number;
+export type ResourceName = string;
 
 export interface Resource {
     name: string,

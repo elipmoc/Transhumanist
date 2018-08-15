@@ -6,14 +6,14 @@ import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
 import { yamlGet } from "./yamlGet";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
-import { BuildActionIndex, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex, ActionCardYamlData, ActionCardName } from "../Share/Yaml/actionCardYamlData";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
     private resourceList: SocketBinderList<ResourceIndex>;
-    private buildActionList: SocketBinderList<BuildActionIndex>;
+    private buildActionList: SocketBinderList<ActionCardName>;
     private diceList: SocketBinder<DiceNumber[]>;
     private actionCardList: SocketBinderList<string | null>;
 
@@ -25,7 +25,7 @@ export class GamePlayer {
         playerId: number,
         state: SocketBinder<GamePlayerState>,
         resourceList: SocketBinderList<ResourceIndex>,
-        buildActionList: SocketBinderList<BuildActionIndex>,
+        buildActionList: SocketBinderList<ActionCardName>,
         diceList: SocketBinder<DiceNumber[]>,
         actionCardList: SocketBinderList<string | null>
     ) {
@@ -45,24 +45,25 @@ export class GamePlayer {
         };
         const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true);
         this.buildActionList.Value = [
-            buildAction["採掘施設"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["教会"]!.index,
-            buildAction["核融合炉"]!.index,
-            buildAction["ロボット工場"]!.index,
+            "採掘施設",
+            "治療施設",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "教会",
+            "核融合炉",
+            "ロボット工場",
         ];
         const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
         this.resourceList.Value = [

@@ -18,6 +18,7 @@ export interface EventHash {
     [index: string]: Event | undefined;
 }
 export type EventIndex = number;
+export type EventName = string;
 
 export interface Event {
     name: string,
