@@ -2,6 +2,7 @@ import { GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
 import { GenerateEventYamlData } from "../Share/Yaml/eventYamlData";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../Server/yamlGet";
+import { GenerateStartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 
 describe("GenerateResourceYamlData", () => {
     it("", () => {
@@ -38,5 +39,17 @@ describe("ActionCardYamlDataCheck", () => {
         expect(actionCardHash["採掘施設"]!.commands).toBeDefined();
         expect(actionCardHash["採掘施設"]!.commands[0].kind).toBeDefined();
         expect(actionCardHash["採掘施設"]!.index).toEqual(0);
+    });
+});
+
+describe("StartStatusYamlDataCheck", () => {
+    it("", () => {
+        const data = yamlGet("./Resource/Yaml/startStatus.yaml");
+        const startStatusYamlData = GenerateStartStatusYamlData(data);
+        expect(startStatusYamlData[0]!.name).toBeDefined();
+        expect(startStatusYamlData[0]!.speed).toBeDefined();
+        expect(startStatusYamlData[0]!.activityRange).toBeDefined();
+        expect(startStatusYamlData[0]!.resource).toBeDefined();
+        expect(startStatusYamlData[0]!.uncertainty).toBeDefined();
     });
 });
