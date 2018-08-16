@@ -15,7 +15,7 @@ import { ActionStorageWindow } from "./actionCard/actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
-import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { ResourceIndex, ResourceName } from "../../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
 import { WarPair } from "../../Share/warPair";
@@ -24,6 +24,7 @@ import { OptionWindow } from "./optionWindow";
 import * as global from "../boardGlobalData";
 import { Yamls } from "../getYaml";
 import { ActionCardHover } from "./actionCardHover";
+import { ResourceHover } from "./resourceHover";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -37,13 +38,15 @@ export interface BindParams {
 export function viewBuilder(bindParams: BindParams) {
     warLineBuilder(bindParams);
     playerWindowBuilder(bindParams);
-    playerResourceAreaBuilder(bindParams);
+    const resourceHover = new ResourceHover(null, bindParams.queue);
+    playerResourceAreaBuilder(resourceHover, bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
     const actionCardHover = new ActionCardHover(null, bindParams.queue, 3);
     playerBuildActionAreaBuilder(actionCardHover, bindParams);
     actionStorageWindowBuilder(actionCardHover, bindParams);
     bindParams.stage.addChild(actionCardHover);
+    bindParams.stage.addChild(resourceHover);
     turnFinishButtonBuilder(bindParams);
     declareWarButtonBuilder(bindParams);
     selectActionWindowBuilder(bindParams);
@@ -79,7 +82,8 @@ function playerWindowBuilder(bindParams: BindParams) {
 }
 
 //プレイヤーのリソース欄生成
-function playerResourceAreaBuilder(bindParams: BindParams) {
+function playerResourceAreaBuilder(resourceHover: ResourceHover, bindParams: BindParams) {
+    bindParams.stage.addChild(resourceHover);
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new view.Player1ResourceArea(bindParams.queue),
         new view.Player2ResourceArea(bindParams.queue),
@@ -87,18 +91,37 @@ function playerResourceAreaBuilder(bindParams: BindParams) {
         new view.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceIndex>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const resourceKindList = new SocketBinderList<ResourceName>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
-            list.forEach((x, iconId) => playerResourceAreaList[i].setResource(iconId, x, bindParams.queue));
+            list.forEach((resourceName, iconId) =>
+                playerResourceAreaList[i].setResource(
+                    iconId,
+                    resourceName,
+                    bindParams.yamls.resourceHash[resourceName].index,
+                    bindParams.queue));
             bindParams.stage.update();
         });
-        resourceKindList.onSetAt((iconId: number, x: ResourceIndex) => {
-            playerResourceAreaList[i].setResource(iconId, x, bindParams.queue);
+        resourceKindList.onSetAt((iconId: number, resourceName: ResourceName) => {
+            playerResourceAreaList[i].setResource(
+                iconId,
+                resourceName,
+                bindParams.yamls.resourceHash[resourceName].index,
+                bindParams.queue);
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
+        playerResourceAreaList[i].onMouseOveredIcon(cardName => {
+            resourceHover.visible = true;
+            resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.queue);
+            bindParams.stage.update();
+        });
+        playerResourceAreaList[i].onMouseOutedIcon(() => {
+            resourceHover.visible = false;
+            resourceHover.setYamlData(null, bindParams.queue);
+            bindParams.stage.update();
+        });
     }
-    playerResourceAreaList[0].onClickIcon((iconId, resourceIndex) => {
-        const selectResourceData: SelectResourceData = { iconId, resourceIndex };
+    playerResourceAreaList[0].onClickIcon((iconId, resourceName) => {
+        const selectResourceData: SelectResourceData = { iconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
 }

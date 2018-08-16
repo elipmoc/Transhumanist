@@ -3,16 +3,16 @@ import { GamePlayerState } from "../Share/gamePlayerState";
 import { PlayerData } from "./playerData";
 import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
-import { ResourceIndex, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
+import { ResourceIndex, GenerateResourceYamlData, ResourceName } from "../Share/Yaml/resourceYamlData";
 import { yamlGet } from "./yamlGet";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
-import { BuildActionIndex, ActionCardYamlData, ActionCardName } from "../Share/Yaml/actionCardYamlData";
+import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: SocketBinder<GamePlayerState>;
-    private resourceList: SocketBinderList<ResourceIndex>;
+    private resourceList: SocketBinderList<ResourceName>;
     private buildActionList: SocketBinderList<ActionCardName>;
     private diceList: SocketBinder<DiceNumber[]>;
     private actionCardList: SocketBinderList<string | null>;
@@ -24,7 +24,7 @@ export class GamePlayer {
         playerData: PlayerData,
         playerId: number,
         state: SocketBinder<GamePlayerState>,
-        resourceList: SocketBinderList<ResourceIndex>,
+        resourceList: SocketBinderList<ResourceName>,
         buildActionList: SocketBinderList<ActionCardName>,
         diceList: SocketBinder<DiceNumber[]>,
         actionCardList: SocketBinderList<string | null>
@@ -67,27 +67,27 @@ export class GamePlayer {
         ];
         const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
         this.resourceList.Value = [
-            resourceAction["人間"]!.index,
-            resourceAction["人間"]!.index,
-            resourceAction["人間"]!.index,
-            resourceAction["人間"]!.index,
-            resourceAction["人間"]!.index,
-            resourceAction["聖書"]!.index,
-            resourceAction["聖書"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["CPU"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
-            resourceAction["拡張人間"]!.index,
+            "人間",
+            "人間",
+            "人間",
+            "人間",
+            "人間",
+            "聖書",
+            "聖書",
+            "CPU",
+            "CPU",
+            "CPU",
+            "CPU",
+            "CPU",
+            "CPU",
+            "CPU",
+            "拡張人間",
+            "拡張人間",
+            "拡張人間",
+            "拡張人間",
+            "拡張人間",
+            "拡張人間",
+            "拡張人間",
         ];
         const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         actionCardList.Value = [null, null, "神の杖", null, null];

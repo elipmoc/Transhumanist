@@ -1,6 +1,6 @@
 import { CheckUndefined } from "./check_func";
 
-export function GenerateResourceYamlData(yamlData: Resource[]) {
+export function GenerateResourceYamlData(yamlData: ResourceYamlData[]) {
     CheckUndefined(yamlData.length, "resourceのyamlが配列ではありません");
     let resourceHash: ResourceHash = {};
     yamlData.forEach((x, index) => {
@@ -14,13 +14,13 @@ export function GenerateResourceYamlData(yamlData: Resource[]) {
 }
 
 export interface ResourceHash {
-    [index: string]: Resource | undefined;
+    [index: string]: ResourceYamlData | undefined;
 }
 
 export type ResourceIndex = number;
 export type ResourceName = string;
 
-export interface Resource {
+export interface ResourceYamlData {
     name: string,
     index: ResourceIndex,
     level: number,

@@ -1,6 +1,6 @@
 import { clipBitmap, getIconResource } from "../utility";
 import * as global from "../boardGlobalData";
-import { ResourceIndex } from "../../Share/Yaml/resourceYamlData";
+import { ResourceIndex, ResourceName } from "../../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 
 //アイコンのベースクラス
@@ -46,10 +46,10 @@ export class CardIconBase<K> extends createjs.Bitmap {
 }
 
 //リソースアイコンクラス
-export class ResourceCardIcon extends CardIconBase<ResourceIndex> {
+export class ResourceCardIcon extends CardIconBase<ResourceName | null> {
 
     constructor(iconId: number) {
-        super(null, iconId, -1, "resource");
+        super(null, iconId, null, "resource");
     }
 }
 

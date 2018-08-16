@@ -10,7 +10,7 @@ import { SelectBuildActionData } from "../Share/selectBuildActionData";
 import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
-import { ResourceIndex } from "../Share/Yaml/resourceYamlData";
+import { ResourceIndex, ResourceName } from "../Share/Yaml/resourceYamlData";
 import { BuildActionIndex, ActionCardYamlData, ActionCardName } from "../Share/Yaml/actionCardYamlData";
 import { WarPair } from "../Share/warPair";
 
@@ -61,7 +61,7 @@ export class BoardGame {
                     //setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
                 },
                 selectResourceCallBack: (data: SelectResourceData) =>
-                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId} resource ${data.resourceIndex}`),
+                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId}`),
                 selectBuildActionCallBack: (data: SelectBuildActionData) =>
                     console.log(`selectBuildAction player${gamePlayer.PlayerId} iconId${data.iconId}`)
 
@@ -79,7 +79,7 @@ export class BoardGame {
     addMember(playerData: PlayerData, playerId: number) {
         const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId);
         state.setNamespaceSocket(this.boardSocket);
-        const resourceList = new SocketBinderList<ResourceIndex>("ResourceKindList" + playerId);
+        const resourceList = new SocketBinderList<ResourceName>("ResourceKindList" + playerId);
         resourceList.setNamespaceSocket(this.boardSocket);
         const buildActionList = new SocketBinderList<ActionCardName>("BuildActionKindList" + playerId);
         buildActionList.setNamespaceSocket(this.boardSocket);
