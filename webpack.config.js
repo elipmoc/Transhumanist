@@ -1,12 +1,15 @@
 
 console.log("すごーい！君はwebpackできるフレンズなんだね！");
 module.exports = {
+
+    mode: 'development',
+
     entry: {
         "Client/board": "./Client/board.ts",
         "Client/login": "./Client/login.ts",
     },
     output: {
-        filename: './dist/[name].js'
+        filename: './[name].js'
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
@@ -15,7 +18,7 @@ module.exports = {
     module: {
         rules: [
             // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-            { test: /\.tsx?$/, loader: 'ts-loader' }
+            { test: /\.tsx?$/, use: 'ts-loader' }
         ]
     }
 }
