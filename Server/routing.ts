@@ -1,6 +1,5 @@
 import { yamlGet } from "./yamlGet";
-
-const fs = require('fs');
+import * as fs from "fs";
 const router = require('router');
 const finalhandler = require('finalhandler');
 
@@ -52,10 +51,12 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
 }
 
 function sendCss(res: any, path: string) {
@@ -66,16 +67,21 @@ function sendCss(res: any, path: string) {
 }
 
 function sendJs(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/plane'
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'text/plane'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
 }
 function sendPng(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'image/png'
+
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'image/png'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
 }
 function sendYaml(res: any, path: string) {
     res.writeHead(200, {
