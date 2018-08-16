@@ -1,0 +1,23 @@
+- name: G社
+  speed: 5
+  resource: 15
+  activityRange: 30
+  uncertainty: 2
+  
+- name: M社
+  speed: 3
+  resource: 15
+  activityRange: 25
+  uncertainty: 1
+
+- name: T社
+  speed: 4
+  resource: 10
+  activityRange: 25
+  uncertainty: 1
+
+- name: L社
+  speed: 2
+  resource: 20
+  activityRange: 20
+  uncertainty: 3
