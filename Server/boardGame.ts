@@ -10,8 +10,8 @@ import { SelectBuildActionData } from "../Share/selectBuildActionData";
 import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
-import { ResourceIndex, ResourceName } from "../Share/Yaml/resourceYamlData";
-import { BuildActionIndex, ActionCardYamlData, ActionCardName } from "../Share/Yaml/actionCardYamlData";
+import { ResourceName } from "../Share/Yaml/resourceYamlData";
+import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 import { WarPair } from "../Share/warPair";
 
 export class BoardGame {

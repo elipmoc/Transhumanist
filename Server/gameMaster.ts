@@ -9,6 +9,7 @@ import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
+    private gameMasterPlayerId: number | null = null;
 
     getGamePlayer(uuid: string) {
         return this.gamePlayerList.find(x => x.Uuid == uuid);
@@ -20,6 +21,8 @@ export class GameMaster {
         , buildActionList: SocketBinderList<ActionCardName>, diceList: SocketBinder<DiceNumber[]>
         , actionCardList: SocketBinderList<string | null>
     ) {
+        if (this.gameMasterPlayerId == null)
+            this.gameMasterPlayerId = playerId;
         this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList));
     }
 
