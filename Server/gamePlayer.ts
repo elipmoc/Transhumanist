@@ -88,6 +88,7 @@ export class GamePlayer {
             "拡張人間",
             "拡張人間",
             "拡張人間",
+            "テラフォーミング",
         ];
         const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         actionCardList.Value = [null, null, "神の杖", null, null];
