@@ -24,7 +24,9 @@ export class BoardGame {
     private turn: SocketBinder<number>;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
-        this.gameMaster = new GameMaster();
+        const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
+        gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
+        this.gameMaster = new GameMaster(gameMasterPlayerId);
         this.boardSocket = boardSocket;
         this.roomId = roomId;
         this.turn = new SocketBinder<number>("turn");

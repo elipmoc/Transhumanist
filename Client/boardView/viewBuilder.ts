@@ -79,6 +79,7 @@ function playerWindowBuilder(bindParams: BindParams) {
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
+    new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket).onUpdate(x => console.log(`gameMasterPlayerId:${x}`));
 }
 
 //プレイヤーのリソース欄生成
