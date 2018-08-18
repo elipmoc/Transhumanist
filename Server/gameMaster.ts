@@ -6,6 +6,7 @@ import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceName } from "../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
+import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 
 export class GameMaster {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -24,10 +25,11 @@ export class GameMaster {
         state: SocketBinder<GamePlayerState>, resourceList: SocketBinderList<ResourceName>
         , buildActionList: SocketBinderList<ActionCardName>, diceList: SocketBinder<DiceNumber[]>
         , actionCardList: SocketBinderList<string | null>
+        , playerCond: SocketBinder<GamePlayerCondition>
     ) {
         if (this.gameMasterPlayerId.Value == null)
             this.gameMasterPlayerId.Value = playerId;
-        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList));
+        this.gamePlayerList.push(new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond));
     }
 
     sendToSocket(socket: SocketIO.Socket) {

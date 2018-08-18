@@ -13,6 +13,7 @@ import { DiceNumber } from "../Share/diceNumber";
 import { ResourceName } from "../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 import { WarPair } from "../Share/warPair";
+import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 
 export class BoardGame {
     private gameMaster: GameMaster;
@@ -88,6 +89,7 @@ export class BoardGame {
         const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId);
         diceList.setNamespaceSocket(this.boardSocket);
         const actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId);
-        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList);
+        const playerCond = new SocketBinder<GamePlayerCondition>("gamePlayerCondition");
+        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond);
     }
 }
