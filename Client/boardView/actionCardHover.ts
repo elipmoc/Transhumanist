@@ -1,19 +1,20 @@
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { MakeCard } from "../../Client/boardView/makeCard";
 import * as global from "../boardGlobalData";
+import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 
 export class ActionCardHover extends createjs.Container {
     private cardInfo: MakeCard;
     private backGround: createjs.Shape;
+    private resourceHash: ResourceHash;
 
     readonly cardWidth: number = 253;
     readonly cardHeight: number = 379;
 
-    constructor(yamlData: ActionCardYamlData, queue: createjs.LoadQueue, size: number) {
+    constructor(resourceHash: ResourceHash, queue: createjs.LoadQueue, size: number) {
         super();
+        this.resourceHash = resourceHash;
         this.cardInfo = new MakeCard(size);
-        this.cardInfo.setYamlData(yamlData, queue);
-
         this.backGround = new createjs.Shape();
         this.backGround.graphics.beginFill("#EEE").drawRect(-7, -7, (this.cardWidth) + 14, (this.cardHeight) + 14);
 

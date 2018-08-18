@@ -43,7 +43,7 @@ export function viewBuilder(bindParams: BindParams) {
     playerResourceAreaBuilder(resourceHover, bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
-    const actionCardHover = new ActionCardHover(null, bindParams.queue, 3);
+    const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, bindParams.queue, 3);
     playerBuildActionAreaBuilder(actionCardHover, bindParams);
     actionStorageWindowBuilder(actionCardHover, bindParams);
     bindParams.stage.addChild(actionCardHover);

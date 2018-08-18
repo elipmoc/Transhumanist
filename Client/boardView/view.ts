@@ -40,7 +40,6 @@ export class TurnFinishButton extends viewBase.ButtonBase {
         //ターン終了ボタンテキスト
         this.turnFinishText = new createjs.Text("", "20px Arial");
         this.turnFinishText.textAlign = "center";
-        //        this.turnFinishText.regX = this.turnFinishText.getMeasuredWidth() / 2;
         this.turnFinishText.regY = this.turnFinishText.getMeasuredHeight() / 2;
         this.turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
         this.turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
