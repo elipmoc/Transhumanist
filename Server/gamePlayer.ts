@@ -6,6 +6,7 @@ import { DiceNumber } from "../Share/diceNumber";
 import { ResourceIndex, GenerateResourceYamlData, ResourceName } from "../Share/Yaml/resourceYamlData";
 import { yamlGet } from "./yamlGet";
 import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
+import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 
 export class GamePlayer {
@@ -16,6 +17,7 @@ export class GamePlayer {
     private buildActionList: SocketBinderList<ActionCardName>;
     private diceList: SocketBinder<DiceNumber[]>;
     private actionCardList: SocketBinderList<string | null>;
+    private playerCond: SocketBinder<GamePlayerCondition>;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -27,7 +29,8 @@ export class GamePlayer {
         resourceList: SocketBinderList<ResourceName>,
         buildActionList: SocketBinderList<ActionCardName>,
         diceList: SocketBinder<DiceNumber[]>,
-        actionCardList: SocketBinderList<string | null>
+        actionCardList: SocketBinderList<string | null>,
+        playerCond: SocketBinder<GamePlayerCondition>
     ) {
         this.diceList = diceList;
         this.diceList.Value = [0, 1, 2];
@@ -92,7 +95,9 @@ export class GamePlayer {
         ];
         const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         actionCardList.Value = [null, null, "神の杖", null, null];
-        actionCardList.setAt(0, "意識操作のテスト")
+        actionCardList.setAt(0, "意識操作のテスト");
+        this.playerCond = playerCond;
+        playerCond.Value = GamePlayerCondition.Start;
 
     }
 
@@ -103,5 +108,6 @@ export class GamePlayer {
         this.buildActionList.updateAt(socket);
         this.diceList.updateAt(socket);
         this.actionCardList.addSocket(socket);
+        this.playerCond.addSocket(socket);
     }
 }

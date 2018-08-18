@@ -25,6 +25,7 @@ import * as global from "../boardGlobalData";
 import { Yamls } from "../getYaml";
 import { ActionCardHover } from "./actionCardHover";
 import { ResourceHover } from "./resourceHover";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 
 export interface BindParams {
     stage: createjs.Stage;
@@ -42,7 +43,7 @@ export function viewBuilder(bindParams: BindParams) {
     playerResourceAreaBuilder(resourceHover, bindParams);
     logWindowBuilder(bindParams);
     eventLogWindowBuilder(bindParams);
-    const actionCardHover = new ActionCardHover(null, bindParams.queue, 3);
+    const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, bindParams.queue, 3);
     playerBuildActionAreaBuilder(actionCardHover, bindParams);
     actionStorageWindowBuilder(actionCardHover, bindParams);
     bindParams.stage.addChild(actionCardHover);
@@ -79,6 +80,7 @@ function playerWindowBuilder(bindParams: BindParams) {
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
+    new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket).onUpdate(x => console.log(`gameMasterPlayerId:${x}`));
 }
 
 //プレイヤーのリソース欄生成
@@ -169,12 +171,43 @@ function playerBuildActionAreaBuilder(actionCardHover: ActionCardHover, bindPara
 
 //ターン終了ボタン生成
 function turnFinishButtonBuilder(bindParams: BindParams) {
+
     const turnFinishButton =
         new view.TurnFinishButton(
             () => bindParams.socket.emit("turnFinishButtonClick"),
             bindParams.queue
         );
     bindParams.stage.addChild(turnFinishButton);
+
+    const gamePlayerCondition =
+        new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
+
+    const gameMasterPlayerId = new SocketBinder<number>("gameMasterPlayerId", bindParams.socket);
+    gamePlayerCondition.onUpdate(cond => {
+        bindParams.stage.update();
+        switch (cond) {
+            case GamePlayerCondition.Start:
+                if (gameMasterPlayerId.Value == bindParams.playerId)
+                    turnFinishButton.setText("ゲーム開始");
+                else
+                    turnFinishButton.setText("");
+                break;
+            case GamePlayerCondition.MyTurn:
+                turnFinishButton.setText("ターン終了");
+                break;
+            case GamePlayerCondition.Wait:
+                turnFinishButton.setText("");
+                break;
+
+        }
+    })
+    gameMasterPlayerId.onUpdate(playerId => {
+        bindParams.stage.update();
+        if (gamePlayerCondition.Value == GamePlayerCondition.Start && playerId == bindParams.playerId)
+            turnFinishButton.setText("ゲーム開始");
+        else
+            turnFinishButton.setText("");
+    })
 }
 
 //宣戦布告ボタン生成
