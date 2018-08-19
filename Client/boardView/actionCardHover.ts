@@ -8,7 +8,7 @@ export class ActionCardHover extends createjs.Container {
     private cardInfo: MakeCard;
     private backGround: createjs.Shape;
     private resourceHash: ResourceHash;
-    private costIcon: createjs.Bitmap[] = [new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null)];
+    private costIcons: createjs.Bitmap[] = [new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null)];
 
     readonly cardWidth: number = 253;
     readonly cardHeight: number = 379;
@@ -22,15 +22,11 @@ export class ActionCardHover extends createjs.Container {
 
         this.addChild(this.backGround);
         this.addChild(this.cardInfo);
-        for (let i = 0; i < global.costCountMax; i++) {
-            if (this.costIcon[i].image != null) {
-                this.costIcon[i].x = 0;
-                this.costIcon[i].y = 40;
-                this.addChild(this.costIcon[i]);
-            }
-            else break;
-        }
-
+        this.costIcons.forEach(icon => {
+            icon.x = 0;
+            icon.y = 40;
+            this.addChild(icon);
+        });
 
         this.x = global.canvasWidth / 2 - this.cardWidth / 2;
         this.y = global.canvasHeight / 2 - this.cardHeight / 2;
@@ -38,10 +34,10 @@ export class ActionCardHover extends createjs.Container {
     }
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         this.cardInfo.setYamlData(yamlData, queue);
-        
-        for (let i = 0; i < global.costCountMax; i++){
+
+        for (let i = 0; i < global.costCountMax; i++) {
             if (yamlData != null && yamlData.cost.length > i) {
-                this.costIcon[i].image = getIconResource(this.resourceHash[yamlData.cost[i].name].index, "resource", queue);
+                this.costIcons[i].image = getIconResource(this.resourceHash[yamlData.cost[i].name].index, "resource", queue);
             }
             else break;
         }
