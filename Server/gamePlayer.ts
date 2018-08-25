@@ -1,31 +1,36 @@
 import { SocketBinder } from "./socketBinder";
-import { GamePlayerState } from "../Share/gamePlayerState";
+import { ResponseGamePlayerState } from "../Share/responseGamePlayerState";
 import { PlayerData } from "./playerData";
 import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
-import { ResourceIndex, GenerateResourceYamlData, ResourceName } from "../Share/Yaml/resourceYamlData";
-import { yamlGet } from "./yamlGet";
-import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
+import { ResourceName } from "../Share/Yaml/resourceYamlData";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
+import { GamePlayerState } from "./gamePlayerState";
+import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
-    private state: SocketBinder<GamePlayerState>;
+    private state: GamePlayerState;
     private resourceList: SocketBinderList<ResourceName>;
     private buildActionList: SocketBinderList<ActionCardName>;
     private diceList: SocketBinder<DiceNumber[]>;
     private actionCardList: SocketBinderList<string | null>;
     private playerCond: SocketBinder<GamePlayerCondition>;
+    private isGameMaster: boolean = false;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
+    get IsGameMaster() { return this.isGameMaster; }
+    set IsGameMaster(x) { this.isGameMaster = x; }
+
+    setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
     constructor(
         playerData: PlayerData,
         playerId: number,
-        state: SocketBinder<GamePlayerState>,
+        state: SocketBinder<ResponseGamePlayerState>,
         resourceList: SocketBinderList<ResourceName>,
         buildActionList: SocketBinderList<ActionCardName>,
         diceList: SocketBinder<DiceNumber[]>,
@@ -36,17 +41,10 @@ export class GamePlayer {
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
-        this.state = state;
+        this.state = new GamePlayerState(state, playerData.getName());
         this.resourceList = resourceList;
         this.buildActionList = buildActionList;
         this.actionCardList = actionCardList;
-        this.state.Value = {
-            playerName: playerData.getName(),
-            negative: 0, positive: 0,
-            uncertainty: 0, resource: 0,
-            activityRange: 0, speed: 0
-        };
-        const buildAction = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true);
         this.buildActionList.Value = [
             "採掘施設",
             "治療施設",
@@ -68,7 +66,6 @@ export class GamePlayer {
             "核融合炉",
             "ロボット工場",
         ];
-        const resourceAction = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
         this.resourceList.Value = [
             "人間",
             "人間",
@@ -93,7 +90,6 @@ export class GamePlayer {
             "拡張人間",
             "テラフォーミング",
         ];
-        const actionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         actionCardList.Value = [null, null, "神の杖", null, null];
         actionCardList.setAt(0, "意識操作のテスト");
         this.playerCond = playerCond;
@@ -103,7 +99,7 @@ export class GamePlayer {
 
     //ユーザーにsocketBinderの値を送信する
     sendToSocket(socket: SocketIO.Socket) {
-        this.state.updateAt(socket);
+        this.state.sendToSocket(socket);
         this.resourceList.updateAt(socket);
         this.buildActionList.updateAt(socket);
         this.diceList.updateAt(socket);

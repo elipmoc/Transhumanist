@@ -1,6 +1,6 @@
 import * as view from "./view";
 import { PlayerWindowBase, PlayerResourceAreaBase, PlayerBuildBase } from "./viewBase";
-import { GamePlayerState } from "../../Share/gamePlayerState";
+import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { SelectActionWindow } from "./selectActionWindow";
 import { NumberOfActionCard } from "../../Share/numberOfActionCard";
 import { SelectResourceData } from "../../Share/selectResourceData";
@@ -15,7 +15,7 @@ import { ActionStorageWindow } from "./actionCard/actionStorageWindow";
 import { SelectDiceWindow, DiceIcon } from "./selectDiceWindow";
 import { DiceNumber } from "../../Share/diceNumber";
 import { ActionCardUseDecisionWindow, DialogResult } from "./actionCard/actionCardUseDecisionWindow";
-import { ResourceIndex, ResourceName } from "../../Share/Yaml/resourceYamlData";
+import { ResourceName } from "../../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { WarLineControl } from "./warLine";
 import { WarPair } from "../../Share/warPair";
@@ -66,7 +66,7 @@ function playerWindowBuilder(bindParams: BindParams) {
 
     for (let i = 0; i < playerWindowList.length; i++) {
         //プレイヤーの状態が更新されたら呼ばれるイベント
-        const updateState = (state: GamePlayerState) => {
+        const updateState = (state: ResponseGamePlayerState) => {
             playerWindowList[i].setPlayerName(state.playerName);
             playerWindowList[i].setSpeed(state.speed);
             playerWindowList[i].setResource(state.resource);
@@ -76,7 +76,7 @@ function playerWindowBuilder(bindParams: BindParams) {
             playerWindowList[i].setActivityRange(state.activityRange);
             bindParams.stage.update();
         };
-        const gamePlayerState = new SocketBinder<GamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const gamePlayerState = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
@@ -231,11 +231,11 @@ function selectActionWindowBuilder(bindParams: BindParams) {
         selectActionWindow.visible = visibleFlag;
         bindParams.stage.update();
     })
-    bindParams.socket.on("setNumberOfActionCard", (str: string) => {
-        const numberOfActionCardList: NumberOfActionCard[] = JSON.parse(str);
+    const numberOfActionCard = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard", bindParams.socket);
+    numberOfActionCard.onUpdate(numberOfActionCardList => {
         selectActionWindow.setNumberOfActionCard(numberOfActionCardList);
         bindParams.stage.update();
-    })
+    });
 }
 
 //ダイス選択ウインドウの生成

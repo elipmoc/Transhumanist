@@ -1,12 +1,9 @@
-import { RoomData } from "./roomData";
-import { BoardPlayerHandle, BoardPlayerHandleEvents } from "./boardPlayerHandle";
+import { BoardPlayerHandle } from "./boardPlayerHandle";
 import { PlayerData } from "./playerData";
-import { GameMaster } from "./gameMaster";
-import { SelectResourceData } from "../Share/selectResourceData";
+import { GamePlayers } from "./gamePlayers";
 import { SocketBinder } from "./socketBinder";
 import { SocketBinderList } from "./socketBinderList";
-import { GamePlayerState } from "../Share/gamePlayerState";
-import { SelectBuildActionData } from "../Share/selectBuildActionData";
+import { ResponseGamePlayerState } from "../Share/responseGamePlayerState";
 import { LogMessageForClient, LogMessageType } from "../Share/logMessageForClient";
 import { EventLogMessageForClient } from "../Share/eventLogMessageForClient";
 import { DiceNumber } from "../Share/diceNumber";
@@ -14,20 +11,34 @@ import { ResourceName } from "../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 import { WarPair } from "../Share/warPair";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
+import { NumberOfActionCard } from "../Share/numberOfActionCard";
+import { BoardGameStarter } from "./boardGameStarter";
 
 export class BoardGame {
-    private gameMaster: GameMaster;
+    private gamePlayers: GamePlayers;
     private boardSocket: SocketIO.Namespace;
     private roomId: number;
     private logMessageList: SocketBinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
     private warPairList: SocketBinderList<WarPair>;
     private turn: SocketBinder<number>;
+    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
+        this.numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
+        this.numberOfActionCardList.setNamespaceSocket(this.boardSocket);
+        this.numberOfActionCardList.Value =
+            [
+                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
+                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
+                { currentNumber: 5, maxNumber: 99, dustNumber: 2 },
+                { currentNumber: 2, maxNumber: 67, dustNumber: 44 },
+                { currentNumber: 5, maxNumber: 99, dustNumber: 66 },
+                { currentNumber: 78, maxNumber: 99, dustNumber: 7 },
+            ];
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
-        this.gameMaster = new GameMaster(gameMasterPlayerId);
+        this.gamePlayers = new GamePlayers(gameMasterPlayerId);
         this.boardSocket = boardSocket;
         this.roomId = roomId;
         this.turn = new SocketBinder<number>("turn");
@@ -50,37 +61,23 @@ export class BoardGame {
         this.eventLogMessage.Value = new EventLogMessageForClient("イベント【人口爆発】が発生しました", "リソース欄にある『人間の』2倍の\n新たな『人間』を追加する。\n新たに追加する時、『人間』は削除対象に出来ない。");
     }
     joinUser(socket: SocketIO.Socket, uuid: string) {
-        const gamePlayer = this.gameMaster.getGamePlayer(uuid);
+        const gamePlayer = this.gamePlayers.getGamePlayer(uuid);
         if (gamePlayer) {
             socket = socket.join(`room${this.roomId}`);
-            let handle: BoardPlayerHandle;
 
-            const event: BoardPlayerHandleEvents = {
-                turnFinishButtonClickCallBack: () => console.log("turnFinishButtonClick"),
-                declareWarButtonClickCallBack: () => console.log("declareWarButtonClick"),
-                selectLevelCallBack: (level: number) => {
-                    console.log("level" + level);
-                    handle.setSelectActionWindowVisible(false);
-                    //setTimeout(() => handle.setSelectActionWindowVisible(true), 3000);
-                },
-                selectResourceCallBack: (data: SelectResourceData) =>
-                    console.log(`selectResource player${gamePlayer.PlayerId} iconId${data.iconId}`),
-                selectBuildActionCallBack: (data: SelectBuildActionData) =>
-                    console.log(`selectBuildAction player${gamePlayer.PlayerId} iconId${data.iconId}`)
-
-            }
             //初期データを送信する
-            this.gameMaster.sendToSocket(socket);
+            this.gamePlayers.sendToSocket(socket);
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
             this.warPairList.updateAt(socket);
             this.turn.updateAt(socket);
-            handle = new BoardPlayerHandle(socket, event);
+            this.numberOfActionCardList.updateAt(socket);
+            new BoardPlayerHandle(socket, gamePlayer, new BoardGameStarter(this.gamePlayers));
         }
     }
 
     addMember(playerData: PlayerData, playerId: number) {
-        const state = new SocketBinder<GamePlayerState>("GamePlayerState" + playerId);
+        const state = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         state.setNamespaceSocket(this.boardSocket);
         const resourceList = new SocketBinderList<ResourceName>("ResourceKindList" + playerId);
         resourceList.setNamespaceSocket(this.boardSocket);
@@ -90,6 +87,6 @@ export class BoardGame {
         diceList.setNamespaceSocket(this.boardSocket);
         const actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId);
         const playerCond = new SocketBinder<GamePlayerCondition>("gamePlayerCondition");
-        this.gameMaster.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond);
+        this.gamePlayers.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond);
     }
 }

@@ -1,20 +1,34 @@
-import { GamePlayerState } from "../Share/gamePlayerState"
 import { SelectResourceData } from "../Share/selectResourceData";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
-
-export interface BoardPlayerHandleEvents {
-    turnFinishButtonClickCallBack: () => void;
-    declareWarButtonClickCallBack: () => void;
-    selectLevelCallBack: (level: number) => void;
-    selectResourceCallBack: (selectResourceData: SelectResourceData) => void
-    selectBuildActionCallBack: (selectBuildActionData: SelectBuildActionData) => void
-}
+import { GamePlayer } from "./gamePlayer";
+import { BoardGameStarter } from "./boardGameStarter";
 
 export class BoardPlayerHandle {
 
     private socket: SocketIO.Socket;
-    private events: BoardPlayerHandleEvents;
+    private player: GamePlayer;
+    private boardGameStarter: BoardGameStarter;
+
+    turnFinishButtonClick() {
+        if (this.player.IsGameMaster)
+            this.boardGameStarter.Init();
+    }
+
+    declareWarButtonClick() { console.log("declareWarButtonClick"); }
+
+    selectLevel(level: number) {
+        console.log("level" + level);
+        this.setSelectActionWindowVisible(false);
+    }
+
+    selectResource(data: SelectResourceData) {
+        console.log(`selectResource player${this.player.PlayerId} iconId${data.iconId}`);
+    }
+    selectBuildAction(data: SelectBuildActionData) {
+        console.log(`selectBuildAction player${this.player.PlayerId} iconId${data.iconId}`);
+    }
+
     //アクションカード選択ウインドウの表示非表示する
     setSelectActionWindowVisible(flag: boolean) {
         this.socket.emit("setSelectActionWindowVisible", JSON.stringify(flag));
@@ -27,29 +41,20 @@ export class BoardPlayerHandle {
         )
     }
 
-    constructor(socket: SocketIO.Socket, events: BoardPlayerHandleEvents) {
+    constructor(socket: SocketIO.Socket, player: GamePlayer, boardGameStarter: BoardGameStarter) {
         this.socket = socket;
-        this.events = events;
-        socket.on("turnFinishButtonClick", () => this.events.turnFinishButtonClickCallBack());
+        this.player = player;
+        this.boardGameStarter = boardGameStarter;
+        socket.on("turnFinishButtonClick", () => this.turnFinishButtonClick());
 
-        socket.on("declareWarButtonClick", () => this.events.declareWarButtonClickCallBack());
+        socket.on("declareWarButtonClick", () => this.declareWarButtonClick());
         socket.on("selectLevel", (level) =>
-            this.events.selectLevelCallBack(level));
+            this.selectLevel(level));
         setTimeout(() => this.setSelectActionWindowVisible(true), 3000);
-        const numberOfActionCardList: NumberOfActionCard[] =
-            [
-                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
-                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
-                { currentNumber: 5, maxNumber: 99, dustNumber: 2 },
-                { currentNumber: 2, maxNumber: 67, dustNumber: 44 },
-                { currentNumber: 5, maxNumber: 99, dustNumber: 66 },
-                { currentNumber: 78, maxNumber: 99, dustNumber: 7 },
-            ]
-        setTimeout(() => this.setNumberOfActionCard(numberOfActionCardList), 2000);
         socket.on("SelectResource", str =>
-            this.events.selectResourceCallBack(JSON.parse(str)));
+            this.selectResource(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
-            this.events.selectBuildActionCallBack(JSON.parse(str)));
+            this.selectBuildAction(JSON.parse(str)));
         socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
         socket.on("useActionCardIndex", actionIndex =>
             console.log(`useActionCardIndex:${actionIndex}`));
