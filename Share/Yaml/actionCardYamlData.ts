@@ -8,6 +8,7 @@ export type ActionCardName = string;
 
 export interface ActionCardYamlData {
     name: string;
+    number: number;//枚数
     index: ActionIndex;
     level: number;
     build_use: boolean;
