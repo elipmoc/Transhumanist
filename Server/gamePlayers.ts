@@ -19,6 +19,10 @@ export class GamePlayers {
         this.gameMasterPlayerId = gameMasterPlayerId;
     }
 
+    getPlayerAll(func: (x: GamePlayer) => void) {
+        this.gamePlayerList.forEach(func);
+    }
+
     canStart() {
         //プレイヤーが二人以上でゲーム開始できる
         return this.gamePlayerList.length > 1;
@@ -46,10 +50,9 @@ export class GamePlayers {
     setAICard(startStatusList: StartStatusYamlData[]) {
         arrayshuffle(startStatusList);
         this.gamePlayerList.forEach((player, index) => player.setAICard(startStatusList[index]));
-        this.initTurnSet();
     }
 
-    private initTurnSet() {
+    initTurnSet() {
         const firstTurnPlayerId = Math.floor(Math.random() * this.gamePlayerList.length);
         this.gamePlayerList[firstTurnPlayerId].setMyTurn();
         this.gamePlayerList.forEach((player, id) => {

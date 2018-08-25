@@ -37,7 +37,7 @@ export class BoardGame {
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
         this.gamePlayers = new GamePlayers(gameMasterPlayerId);
-        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger);
+        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
         this.boardSocket = boardSocket;
         this.roomId = roomId;
         this.turn = new SocketBinder<number>("turn");

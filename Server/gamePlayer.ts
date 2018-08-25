@@ -5,7 +5,7 @@ import { SocketBinderList } from "./socketBinderList";
 import { DiceNumber } from "../Share/diceNumber";
 import { ResourceName } from "../Share/Yaml/resourceYamlData";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
-import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
+import { ActionCardName, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 
@@ -98,8 +98,7 @@ export class GamePlayer {
             "拡張人間",
             "テラフォーミング",
         ];
-        actionCardList.Value = [null, null, "神の杖", null, null];
-        actionCardList.setAt(0, "意識操作のテスト");
+        actionCardList.Value = [null, null, null, null, null];
         this.playerCond = playerCond;
         playerCond.Value = GamePlayerCondition.Start;
 
@@ -116,5 +115,11 @@ export class GamePlayer {
     addSocket(socket: SocketIO.Socket) {
         this.actionCardList.addSocket(socket);
         this.playerCond.addSocket(socket);
+    }
+    drawActionCard(card: ActionCardYamlData) {
+        const index = this.actionCardList.Value.findIndex(x => x == null);
+        if (index == -1)
+            throw "手札がいっぱいです";
+        this.actionCardList.setAt(index, card.name);
     }
 }

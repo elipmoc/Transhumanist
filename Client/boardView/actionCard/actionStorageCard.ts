@@ -34,6 +34,7 @@ export class ActionStorageCard extends createjs.Container {
         this.yamlData = yamlData;
         if (yamlData != null) {
             this.cardInfo.setYamlData(yamlData, queue);
+            this.cardInfo.visible = true;
         } else {
             //ここは手札がないことを表すので、画像はすべてなくしておく
             this.cardInfo.visible = false;

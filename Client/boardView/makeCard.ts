@@ -24,7 +24,7 @@ export class MakeCard extends createjs.Container {
         this.cardImage.scaleY = this.size * 0.25;
         this.cardName = new createjs.Text(null);
         this.cardName.textAlign = "center";
-        this.cardName.font = (this.size * 8.5)+"px Arial";
+        this.cardName.font = (this.size * 8.5) + "px Arial";
         this.cardName.x = this.size * 42;
         this.cardName.y = this.size * 5;
         this.cardCap = new createjs.Text(null);
@@ -51,8 +51,8 @@ export class MakeCard extends createjs.Container {
 
     setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
         if (yamlData != null) {
-            this.cardFrame.image = new createjs.Bitmap(queue.getResult("f_level" + yamlData.level)).image;
-            this.cardImage.image = new createjs.Bitmap(queue.getResult(yamlData.name)).image;
+            this.cardFrame.image = <any>queue.getResult("f_level" + yamlData.level);
+            this.cardImage.image = <any>queue.getResult(yamlData.name);
             this.cardName.text = yamlData.name;
             this.cardCap.text = yamlData.description;
             this.cardLevel.text = "LEVEL " + yamlData.level;
