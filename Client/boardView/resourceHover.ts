@@ -28,14 +28,15 @@ export class ResourceHover extends createjs.Container {
         this.addChild(this.cardIcon);
         this.addChild(this.cardName);
 
-        this.x = global.canvasWidth / 2;
-        this.y = global.canvasHeight / 2;
-
+        //this.x = global.canvasWidth / 2;
+        //this.y = global.canvasHeight / 2;
     }
     setYamlData(yamlData: ResourceYamlData | null, queue: createjs.LoadQueue) {
         if (yamlData != null) {
             this.cardIcon.image = getIconResource(yamlData.index, "resource", queue);
             this.cardName.text = yamlData.name;
+            this.x = this.stage.mouseX;
+            this.y = this.stage.mouseY;
         }
     }
 }
