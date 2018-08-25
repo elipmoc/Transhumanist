@@ -26,8 +26,9 @@ export class SocketBinder<T>{
     protected socketEmit(eventName: string, data: string) {
         if (this.namespaceSocket)
             this.namespaceSocket.emit(eventName, data);
-        for (let socket of Object.values(this.socketList))
+        for (let socket of Object.values(this.socketList)) {
             socket.emit(eventName, data);
+        }
     }
 
     //値を変更したことを手動で伝える
@@ -41,7 +42,7 @@ export class SocketBinder<T>{
     }
 
     addSocket(socket: SocketIO.Socket) {
-        this.socketList[socket.id];
+        this.socketList[socket.id] = socket;
         (<SocketIO.Socket>socket).on("disconnect", () => {
             delete this.socketList[socket.id];
         });

@@ -186,7 +186,6 @@ function turnFinishButtonBuilder(bindParams: BindParams) {
 
     const gameMasterPlayerId = new SocketBinder<number>("gameMasterPlayerId", bindParams.socket);
     gamePlayerCondition.onUpdate(cond => {
-        bindParams.stage.update();
         switch (cond) {
             case GamePlayerCondition.Start:
                 if (gameMasterPlayerId.Value == bindParams.playerId)
@@ -202,13 +201,14 @@ function turnFinishButtonBuilder(bindParams: BindParams) {
                 break;
 
         }
+        bindParams.stage.update();
     })
     gameMasterPlayerId.onUpdate(playerId => {
-        bindParams.stage.update();
         if (gamePlayerCondition.Value == GamePlayerCondition.Start && playerId == bindParams.playerId)
             turnFinishButton.setText("ゲーム開始");
         else
             turnFinishButton.setText("");
+        bindParams.stage.update();
     })
 }
 

@@ -46,6 +46,15 @@ export class GamePlayers {
     setAICard(startStatusList: StartStatusYamlData[]) {
         arrayshuffle(startStatusList);
         this.gamePlayerList.forEach((player, index) => player.setAICard(startStatusList[index]));
+        this.initTurnSet();
+    }
+
+    private initTurnSet() {
+        const firstTurnPlayerId = Math.floor(Math.random() * this.gamePlayerList.length);
+        this.gamePlayerList[firstTurnPlayerId].setMyTurn();
+        this.gamePlayerList.forEach((player, id) => {
+            if (id != firstTurnPlayerId) player.setWait();
+        });
     }
 
     sendToSocket(socket: SocketIO.Socket) {

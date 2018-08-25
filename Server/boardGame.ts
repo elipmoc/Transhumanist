@@ -73,6 +73,7 @@ export class BoardGame {
 
             //初期データを送信する
             this.gamePlayers.sendToSocket(socket);
+            gamePlayer.addSocket(socket);
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
             this.warPairList.updateAt(socket);

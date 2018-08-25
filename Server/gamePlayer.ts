@@ -27,6 +27,14 @@ export class GamePlayer {
 
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
+    setMyTurn() {
+        this.playerCond.Value = GamePlayerCondition.MyTurn;
+    }
+
+    setWait() {
+        this.playerCond.Value = GamePlayerCondition.Wait;
+    }
+
     constructor(
         playerData: PlayerData,
         playerId: number,
@@ -103,6 +111,9 @@ export class GamePlayer {
         this.resourceList.updateAt(socket);
         this.buildActionList.updateAt(socket);
         this.diceList.updateAt(socket);
+    }
+
+    addSocket(socket: SocketIO.Socket) {
         this.actionCardList.addSocket(socket);
         this.playerCond.addSocket(socket);
     }
