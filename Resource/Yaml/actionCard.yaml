@@ -22,6 +22,7 @@
             number: 1
           - name: 硫黄
             number: 1
+  number: 10
 
 - name: 加工施設
   level: 2
@@ -68,6 +69,7 @@
         get:
           - name: 爆弾
             number: 1
+  number: 15
 
 - name: 核融合炉
   level: 2
@@ -87,6 +89,7 @@
       body:
         name: ガス
         max_cost: 2
+  number: 5
 
 - name: 倉庫
   level: 2
@@ -101,6 +104,7 @@
     - kind: resource_plus
       body:
         add: 10
+  number: 8 
 
 - name: 地下シェルター
   level: 2
@@ -119,6 +123,7 @@
     - kind: resource_guard
       body:
         number: 5
+  number: 4
 
 - name: 印刷所
   level: 2
@@ -135,6 +140,7 @@
         items:
           - name: 聖書
             number: 1
+  number: 8
 
 - name: ロケットの開発
   level: 3
@@ -155,6 +161,7 @@
         items:
           - name: ロケット
             number: 1
+  number: 10
 
 - name: 治療施設
   level: 3
@@ -180,6 +187,7 @@
         to_item:
           name: 人間
           number: 1
+  number: 8
 
 - name: 研究施設
   level: 3
@@ -226,6 +234,7 @@
         get:
           - name: マイクロチップ
             number: 1
+  number: 10
 
 - name: 花火大会
   level: 3
@@ -242,6 +251,7 @@
       number: 3
   commands:
     - kind: human_p_plus
+  number: 4
   
 - name: 布教活動
   level: 3
@@ -264,6 +274,7 @@
         get: 
           - name: 信者
             number: 1
+  number: 8
 
 - name: 火星探査
   level: 4
@@ -280,6 +291,7 @@
         items:
           - name: 火星の情報
             number: 1
+  number: 10
 
 - name: ミサイル発射
   level: 4
@@ -305,6 +317,7 @@
       number: 1
   commands:
      - kind: missile_start
+  number: 5
 
 - name: 衛星の打ち上げ
   level: 4
@@ -321,6 +334,7 @@
         items:
           - name: 衛星
             number: 1
+  number: 5
 
 - name: ロボット工場
   level: 4
@@ -347,6 +361,7 @@
         get:
           - name: ロボット
             number: 2
+  number: 8
 
 - name: 量子コンピュータ
   level: 4
@@ -365,6 +380,7 @@
     - kind: speed_plus
       body:
         plus: 3
+  number: 4
 
 - name: チップの埋め込み
   level: 4
@@ -383,6 +399,7 @@
         items:
           - name: 拡張人間
             number: 1
+  number: 5
 
 - name: 細菌兵器
   level: 4
@@ -401,6 +418,7 @@
       number: 1
   commands:
     - kind: bacterial_weapon
+  number: 5
 
 - name: 教会
   level: 4
@@ -420,6 +438,7 @@
       number: 2
   commands:
     - kind: missionary
+  number: 8
 
 - name: テラフォーミングの実行
   level: 5
@@ -441,6 +460,7 @@
         items:
           - name: テラフォーミング
             number: 1
+  number: 8
 
 - name: 神の杖
   level: 5
@@ -463,6 +483,7 @@
       number: 2
   commands:
     - kind : god_wand
+  number: 4
 
 - name: 意識操作のテスト
   level: 5
@@ -478,6 +499,7 @@
       number: 1
   commands:
     - kind:  n_minus_p_plus
+  number: 8
 
 - name: 未来予報装置
   level: 5
@@ -502,6 +524,7 @@
       number: 2
   commands:
     - kind: future_forecast
+  number: 5
 
 - name: 御神体の再生
   level: 5
@@ -522,6 +545,7 @@
         items:
           - name: 神体
             number: 1
+  number: 5
     
 - name: 火星の支配
   level: 6
@@ -542,6 +566,7 @@
       number: 1
   commands:
     - kind: win
+  number: 2
 
 - name: A.Iによる支配
   level: 6
@@ -560,6 +585,7 @@
       number: 5
   commands:
     - kind: win
+  number: 2
 
 - name: 宗教による支配
   level: 6
@@ -580,3 +606,4 @@
       number: 12
   commands:
     - kind: win
+  number: 2
