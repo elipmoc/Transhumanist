@@ -54,7 +54,8 @@ window.onload = () => {
         { id: "bg_level3", src: "Img/background/bg_level3.png" },
         { id: "bg_level4", src: "Img/background/bg_level4.png" },
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
-        { id: "bg_level6", src: "Img/background/bg_level6.png" }
+        { id: "bg_level6", src: "Img/background/bg_level6.png" },
+        { id: "gm_icon", src: "Img/gmIcon.png" }
     ]);
 }
 

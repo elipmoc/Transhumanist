@@ -78,7 +78,7 @@ export class SettingButton extends viewBase.ButtonBase {
 
 export class Player1Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(queue);
 
         this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
         this.playerFrame.regX = this.playerFrame.image.width / 2;
@@ -135,6 +135,7 @@ export class Player1Window extends viewBase.PlayerWindowBase {
         this.negativeText.font = "15px Arial";
         this.negativeText.shadow = createMyShadow();
     }
+
 }
 export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
@@ -166,7 +167,7 @@ export class Player1Build extends viewBase.PlayerBuildBase {
 
 export class Player2Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(queue);
 
         this.playerFrame.image = <any>queue.getResult("oddPlayerFrame");
         this.playerFrame.regY = this.playerFrame.image.height / 2;
@@ -251,7 +252,7 @@ export class Player2Build extends viewBase.PlayerBuildBase {
 
 export class Player3Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(queue);
 
         this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
         this.playerFrame.regX = this.playerFrame.image.width / 2;
@@ -337,7 +338,7 @@ export class Player3Build extends viewBase.PlayerBuildBase {
 
 export class Player4Window extends viewBase.PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super();
+        super(queue);
 
         this.playerFrame.image = <any>queue.getResult("oddPlayerFrame");
         this.playerFrame.regY = this.playerFrame.image.height / 2;

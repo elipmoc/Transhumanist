@@ -80,7 +80,11 @@ function playerWindowBuilder(bindParams: BindParams) {
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
-    new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket).onUpdate(x => console.log(`gameMasterPlayerId:${x}`));
+    const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
+    gameMasterPlayerId.onUpdate(id => {
+        playerWindowList[(4 + id - bindParams.playerId) % 4].visibleGMIcon(true);
+        bindParams.stage.update();
+    });
 }
 
 //プレイヤーのリソース欄生成

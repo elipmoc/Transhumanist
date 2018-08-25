@@ -22,7 +22,9 @@ export class PlayerWindowBase extends createjs.Container {
     protected positiveText: createjs.Text;
     protected negativeText: createjs.Text;
     protected playerFrame: createjs.Bitmap;
-    constructor() {
+    protected gmIcon: createjs.Bitmap;
+
+    constructor(queue: createjs.LoadQueue) {
         super();
         this.playerNameText = new createjs.Text();
         this.playerFrame = new createjs.Bitmap("");
@@ -32,6 +34,8 @@ export class PlayerWindowBase extends createjs.Container {
         this.uncertaintyText = new createjs.Text();
         this.positiveText = new createjs.Text();
         this.negativeText = new createjs.Text();
+        this.gmIcon = new createjs.Bitmap(queue.getResult("gm_icon"));
+        this.gmIcon.visible = false;
         this.addChild(this.playerFrame);
         this.addChild(this.playerNameText);
         this.addChild(this.speedText);
@@ -40,6 +44,7 @@ export class PlayerWindowBase extends createjs.Container {
         this.addChild(this.uncertaintyText);
         this.addChild(this.positiveText);
         this.addChild(this.negativeText);
+        this.addChild(this.gmIcon);
     }
     setPlayerName(name: string) {
         this.playerNameText.text = name;
@@ -61,6 +66,9 @@ export class PlayerWindowBase extends createjs.Container {
     }
     setNegative(negative: number) {
         this.negativeText.text = "Negative:" + negative;
+    }
+    public visibleGMIcon(flag: boolean) {
+        this.gmIcon.visible = flag;
     }
 }
 
