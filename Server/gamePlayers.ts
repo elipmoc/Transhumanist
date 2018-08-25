@@ -19,6 +19,11 @@ export class GamePlayers {
         this.gameMasterPlayerId = gameMasterPlayerId;
     }
 
+    canStart() {
+        //プレイヤーが二人以上でゲーム開始できる
+        return this.gamePlayerList.length > 1;
+    }
+
     getGamePlayer(uuid: string) {
         return this.gamePlayerList.find(x => x.Uuid == uuid);
     }

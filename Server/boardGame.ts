@@ -13,6 +13,7 @@ import { WarPair } from "../Share/warPair";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { BoardGameStarter } from "./boardGameStarter";
+import { BoardGameStatusChanger } from "./boardGameStatusChanger";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -22,9 +23,12 @@ export class BoardGame {
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
     private warPairList: SocketBinderList<WarPair>;
     private turn: SocketBinder<number>;
-    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>
+    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>;
+    private boardGameStatusChanger: BoardGameStatusChanger;
+    private boardGameStarter: BoardGameStarter;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
+        this.boardGameStatusChanger = new BoardGameStatusChanger();
         this.numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
         this.numberOfActionCardList.setNamespaceSocket(this.boardSocket);
         this.numberOfActionCardList.Value =
@@ -39,6 +43,7 @@ export class BoardGame {
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
         this.gamePlayers = new GamePlayers(gameMasterPlayerId);
+        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger);
         this.boardSocket = boardSocket;
         this.roomId = roomId;
         this.turn = new SocketBinder<number>("turn");
@@ -60,6 +65,7 @@ export class BoardGame {
         this.eventLogMessage.setNamespaceSocket(this.boardSocket);
         this.eventLogMessage.Value = new EventLogMessageForClient("イベント【人口爆発】が発生しました", "リソース欄にある『人間の』2倍の\n新たな『人間』を追加する。\n新たに追加する時、『人間』は削除対象に出来ない。");
     }
+
     joinUser(socket: SocketIO.Socket, uuid: string) {
         const gamePlayer = this.gamePlayers.getGamePlayer(uuid);
         if (gamePlayer) {
@@ -72,7 +78,7 @@ export class BoardGame {
             this.warPairList.updateAt(socket);
             this.turn.updateAt(socket);
             this.numberOfActionCardList.updateAt(socket);
-            new BoardPlayerHandle(socket, gamePlayer, new BoardGameStarter(this.gamePlayers));
+            new BoardPlayerHandle(socket, gamePlayer, this.boardGameStarter);
         }
     }
 
