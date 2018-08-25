@@ -86,6 +86,8 @@ function playerWindowBuilder(bindParams: BindParams) {
 //プレイヤーのリソース欄生成
 function playerResourceAreaBuilder(resourceHover: ResourceHover, bindParams: BindParams) {
     bindParams.stage.addChild(resourceHover);
+    resourceHover.visible = false;
+
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new view.Player1ResourceArea(bindParams.queue),
         new view.Player2ResourceArea(bindParams.queue),

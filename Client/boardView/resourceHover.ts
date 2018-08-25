@@ -17,7 +17,7 @@ export class ResourceHover extends createjs.Container {
         this.cardName.x = (global.cardIconSize * 1) + 2;
         this.cardName.y = (global.cardIconSize / 2) - 6;
         //this.cardName.textAlign = "center";
-        this.cardName.font = "12px Arial"
+        this.cardName.font = "12px Arial";
 
         this.backGround = new createjs.Shape();
         this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 *8)) + 8, (global.cardIconSize) + 8);
@@ -28,14 +28,15 @@ export class ResourceHover extends createjs.Container {
         this.addChild(this.cardIcon);
         this.addChild(this.cardName);
 
-        this.x = global.canvasWidth / 2;
-        this.y = global.canvasHeight / 2;
-
+        //this.x = global.canvasWidth / 2;
+        //this.y = global.canvasHeight / 2;
     }
     setYamlData(yamlData: ResourceYamlData | null, queue: createjs.LoadQueue) {
         if (yamlData != null) {
             this.cardIcon.image = getIconResource(yamlData.index, "resource", queue);
             this.cardName.text = yamlData.name;
+            this.x = this.stage.mouseX;
+            this.y = this.stage.mouseY;
         }
     }
 }

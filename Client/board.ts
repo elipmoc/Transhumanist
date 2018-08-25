@@ -44,6 +44,7 @@ window.onload = () => {
         { id: "意識操作のテスト", src: "Img/card/front/action/意識操作のテスト.png" },
         { id: "核融合炉", src: "Img/card/front/action/核融合炉.png" },
         { id: "量子コンピュータ", src: "Img/card/front/action/量子コンピュータ.png" },
+        { id: "治療施設", src: "Img/card/front/action/治療施設.png" },
         { id: "resource", src: "Img/resource.png" },
         { id: "buildAction", src: "Img/buildAction.png" },
         { id: "logFrame", src: "Img/ui/logFrame.png" },
