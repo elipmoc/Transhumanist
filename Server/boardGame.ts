@@ -14,6 +14,7 @@ import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { BoardGameStarter } from "./boardGameStarter";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
+import { ActionCardStacks } from "./Card/actionCardStacks";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -23,23 +24,16 @@ export class BoardGame {
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
     private warPairList: SocketBinderList<WarPair>;
     private turn: SocketBinder<number>;
-    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>;
+    private actionCardStacks: ActionCardStacks;
     private boardGameStatusChanger: BoardGameStatusChanger;
     private boardGameStarter: BoardGameStarter;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardGameStatusChanger = new BoardGameStatusChanger();
-        this.numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
-        this.numberOfActionCardList.setNamespaceSocket(this.boardSocket);
-        this.numberOfActionCardList.Value =
-            [
-                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
-                { currentNumber: 50, maxNumber: 99, dustNumber: 5 },
-                { currentNumber: 5, maxNumber: 99, dustNumber: 2 },
-                { currentNumber: 2, maxNumber: 67, dustNumber: 44 },
-                { currentNumber: 5, maxNumber: 99, dustNumber: 66 },
-                { currentNumber: 78, maxNumber: 99, dustNumber: 7 },
-            ];
+        let numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
+        numberOfActionCardList.setNamespaceSocket(this.boardSocket);
+        this.actionCardStacks = new ActionCardStacks(numberOfActionCardList);
+
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
         this.gamePlayers = new GamePlayers(gameMasterPlayerId);
@@ -78,7 +72,7 @@ export class BoardGame {
             this.eventLogMessage.updateAt(socket);
             this.warPairList.updateAt(socket);
             this.turn.updateAt(socket);
-            this.numberOfActionCardList.updateAt(socket);
+            this.actionCardStacks.updateAt(socket);
             new BoardPlayerHandle(socket, gamePlayer, this.boardGameStarter);
         }
     }
