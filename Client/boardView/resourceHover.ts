@@ -17,7 +17,7 @@ export class ResourceHover extends createjs.Container {
         this.cardName.x = (global.cardIconSize * 1) + 2;
         this.cardName.y = (global.cardIconSize / 2) - 6;
         //this.cardName.textAlign = "center";
-        this.cardName.font = "12px Arial"
+        this.cardName.font = "12px Arial";
 
         this.backGround = new createjs.Shape();
         this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 *8)) + 8, (global.cardIconSize) + 8);
