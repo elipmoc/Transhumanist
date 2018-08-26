@@ -156,6 +156,7 @@ function playerBuildActionAreaBuilder(actionCardHover: ActionCardHover, bindPara
         buildActionKindList.onSetAt((iconId: number, cardName: ActionCardName) => {
             playerBuildActionAreaList[i].setResource(
                 iconId, cardName, bindParams.yamls.buildActionCardHash[cardName].index, bindParams.queue);
+            bindParams.stage.update();
         });
         bindParams.stage.addChild(playerBuildActionAreaList[i]);
         playerBuildActionAreaList[i].onMouseOveredIcon(cardName => {
@@ -287,13 +288,16 @@ function actionStorageWindowBuilder(actionCardHover: ActionCardHover, bindParams
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new ActionStorageWindow(actionCardHover, bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
-    actionCardList.onUpdate(list =>
+    actionCardList.onUpdate(list => {
         list.forEach((actionCardName, index) =>
             actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName])
-        )
-    );
-    actionCardList.onSetAt((index, actionCardName) =>
-        actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName]));
+        );
+        bindParams.stage.update();
+    });
+    actionCardList.onSetAt((index, actionCardName) => {
+        actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName]);
+        bindParams.stage.update();
+    });
     decision.visible = false;
     decision.onClicked((r) => {
         if (r == DialogResult.Yes) {
