@@ -1,4 +1,4 @@
-import * as view from "../boardView/view";
+import * as view from "../board/view";
 import { OptionWindow } from "./optionWindow";
 
 //左上のやーつ

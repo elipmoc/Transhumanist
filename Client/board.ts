@@ -1,6 +1,6 @@
 import * as global from "./boardGlobalData"
 import * as io from "socket.io-client";
-import * as viewBuilder from "./boardView/viewBuilder"
+import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
@@ -77,7 +77,7 @@ function preloadImage(yamls: Yamls) {
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-    viewBuilder.viewBuilder({
+    viewBuild({
         queue,
         stage,
         socket,

@@ -1,5 +1,5 @@
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { MakeCard } from "../../Client/boardView/makeCard";
+import { MakeCard } from "./makeCard";
 import * as global from "../boardGlobalData";
 import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 import { getIconResource } from "../utility";
@@ -20,7 +20,7 @@ export class ActionCardHover extends createjs.Container {
         this.resourceHash = resourceHash;
         this.cardInfo = new MakeCard(size);
         this.backGround = new createjs.Shape();
-        this.backGround.graphics.beginFill("#EEE").drawRect(-7, -7, (this.cardWidth) + (7*3) + (12 * 8), (this.cardHeight) + (7*2));
+        this.backGround.graphics.beginFill("#EEE").drawRect(-7, -7, (this.cardWidth) + (7 * 3) + (12 * 8), (this.cardHeight) + (7 * 2));
 
         this.addChild(this.backGround);
         this.addChild(this.cardInfo);
@@ -32,7 +32,7 @@ export class ActionCardHover extends createjs.Container {
         this.useCostText.y = 5;
         this.addChild(this.useCostText);
 
-        this.costIcons.forEach((icon,i) => {
+        this.costIcons.forEach((icon, i) => {
             icon.x = (this.cardWidth) + 7;
             icon.y = 7 + 24 + ((global.cardIconSize + 2) * i);
             this.addChild(icon);
@@ -57,7 +57,7 @@ export class ActionCardHover extends createjs.Container {
                 this.costIcons[i].image = getIconResource(this.resourceHash[yamlData.cost[i].name].index, "resource", queue);
                 this.costNums[i].text = yamlData.cost[i].number.toString();
             }
-            else { 
+            else {
                 this.costIcons[i].image = null;
                 this.costNums[i].text = null;
             };
