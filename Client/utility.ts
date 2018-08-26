@@ -1,4 +1,4 @@
-import * as global from "./boardGlobalData"
+import { global } from "./boardGlobalData"
 
 
 //Bitmapから一部を切り取って新しいBitmapを作る関数

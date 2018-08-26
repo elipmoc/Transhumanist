@@ -1,4 +1,4 @@
-import * as global from "../../boardGlobalData";
+import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { DiceNumber } from "../../../Share/diceNumber";
 
@@ -50,7 +50,7 @@ export class SelectDiceWindow extends createjs.Container {
         this.callBack = callBack;
     }
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor() {
         super();
 
         const frame = new createjs.Shape();

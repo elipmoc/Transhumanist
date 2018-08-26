@@ -1,7 +1,6 @@
-import { clipBitmap, getIconResource } from "../../utility";
-import * as global from "../../boardGlobalData";
-import { ResourceIndex, ResourceName } from "../../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { getIconResource } from "../../utility";
+import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
+import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 
 //アイコンのベースクラス
 export class CardIconBase<K> extends createjs.Bitmap {

@@ -1,5 +1,5 @@
 import { BindParams } from "../bindParams";
-import { PlayerResourceAreaBase } from "../views/viewBase";
+import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
 import { ResourceHover } from "../views/resourceHover";
 import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { SelectResourceData } from "../../../Share/selectResourceData";
@@ -47,7 +47,7 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
             bindParams.stage.update();
         });
     }
-    playerResourceAreaList[0].onClickIcon((iconId, resourceName) => {
+    playerResourceAreaList[0].onClickIcon((iconId, _) => {
         const selectResourceData: SelectResourceData = { iconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });

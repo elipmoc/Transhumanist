@@ -16,10 +16,10 @@ export class Bar extends createjs.Container {
         this.optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
         this.optionVolumeCursor.regX = this.optionVolumeCursor.image.width / 2;
         this.optionVolumeCursor.regY = this.optionVolumeCursor.image.width / 2;
-        this.addEventListener("pressmove", event => {
+        this.addEventListener("pressmove", _ => {
             this.setBarCursorX(this.stage.mouseX);
         });
-        this.addEventListener("mousedown", event => {
+        this.addEventListener("mousedown", _ => {
             this.setBarCursorX(this.stage.mouseX);
         })
         this.addChild(this.optionVolumeCursor);

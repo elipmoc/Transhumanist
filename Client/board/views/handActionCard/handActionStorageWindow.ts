@@ -1,14 +1,14 @@
-import * as global from "../../../boardGlobalData";
+import { global } from "../../../boardGlobalData";
 import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
-import { ActionStorageCard } from "./actionStorageCard";
+import { HandActionCard } from "./handActionCard";
 import { ActionCardHover } from "../actionCardHover";
 
-//アクションカード置き場のウィンドウ
-export class ActionStorageWindow extends createjs.Container {
+//手札のアクションカード置き場のウィンドウ
+export class HandActionCardStorageWindow extends createjs.Container {
     private callBack: (index: number, cardName: string) => void;
     private frame: createjs.Bitmap;
     private queue: createjs.LoadQueue;
-    private cardImageList: ActionStorageCard[];
+    private cardImageList: HandActionCard[];
     private actionCardHover: ActionCardHover;
 
     constructor(actionCardHover: ActionCardHover, queue: createjs.LoadQueue) {
@@ -21,7 +21,7 @@ export class ActionStorageWindow extends createjs.Container {
         this.addChild(this.frame);
         this.cardImageList = [];
         [...Array(5).keys()].forEach(index => {
-            const card = new ActionStorageCard(index, this.actionCardHover, queue);
+            const card = new HandActionCard(index, this.actionCardHover, queue);
             this.cardImageList.push(card);
             card.x = this.frame.x + index * (card.width + 1);
             card.y = this.frame.y;

@@ -2,7 +2,7 @@ import { OptionWindow } from "../views/optionWindow";
 import { TopWindowL } from "../views/topWindowL";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
-import * as global from "../../boardGlobalData";
+import { global } from "../../boardGlobalData";
 
 //左上のやつ生成
 export function build(bindParams: BindParams) {

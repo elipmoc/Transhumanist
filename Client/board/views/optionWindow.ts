@@ -1,4 +1,4 @@
-import { ButtonBase } from "./viewBase";
+import { ButtonBase } from "./bases/buttonBase";
 import { Bar } from "./bar";
 
 //オプション罰ボタン

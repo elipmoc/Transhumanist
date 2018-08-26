@@ -1,14 +1,14 @@
-import { ActionStorageWindow } from "../views/actionCard/actionStorageWindow";
+import { HandActionCardStorageWindow } from "../views/handActionCard/handActionStorageWindow";
 import { ActionCardHover } from "../views/actionCardHover";
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
-import { ActionCardUseDecisionWindow, DialogResult } from "../views/actionCard/actionCardUseDecisionWindow";
+import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 
 //手札ウインドウの生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
-    const actionStorageWindow = new ActionStorageWindow(actionCardHover, bindParams.queue);
+    const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.queue);
     const decision = new ActionCardUseDecisionWindow();
     actionCardList.onUpdate(list => {
         list.forEach((actionCardName, index) =>

@@ -1,8 +1,8 @@
-import * as global from "../../boardGlobalData"
-import * as viewBase from "./viewBase"
+import { global } from "../../boardGlobalData"
+import { PlayerWindowBase } from "./bases/playerWindowBase"
 import { createMyShadow } from "../../utility";
 
-export class Player1Window extends viewBase.PlayerWindowBase {
+export class Player1Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super(queue);
 
@@ -64,7 +64,7 @@ export class Player1Window extends viewBase.PlayerWindowBase {
 
 }
 
-export class Player2Window extends viewBase.PlayerWindowBase {
+export class Player2Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super(queue);
 
@@ -125,7 +125,7 @@ export class Player2Window extends viewBase.PlayerWindowBase {
 }
 
 
-export class Player3Window extends viewBase.PlayerWindowBase {
+export class Player3Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super(queue);
 
@@ -186,7 +186,7 @@ export class Player3Window extends viewBase.PlayerWindowBase {
     }
 }
 
-export class Player4Window extends viewBase.PlayerWindowBase {
+export class Player4Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
         super(queue);
 

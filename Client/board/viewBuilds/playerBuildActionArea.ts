@@ -3,11 +3,11 @@ import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 import { SelectBuildActionData } from "../../../Share/selectBuildActionData";
-import { PlayerBuildBase } from "../views/viewBase";
-import * as playerBuildAreas from "../views/playerBuildAreas";
+import { PlayerBuildAreaBase } from "../views/bases/playerBuildAreaBase";
+import * as playerBuildAreas from "../views/playerBuildActionAreas";
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
-    const playerBuildActionAreaList: PlayerBuildBase[] = [
+    const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
         new playerBuildAreas.Player1BuildArea(bindParams.queue),
         new playerBuildAreas.Player2BuildArea(bindParams.queue),
         new playerBuildAreas.Player3BuildArea(bindParams.queue),
@@ -41,7 +41,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             bindParams.stage.update();
         });
     }
-    playerBuildActionAreaList[0].onClickedIcon((iconId, actionCardName) => {
+    playerBuildActionAreaList[0].onClickedIcon((iconId, _) => {
         const selectBuildActionData: SelectBuildActionData = { iconId };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });

@@ -1,4 +1,4 @@
-import * as global from "./boardGlobalData"
+import { global } from "./boardGlobalData"
 import * as io from "socket.io-client";
 import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";

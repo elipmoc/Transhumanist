@@ -1,8 +1,8 @@
-import * as global from "../../boardGlobalData"
-import * as viewBase from "./viewBase"
+import { global } from "../../boardGlobalData"
+import { ButtonBase } from "./bases/buttonBase"
 
 //ターン終了ボタン
-export class TurnFinishButton extends viewBase.ButtonBase {
+export class TurnFinishButton extends ButtonBase {
 
     private turnFinishText: createjs.Text;
 

@@ -1,9 +1,9 @@
-import * as viewBase from "./viewBase"
-import * as global from "../../boardGlobalData"
+import { ButtonBase } from "./bases/buttonBase"
+import { global } from "../../boardGlobalData"
 
 
 //宣戦布告ボタン
-export class DeclareWarButton extends viewBase.ButtonBase {
+export class DeclareWarButton extends ButtonBase {
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         //ボタン画像
         const declareWarButton = new createjs.Bitmap(queue.getResult("button"));

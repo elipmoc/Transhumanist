@@ -1,11 +1,11 @@
 import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
-import { MakeCard } from "./makeCard";
-import * as global from "../../boardGlobalData";
+import { DetailsActionCard } from "./detailsActionCard";
+import { global } from "../../boardGlobalData";
 import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
 import { getIconResource } from "../../utility";
 
 export class ActionCardHover extends createjs.Container {
-    private cardInfo: MakeCard;
+    private cardInfo: DetailsActionCard;
     private backGround: createjs.Shape;
     private resourceHash: ResourceHash;
     private costIcons: createjs.Bitmap[] = [new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null)];
@@ -15,10 +15,10 @@ export class ActionCardHover extends createjs.Container {
     readonly cardWidth: number = 253;
     readonly cardHeight: number = 379;
 
-    constructor(resourceHash: ResourceHash, queue: createjs.LoadQueue, size: number) {
+    constructor(resourceHash: ResourceHash, size: number) {
         super();
         this.resourceHash = resourceHash;
-        this.cardInfo = new MakeCard(size);
+        this.cardInfo = new DetailsActionCard(size);
         this.backGround = new createjs.Shape();
         this.backGround.graphics.beginFill("#EEE").drawRect(-7, -7, (this.cardWidth) + (7 * 3) + (12 * 8), (this.cardHeight) + (7 * 2));
 

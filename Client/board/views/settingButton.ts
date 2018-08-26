@@ -1,7 +1,7 @@
-import * as viewBase from "./viewBase"
+import { ButtonBase } from "./bases/buttonBase"
 
 //設定ボタン
-export class SettingButton extends viewBase.ButtonBase {
+export class SettingButton extends ButtonBase {
     private height: number;
     constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
         const settingButton = new createjs.Bitmap(queue.getResult("setting"));

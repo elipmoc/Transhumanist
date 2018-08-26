@@ -1,4 +1,4 @@
-import * as global from "../../../boardGlobalData";
+import { global } from "../../../boardGlobalData";
 import { createMyShadow } from "../../../utility";
 
 class DecisionButton extends createjs.Container {

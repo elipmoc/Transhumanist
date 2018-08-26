@@ -1,6 +1,7 @@
 import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 
-export class MakeCard extends createjs.Container {
+//詳細な情報が書かれたアクションカードのクラス
+export class DetailsActionCard extends createjs.Container {
     cardFrame: createjs.Bitmap;
     private cardImage: createjs.Bitmap;
     private cardName: createjs.Text;

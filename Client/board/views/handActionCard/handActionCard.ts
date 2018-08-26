@@ -1,10 +1,10 @@
 import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
-import { MakeCard } from "../makeCard";
+import { DetailsActionCard } from "../detailsActionCard";
 import { ActionCardHover } from "../actionCardHover";
 
 //手札カードのクラス
-export class ActionStorageCard extends createjs.Container {
-    private cardInfo: MakeCard = new MakeCard(1);
+export class HandActionCard extends createjs.Container {
+    private cardInfo: DetailsActionCard = new DetailsActionCard(1);
     private yamlData: ActionCardYamlData = null;
     readonly width: number = 84;
     readonly height: number = 126;

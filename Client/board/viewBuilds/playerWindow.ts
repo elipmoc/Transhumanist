@@ -1,5 +1,5 @@
 import { BindParams } from "../bindParams";
-import { PlayerWindowBase } from "../views/viewBase";
+import { PlayerWindowBase } from "../views/bases/playerWindowBase";
 import { ResponseGamePlayerState } from "../../../Share/responseGamePlayerState";
 import { SocketBinder } from "../../socketBinder";
 import * as playerWindows from "../views/playerWindows";

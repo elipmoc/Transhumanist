@@ -1,8 +1,8 @@
-import * as global from "../../boardGlobalData"
-import * as viewBase from "./viewBase"
+import { global } from "../../boardGlobalData"
+import { PlayerResourceAreaBase } from "./bases/playerResourceAreaBase"
 
 
-export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
+export class Player1ResourceArea extends PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super(15);
         this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
@@ -17,7 +17,7 @@ export class Player1ResourceArea extends viewBase.PlayerResourceAreaBase {
     }
 }
 
-export class Player2ResourceArea extends viewBase.PlayerResourceAreaBase {
+export class Player2ResourceArea extends PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super(5);
         this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");
@@ -30,7 +30,7 @@ export class Player2ResourceArea extends viewBase.PlayerResourceAreaBase {
     }
 }
 
-export class Player3ResourceArea extends viewBase.PlayerResourceAreaBase {
+export class Player3ResourceArea extends PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super(15);
         this.resourceArea.image = <any>queue.getResult("oddPlayerRBArea");
@@ -43,7 +43,7 @@ export class Player3ResourceArea extends viewBase.PlayerResourceAreaBase {
     }
 }
 
-export class Player4ResourceArea extends viewBase.PlayerResourceAreaBase {
+export class Player4ResourceArea extends PlayerResourceAreaBase {
     constructor(queue: createjs.LoadQueue) {
         super(5);
         this.resourceArea.image = <any>queue.getResult("evenPlayerRBArea");

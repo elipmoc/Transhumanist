@@ -1,4 +1,4 @@
-import * as global from "../../boardGlobalData"
+import { global } from "../../boardGlobalData"
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 import { createMyShadow } from "../../utility";
 
