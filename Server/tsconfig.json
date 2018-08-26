@@ -3,7 +3,7 @@
         "target": "es2017",
         "module": "commonjs",
         "sourceMap": false,
-        "declaration": true,
+        "declaration": false,
         "outDir": "../dist",
         // "rootDir": "../Server",
         "noImplicitAny": true,
@@ -19,7 +19,6 @@
     ],
     "exclude": [
         "../node_modules",
-        "../Client",
         "../Share"
     ]
 }
