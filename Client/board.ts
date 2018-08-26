@@ -1,15 +1,17 @@
-import * as global from "./boardGlobalData"
-import * as view from "./boardView/view"
+import { global } from "./boardGlobalData"
 import * as io from "socket.io-client";
-import * as viewBuilder from "./boardView/viewBuilder"
+import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
-import { OptionWindow } from "./boardView/optionWindow";
+import { Yamls, getYamls } from "./getYaml";
 
 const queue = new createjs.LoadQueue();
 window.onload = () => {
 
-    queue.on("complete", preloadImage);
+    queue.on("complete", () => getYamls().then(yamls => {
+        preloadImage(yamls);
+        return Promise.resolve();
+    }));
     queue.loadManifest([
         { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },
         { id: "evenPlayerFrame2", src: "Img/ui/evenPlayerFrame2.png" },
@@ -39,6 +41,10 @@ window.onload = () => {
         { id: "f_level5", src: "Img/card/front/action/level5.png" },
         { id: "f_level6", src: "Img/card/front/action/level6.png" },
         { id: "miningAction", src: "Img/card/front/action/mining.png" },
+        { id: "意識操作のテスト", src: "Img/card/front/action/意識操作のテスト.png" },
+        { id: "核融合炉", src: "Img/card/front/action/核融合炉.png" },
+        { id: "量子コンピュータ", src: "Img/card/front/action/量子コンピュータ.png" },
+        { id: "治療施設", src: "Img/card/front/action/治療施設.png" },
         { id: "resource", src: "Img/resource.png" },
         { id: "buildAction", src: "Img/buildAction.png" },
         { id: "logFrame", src: "Img/ui/logFrame.png" },
@@ -48,31 +54,17 @@ window.onload = () => {
         { id: "bg_level3", src: "Img/background/bg_level3.png" },
         { id: "bg_level4", src: "Img/background/bg_level4.png" },
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
-        { id: "bg_level6", src: "Img/background/bg_level6.png" }
+        { id: "bg_level6", src: "Img/background/bg_level6.png" },
+        { id: "gm_icon", src: "Img/gmIcon.png" }
     ]);
 }
 
-function preloadImage() {
+function preloadImage(yamls: Yamls) {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
     background.alpha = 0.5;
     stage.addChild(background);
-
-    //オプションウインドウ
-    const optionWindow = new OptionWindow(queue);
-    optionWindow.x = global.canvasWidth / 2;
-    optionWindow.y = global.canvasHeight / 2;
-    optionWindow.visible = false;
-
-    //設定枠
-    let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
-    stage.addChild(topWindowsL);
-    //設定ボタン
-    const settingButton = new view.SettingButton(() => { optionWindow.visible = true; stage.update(); }, queue);
-    settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2;
-    settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2;
-    stage.addChild(settingButton);
 
     //イベント枠
     let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
@@ -85,8 +77,13 @@ function preloadImage() {
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-    viewBuilder.viewBuilder({ queue: queue, stage: stage, socket: socket, playerId: Number(cookies.get("playerId")) });
+    viewBuild({
+        queue,
+        stage,
+        socket,
+        playerId: Number(cookies.get("playerId")),
+        yamls
+    });
 
-    stage.addChild(optionWindow);
     stage.update();
 }

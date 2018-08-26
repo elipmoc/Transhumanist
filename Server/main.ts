@@ -2,7 +2,7 @@
 import * as http from 'http';
 import { createRouter } from "./routing";
 import * as io from "socket.io";
-import { createControler } from "../Server/createControler";
+import { createControler } from "./createControler";
 
 
 //サーバーの作成

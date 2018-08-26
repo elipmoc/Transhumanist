@@ -16,6 +16,7 @@ export function GenerateActionCardYamlData(data: ActionCardYamlData[], buildFlag
         CheckUndefined(x.cost, "constがありませんよ？");
         CheckUndefined(x.level, "levelがありませんよ？");
         CheckUndefined(x.name, "nameがありませんよ？");
+        CheckUndefined(x.number, "numberがありませんよ？");
         if (buildFlag && x.build_use == false) return;
         actionCardHash[x.name] = x;
         x.index = index;

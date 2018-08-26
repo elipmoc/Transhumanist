@@ -1,12 +1,14 @@
 export interface ActionCardHash {
-    [index: string]: ActionCardYamlData
+    [index: string]: ActionCardYamlData | undefined
 }
 
 export type BuildActionIndex = number;
 export type ActionIndex = number;
+export type ActionCardName = string;
 
 export interface ActionCardYamlData {
     name: string;
+    number: number;//枚数
     index: ActionIndex;
     level: number;
     build_use: boolean;

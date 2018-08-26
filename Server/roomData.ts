@@ -1,5 +1,5 @@
-import { PlayerData } from "../Server/playerData";
-import { PlayerDataList } from "../Server/playerDataList";
+import { PlayerData } from "./playerData";
+import { PlayerDataList } from "./playerDataList";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { PasswordInfo } from "./passwordInfo";
 import { RoomDataForClient } from "../Share/roomDataForClient";

@@ -1,4 +1,5 @@
-const fs = require('fs');
+import { yamlGet } from "./yamlGet";
+import * as fs from "fs";
 const router = require('router');
 const finalhandler = require('finalhandler');
 
@@ -37,6 +38,9 @@ export function createRouter() {
     myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/card/front/action/" + req.params.path);
     });
+    myRouter.get("/Json/:path", (req: any, res: any) => {
+        sendYaml(res, "./Resource/Yaml/" + req.params.path);
+    });
     myRouter.get("/:path", (req: any, res: any) => {
         sendHtml(res, "./Html/" + req.params.path);
     });
@@ -47,10 +51,12 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
 }
 
 function sendCss(res: any, path: string) {
@@ -61,14 +67,25 @@ function sendCss(res: any, path: string) {
 }
 
 function sendJs(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/plane'
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'text/plane'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
 }
 function sendPng(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'image/png'
+
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'image/png'
+        });
+        res.end(data);
     });
-    res.end(fs.readFileSync(path));
+}
+function sendYaml(res: any, path: string) {
+    res.writeHead(200, {
+        'Content-Type': 'text/plain'
+    });
+    res.end(JSON.stringify(yamlGet(path)));
 }

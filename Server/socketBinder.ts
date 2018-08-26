@@ -1,8 +1,13 @@
+interface SocketHash {
+    [index: string]: SocketIO.Socket;
+}
+
 
 //値をクライアントと効率よくシェアできるクラス
 export class SocketBinder<T>{
     private value: T;
-    protected socket: SocketIO.Namespace;
+    private socketList: SocketHash = {};
+    private namespaceSocket: SocketIO.Namespace | null = null;
     private valueName: string;
 
     get ValueName() {
@@ -18,9 +23,17 @@ export class SocketBinder<T>{
         this.update();
     }
 
+    protected socketEmit(eventName: string, data: string) {
+        if (this.namespaceSocket)
+            this.namespaceSocket.emit(eventName, data);
+        for (let socket of Object.values(this.socketList)) {
+            socket.emit(eventName, data);
+        }
+    }
+
     //値を変更したことを手動で伝える
     update() {
-        this.socket.emit("update" + this.valueName, JSON.stringify(this.value));
+        this.socketEmit("update" + this.valueName, JSON.stringify(this.value));
     }
 
     //値を変更したことを個別のsocketを指定して手動で伝える
@@ -28,11 +41,20 @@ export class SocketBinder<T>{
         socket.emit("update" + this.valueName, JSON.stringify(this.value));
     }
 
-    //この時渡すソケットは一斉送信用の用途で使われる
+    addSocket(socket: SocketIO.Socket) {
+        this.socketList[socket.id] = socket;
+        (<SocketIO.Socket>socket).on("disconnect", () => {
+            delete this.socketList[socket.id];
+        });
+        this.updateAt(socket);
+    }
+
+    setNamespaceSocket(socket: SocketIO.Namespace) {
+        this.namespaceSocket = socket;
+    }
+
     constructor(
-        valueName: string,
-        socket: SocketIO.Namespace) {
-        this.socket = socket;
+        valueName: string) {
         this.valueName = valueName;
     }
 }

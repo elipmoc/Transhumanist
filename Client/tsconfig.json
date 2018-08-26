@@ -4,7 +4,7 @@
         "module": "commonjs",
         "sourceMap": false,
         "outDir": "../dist",
-        "declaration": true,
+        "declaration": false,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noUnusedLocals": false,
@@ -14,10 +14,10 @@
         "noEmitOnError": true
     },
     "include": [
-        "../Client/**/*",
-        "../Share/**/*"
+        "../Client/**/*"
     ],
     "exclude": [
-        "../Server"
+        "../Server",
+        "../Share/**/*"
     ]
 }

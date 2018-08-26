@@ -15,9 +15,10 @@ export function GenerateEventYamlData(yamlData: Event[]) {
 }
 
 export interface EventHash {
-    [index: string]: Event;
+    [index: string]: Event | undefined;
 }
 export type EventIndex = number;
+export type EventName = string;
 
 export interface Event {
     name: string,

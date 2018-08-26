@@ -1,3 +1,6 @@
+import { global } from "./boardGlobalData"
+
+
 //Bitmapから一部を切り取って新しいBitmapを作る関数
 export function clipBitmap(
     bitmap: createjs.Bitmap,
@@ -22,6 +25,18 @@ export function clipBitmap(
 
     //Bitmapを生成
     return new createjs.Bitmap(clipCanvas);
+}
+
+//カードアイコンの画像取得
+export function getIconResource(imgIndex: number, img_name: string, queue: createjs.LoadQueue) {
+    if (imgIndex == -1)
+        return null;
+    const bitmap = clipBitmap(
+        new createjs.Bitmap(<any>queue.getResult(img_name)),
+        imgIndex % 5 * global.cardIconSize,
+        Math.floor(imgIndex / 5) * global.cardIconSize,
+        global.cardIconSize, global.cardIconSize);
+    return bitmap.image;
 }
 
 export function createMyShadow() {
