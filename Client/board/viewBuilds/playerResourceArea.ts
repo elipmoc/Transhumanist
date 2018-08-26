@@ -4,7 +4,7 @@ import { ResourceHover } from "../views/resourceHover";
 import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { SelectResourceData } from "../../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
-import * as view from "../views/view";
+import * as playerResourceAreas from "../views/playerResourceAreas";
 
 //プレイヤーのリソース欄生成
 export function build(resourceHover: ResourceHover, bindParams: BindParams) {
@@ -12,10 +12,10 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
     resourceHover.visible = false;
 
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
-        new view.Player1ResourceArea(bindParams.queue),
-        new view.Player2ResourceArea(bindParams.queue),
-        new view.Player3ResourceArea(bindParams.queue),
-        new view.Player4ResourceArea(bindParams.queue)
+        new playerResourceAreas.Player1ResourceArea(bindParams.queue),
+        new playerResourceAreas.Player2ResourceArea(bindParams.queue),
+        new playerResourceAreas.Player3ResourceArea(bindParams.queue),
+        new playerResourceAreas.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
         const resourceKindList = new SocketBinderList<ResourceName>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);

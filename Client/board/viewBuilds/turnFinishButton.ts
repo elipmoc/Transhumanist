@@ -1,13 +1,13 @@
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
-import * as view from "../views/view";
+import { TurnFinishButton } from "../views/turnFinishButton";
 
 //ターン終了ボタン生成
 export function build(bindParams: BindParams) {
 
     const turnFinishButton =
-        new view.TurnFinishButton(
+        new TurnFinishButton(
             () => bindParams.socket.emit("turnFinishButtonClick"),
             bindParams.queue
         );

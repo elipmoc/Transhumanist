@@ -1,10 +1,10 @@
 import { BindParams } from "../bindParams";
-import * as view from "../views/view";
+import { DeclareWarButton } from "../views/declareWarButton";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {
     const declareWarButton =
-        new view.DeclareWarButton(
+        new DeclareWarButton(
             () => bindParams.socket.emit("declareWarButtonClick"),
             bindParams.queue
         );

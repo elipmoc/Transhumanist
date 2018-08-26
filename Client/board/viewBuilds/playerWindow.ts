@@ -2,14 +2,14 @@ import { BindParams } from "../bindParams";
 import { PlayerWindowBase } from "../views/viewBase";
 import { ResponseGamePlayerState } from "../../../Share/responseGamePlayerState";
 import { SocketBinder } from "../../socketBinder";
-import * as view from "../views/view"
+import * as playerWindows from "../views/playerWindows";
 
 export function build(bindParams: BindParams) {
     const playerWindowList: PlayerWindowBase[] = [
-        new view.Player1Window(bindParams.queue),
-        new view.Player2Window(bindParams.queue),
-        new view.Player3Window(bindParams.queue),
-        new view.Player4Window(bindParams.queue)
+        new playerWindows.Player1Window(bindParams.queue),
+        new playerWindows.Player2Window(bindParams.queue),
+        new playerWindows.Player3Window(bindParams.queue),
+        new playerWindows.Player4Window(bindParams.queue)
     ];
 
 

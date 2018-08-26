@@ -4,15 +4,14 @@ import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 import { SelectBuildActionData } from "../../../Share/selectBuildActionData";
 import { PlayerBuildBase } from "../views/viewBase";
-import * as view from "../views/view";
-
+import * as playerBuildAreas from "../views/playerBuildAreas";
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const playerBuildActionAreaList: PlayerBuildBase[] = [
-        new view.Player1Build(bindParams.queue),
-        new view.Player2Build(bindParams.queue),
-        new view.Player3Build(bindParams.queue),
-        new view.Player4Build(bindParams.queue)
+        new playerBuildAreas.Player1BuildArea(bindParams.queue),
+        new playerBuildAreas.Player2BuildArea(bindParams.queue),
+        new playerBuildAreas.Player3BuildArea(bindParams.queue),
+        new playerBuildAreas.Player4BuildArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
         const buildActionKindList = new SocketBinderList<ActionCardName>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);

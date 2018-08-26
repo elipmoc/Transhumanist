@@ -1,5 +1,5 @@
-import * as view from "./view";
 import { OptionWindow } from "./optionWindow";
+import { SettingButton } from "./settingButton";
 
 //左上のやーつ
 export class TopWindowL extends createjs.Container {
@@ -12,7 +12,7 @@ export class TopWindowL extends createjs.Container {
         let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
         this.addChild(topWindowsL);
         //設定ボタン
-        const settingButton = new view.SettingButton(() => { optionWindow.visible = true; this.stage.update(); }, queue);
+        const settingButton = new SettingButton(() => { optionWindow.visible = true; this.stage.update(); }, queue);
         settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2 - 10;
         settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2 - 10;
         this.addChild(settingButton);
