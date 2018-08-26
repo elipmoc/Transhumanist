@@ -1,10 +1,10 @@
-import { ActionCardHover } from "../actionCardHover";
+import { ActionCardHover } from "../views/actionCardHover";
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 import { SelectBuildActionData } from "../../../Share/selectBuildActionData";
-import { PlayerBuildBase } from "../viewBase";
-import * as view from "../view";
+import { PlayerBuildBase } from "../views/viewBase";
+import * as view from "../views/view";
 
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {

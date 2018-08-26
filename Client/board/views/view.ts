@@ -1,6 +1,6 @@
-import * as global from "../boardGlobalData"
+import * as global from "../../boardGlobalData"
 import * as viewBase from "./viewBase"
-import { createMyShadow } from "../utility";
+import { createMyShadow } from "../../utility";
 
 //宣戦布告ボタン
 export class DeclareWarButton extends viewBase.ButtonBase {

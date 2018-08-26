@@ -1,5 +1,5 @@
-import { ActionCardHover } from "./actionCardHover";
-import { ResourceHover } from "./resourceHover";
+import { ActionCardHover } from "./views/actionCardHover";
+import { ResourceHover } from "./views/resourceHover";
 import { BindParams } from "./bindParams";
 import * as warLine from "./viewBuilds/warLine";
 import * as playerWindow from "./viewBuilds/playerWindow";
@@ -32,13 +32,3 @@ export function viewBuild(bindParams: BindParams) {
     selectDiceWindow.build(bindParams);
     topWindowL.build(bindParams);
 }
-
-
-
-
-
-
-
-
-
-

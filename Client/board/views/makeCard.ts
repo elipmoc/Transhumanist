@@ -1,4 +1,4 @@
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 
 export class MakeCard extends createjs.Container {
     cardFrame: createjs.Bitmap;

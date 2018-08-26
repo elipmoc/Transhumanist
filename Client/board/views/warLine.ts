@@ -1,4 +1,4 @@
-import * as global from "../boardGlobalData";
+import * as global from "../../boardGlobalData";
 
 interface Pos {
     x: number,

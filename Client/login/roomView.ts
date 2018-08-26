@@ -1,4 +1,4 @@
-import { RoomDataForClient } from "../Share/roomDataForClient";
+import { RoomDataForClient } from "../../Share/roomDataForClient";
 
 export class RoomView {
     private roomId: number;

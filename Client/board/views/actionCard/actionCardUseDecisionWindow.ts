@@ -1,6 +1,5 @@
-import * as global from "../../boardGlobalData";
-import { createMyShadow } from "../../utility";
-import { ActionIndex } from "../../../Share/Yaml/actionCardYamlData";
+import * as global from "../../../boardGlobalData";
+import { createMyShadow } from "../../../utility";
 
 class DecisionButton extends createjs.Container {
     readonly width = 150;

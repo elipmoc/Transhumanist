@@ -2,7 +2,7 @@ import * as io from "socket.io-client";
 import * as cookies from "js-cookie";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 import { PlayerDataForClient } from "../Share/playerDataForClient";
-import { RoomViewList } from "./roomViewList";
+import { RoomViewList } from "./login/roomViewList";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";

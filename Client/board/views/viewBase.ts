@@ -1,7 +1,7 @@
 import { CardIconBase, ResourceCardIcon, BuildActionCardIcon } from "./cardIcon"
-import * as global from "../boardGlobalData";
-import { ResourceIndex, ResourceName } from "../../Share/Yaml/resourceYamlData";
-import { BuildActionIndex, ActionCardName } from "../../Share/Yaml/actionCardYamlData";
+import * as global from "../../boardGlobalData";
+import { ResourceIndex, ResourceName } from "../../../Share/Yaml/resourceYamlData";
+import { BuildActionIndex, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 
 //ボタンのベースクラス
 export class ButtonBase extends createjs.Container {

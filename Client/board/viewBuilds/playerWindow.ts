@@ -1,8 +1,8 @@
 import { BindParams } from "../bindParams";
-import { PlayerWindowBase } from "../viewBase";
+import { PlayerWindowBase } from "../views/viewBase";
 import { ResponseGamePlayerState } from "../../../Share/responseGamePlayerState";
 import { SocketBinder } from "../../socketBinder";
-import * as view from "../view"
+import * as view from "../views/view"
 
 export function build(bindParams: BindParams) {
     const playerWindowList: PlayerWindowBase[] = [

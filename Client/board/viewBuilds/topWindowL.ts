@@ -1,5 +1,5 @@
-import { OptionWindow } from "../optionWindow";
-import { TopWindowL } from "../topWindowL";
+import { OptionWindow } from "../views/optionWindow";
+import { TopWindowL } from "../views/topWindowL";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import * as global from "../../boardGlobalData";

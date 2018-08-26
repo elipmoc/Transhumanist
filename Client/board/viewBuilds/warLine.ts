@@ -1,5 +1,5 @@
 import { BindParams } from "../bindParams";
-import { WarLineControl } from "../warLine";
+import { WarLineControl } from "../views/warLine";
 import { SocketBinderList } from "../../socketBinderList";
 import { WarPair } from "../../../Share/warPair";
 

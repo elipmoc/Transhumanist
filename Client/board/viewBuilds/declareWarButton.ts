@@ -1,5 +1,5 @@
 import { BindParams } from "../bindParams";
-import * as view from "../view";
+import * as view from "../views/view";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {

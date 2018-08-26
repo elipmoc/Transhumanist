@@ -1,7 +1,7 @@
-import { ActionStorageWindow } from "../actionCard/actionStorageWindow";
-import { ActionCardHover } from "../actionCardHover";
+import { ActionStorageWindow } from "../views/actionCard/actionStorageWindow";
+import { ActionCardHover } from "../views/actionCardHover";
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
-import { ActionCardUseDecisionWindow, DialogResult } from "../actionCard/actionCardUseDecisionWindow";
+import { ActionCardUseDecisionWindow, DialogResult } from "../views/actionCard/actionCardUseDecisionWindow";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 

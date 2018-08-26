@@ -1,10 +1,10 @@
 import { BindParams } from "../bindParams";
-import { PlayerResourceAreaBase } from "../viewBase";
-import { ResourceHover } from "../resourceHover";
+import { PlayerResourceAreaBase } from "../views/viewBase";
+import { ResourceHover } from "../views/resourceHover";
 import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { SelectResourceData } from "../../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
-import * as view from "../view";
+import * as view from "../views/view";
 
 //プレイヤーのリソース欄生成
 export function build(resourceHover: ResourceHover, bindParams: BindParams) {

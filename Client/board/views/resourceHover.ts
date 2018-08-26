@@ -1,6 +1,6 @@
-import * as global from "../boardGlobalData";
-import { ResourceYamlData } from "../../Share/Yaml/resourceYamlData";
-import { getIconResource } from "../utility";
+import * as global from "../../boardGlobalData";
+import { ResourceYamlData } from "../../../Share/Yaml/resourceYamlData";
+import { getIconResource } from "../../utility";
 import { runInThisContext } from "vm";
 
 export class ResourceHover extends createjs.Container {
@@ -20,7 +20,7 @@ export class ResourceHover extends createjs.Container {
         this.cardName.font = "12px Arial";
 
         this.backGround = new createjs.Shape();
-        this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 *8)) + 8, (global.cardIconSize) + 8);
+        this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 * 8)) + 8, (global.cardIconSize) + 8);
 
         this.scaleX = 1.5;
         this.scaleY = 1.5;

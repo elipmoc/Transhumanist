@@ -1,4 +1,4 @@
-import { LogMessage, LogWindow } from "../logWindow";
+import { LogMessage, LogWindow } from "../views/logWindow";
 import { BindParams } from "../bindParams";
 import { LogMessageForClient } from "../../../Share/logMessageForClient";
 import { SocketBinderList } from "../../socketBinderList";

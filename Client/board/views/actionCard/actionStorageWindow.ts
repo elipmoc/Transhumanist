@@ -1,5 +1,5 @@
-import * as global from "../../boardGlobalData";
-import { ActionIndex, ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import * as global from "../../../boardGlobalData";
+import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
 import { ActionStorageCard } from "./actionStorageCard";
 import { ActionCardHover } from "../actionCardHover";
 

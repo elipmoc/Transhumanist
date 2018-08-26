@@ -1,7 +1,7 @@
-import { RoomDataForClient } from "../Share/roomDataForClient";
-import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { RoomDataForClient } from "../../Share/roomDataForClient";
+import { PlayerDataForClient } from "../../Share/playerDataForClient";
 import { RoomView } from "./roomView";
-import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
+import { PlayFlagDataForClient } from "../../Share/playFlagDataForClient";
 
 export class RoomViewList {
     private roomViewMap: Map<number, RoomView>;

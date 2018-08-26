@@ -1,6 +1,6 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
-import { MakeCard } from "../../board/makeCard";
-import { ActionCardHover } from "../../board/actionCardHover";
+import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { MakeCard } from "../makeCard";
+import { ActionCardHover } from "../actionCardHover";
 
 //手札カードのクラス
 export class ActionStorageCard extends createjs.Container {

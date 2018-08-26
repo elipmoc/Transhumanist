@@ -1,8 +1,8 @@
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { MakeCard } from "./makeCard";
-import * as global from "../boardGlobalData";
-import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
-import { getIconResource } from "../utility";
+import * as global from "../../boardGlobalData";
+import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { getIconResource } from "../../utility";
 
 export class ActionCardHover extends createjs.Container {
     private cardInfo: MakeCard;

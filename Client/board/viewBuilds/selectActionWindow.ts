@@ -1,4 +1,4 @@
-import { SelectActionWindow } from "../selectActionWindow";
+import { SelectActionWindow } from "../views/selectActionWindow";
 import { BindParams } from "../bindParams";
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 import { SocketBinder } from "../../socketBinder";

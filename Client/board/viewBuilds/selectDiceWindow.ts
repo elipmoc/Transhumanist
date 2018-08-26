@@ -1,4 +1,4 @@
-import { SelectDiceWindow } from "../selectDiceWindow";
+import { SelectDiceWindow } from "../views/selectDiceWindow";
 import { BindParams } from "../bindParams";
 import { DiceNumber } from "../../../Share/diceNumber";
 import { SocketBinder } from "../../socketBinder";

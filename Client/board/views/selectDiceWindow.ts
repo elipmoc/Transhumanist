@@ -1,6 +1,6 @@
-import * as global from "../boardGlobalData";
-import { createMyShadow } from "../utility";
-import { DiceNumber } from "../../Share/diceNumber";
+import * as global from "../../boardGlobalData";
+import { createMyShadow } from "../../utility";
+import { DiceNumber } from "../../../Share/diceNumber";
 
 
 //ダイスアイコン

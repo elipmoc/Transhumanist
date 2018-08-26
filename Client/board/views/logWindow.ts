@@ -1,6 +1,6 @@
-import * as global from "../boardGlobalData";
-import { LogMessageType, LogMessageForClient } from "../../Share/logMessageForClient";
-import { createMyShadow } from "../utility";
+import * as global from "../../boardGlobalData";
+import { LogMessageType, LogMessageForClient } from "../../../Share/logMessageForClient";
+import { createMyShadow } from "../../utility";
 import { MessageBox, Message } from "./messageBox";
 
 
