@@ -60,6 +60,11 @@ export class Player1Window extends PlayerWindowBase {
         this.negativeText.color = "#ff0000";
         this.negativeText.font = "15px Arial";
         this.negativeText.shadow = createMyShadow();
+
+        this.gmIcon.x = -100;
+        this.gmIcon.y = 5;
+        this.gmIcon.scaleX = 0.4;
+        this.gmIcon.scaleY = 0.4;
     }
 
 }
@@ -121,6 +126,11 @@ export class Player2Window extends PlayerWindowBase {
         this.negativeText.color = "#ff0000";
         this.negativeText.font = "12px Arial";
         this.negativeText.shadow = createMyShadow();
+
+        this.gmIcon.x = (this.playerFrame.image.width / 2) - 12;
+        this.gmIcon.y = -90;
+        this.gmIcon.scaleX = 0.4;
+        this.gmIcon.scaleY = 0.4;
     }
 }
 
@@ -183,6 +193,12 @@ export class Player3Window extends PlayerWindowBase {
         this.negativeText.color = "red";
         this.negativeText.font = "15px Arial";
         this.negativeText.shadow = createMyShadow();
+
+        this.gmIcon.x = -100;
+        this.gmIcon.y = 5;
+        this.gmIcon.scaleX = 0.4;
+        this.gmIcon.scaleY = 0.4;
+
     }
 }
 
@@ -245,5 +261,10 @@ export class Player4Window extends PlayerWindowBase {
         this.negativeText.color = "red";
         this.negativeText.font = "12px Arial";
         this.negativeText.shadow = createMyShadow();
+
+        this.gmIcon.x = (this.playerFrame.image.width / 2) - 12;
+        this.gmIcon.y = -90;
+        this.gmIcon.scaleX = 0.4;
+        this.gmIcon.scaleY = 0.4;
     }
 }
