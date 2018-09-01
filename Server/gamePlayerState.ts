@@ -5,6 +5,8 @@ import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 export class GamePlayerState {
     private state: SocketBinder<ResponseGamePlayerState>;
 
+    get State() { return this.state.Value; }
+
     constructor(state: SocketBinder<ResponseGamePlayerState>, playerName: string) {
         this.state = state;
         this.state.Value = {

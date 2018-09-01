@@ -9,11 +9,13 @@ import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 import { arrayshuffle } from "../Share/utility";
+import { TurnManager } from "./turnManager";
 
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
     private gameMasterPlayerId: SocketBinder<number | null>;
+    private turnManager: TurnManager = new TurnManager();
 
     constructor(gameMasterPlayerId: SocketBinder<number | null>) {
         this.gameMasterPlayerId = gameMasterPlayerId;
@@ -53,10 +55,12 @@ export class GamePlayers {
     }
 
     initTurnSet() {
-        const firstTurnPlayerId = Math.floor(Math.random() * this.gamePlayerList.length);
-        this.gamePlayerList[firstTurnPlayerId].setMyTurn();
-        this.gamePlayerList.forEach((player, id) => {
-            if (id != firstTurnPlayerId) player.setWait();
+        const firstTurnPlayerId = this.turnManager
+            .calculate(this.gamePlayerList)
+            .nextTurnPlayerId()!;
+        this.gamePlayerList.forEach(player => {
+            if (player.PlayerId != firstTurnPlayerId) player.setWait();
+            else player.setMyTurn();
         });
     }
 
