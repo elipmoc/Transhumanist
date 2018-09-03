@@ -24,7 +24,7 @@ export function createRouter() {
         sendPng(res, "./Resource/Img/ui/" + req.params.path);
     });
     myRouter.get("/Bgm/:path", (req: any, res: any) => {
-        sendWav(res, "./Resource/Bgm/" + req.params.path);
+        sendMp3(res, "./Resource/Bgm/" + req.params.path);
     });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/page/" + req.params.path);
@@ -90,10 +90,10 @@ function sendYaml(res: any, path: string) {
     res.end(JSON.stringify(yamlGet(path)));
 }
 
-function sendWav(res: any, path: string) {
+function sendMp3(res: any, path: string) {
     fs.readFile(path, (err, data) => {
         res.writeHead(200, {
-            'Content-Type': 'audio/wav'
+            'Content-Type': 'audio/mp3'
         });
         res.end(data);
     });

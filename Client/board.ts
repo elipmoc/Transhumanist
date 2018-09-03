@@ -57,7 +57,7 @@ window.onload = () => {
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
         { id: "bg_level6", src: "Img/background/bg_level6.png" },
         { id: "gm_icon", src: "Img/gmIcon.png" },
-        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.wav" }
+        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.mp3" }
     ]);
 }
 
