@@ -25,6 +25,8 @@ export class GamePlayer {
     get IsGameMaster() { return this.isGameMaster; }
     set IsGameMaster(x) { this.isGameMaster = x; }
 
+    get Condition() { return this.playerCond.Value; }
+
     get GameState() { return this.state; }
 
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }

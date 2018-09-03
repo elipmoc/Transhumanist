@@ -15,7 +15,7 @@ import { TurnManager } from "./turnManager";
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
     private gameMasterPlayerId: SocketBinder<number | null>;
-    private turnManager: TurnManager = new TurnManager();
+    private turnManager: TurnManager = new TurnManager(this.gamePlayerList);
 
     constructor(gameMasterPlayerId: SocketBinder<number | null>) {
         this.gameMasterPlayerId = gameMasterPlayerId;
@@ -55,13 +55,19 @@ export class GamePlayers {
     }
 
     initTurnSet() {
-        const firstTurnPlayerId = this.turnManager
-            .calculate(this.gamePlayerList)
-            .nextTurnPlayerId()!;
+        const firstTurnPlayerId = this.turnManager.nextTurnPlayerId()!;
         this.gamePlayerList.forEach(player => {
             if (player.PlayerId != firstTurnPlayerId) player.setWait();
             else player.setMyTurn();
         });
+    }
+
+    rotateTurn() {
+        const currentPlayerId = this.turnManager.nextTurnPlayerId();
+        this.gamePlayerList.forEach(player => {
+            if (player.PlayerId != currentPlayerId) player.setWait();
+            else player.setMyTurn();
+        })
     }
 
     sendToSocket(socket: SocketIO.Socket) {

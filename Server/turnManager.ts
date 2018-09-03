@@ -11,16 +11,29 @@ function cmp(a: GamePlayer, b: GamePlayer) {
 }
 
 export class TurnManager {
-    private turn_player_id_list: Array<number> = [];
+    private turnPlayerIdList: Array<number> = [];
+    private currentPlayerId: number;
+    private players: Array<GamePlayer>;
 
-    //1週分のターンを計算
-    calculate(players: Array<GamePlayer>) {
-        this.turn_player_id_list = players.sort(cmp).map(x => x.PlayerId);
-        return this;
+    get CurrentPlayerId() { return this.currentPlayerId; }
+
+    constructor(players: Array<GamePlayer>) {
+        this.players = players;
     }
 
-    nextTurnPlayerId() {
-        return this.turn_player_id_list.pop();
+    //1週分のターンを計算
+    private calculate() {
+        this.turnPlayerIdList = this.players.sort(cmp).map(x => x.PlayerId);
+    }
+
+    nextTurnPlayerId(): number {
+        const nextPlayerId = this.turnPlayerIdList.pop();
+        if (nextPlayerId == undefined) {
+            this.calculate();
+            return this.nextTurnPlayerId();
+        }
+        this.currentPlayerId = nextPlayerId;
+        return this.currentPlayerId;
     }
 
 }

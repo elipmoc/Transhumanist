@@ -15,6 +15,7 @@ import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { BoardGameStarter } from "./boardGameStarter";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
 import { ActionCardStacks } from "./Card/actionCardStacks";
+import { BoardGameTurnRotation } from "./boardGameTurnRotation";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -26,7 +27,6 @@ export class BoardGame {
     private turn: SocketBinder<number>;
     private actionCardStacks: ActionCardStacks;
     private boardGameStatusChanger: BoardGameStatusChanger;
-    private boardGameStarter: BoardGameStarter;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardGameStatusChanger = new BoardGameStatusChanger();
@@ -37,7 +37,6 @@ export class BoardGame {
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
         this.gamePlayers = new GamePlayers(gameMasterPlayerId);
-        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
         this.boardSocket = boardSocket;
         this.roomId = roomId;
         this.turn = new SocketBinder<number>("turn");
@@ -73,7 +72,9 @@ export class BoardGame {
             this.warPairList.updateAt(socket);
             this.turn.updateAt(socket);
             this.actionCardStacks.updateAt(socket);
-            new BoardPlayerHandle(socket, gamePlayer, this.boardGameStarter);
+            const boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
+            const boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
+            new BoardPlayerHandle(socket, gamePlayer, boardGameStarter, boardGameTurnRotation);
         }
     }
 

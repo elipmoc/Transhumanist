@@ -3,16 +3,26 @@ import { NumberOfActionCard } from "../Share/numberOfActionCard";
 import { SelectBuildActionData } from "../Share/selectBuildActionData";
 import { GamePlayer } from "./gamePlayer";
 import { BoardGameStarter } from "./boardGameStarter";
+import { GamePlayerCondition } from "../Share/gamePlayerCondition";
+import { BoardGameTurnRotation } from "./boardGameTurnRotation";
 
 export class BoardPlayerHandle {
 
     private socket: SocketIO.Socket;
     private player: GamePlayer;
     private boardGameStarter: BoardGameStarter;
+    private boardGameTurnRotation: BoardGameTurnRotation;
 
     turnFinishButtonClick() {
-        if (this.player.IsGameMaster)
-            this.boardGameStarter.Init();
+        switch (this.player.Condition) {
+            case GamePlayerCondition.Start:
+                if (this.player.IsGameMaster)
+                    this.boardGameStarter.Init();
+                break;
+            case GamePlayerCondition.MyTurn:
+                this.boardGameTurnRotation.next();
+                break;
+        }
     }
 
     declareWarButtonClick() { console.log("declareWarButtonClick"); }
@@ -41,10 +51,11 @@ export class BoardPlayerHandle {
         )
     }
 
-    constructor(socket: SocketIO.Socket, player: GamePlayer, boardGameStarter: BoardGameStarter) {
+    constructor(socket: SocketIO.Socket, player: GamePlayer, boardGameStarter: BoardGameStarter, boardGameTurnRotation: BoardGameTurnRotation) {
         this.socket = socket;
         this.player = player;
         this.boardGameStarter = boardGameStarter;
+        this.boardGameTurnRotation = boardGameTurnRotation;
         socket.on("turnFinishButtonClick", () => this.turnFinishButtonClick());
 
         socket.on("declareWarButtonClick", () => this.declareWarButtonClick());
