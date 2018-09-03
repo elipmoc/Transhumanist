@@ -1,11 +1,9 @@
 //バー
 export class Bar extends createjs.Container {
     private optionVolumeCursor: createjs.Bitmap;
-    private maxValue: number = 100;
-    private minValue: number = 0;
     private maxX: number;
     private minX: number = 0;
-    private callBack: (value: number) => void;
+    private callBack: (value: number) => void = (value) => { };
     constructor(queue: createjs.LoadQueue) {
         super();
 
@@ -34,6 +32,7 @@ export class Bar extends createjs.Container {
         else
             this.optionVolumeCursor.x = x;
         this.stage.update();
+        this.callBack(x / this.maxX);
     }
 
     onChangedValue(callBack: (value: number) => void) {
