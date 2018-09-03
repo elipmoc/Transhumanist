@@ -51,37 +51,18 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'text/html'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "text/html");
 }
 
 function sendCss(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/css'
-    });
-    res.end(fs.readFileSync(path));
+    readFileResponse(res, path, "text/css");
 }
 
 function sendJs(res: any, path: string) {
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'text/plane'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "text/plane");
 }
 function sendPng(res: any, path: string) {
-
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'image/png'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "image/png");
 }
 function sendYaml(res: any, path: string) {
     res.writeHead(200, {
@@ -91,9 +72,13 @@ function sendYaml(res: any, path: string) {
 }
 
 function sendMp3(res: any, path: string) {
-    fs.readFile(path, (err, data) => {
+    readFileResponse(res, path, "audio/mp3");
+}
+
+function readFileResponse(res: any, path: string, contentType: string) {
+    fs.readFile(path, (_, data) => {
         res.writeHead(200, {
-            'Content-Type': 'audio/mp3'
+            'Content-Type': contentType
         });
         res.end(data);
     });
