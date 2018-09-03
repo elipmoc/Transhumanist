@@ -8,11 +8,8 @@ export function createRouter() {
     myRouter.get("/", (req: any, res: any) => {
         sendHtml(res, "./Html/login.html");
     });
-    myRouter.get("/Client/Lib/easel.js", (req: any, res: any) => {
-        sendHtml(res, "./Client/Lib/easeljs-0.8.2.min.js");
-    });
-    myRouter.get("/Client/Lib/preload.js", (req: any, res: any) => {
-        sendHtml(res, "./Client/Lib/preloadjs-0.6.2.min.js");
+    myRouter.get("/Client/Lib/:path", (req: any, res: any) => {
+        sendHtml(res, "./Client/Lib/" + req.params.path);
     });
     myRouter.get("/Css/:path", (req: any, res: any) => {
         sendCss(res, "./Css/" + req.params.path);
@@ -25,6 +22,9 @@ export function createRouter() {
     });
     myRouter.get("/Img/ui/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/ui/" + req.params.path);
+    });
+    myRouter.get("/Bgm/:path", (req: any, res: any) => {
+        sendWav(res, "./Resource/Bgm/" + req.params.path);
     });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/page/" + req.params.path);
@@ -88,4 +88,13 @@ function sendYaml(res: any, path: string) {
         'Content-Type': 'text/plain'
     });
     res.end(JSON.stringify(yamlGet(path)));
+}
+
+function sendWav(res: any, path: string) {
+    fs.readFile(path, (err, data) => {
+        res.writeHead(200, {
+            'Content-Type': 'audio/wav'
+        });
+        res.end(data);
+    });
 }

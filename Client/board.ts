@@ -6,6 +6,7 @@ import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
 
 const queue = new createjs.LoadQueue();
+queue.installPlugin(createjs.Sound);
 window.onload = () => {
 
     queue.on("complete", () => getYamls().then(yamls => {
@@ -55,11 +56,14 @@ window.onload = () => {
         { id: "bg_level4", src: "Img/background/bg_level4.png" },
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
         { id: "bg_level6", src: "Img/background/bg_level6.png" },
-        { id: "gm_icon", src: "Img/gmIcon.png" }
+        { id: "gm_icon", src: "Img/gmIcon.png" },
+        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.wav" }
     ]);
 }
 
 function preloadImage(yamls: Yamls) {
+    createjs.Sound.setVolume(0.05);
+    createjs.Sound.play("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
