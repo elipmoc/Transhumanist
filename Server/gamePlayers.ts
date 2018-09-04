@@ -15,10 +15,11 @@ import { TurnManager } from "./turnManager";
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
     private gameMasterPlayerId: SocketBinder<number | null>;
-    private turnManager: TurnManager = new TurnManager(this.gamePlayerList);
+    private turnManager: TurnManager;
 
-    constructor(gameMasterPlayerId: SocketBinder<number | null>) {
+    constructor(gameMasterPlayerId: SocketBinder<number | null>, turn: SocketBinder<number>) {
         this.gameMasterPlayerId = gameMasterPlayerId;
+        this.turnManager = new TurnManager(this.gamePlayerList, turn);
     }
 
     getPlayerAll(func: (x: GamePlayer) => void) {
@@ -73,5 +74,6 @@ export class GamePlayers {
     sendToSocket(socket: SocketIO.Socket) {
         this.gamePlayerList.forEach(x => x.sendToSocket(socket));
         this.gameMasterPlayerId.updateAt(socket);
+        this.turnManager.sendToSocket(socket);
     }
 }

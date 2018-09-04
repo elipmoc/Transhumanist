@@ -1,4 +1,5 @@
 import { GamePlayer } from "./gamePlayer";
+import { SocketBinder } from "./socketBinder";
 
 function cmp(a: GamePlayer, b: GamePlayer) {
     if (a.GameState.State.speed > b.GameState.State.speed)
@@ -14,16 +15,20 @@ export class TurnManager {
     private turnPlayerIdList: Array<number> = [];
     private currentPlayerId: number;
     private players: Array<GamePlayer>;
+    private turn: SocketBinder<number>;
 
     get CurrentPlayerId() { return this.currentPlayerId; }
 
-    constructor(players: Array<GamePlayer>) {
+    constructor(players: Array<GamePlayer>, turn: SocketBinder<number>) {
         this.players = players;
+        this.turn = turn;
+        turn.Value = 0;
     }
 
     //1週分のターンを計算
     private calculate() {
         this.turnPlayerIdList = this.players.sort(cmp).map(x => x.PlayerId);
+        this.turn.Value = this.turn.Value + 1;
     }
 
     nextTurnPlayerId(): number {
@@ -34,6 +39,10 @@ export class TurnManager {
         }
         this.currentPlayerId = nextPlayerId;
         return this.currentPlayerId;
+    }
+
+    sendToSocket(socket: SocketIO.Socket) {
+        this.turn.updateAt(socket);
     }
 
 }

@@ -24,11 +24,11 @@ export class BoardGame {
     private logMessageList: SocketBinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
     private warPairList: SocketBinderList<WarPair>;
-    private turn: SocketBinder<number>;
     private actionCardStacks: ActionCardStacks;
     private boardGameStatusChanger: BoardGameStatusChanger;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
+        this.boardSocket = boardSocket;
         this.boardGameStatusChanger = new BoardGameStatusChanger();
         let numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
         numberOfActionCardList.setNamespaceSocket(this.boardSocket);
@@ -36,12 +36,11 @@ export class BoardGame {
 
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
         gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
-        this.gamePlayers = new GamePlayers(gameMasterPlayerId);
-        this.boardSocket = boardSocket;
+        const turn = new SocketBinder<number>("turn");
+        turn.setNamespaceSocket(this.boardSocket);
+        this.gamePlayers = new GamePlayers(gameMasterPlayerId, turn);
         this.roomId = roomId;
-        this.turn = new SocketBinder<number>("turn");
-        this.turn.setNamespaceSocket(this.boardSocket);
-        this.turn.Value = 5;
+
         this.warPairList = new SocketBinderList<WarPair>("warPairList");
         this.warPairList.setNamespaceSocket(this.boardSocket);
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
@@ -70,7 +69,6 @@ export class BoardGame {
             this.logMessageList.updateAt(socket);
             this.eventLogMessage.updateAt(socket);
             this.warPairList.updateAt(socket);
-            this.turn.updateAt(socket);
             this.actionCardStacks.updateAt(socket);
             const boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
             const boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
