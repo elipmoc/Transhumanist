@@ -1,7 +1,7 @@
 import { GamePlayers } from "./gamePlayers";
 import { yamlGet } from "./yamlGet";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
-import { ActionCardStacks } from "./Card/actionCardStacks";
+import { ActionCardStacks } from "./drawCard/actionCardStacks";
 
 export class BoardGameStarter {
     private gamePlayers: GamePlayers;

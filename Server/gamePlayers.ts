@@ -1,15 +1,10 @@
 import { GamePlayer } from "./gamePlayer";
 import { PlayerData } from "./playerData";
 import { SocketBinder } from "./socketBinder";
-import { ResponseGamePlayerState } from "../Share/responseGamePlayerState";
-import { SocketBinderList } from "./socketBinderList";
-import { DiceNumber } from "../Share/diceNumber";
-import { ResourceName } from "../Share/Yaml/resourceYamlData";
-import { ActionCardName } from "../Share/Yaml/actionCardYamlData";
-import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
 import { arrayshuffle } from "../Share/utility";
 import { TurnManager } from "./turnManager";
+import { SocketNamespace } from "./socketBindManager";
 
 
 export class GamePlayers {
@@ -17,8 +12,10 @@ export class GamePlayers {
     private gameMasterPlayerId: SocketBinder<number | null>;
     private turnManager: TurnManager;
 
-    constructor(gameMasterPlayerId: SocketBinder<number | null>, turn: SocketBinder<number>) {
-        this.gameMasterPlayerId = gameMasterPlayerId;
+    constructor(boardSocketManager: SocketNamespace) {
+        this.gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
+        const turn = new SocketBinder<number>("turn");
+        boardSocketManager.addSocketBinder(this.gameMasterPlayerId, turn);
         this.turnManager = new TurnManager(this.gamePlayerList, turn);
     }
 
@@ -37,12 +34,9 @@ export class GamePlayers {
 
     addMember(
         playerData: PlayerData, playerId: number,
-        state: SocketBinder<ResponseGamePlayerState>, resourceList: SocketBinderList<ResourceName>
-        , buildActionList: SocketBinderList<ActionCardName>, diceList: SocketBinder<DiceNumber[]>
-        , actionCardList: SocketBinderList<string | null>
-        , playerCond: SocketBinder<GamePlayerCondition>
+        boardSocketManager: SocketNamespace
     ) {
-        const player = new GamePlayer(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond);
+        const player = new GamePlayer(playerData, playerId, boardSocketManager);
         if (this.gameMasterPlayerId.Value == null) {
             this.gameMasterPlayerId.Value = playerId;
             player.IsGameMaster = true;

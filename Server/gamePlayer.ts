@@ -8,6 +8,7 @@ import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { ActionCardName, ActionCardYamlData } from "../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
+import { SocketNamespace } from "./socketBindManager";
 
 export class GamePlayer {
     private playerId: number;
@@ -42,70 +43,36 @@ export class GamePlayer {
     constructor(
         playerData: PlayerData,
         playerId: number,
-        state: SocketBinder<ResponseGamePlayerState>,
-        resourceList: SocketBinderList<ResourceName>,
-        buildActionList: SocketBinderList<ActionCardName>,
-        diceList: SocketBinder<DiceNumber[]>,
-        actionCardList: SocketBinderList<string | null>,
-        playerCond: SocketBinder<GamePlayerCondition>
+        boardSocketManager: SocketNamespace
     ) {
-        this.diceList = diceList;
+        const state = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + playerId);
+        this.resourceList = new SocketBinderList<ResourceName>("ResourceKindList" + playerId);
+        this.buildActionList = new SocketBinderList<ActionCardName>("BuildActionKindList" + playerId);
+        this.diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId);
+        this.actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
+        this.playerCond = new SocketBinder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
+        boardSocketManager.addSocketBinder(state, this.resourceList, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
+
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
         this.state = new GamePlayerState(state, playerData.getName());
-        this.resourceList = resourceList;
-        this.buildActionList = buildActionList;
-        this.actionCardList = actionCardList;
         this.buildActionList.Value = [
-            "採掘施設",
-            "治療施設",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "教会",
-            "核融合炉",
+            "採掘施設", "治療施設", "教会", "教会",
+            "教会", "教会", "教会", "教会", "教会",
+            "教会", "教会", "教会", "教会", "教会",
+            "教会", "教会", "教会", "核融合炉",
             "ロボット工場",
         ];
         this.resourceList.Value = [
-            "人間",
-            "人間",
-            "人間",
-            "人間",
-            "人間",
-            "聖書",
-            "聖書",
-            "CPU",
-            "CPU",
-            "CPU",
-            "CPU",
-            "CPU",
-            "CPU",
-            "CPU",
-            "拡張人間",
-            "拡張人間",
-            "拡張人間",
-            "拡張人間",
-            "拡張人間",
-            "拡張人間",
-            "拡張人間",
+            "人間", "人間", "人間", "人間", "人間", "聖書",
+            "聖書", "CPU", "CPU", "CPU", "CPU", "CPU",
+            "CPU", "CPU", "拡張人間", "拡張人間", "拡張人間",
+            "拡張人間", "拡張人間", "拡張人間", "拡張人間",
             "テラフォーミング",
         ];
-        actionCardList.Value = [null, null, null, null, null];
-        this.playerCond = playerCond;
-        playerCond.Value = GamePlayerCondition.Start;
-
+        this.actionCardList.Value = [null, null, null, null, null];
+        this.playerCond.Value = GamePlayerCondition.Start;
     }
     drawActionCard(card: ActionCardYamlData) {
         const index = this.actionCardList.Value.findIndex(x => x == null);
