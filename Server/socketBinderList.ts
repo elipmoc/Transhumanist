@@ -3,8 +3,11 @@ import { SocketBinder } from "./socketBinder";
 export class SocketBinderList<T> extends SocketBinder<T[]> {
     //この時渡すソケットは一斉送信用の用途で使われる
     constructor(
-        valueName: string) {
-        super(valueName);
+        valueName: string,
+        privateFlag: boolean = false,
+        privateSocketTags: Array<string> = []
+    ) {
+        super(valueName, privateFlag, privateSocketTags);
         this.Value = [];
     }
 

@@ -24,8 +24,4 @@ export class GamePlayerState {
         this.state.Value.uncertainty = startStatusYamlData.uncertainty;
         this.state.update();
     }
-
-    sendToSocket(socket: SocketIO.Socket) {
-        this.state.updateAt(socket);
-    }
 }

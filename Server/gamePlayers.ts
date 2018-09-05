@@ -70,10 +70,4 @@ export class GamePlayers {
             else player.setMyTurn();
         })
     }
-
-    sendToSocket(socket: SocketIO.Socket) {
-        this.gamePlayerList.forEach(x => x.sendToSocket(socket));
-        this.gameMasterPlayerId.updateAt(socket);
-        this.turnManager.sendToSocket(socket);
-    }
 }

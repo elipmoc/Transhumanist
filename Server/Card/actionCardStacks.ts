@@ -48,10 +48,6 @@ export class ActionCardStacks {
         this.updateNumberOfActionCards();
     }
 
-    updateAt(socket: SocketIO.Socket) {
-        this.numberOfActionCardList.updateAt(socket);
-    }
-
     private updateNumberOfActionCards() {
         let numberOfActionCards = this.actionCardStackPairList.map(x => x.getNumberOfActionCard());
         numberOfActionCards.push({ currentNumber: 0, dustNumber: 0, maxNumber: 0 });

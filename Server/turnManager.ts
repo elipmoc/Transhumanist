@@ -40,9 +40,4 @@ export class TurnManager {
         this.currentPlayerId = nextPlayerId;
         return this.currentPlayerId;
     }
-
-    sendToSocket(socket: SocketIO.Socket) {
-        this.turn.updateAt(socket);
-    }
-
 }

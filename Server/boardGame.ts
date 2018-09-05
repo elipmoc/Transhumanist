@@ -16,10 +16,12 @@ import { BoardGameStarter } from "./boardGameStarter";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
 import { ActionCardStacks } from "./Card/actionCardStacks";
 import { BoardGameTurnRotation } from "./boardGameTurnRotation";
+import { SocketNamespace, SocketBindManager } from "./socketBindManager";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
-    private boardSocket: SocketIO.Namespace;
+    private socketManager: SocketBindManager;
+    private boardsocketManager: SocketNamespace;
     private roomId: number;
     private logMessageList: SocketBinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder<EventLogMessageForClient>;
@@ -28,24 +30,20 @@ export class BoardGame {
     private boardGameStatusChanger: BoardGameStatusChanger;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
-        this.boardSocket = boardSocket;
+        this.socketManager = new SocketBindManager();
+        this.boardsocketManager = this.socketManager.registNamespace("board", boardSocket);
         this.boardGameStatusChanger = new BoardGameStatusChanger();
         let numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
-        numberOfActionCardList.setNamespaceSocket(this.boardSocket);
         this.actionCardStacks = new ActionCardStacks(numberOfActionCardList);
 
         const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
-        gameMasterPlayerId.setNamespaceSocket(this.boardSocket);
         const turn = new SocketBinder<number>("turn");
-        turn.setNamespaceSocket(this.boardSocket);
         this.gamePlayers = new GamePlayers(gameMasterPlayerId, turn);
         this.roomId = roomId;
 
         this.warPairList = new SocketBinderList<WarPair>("warPairList");
-        this.warPairList.setNamespaceSocket(this.boardSocket);
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
         this.logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList");
-        this.logMessageList.setNamespaceSocket(this.boardSocket);
         this.logMessageList.Value = new Array();
         this.logMessageList.push(new LogMessageForClient("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
         this.logMessageList.push(new LogMessageForClient("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
@@ -54,8 +52,13 @@ export class BoardGame {
         this.logMessageList.push(new LogMessageForClient("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
         setTimeout(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
         this.eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage");
-        this.eventLogMessage.setNamespaceSocket(this.boardSocket);
         this.eventLogMessage.Value = new EventLogMessageForClient("イベント【人口爆発】が発生しました", "リソース欄にある『人間の』2倍の\n新たな『人間』を追加する。\n新たに追加する時、『人間』は削除対象に出来ない。");
+
+        this.boardsocketManager.addSocketBinder(
+            numberOfActionCardList, gameMasterPlayerId,
+            turn, this.warPairList, this.logMessageList, this.eventLogMessage
+        );
+
     }
 
     joinUser(socket: SocketIO.Socket, uuid: string) {
@@ -63,13 +66,7 @@ export class BoardGame {
         if (gamePlayer) {
             socket = socket.join(`room${this.roomId}`);
 
-            //初期データを送信する
-            this.gamePlayers.sendToSocket(socket);
-            gamePlayer.addSocket(socket);
-            this.logMessageList.updateAt(socket);
-            this.eventLogMessage.updateAt(socket);
-            this.warPairList.updateAt(socket);
-            this.actionCardStacks.updateAt(socket);
+            this.boardsocketManager.addSocket(`player${gamePlayer.PlayerId}`, socket);
             const boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
             const boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
             new BoardPlayerHandle(socket, gamePlayer, boardGameStarter, boardGameTurnRotation);
@@ -78,15 +75,12 @@ export class BoardGame {
 
     addMember(playerData: PlayerData, playerId: number) {
         const state = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + playerId);
-        state.setNamespaceSocket(this.boardSocket);
         const resourceList = new SocketBinderList<ResourceName>("ResourceKindList" + playerId);
-        resourceList.setNamespaceSocket(this.boardSocket);
         const buildActionList = new SocketBinderList<ActionCardName>("BuildActionKindList" + playerId);
-        buildActionList.setNamespaceSocket(this.boardSocket);
         const diceList = new SocketBinder<DiceNumber[]>("diceList" + playerId);
-        diceList.setNamespaceSocket(this.boardSocket);
-        const actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId);
-        const playerCond = new SocketBinder<GamePlayerCondition>("gamePlayerCondition");
+        const actionCardList = new SocketBinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
+        const playerCond = new SocketBinder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
+        this.boardsocketManager.addSocketBinder(state, resourceList, buildActionList, diceList, actionCardList, playerCond);
         this.gamePlayers.addMember(playerData, playerId, state, resourceList, buildActionList, diceList, actionCardList, playerCond);
     }
 }

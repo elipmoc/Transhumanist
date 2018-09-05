@@ -107,19 +107,6 @@ export class GamePlayer {
         playerCond.Value = GamePlayerCondition.Start;
 
     }
-
-    //ユーザーにsocketBinderの値を送信する
-    sendToSocket(socket: SocketIO.Socket) {
-        this.state.sendToSocket(socket);
-        this.resourceList.updateAt(socket);
-        this.buildActionList.updateAt(socket);
-        this.diceList.updateAt(socket);
-    }
-
-    addSocket(socket: SocketIO.Socket) {
-        this.actionCardList.addSocket(socket);
-        this.playerCond.addSocket(socket);
-    }
     drawActionCard(card: ActionCardYamlData) {
         const index = this.actionCardList.Value.findIndex(x => x == null);
         if (index == -1)
