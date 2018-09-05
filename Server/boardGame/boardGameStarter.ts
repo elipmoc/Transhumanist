@@ -1,5 +1,5 @@
 import { GamePlayers } from "./gamePlayers";
-import { yamlGet } from "./yamlGet";
+import { yamlGet } from "../yamlGet";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 

@@ -1,20 +1,19 @@
 import { GamePlayer } from "./gamePlayer";
-import { PlayerData } from "./playerData";
-import { SocketBinder } from "./socketBinder";
-import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
-import { arrayshuffle } from "../Share/utility";
+import { PlayerData } from "../playerData";
+import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
+import { arrayshuffle } from "../../Share/utility";
 import { TurnManager } from "./turnManager";
-import { SocketNamespace } from "./socketBindManager";
+import { SocketBinder } from "../socketBinder";
 
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
-    private gameMasterPlayerId: SocketBinder<number | null>;
+    private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
 
-    constructor(boardSocketManager: SocketNamespace) {
-        this.gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId")
-        const turn = new SocketBinder<number>("turn");
+    constructor(boardSocketManager: SocketBinder.Namespace) {
+        this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
+        const turn = new SocketBinder.Binder<number>("turn");
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId, turn);
         this.turnManager = new TurnManager(this.gamePlayerList, turn);
     }
@@ -34,7 +33,7 @@ export class GamePlayers {
 
     addMember(
         playerData: PlayerData, playerId: number,
-        boardSocketManager: SocketNamespace
+        boardSocketManager: SocketBinder.Namespace
     ) {
         const player = new GamePlayer(playerData, playerId, boardSocketManager);
         if (this.gameMasterPlayerId.Value == null) {

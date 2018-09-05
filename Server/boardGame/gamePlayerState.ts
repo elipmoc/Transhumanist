@@ -1,13 +1,13 @@
-import { SocketBinder } from "./socketBinder";
-import { ResponseGamePlayerState } from "../Share/responseGamePlayerState";
-import { StartStatusYamlData } from "../Share/Yaml/startStatusYamlData";
+import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
+import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
+import { SocketBinder } from "../socketBinder";
 
 export class GamePlayerState {
-    private state: SocketBinder<ResponseGamePlayerState>;
+    private state: SocketBinder.Binder<ResponseGamePlayerState>;
 
     get State() { return this.state.Value; }
 
-    constructor(state: SocketBinder<ResponseGamePlayerState>, playerName: string) {
+    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>, playerName: string) {
         this.state = state;
         this.state.Value = {
             playerName: playerName,

@@ -4,9 +4,8 @@ import { createMyShadow } from "../../utility";
 
 export class Player1Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super(queue);
+        super(queue, "evenPlayerFrame", "evenPlayerFrame2");
 
-        this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
         this.playerFrame.regX = this.playerFrame.image.width / 2;
         this.playerFrame.regY = 0;
 
@@ -71,9 +70,8 @@ export class Player1Window extends PlayerWindowBase {
 
 export class Player2Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super(queue);
+        super(queue, "oddPlayerFrame", "oddPlayerFrame2");
 
-        this.playerFrame.image = <any>queue.getResult("oddPlayerFrame");
         this.playerFrame.regY = this.playerFrame.image.height / 2;
 
         this.y = global.canvasHeight / 2;
@@ -137,9 +135,8 @@ export class Player2Window extends PlayerWindowBase {
 
 export class Player3Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super(queue);
+        super(queue, "evenPlayerFrame", "evenPlayerFrame2");
 
-        this.playerFrame.image = <any>queue.getResult("evenPlayerFrame");
         this.playerFrame.regX = this.playerFrame.image.width / 2;
         this.playerFrame.regY = this.playerFrame.image.height;
         this.playerFrame.rotation = 180;
@@ -204,9 +201,8 @@ export class Player3Window extends PlayerWindowBase {
 
 export class Player4Window extends PlayerWindowBase {
     constructor(queue: createjs.LoadQueue) {
-        super(queue);
+        super(queue, "oddPlayerFrame", "oddPlayerFrame2");
 
-        this.playerFrame.image = <any>queue.getResult("oddPlayerFrame");
         this.playerFrame.regY = this.playerFrame.image.height / 2;
         this.playerFrame.regX = this.playerFrame.image.width;
         this.playerFrame.rotation = 180;

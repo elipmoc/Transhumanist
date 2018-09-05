@@ -1,19 +1,18 @@
-import { ActionCardHash, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
-import { yamlGet } from "../yamlGet";
+import { ActionCardHash, ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../../Share/Yaml/actionCardYamlDataGen";
+import { yamlGet } from "../../yamlGet";
 import { ActionCardStackPair } from "./actionCardStackPair";
-import { SocketBinder } from "../socketBinder";
-import { NumberOfActionCard } from "../../Share/numberOfActionCard";
-import { SocketNamespace } from "../socketBindManager";
+import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
+import { SocketBinder } from "../../socketBinder";
 
 //アクションカードの山札をレベルごとに持つクラス
 export class ActionCardStacks {
     static maxLevel = 5;
     private actionCardStackPairList: ActionCardStackPair[] = [];
-    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>;
+    private numberOfActionCardList: SocketBinder.Binder<NumberOfActionCard[]>;
 
-    constructor(boardSocketManager: SocketNamespace) {
-        this.numberOfActionCardList = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard");
+    constructor(boardSocketManager: SocketBinder.Namespace) {
+        this.numberOfActionCardList = new SocketBinder.Binder<NumberOfActionCard[]>("numberOfActionCard");
         boardSocketManager.addSocketBinder(this.numberOfActionCardList);
         const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         for (let i = 0; i < ActionCardStacks.maxLevel; i++)

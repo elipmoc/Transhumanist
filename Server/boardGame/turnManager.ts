@@ -1,5 +1,5 @@
 import { GamePlayer } from "./gamePlayer";
-import { SocketBinder } from "./socketBinder";
+import { SocketBinder } from "../socketBinder";
 
 function cmp(a: GamePlayer, b: GamePlayer) {
     if (a.GameState.State.speed > b.GameState.State.speed)
@@ -15,11 +15,11 @@ export class TurnManager {
     private turnPlayerIdList: Array<number> = [];
     private currentPlayerId: number;
     private players: Array<GamePlayer>;
-    private turn: SocketBinder<number>;
+    private turn: SocketBinder.Binder<number>;
 
     get CurrentPlayerId() { return this.currentPlayerId; }
 
-    constructor(players: Array<GamePlayer>, turn: SocketBinder<number>) {
+    constructor(players: Array<GamePlayer>, turn: SocketBinder.Binder<number>) {
         this.players = players;
         this.turn = turn;
         turn.Value = 0;
