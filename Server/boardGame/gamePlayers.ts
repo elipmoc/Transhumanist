@@ -13,9 +13,8 @@ export class GamePlayers {
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
-        const turn = new SocketBinder.Binder<number>("turn");
-        boardSocketManager.addSocketBinder(this.gameMasterPlayerId, turn);
-        this.turnManager = new TurnManager(this.gamePlayerList, turn);
+        boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
+        this.turnManager = new TurnManager(this.gamePlayerList, boardSocketManager);
     }
 
     getPlayerAll(func: (x: GamePlayer) => void) {

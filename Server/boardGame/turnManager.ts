@@ -13,16 +13,19 @@ function cmp(a: GamePlayer, b: GamePlayer) {
 
 export class TurnManager {
     private turnPlayerIdList: Array<number> = [];
-    private currentPlayerId: number;
+    private currentTurnPlayerId: SocketBinder.Binder<number>;
     private players: Array<GamePlayer>;
     private turn: SocketBinder.Binder<number>;
 
-    get CurrentPlayerId() { return this.currentPlayerId; }
+    get CurrentPlayerId() { return this.currentTurnPlayerId.Value; }
 
-    constructor(players: Array<GamePlayer>, turn: SocketBinder.Binder<number>) {
+    constructor(players: Array<GamePlayer>, boardSocketManager: SocketBinder.Namespace) {
+        this.turn = new SocketBinder.Binder<number>("turn");
+        this.currentTurnPlayerId = new SocketBinder.Binder<number>("currentTurnPlayerId");
+        boardSocketManager.addSocketBinder(this.turn, this.currentTurnPlayerId);
         this.players = players;
-        this.turn = turn;
-        turn.Value = 0;
+        this.turn.Value = 0;
+        this.currentTurnPlayerId.Value = 0;
     }
 
     //1週分のターンを計算
@@ -37,7 +40,7 @@ export class TurnManager {
             this.calculate();
             return this.nextTurnPlayerId();
         }
-        this.currentPlayerId = nextPlayerId;
-        return this.currentPlayerId;
+        this.currentTurnPlayerId.Value = nextPlayerId;
+        return this.currentTurnPlayerId.Value;
     }
 }
