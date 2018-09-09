@@ -57,7 +57,13 @@ window.onload = () => {
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
         { id: "bg_level6", src: "Img/background/bg_level6.png" },
         { id: "gm_icon", src: "Img/gmIcon.png" },
-        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.mp3" }
+        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.mp3" },
+        { id: "bell", src: "Se/bell.mp3" },
+        { id: "clap", src: "Se/clap.mp3" },
+        { id: "surrender", src: "Se/surrender.mp3" },
+        { id: "turnStart", src: "Se/turnStart.mp3" },
+        { id: "turnStart2", src: "Se/turnStart2.mp3" },
+        { id: "warAlarm", src: "Se/warAlarm.mp3" },
     ]);
 }
 
