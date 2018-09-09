@@ -15,6 +15,8 @@ export interface ActionCardYamlData {
     description: string;
     cost: ResourceItem[];
     commands: Command[];
+    war_use: boolean;
+    conditionDescript: string;
 }
 
 export interface ResourceItem {
