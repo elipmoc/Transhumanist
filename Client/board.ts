@@ -4,6 +4,7 @@ import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
+import { SoundManager } from "./soundManager";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -68,8 +69,7 @@ window.onload = () => {
 }
 
 function preloadImage(yamls: Yamls) {
-    createjs.Sound.setVolume(0.05);
-    createjs.Sound.play("bgm_level3");
+    SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
