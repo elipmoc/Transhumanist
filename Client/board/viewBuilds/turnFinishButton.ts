@@ -2,6 +2,7 @@ import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { TurnFinishButton } from "../views/turnFinishButton";
+import { SoundManager } from "../../soundManager";
 
 //ターン終了ボタン生成
 export function build(bindParams: BindParams) {
@@ -27,9 +28,11 @@ export function build(bindParams: BindParams) {
                 break;
             case GamePlayerCondition.MyTurn:
                 turnFinishButton.setText("ターン終了");
+                SoundManager.sePlay("turnStart");
                 break;
             case GamePlayerCondition.Wait:
                 turnFinishButton.setText("");
+                SoundManager.sePlay("turnStart2");
                 break;
 
         }

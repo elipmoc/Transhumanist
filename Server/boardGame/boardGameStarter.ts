@@ -1,7 +1,7 @@
 import { GamePlayers } from "./gamePlayers";
-import { yamlGet } from "./yamlGet";
+import { yamlGet } from "../yamlGet";
 import { BoardGameStatusChanger } from "./boardGameStatusChanger";
-import { ActionCardStacks } from "./Card/actionCardStacks";
+import { ActionCardStacks } from "./drawCard/actionCardStacks";
 
 export class BoardGameStarter {
     private gamePlayers: GamePlayers;
@@ -20,8 +20,10 @@ export class BoardGameStarter {
             this.gamePlayers.initTurnSet();
             this.gamePlayers.getPlayerAll(x => {
                 x.drawActionCard(this.actionCardStacks.draw(1));
-                for (let i = 0; i < 4; i++)
+                for (let i = 0; i < 4; i++) {
                     x.drawActionCard(this.actionCardStacks.draw(Math.floor(Math.random() * 2) + 2));
+                    x.setResourceList();
+                }
             });
         }
     }

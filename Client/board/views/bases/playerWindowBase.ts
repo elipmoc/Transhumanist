@@ -9,11 +9,16 @@ export class PlayerWindowBase extends createjs.Container {
     protected negativeText: createjs.Text;
     protected playerFrame: createjs.Bitmap;
     protected gmIcon: createjs.Bitmap;
+    private playerFrameImage: HTMLImageElement;
+    private myTurnPlayerFrameImage: HTMLImageElement;
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: createjs.LoadQueue, playerFrameImageName: String, myTurnPlayerFrameImageName: String) {
         super();
+        this.playerFrameImage = <HTMLImageElement>queue.getResult(playerFrameImageName);
+        this.myTurnPlayerFrameImage = <HTMLImageElement>queue.getResult(myTurnPlayerFrameImageName);
         this.playerNameText = new createjs.Text();
         this.playerFrame = new createjs.Bitmap("");
+        this.playerFrame.image = this.playerFrameImage;
         this.speedText = new createjs.Text();
         this.resourceText = new createjs.Text();
         this.activityRangeText = new createjs.Text();
@@ -53,7 +58,14 @@ export class PlayerWindowBase extends createjs.Container {
     setNegative(negative: number) {
         this.negativeText.text = "Negative:" + negative;
     }
-    public visibleGMIcon(flag: boolean) {
+    visibleGMIcon(flag: boolean) {
         this.gmIcon.visible = flag;
+    }
+    setMyTurn(flag: boolean) {
+        if (flag) {
+            this.playerFrame.image = this.myTurnPlayerFrameImage;
+        } else {
+            this.playerFrame.image = this.playerFrameImage;
+        }
     }
 }

@@ -4,8 +4,10 @@ import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
+import { SoundManager } from "./soundManager";
 
 const queue = new createjs.LoadQueue();
+queue.installPlugin(createjs.Sound);
 window.onload = () => {
 
     queue.on("complete", () => getYamls().then(yamls => {
@@ -55,22 +57,24 @@ window.onload = () => {
         { id: "bg_level4", src: "Img/background/bg_level4.png" },
         { id: "bg_level5", src: "Img/background/bg_level5.png" },
         { id: "bg_level6", src: "Img/background/bg_level6.png" },
-        { id: "gm_icon", src: "Img/gmIcon.png" }
+        { id: "gm_icon", src: "Img/gmIcon.png" },
+        { id: "bgm_level3", src: "Bgm/transhumanist_level3.1.mp3" },
+        { id: "bell", src: "Se/bell.mp3" },
+        { id: "clap", src: "Se/clap.mp3" },
+        { id: "surrender", src: "Se/surrender.mp3" },
+        { id: "turnStart", src: "Se/turnStart.mp3" },
+        { id: "turnStart2", src: "Se/turnStart2.mp3" },
+        { id: "warAlarm", src: "Se/warAlarm.mp3" },
     ]);
 }
 
 function preloadImage(yamls: Yamls) {
+    SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new createjs.Bitmap(queue.getResult("bg_level4"));
     background.alpha = 0.5;
     stage.addChild(background);
-
-    //イベント枠
-    let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
-    topWindowsR.scaleX = -1;
-    topWindowsR.x = global.canvasWidth;
-    stage.addChild(topWindowsR);
 
     const socket = io("/board");
 

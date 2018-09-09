@@ -29,6 +29,12 @@ export function build(bindParams: BindParams) {
         gamePlayerState.onUpdate(updateState);
         bindParams.stage.addChild(playerWindowList[i]);
     }
+    const currentTurnPlayerId = new SocketBinder<number>("currentTurnPlayerId", bindParams.socket);
+    currentTurnPlayerId.onUpdate(id => {
+        playerWindowList.forEach(x => x.setMyTurn(false));
+        playerWindowList[(4 + id - bindParams.playerId) % 4].setMyTurn(true);
+        bindParams.stage.update();
+    })
     const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
     gameMasterPlayerId.onUpdate(id => {
         playerWindowList[(4 + id - bindParams.playerId) % 4].visibleGMIcon(true);

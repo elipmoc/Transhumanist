@@ -16,6 +16,6 @@ export function build(bindParams: BindParams) {
     //左上のやつ生成
     const topWindowL = new TopWindowL(bindParams.queue, optionWindow);
     const turn = new SocketBinder<number>("turn", bindParams.socket);
-    turn.onUpdate(x => topWindowL.setTurn(x));
+    turn.onUpdate(x => { topWindowL.setTurn(x); bindParams.stage.update(); });
     bindParams.stage.addChild(topWindowL);
 }

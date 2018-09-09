@@ -13,6 +13,17 @@ export function GenerateResourceYamlData(yamlData: ResourceYamlData[]) {
     return resourceHash;
 }
 
+export function GenerateResourceYamlDataArray(yamlData: ResourceYamlData[]) {
+    CheckUndefined(yamlData.length, "resourceのyamlが配列ではありません");
+    yamlData.forEach((x, index) => {
+        CheckUndefined(x.name, "resourceのyamlにnameがありません");
+        CheckUndefined(x.description, "resourceのyamlにdescriptionがありません");
+        CheckUndefined(x.level, "resourceのyamlにlevelがありません");
+        x.index = index;
+    });
+    return yamlData;
+}
+
 export interface ResourceHash {
     [index: string]: ResourceYamlData | undefined;
 }

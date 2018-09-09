@@ -8,11 +8,8 @@ export function createRouter() {
     myRouter.get("/", (req: any, res: any) => {
         sendHtml(res, "./Html/login.html");
     });
-    myRouter.get("/Client/Lib/easel.js", (req: any, res: any) => {
-        sendHtml(res, "./Client/Lib/easeljs-0.8.2.min.js");
-    });
-    myRouter.get("/Client/Lib/preload.js", (req: any, res: any) => {
-        sendHtml(res, "./Client/Lib/preloadjs-0.6.2.min.js");
+    myRouter.get("/Client/Lib/:path", (req: any, res: any) => {
+        sendHtml(res, "./Client/Lib/" + req.params.path);
     });
     myRouter.get("/Css/:path", (req: any, res: any) => {
         sendCss(res, "./Css/" + req.params.path);
@@ -25,6 +22,12 @@ export function createRouter() {
     });
     myRouter.get("/Img/ui/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/ui/" + req.params.path);
+    });
+    myRouter.get("/Bgm/:path", (req: any, res: any) => {
+        sendMp3(res, "./Resource/Bgm/" + req.params.path);
+    });
+    myRouter.get("/Se/:path", (req: any, res: any) => {
+        sendMp3(res, "./Resource/Se/" + req.params.path);
     });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/page/" + req.params.path);
@@ -51,41 +54,35 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'text/html'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "text/html");
 }
 
 function sendCss(res: any, path: string) {
-    res.writeHead(200, {
-        'Content-Type': 'text/css'
-    });
-    res.end(fs.readFileSync(path));
+    readFileResponse(res, path, "text/css");
 }
 
 function sendJs(res: any, path: string) {
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'text/plane'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "text/plane");
 }
 function sendPng(res: any, path: string) {
-
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, {
-            'Content-Type': 'image/png'
-        });
-        res.end(data);
-    });
+    readFileResponse(res, path, "image/png");
 }
 function sendYaml(res: any, path: string) {
     res.writeHead(200, {
         'Content-Type': 'text/plain'
     });
     res.end(JSON.stringify(yamlGet(path)));
+}
+
+function sendMp3(res: any, path: string) {
+    readFileResponse(res, path, "audio/mp3");
+}
+
+function readFileResponse(res: any, path: string, contentType: string) {
+    fs.readFile(path, (_, data) => {
+        res.writeHead(200, {
+            'Content-Type': contentType
+        });
+        res.end(data);
+    });
 }

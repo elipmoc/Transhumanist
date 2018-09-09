@@ -1,5 +1,6 @@
 import { ButtonBase } from "./bases/buttonBase";
 import { Bar } from "./bar";
+import { SoundManager } from "../../soundManager";
 
 //オプション罰ボタン
 export class OptionCrossButton extends ButtonBase {
@@ -80,11 +81,19 @@ export class OptionWindow extends createjs.Container {
         const BgmBar = new Bar(queue);
         BgmBar.x = -170;
         BgmBar.y = -115;
+        BgmBar.onChangedValue((value) => {
+            SoundManager.BgmVolume = value;
+        });
+        BgmBar.setBarValue(0.5);
         this.addChild(BgmBar);
 
         const SeBar = new Bar(queue);
         SeBar.x = -170;
         SeBar.y = -75;
+        SeBar.onChangedValue((value) => {
+            SoundManager.SeVolume = value;
+        });
+        SeBar.setBarValue(0.5);
         this.addChild(SeBar);
 
     }

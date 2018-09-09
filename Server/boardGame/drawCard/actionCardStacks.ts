@@ -1,18 +1,19 @@
-import { ActionCardHash, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
-import { yamlGet } from "../yamlGet";
+import { ActionCardHash, ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../../Share/Yaml/actionCardYamlDataGen";
+import { yamlGet } from "../../yamlGet";
 import { ActionCardStackPair } from "./actionCardStackPair";
-import { SocketBinder } from "../socketBinder";
-import { NumberOfActionCard } from "../../Share/numberOfActionCard";
+import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
+import { SocketBinder } from "../../socketBinder";
 
 //アクションカードの山札をレベルごとに持つクラス
 export class ActionCardStacks {
     static maxLevel = 5;
     private actionCardStackPairList: ActionCardStackPair[] = [];
-    private numberOfActionCardList: SocketBinder<NumberOfActionCard[]>;
+    private numberOfActionCardList: SocketBinder.Binder<NumberOfActionCard[]>;
 
-    constructor(numberOfActionCardList: SocketBinder<NumberOfActionCard[]>) {
-        this.numberOfActionCardList = numberOfActionCardList;
+    constructor(boardSocketManager: SocketBinder.Namespace) {
+        this.numberOfActionCardList = new SocketBinder.Binder<NumberOfActionCard[]>("numberOfActionCard");
+        boardSocketManager.addSocketBinder(this.numberOfActionCardList);
         const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         for (let i = 0; i < ActionCardStacks.maxLevel; i++)
             this.actionCardStackPairList.push(new ActionCardStackPair());
@@ -46,10 +47,6 @@ export class ActionCardStacks {
             throw "levelが不正です";
         this.actionCardStackPairList[card.level - 1].throwAway(card);
         this.updateNumberOfActionCards();
-    }
-
-    updateAt(socket: SocketIO.Socket) {
-        this.numberOfActionCardList.updateAt(socket);
     }
 
     private updateNumberOfActionCards() {
