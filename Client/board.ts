@@ -76,12 +76,6 @@ function preloadImage(yamls: Yamls) {
     background.alpha = 0.5;
     stage.addChild(background);
 
-    //イベント枠
-    let topWindowsR = new createjs.Bitmap(queue.getResult("topWindows"));
-    topWindowsR.scaleX = -1;
-    topWindowsR.x = global.canvasWidth;
-    stage.addChild(topWindowsR);
-
     const socket = io("/board");
 
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };

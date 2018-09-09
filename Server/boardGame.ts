@@ -9,6 +9,7 @@ import { BoardGameTurnRotation } from "./boardGame/boardGameTurnRotation";
 import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
+import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
@@ -26,7 +27,8 @@ export class BoardGame {
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
         this.eventCardStack = new EventCardStack();
 
-        this.gamePlayers = new GamePlayers(this.boardsocketManager);
+        this.gamePlayers =
+            new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
         this.roomId = roomId;
         this.warPairList = new SocketBinder.BinderList<WarPair>("warPairList");
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);

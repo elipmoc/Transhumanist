@@ -4,6 +4,7 @@ import { BindParams } from "./bindParams";
 import * as warLine from "./viewBuilds/warLine";
 import * as playerWindow from "./viewBuilds/playerWindow";
 import * as topWindowL from "./viewBuilds/topWindowL";
+import * as topWindowR from "./viewBuilds/topWindowR";
 import * as handActionCardStorageWindow from "./viewBuilds/handActionCardStorageWindow";
 import * as eventLogWindow from "./viewBuilds/eventLogWindow";
 import * as playerResourceArea from "./viewBuilds/playerResourceArea";
@@ -17,6 +18,7 @@ import { ActionCardUseDecisionWindow } from "./views/handActionCard/actionCardUs
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {
+    topWindowR.build(bindParams);
     warLine.build(bindParams);
     playerWindow.build(bindParams);
     const resourceHover = new ResourceHover();

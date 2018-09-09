@@ -4,6 +4,7 @@ import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { arrayshuffle } from "../../Share/utility";
 import { TurnManager } from "./turnManager";
 import { SocketBinder } from "../socketBinder";
+import { EventCardDrawer } from "./eventCardDrawer";
 
 
 export class GamePlayers {
@@ -11,10 +12,10 @@ export class GamePlayers {
     private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
 
-    constructor(boardSocketManager: SocketBinder.Namespace) {
+    constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
-        this.turnManager = new TurnManager(this.gamePlayerList, boardSocketManager);
+        this.turnManager = new TurnManager(this.gamePlayerList, eventCardDrawer, boardSocketManager);
     }
 
     getPlayerAll(func: (x: GamePlayer) => void) {
