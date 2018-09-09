@@ -13,6 +13,7 @@ export function GenerateActionCardYamlData(data: ActionCardYamlData[], buildFlag
         x.commands.forEach(xx => {
             CheckCommand(xx);
         });
+        CheckUndefined(x.war_use, "war_useがありませんよ？");
         CheckUndefined(x.cost, "constがありませんよ？");
         CheckUndefined(x.level, "levelがありませんよ？");
         CheckUndefined(x.name, "nameがありませんよ？");
