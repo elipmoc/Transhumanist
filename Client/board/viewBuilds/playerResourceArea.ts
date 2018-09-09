@@ -18,13 +18,13 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
         new playerResourceAreas.Player4ResourceArea(bindParams.queue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceName>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const resourceKindList = new SocketBinderList<ResourceName | null>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
             list.forEach((resourceName, iconId) =>
                 playerResourceAreaList[i].setResource(
                     iconId,
                     resourceName,
-                    bindParams.yamls.resourceHash[resourceName].index,
+                    resourceName != null ? bindParams.yamls.resourceHash[resourceName].index : -1,
                     bindParams.queue));
             bindParams.stage.update();
         });

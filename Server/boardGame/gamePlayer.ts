@@ -1,18 +1,19 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
 import { DiceNumber } from "../../Share/diceNumber";
-import { ResourceName } from "../../Share/Yaml/resourceYamlData";
+import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/resourceYamlData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardName, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
+import { yamlGet } from "../yamlGet";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: GamePlayerState;
-    private resourceList: SocketBinder.BinderList<ResourceName>;
+    private resourceList: SocketBinder.BinderList<ResourceName | null>;
     private buildActionList: SocketBinder.BinderList<ActionCardName>;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private actionCardList: SocketBinder.BinderList<string | null>;
@@ -44,7 +45,7 @@ export class GamePlayer {
         boardSocketManager: SocketBinder.Namespace
     ) {
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
-        this.resourceList = new SocketBinder.BinderList<ResourceName>("ResourceKindList" + playerId);
+        this.resourceList = new SocketBinder.BinderList<ResourceName | null>("ResourceKindList" + playerId);
         this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
@@ -62,16 +63,21 @@ export class GamePlayer {
             "教会", "教会", "教会", "核融合炉",
             "ロボット工場",
         ];
-        this.resourceList.Value = [
-            "人間", "人間", "人間", "人間", "人間", "聖書",
-            "聖書", "CPU", "CPU", "CPU", "CPU", "CPU",
-            "CPU", "CPU", "拡張人間", "拡張人間", "拡張人間",
-            "拡張人間", "拡張人間", "拡張人間", "拡張人間",
-            "テラフォーミング",
-        ];
+        this.resourceList.Value = new Array(30);
+        this.resourceList.Value.fill(null);
+
         this.actionCardList.Value = [null, null, null, null, null];
         this.playerCond.Value = GamePlayerCondition.Start;
     }
+
+    setResourceList() {
+        this.resourceList.Value.fill("人間", 0, 4);
+        const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
+            x.level == 2);
+        this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
+        this.resourceList.update();
+    }
+
     drawActionCard(card: ActionCardYamlData) {
         const index = this.actionCardList.Value.findIndex(x => x == null);
         if (index == -1)

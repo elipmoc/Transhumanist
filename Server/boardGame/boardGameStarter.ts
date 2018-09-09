@@ -20,8 +20,10 @@ export class BoardGameStarter {
             this.gamePlayers.initTurnSet();
             this.gamePlayers.getPlayerAll(x => {
                 x.drawActionCard(this.actionCardStacks.draw(1));
-                for (let i = 0; i < 4; i++)
+                for (let i = 0; i < 4; i++) {
                     x.drawActionCard(this.actionCardStacks.draw(Math.floor(Math.random() * 2) + 2));
+                    x.setResourceList();
+                }
             });
         }
     }
