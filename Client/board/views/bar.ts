@@ -35,6 +35,11 @@ export class Bar extends createjs.Container {
         this.callBack(x / this.maxX);
     }
 
+    setBarValue(value: number) {
+        this.optionVolumeCursor.x = this.minX + (this.maxX - this.minX) * value;
+        this.callBack(value);
+    }
+
     onChangedValue(callBack: (value: number) => void) {
         this.callBack = callBack;
     }
