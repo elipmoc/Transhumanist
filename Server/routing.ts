@@ -26,6 +26,9 @@ export function createRouter() {
     myRouter.get("/Bgm/:path", (req: any, res: any) => {
         sendMp3(res, "./Resource/Bgm/" + req.params.path);
     });
+    myRouter.get("/Se/:path", (req: any, res: any) => {
+        sendMp3(res, "./Resource/Se/" + req.params.path);
+    });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/page/" + req.params.path);
     });
