@@ -13,6 +13,7 @@ import * as selectActionWindow from "./viewBuilds/selectActionWindow";
 import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
+import { ActionCardUseDecisionWindow } from "./views/handActionCard/actionCardUseDecisionWindow";
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {
@@ -24,8 +25,9 @@ export function viewBuild(bindParams: BindParams) {
     eventLogWindow.build(bindParams);
     const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, 3);
     playerBuildActionArea.build(actionCardHover, bindParams);
-    handActionCardStorageWindow.build(actionCardHover, bindParams);
-    bindParams.stage.addChild(actionCardHover, resourceHover);
+    const decision = new ActionCardUseDecisionWindow();
+    handActionCardStorageWindow.build(actionCardHover, decision, bindParams);
+    bindParams.stage.addChild(actionCardHover, resourceHover, decision);
     turnFinishButton.build(bindParams);
     declareWarButton.build(bindParams);
     selectActionWindow.build(bindParams);

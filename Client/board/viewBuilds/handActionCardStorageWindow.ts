@@ -6,10 +6,9 @@ import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 
 //手札ウインドウの生成
-export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
+export function build(actionCardHover: ActionCardHover, decision: ActionCardUseDecisionWindow, bindParams: BindParams) {
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.queue);
-    const decision = new ActionCardUseDecisionWindow();
     actionCardList.onUpdate(list => {
         list.forEach((actionCardName, index) =>
             actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName])
@@ -36,5 +35,4 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     });
 
     bindParams.stage.addChild(actionStorageWindow);
-    bindParams.stage.addChild(decision);
 }
