@@ -8,6 +8,7 @@ import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
 import { BoardGameTurnRotation } from "./boardGame/boardGameTurnRotation";
 import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
+import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
@@ -15,6 +16,7 @@ export class BoardGame {
     private roomId: number;
     private warPairList: SocketBinder.BinderList<WarPair>;
     private actionCardStacks: ActionCardStacks;
+    private eventCardStack: EventCardStack;
     private boardGameStatusChanger: BoardGameStatusChanger;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
@@ -22,6 +24,7 @@ export class BoardGame {
         this.boardGameStatusChanger = new BoardGameStatusChanger();
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
+        this.eventCardStack = new EventCardStack();
 
         this.gamePlayers = new GamePlayers(this.boardsocketManager);
         this.roomId = roomId;

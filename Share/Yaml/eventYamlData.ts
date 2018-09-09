@@ -14,6 +14,18 @@ export function GenerateEventYamlData(yamlData: Event[]) {
     return eventHash;
 }
 
+export function GenerateEventYamlDataArray(yamlData: Event[]) {
+    CheckUndefined(yamlData.length, "eventのyamlが配列ではありません");
+    yamlData.forEach((x, index) => {
+        CheckUndefined(x.name, "eventのyamlにnameがありません");
+        CheckUndefined(x.description, "eventのyamlにdescriptionがありません");
+        CheckUndefined(x.level, "eventのyamlにlevelがありません");
+        CheckUndefined(x.forever, "eventのyamlにforeverがありません");
+        x.index = index;
+    });
+    return yamlData;
+}
+
 export interface EventHash {
     [index: string]: Event | undefined;
 }
