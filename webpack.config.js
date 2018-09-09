@@ -9,7 +9,7 @@ module.exports = {
         "Client/login": "./Client/login.ts",
     },
     output: {
-        filename: './dist/[name].js'
+        filename: './[name].js'
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
