@@ -11,7 +11,7 @@ export class SoundManager {
     }
 
     private static seprops: createjs.PlayPropsConfig = new createjs.PlayPropsConfig().set({ volume: 0.5 });
-    private static bgmprops: createjs.PlayPropsConfig = new createjs.PlayPropsConfig().set({ volume: 0.5, loop: true });
+    private static bgmprops: createjs.PlayPropsConfig = new createjs.PlayPropsConfig().set({ volume: 0.5, loop: -1 });
 
     private static bgmInstance: createjs.AbstractSoundInstance = null;
 
