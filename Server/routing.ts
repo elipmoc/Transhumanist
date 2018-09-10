@@ -6,7 +6,7 @@ const finalhandler = require('finalhandler');
 export function createRouter() {
     let myRouter = router();
     myRouter.get("/", (req: any, res: any) => {
-        sendHtml(res, "./Html/login.html");
+        sendHtml(res, "./Html/index.html");
     });
     myRouter.get("/Client/Lib/:path", (req: any, res: any) => {
         sendHtml(res, "./Client/Lib/" + req.params.path);
