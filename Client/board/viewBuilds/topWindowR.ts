@@ -5,9 +5,12 @@ import { TopWindowR } from "../views/topWindowR";
 
 //右上のやつ生成
 export function build(bindParams: BindParams) {
-    bindParams.stage.addChild(new TopWindowR(bindParams.queue));
+    const topWindowR = new TopWindowR(bindParams.queue);
+    bindParams.stage.addChild(topWindowR);
     const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
     nowEvent.onUpdate(x => {
-        alert(x);
+        if (x == null) return;
+        topWindowR.setEventName(x.name);
+        bindParams.stage.update();
     });
 }
