@@ -17,7 +17,6 @@ export class BoardGameStarter {
         if (this.gamePlayers.canStart() && this.boardGameStatusChanger.start()) {
             const startStatusYamlData = yamlGet("./Resource/Yaml/startStatus.yaml");
             this.gamePlayers.setAICard(startStatusYamlData);
-            this.gamePlayers.initTurnSet();
             this.gamePlayers.getPlayerAll(x => {
                 x.drawActionCard(this.actionCardStacks.draw(1));
                 for (let i = 0; i < 4; i++) {
@@ -25,6 +24,7 @@ export class BoardGameStarter {
                     x.setResourceList();
                 }
             });
+            this.gamePlayers.initTurnSet();
         }
     }
 }
