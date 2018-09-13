@@ -15,4 +15,8 @@ export class BoardGameStatusChanger {
         }
     }
 
+    isWait() {
+        return this.state == BoardGameStatus.wait;
+    }
+
 }

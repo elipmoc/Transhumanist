@@ -51,6 +51,7 @@ export class BoardGame {
     }
 
     addMember(playerData: PlayerData, playerId: number) {
-        this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager);
+        if (this.boardGameStatusChanger.isWait())
+            this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager);
     }
 }
