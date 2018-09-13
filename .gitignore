@@ -68,3 +68,4 @@ typings/
 /Server/*.js
 /Server/*.d.ts
 /dist/*
+/Resource/PImg/*
