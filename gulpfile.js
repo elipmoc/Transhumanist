@@ -9,8 +9,27 @@ const webpack = require("webpack");
 var plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const pngquant = require('imagemin-pngquant');
+const spritesmith = require('gulp.spritesmith');
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
+
+gulp.task('sprite', function () {
+    var spriteData = gulp.src('./Resource/Img/**/*.png')
+        .pipe(spritesmith({
+            imgName: 'sprite.png',
+            cssName: 'sprite.json'
+        }));
+    return spriteData.pipe(gulp.dest('./Resource/Sprite'));
+});
+
+gulp.task('sprite_compress', () =>
+    gulp.src('./Resource/Sprite/**/*.png')
+        .pipe(imagemin([
+            pngquant({ nofs: true, posterize: 2, speed: 1 })
+        ]))
+        .pipe(imagemin())
+        .pipe(gulp.dest('./Resource/PSprite'))
+);
 
 gulp.task('compress', () =>
     gulp.src('./Resource/Img/**/*.png')

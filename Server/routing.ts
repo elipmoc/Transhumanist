@@ -2,6 +2,7 @@ import { yamlGet } from "./yamlGet";
 import * as fs from "fs";
 const router = require('router');
 const finalhandler = require('finalhandler');
+import zlib = require("zlib");
 
 export function createRouter() {
     let myRouter = router();
@@ -54,15 +55,15 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    readFileResponse(res, path, "text/html");
+    readFileResponse(res, path, "text/html", true);
 }
 
 function sendCss(res: any, path: string) {
-    readFileResponse(res, path, "text/css");
+    readFileResponse(res, path, "text/css", true);
 }
 
 function sendJs(res: any, path: string) {
-    readFileResponse(res, path, "text/plane");
+    readFileResponse(res, path, "text/plane", true);
 }
 function sendPng(res: any, path: string) {
     readFileResponse(res, path, "image/png");
@@ -80,11 +81,16 @@ function sendMp3(res: any, path: string) {
 
 
 
-function readFileResponse(res: any, path: string, contentType: string) {
+function readFileResponse(res: any, path: string, contentType: string, gzip: boolean = false) {
     fs.readFile(path, (_, data) => {
         res.writeHead(200, {
-            'Content-Type': contentType
+            'Content-Type': contentType,
+            'content-encoding': gzip ? "gzip" : null
         });
-        res.end(data);
+        if (gzip) {
+            zlib.gzip(data, (e, b) => res.end(b));
+        } else {
+            res.end(data);
+        }
     });
 }
