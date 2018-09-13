@@ -1,4 +1,8 @@
+const mapping: { [index: string]: string } = { "bgm_level3": "Bgm/transhumanist_level3.1.mp3" };
+
+
 export class SoundManager {
+
 
     static get SeVolume() { return this.seprops.volume; }
     static get BgmVolume() { return this.bgmprops.volume; }
@@ -18,8 +22,12 @@ export class SoundManager {
     static bgmPlay(id: string) {
         if (SoundManager.bgmInstance != null) {
             SoundManager.bgmInstance.destroy();
+            createjs.Sound.removeAllEventListeners();
         }
-        SoundManager.bgmInstance = createjs.Sound.play(id, SoundManager.bgmprops);
+        createjs.Sound.registerSound(mapping[id], id);
+        createjs.Sound.addEventListener("fileload", (e) => {
+            SoundManager.bgmInstance = createjs.Sound.play(id, SoundManager.bgmprops);
+        });
     }
 
     static sePlay(id: string) {
