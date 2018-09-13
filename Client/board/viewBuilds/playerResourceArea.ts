@@ -34,6 +34,7 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
                 resourceName,
                 bindParams.yamls.resourceHash[resourceName].index,
                 bindParams.queue);
+            bindParams.stage.update();
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
         playerResourceAreaList[i].onMouseOveredIcon(cardName => {

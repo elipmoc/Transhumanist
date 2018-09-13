@@ -7,9 +7,19 @@ var node;
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
 var plumber = require('gulp-plumber');
-
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
+
+gulp.task('compress', () =>
+    gulp.src('./Resource/Img/**/*.png')
+        .pipe(imagemin([
+            pngquant({ nofs: true, posterize: 2, speed: 1 })
+        ]))
+        .pipe(imagemin())
+        .pipe(gulp.dest('./Resource/PImg'))
+);
 
 gulp.task("webpack", () => {
     return new Promise((resolve, reject) => {

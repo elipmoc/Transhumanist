@@ -6,7 +6,7 @@ const finalhandler = require('finalhandler');
 export function createRouter() {
     let myRouter = router();
     myRouter.get("/", (req: any, res: any) => {
-        sendHtml(res, "./Html/login.html");
+        sendHtml(res, "./Html/index.html");
     });
     myRouter.get("/Client/Lib/:path", (req: any, res: any) => {
         sendHtml(res, "./Client/Lib/" + req.params.path);
@@ -30,16 +30,16 @@ export function createRouter() {
         sendMp3(res, "./Resource/Se/" + req.params.path);
     });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/page/" + req.params.path);
+        sendPng(res, "./Resource/PImg/page/" + req.params.path);
     });
     myRouter.get("/Img/background/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/background/" + req.params.path);
+        sendPng(res, "./Resource/PImg/background/" + req.params.path);
     });
     myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/card/back/" + req.params.path);
+        sendPng(res, "./Resource/PImg/card/back/" + req.params.path);
     });
     myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/card/front/action/" + req.params.path);
+        sendPng(res, "./Resource/PImg/card/front/action/" + req.params.path);
     });
     myRouter.get("/Json/:path", (req: any, res: any) => {
         sendYaml(res, "./Resource/Yaml/" + req.params.path);
@@ -77,6 +77,8 @@ function sendYaml(res: any, path: string) {
 function sendMp3(res: any, path: string) {
     readFileResponse(res, path, "audio/mp3");
 }
+
+
 
 function readFileResponse(res: any, path: string, contentType: string) {
     fs.readFile(path, (_, data) => {
