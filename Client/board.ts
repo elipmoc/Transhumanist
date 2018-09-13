@@ -5,6 +5,7 @@ import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
 import { SoundManager } from "./soundManager";
+import { BackGround } from "./board/views/backGround";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -51,12 +52,6 @@ window.onload = () => {
         { id: "buildAction", src: "Img/buildAction.png" },
         { id: "logFrame", src: "Img/ui/logFrame.png" },
         { id: "eventFrame", src: "Img/ui/eventFrame.png" },
-        { id: "bg_level1", src: "Img/background/bg_level1.png" },
-        { id: "bg_level2", src: "Img/background/bg_level2.png" },
-        { id: "bg_level3", src: "Img/background/bg_level3.png" },
-        { id: "bg_level4", src: "Img/background/bg_level4.png" },
-        { id: "bg_level5", src: "Img/background/bg_level5.png" },
-        { id: "bg_level6", src: "Img/background/bg_level6.png" },
         { id: "gm_icon", src: "Img/gmIcon.png" },
         { id: "bell", src: "Se/bell.mp3" },
         { id: "clap", src: "Se/clap.mp3" },
@@ -71,9 +66,9 @@ function preloadImage(yamls: Yamls) {
     SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
-    let background = new createjs.Bitmap(queue.getResult("bg_level4"));
-    background.alpha = 0.5;
+    let background = new BackGround();
     stage.addChild(background);
+    background.setBg("bg_level5");
 
     const socket = io("/board");
 
