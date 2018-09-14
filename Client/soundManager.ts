@@ -1,4 +1,4 @@
-const mapping: { [index: string]: string } = { "bgm_level3": "Bgm/transhumanist_level3.1.mp3" };
+const mapping: { [index: string]: string } = { "bgm_level3": "https://elipmoc.github.io/audio/transhumanist_level3.1.mp3" };
 
 
 export class SoundManager {
