@@ -1,11 +1,12 @@
 import { ButtonBase } from "./bases/buttonBase";
 import { Bar } from "./bar";
 import { SoundManager } from "../../soundManager";
+import { ImageQueue } from "../imageQueue";
 
 //オプション罰ボタン
 export class OptionCrossButton extends ButtonBase {
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        const crossButton = new createjs.Bitmap(queue.getResult("optionCross"));
+    constructor(onClickCallback: () => void, queue: ImageQueue) {
+        const crossButton = queue.getImage("optionCross");
         var g = new createjs.Graphics()
             .beginStroke("#000")
             .beginFill("#000")
@@ -18,10 +19,10 @@ export class OptionCrossButton extends ButtonBase {
 
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
 
-        const optionFrame = new createjs.Bitmap(queue.getResult("optionWindow"));
+        const optionFrame = queue.getImage("optionWindow");
         optionFrame.regX = optionFrame.image.width / 2;
         optionFrame.regY = optionFrame.image.height / 2;
         this.addChild(optionFrame);
@@ -39,7 +40,7 @@ export class OptionWindow extends createjs.Container {
         optionText.font = "45px Arial";
         this.addChild(optionText);
 
-        const optionIcon = new createjs.Bitmap(queue.getResult("setting"));
+        const optionIcon = queue.getImage("setting");
         optionIcon.scaleX = 1;
         optionIcon.scaleY = 1;
         optionIcon.x = -280;

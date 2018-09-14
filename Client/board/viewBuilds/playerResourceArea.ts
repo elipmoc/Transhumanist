@@ -12,10 +12,10 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
     resourceHover.visible = false;
 
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
-        new playerResourceAreas.Player1ResourceArea(bindParams.queue),
-        new playerResourceAreas.Player2ResourceArea(bindParams.queue),
-        new playerResourceAreas.Player3ResourceArea(bindParams.queue),
-        new playerResourceAreas.Player4ResourceArea(bindParams.queue)
+        new playerResourceAreas.Player1ResourceArea(bindParams.imgQueue),
+        new playerResourceAreas.Player2ResourceArea(bindParams.imgQueue),
+        new playerResourceAreas.Player3ResourceArea(bindParams.imgQueue),
+        new playerResourceAreas.Player4ResourceArea(bindParams.imgQueue)
     ];
     for (let i = 0; i < 4; i++) {
         const resourceKindList = new SocketBinderList<ResourceName | null>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
@@ -25,7 +25,7 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
                     iconId,
                     resourceName,
                     resourceName != null ? bindParams.yamls.resourceHash[resourceName].index : -1,
-                    bindParams.queue));
+                    bindParams.imgQueue));
             bindParams.stage.update();
         });
         resourceKindList.onSetAt((iconId: number, resourceName: ResourceName) => {
@@ -33,17 +33,18 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
                 iconId,
                 resourceName,
                 bindParams.yamls.resourceHash[resourceName].index,
-                bindParams.queue);
+                bindParams.imgQueue);
+            bindParams.stage.update();
         });
         bindParams.stage.addChild(playerResourceAreaList[i]);
         playerResourceAreaList[i].onMouseOveredIcon(cardName => {
             resourceHover.visible = true;
-            resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.queue);
+            resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.imgQueue);
             bindParams.stage.update();
         });
         playerResourceAreaList[i].onMouseOutedIcon(() => {
             resourceHover.visible = false;
-            resourceHover.setYamlData(null, bindParams.queue);
+            resourceHover.setYamlData(null, bindParams.imgQueue);
             bindParams.stage.update();
         });
     }

@@ -1,15 +1,16 @@
 import { global } from "../../boardGlobalData"
 import { ButtonBase } from "./bases/buttonBase"
+import { ImageQueue } from "../imageQueue";
 
 //ターン終了ボタン
 export class TurnFinishButton extends ButtonBase {
 
     private turnFinishText: createjs.Text;
 
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+    constructor(onClickCallback: () => void, queue: ImageQueue) {
 
         //ターン終了ボタン画像
-        const turnFinishButton = new createjs.Bitmap(queue.getResult("button"));
+        const turnFinishButton = queue.getImage("button");
         turnFinishButton.regX = turnFinishButton.image.width;
         turnFinishButton.regY = turnFinishButton.image.height;
         turnFinishButton.x = global.canvasWidth - 20;

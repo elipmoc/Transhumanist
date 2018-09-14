@@ -5,7 +5,7 @@ import { SocketBinderList } from "../../socketBinderList";
 
 //ログウインドウの生成
 export function build(bindParams: BindParams) {
-    const logWindow = new LogWindow(bindParams.queue);
+    const logWindow = new LogWindow(bindParams.imgQueue);
     const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
     logMessageList.onUpdate(msgList => {
         msgList.forEach(msg => logWindow.addMessaage(new LogMessage(msg)));

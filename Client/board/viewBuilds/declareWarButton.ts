@@ -6,7 +6,7 @@ export function build(bindParams: BindParams) {
     const declareWarButton =
         new DeclareWarButton(
             () => bindParams.socket.emit("declareWarButtonClick"),
-            bindParams.queue
+            bindParams.imgQueue
         );
     bindParams.stage.addChild(declareWarButton);
 }

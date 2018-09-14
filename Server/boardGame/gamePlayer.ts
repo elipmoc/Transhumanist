@@ -33,6 +33,7 @@ export class GamePlayer {
 
     setMyTurn() {
         this.playerCond.Value = GamePlayerCondition.MyTurn;
+        this.addResource("人間");
     }
 
     setWait() {
@@ -68,6 +69,11 @@ export class GamePlayer {
 
         this.actionCardList.Value = [null, null, null, null, null];
         this.playerCond.Value = GamePlayerCondition.Start;
+    }
+
+    private addResource(name: ResourceName) {
+        const idx = this.resourceList.Value.findIndex(x => x == null);
+        this.resourceList.setAt(idx, name);
     }
 
     setResourceList() {

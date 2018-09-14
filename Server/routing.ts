@@ -2,6 +2,7 @@ import { yamlGet } from "./yamlGet";
 import * as fs from "fs";
 const router = require('router');
 const finalhandler = require('finalhandler');
+import zlib = require("zlib");
 
 export function createRouter() {
     let myRouter = router();
@@ -17,6 +18,9 @@ export function createRouter() {
     myRouter.get("/Client/:path", (req: any, res: any) => {
         sendJs(res, "./dist/Client/" + req.params.path);
     });
+    myRouter.get("/Img/boardSprite.png", (req: any, res: any) => {
+        sendPng(res, "./Resource/Sprite/boardSprite.png");
+    });
     myRouter.get("/Img/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/" + req.params.path);
     });
@@ -30,16 +34,19 @@ export function createRouter() {
         sendMp3(res, "./Resource/Se/" + req.params.path);
     });
     myRouter.get("/Img/page/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/page/" + req.params.path);
+        sendPng(res, "./Resource/PImg/page/" + req.params.path);
     });
     myRouter.get("/Img/background/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/background/" + req.params.path);
+        sendPng(res, "./Resource/PImg/background/" + req.params.path);
     });
-    myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/card/back/" + req.params.path);
+    /*myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
+        sendPng(res, "./Resource/PImg/card/back/" + req.params.path);
     });
     myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/Img/card/front/action/" + req.params.path);
+        sendPng(res, "./Resource/PImg/card/front/action/" + req.params.path);
+    });*/
+    myRouter.get("/Json/boardSprite.json", (req: any, res: any) => {
+        sendJson(res, "./Resource/Sprite/boardSprite.json");
     });
     myRouter.get("/Json/:path", (req: any, res: any) => {
         sendYaml(res, "./Resource/Yaml/" + req.params.path);
@@ -54,15 +61,15 @@ export function createRouter() {
 }
 
 function sendHtml(res: any, path: string) {
-    readFileResponse(res, path, "text/html");
+    readFileResponse(res, path, "text/html", true);
 }
 
 function sendCss(res: any, path: string) {
-    readFileResponse(res, path, "text/css");
+    readFileResponse(res, path, "text/css", true);
 }
 
 function sendJs(res: any, path: string) {
-    readFileResponse(res, path, "text/plane");
+    readFileResponse(res, path, "text/plane", true);
 }
 function sendPng(res: any, path: string) {
     readFileResponse(res, path, "image/png");
@@ -78,11 +85,20 @@ function sendMp3(res: any, path: string) {
     readFileResponse(res, path, "audio/mp3");
 }
 
-function readFileResponse(res: any, path: string, contentType: string) {
+function sendJson(res: any, path: string) {
+    readFileResponse(res, path, "text/plain", true);
+}
+
+function readFileResponse(res: any, path: string, contentType: string, gzip: boolean = false) {
     fs.readFile(path, (_, data) => {
         res.writeHead(200, {
-            'Content-Type': contentType
+            'Content-Type': contentType,
+            'content-encoding': gzip ? "gzip" : null
         });
-        res.end(data);
+        if (gzip) {
+            zlib.gzip(data, (e, b) => res.end(b));
+        } else {
+            res.end(data);
+        }
     });
 }

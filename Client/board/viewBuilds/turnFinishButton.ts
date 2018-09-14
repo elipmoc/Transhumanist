@@ -10,7 +10,7 @@ export function build(bindParams: BindParams) {
     const turnFinishButton =
         new TurnFinishButton(
             () => bindParams.socket.emit("turnFinishButtonClick"),
-            bindParams.queue
+            bindParams.imgQueue
         );
     bindParams.stage.addChild(turnFinishButton);
 

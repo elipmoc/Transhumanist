@@ -7,9 +7,38 @@ var node;
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
 var plumber = require('gulp-plumber');
-
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
+const spritesmith = require('gulp.spritesmith');
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
+
+gulp.task('sprite', function () {
+    var spriteData = gulp.src('./Resource/Img/boardSprite/**/*.png')
+        .pipe(spritesmith({
+            imgName: 'boardSprite.png',
+            cssName: 'boardSprite.json'
+        }));
+    return spriteData.pipe(gulp.dest('./Resource/Sprite'));
+});
+
+gulp.task('sprite_compress', () =>
+    gulp.src('./Resource/Sprite/**/*.png')
+        .pipe(imagemin([
+            pngquant({ nofs: true, posterize: 2, speed: 1 })
+        ]))
+        .pipe(imagemin())
+        .pipe(gulp.dest('./Resource/Sprite'))
+);
+
+gulp.task('compress', () =>
+    gulp.src('./Resource/Img/**/*.png')
+        .pipe(imagemin([
+            pngquant({ nofs: true, posterize: 2, speed: 1 })
+        ]))
+        .pipe(imagemin())
+        .pipe(gulp.dest('./Resource/PImg'))
+);
 
 gulp.task("webpack", () => {
     return new Promise((resolve, reject) => {

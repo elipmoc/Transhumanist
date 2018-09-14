@@ -12,16 +12,14 @@ export interface Yamls {
 }
 
 export async function getYamls(): Promise<Yamls> {
-    const actionCardHash = await new Promise<ActionCardHash>((resolve) =>
+    const actionYaml = await new Promise<any>((resolve) =>
         $.get("/Json/actionCard.yaml", data => resolve(
-            GenerateActionCardYamlData(JSON.parse(data), false)
+            JSON.parse(data)
         ))
     );
-    const buildActionCardHash = await new Promise<ActionCardHash>((resolve) =>
-        $.get("/Json/actionCard.yaml", data => resolve(
-            GenerateActionCardYamlData(JSON.parse(data), true)
-        ))
-    );
+
+    const actionCardHash = GenerateActionCardYamlData(actionYaml, false);
+    const buildActionCardHash = GenerateActionCardYamlData(actionYaml, true)
     const resourceHash = await new Promise<ResourceHash>((resolve) =>
         $.get("/Json/resource.yaml", data => resolve(
             GenerateResourceYamlData(JSON.parse(data))

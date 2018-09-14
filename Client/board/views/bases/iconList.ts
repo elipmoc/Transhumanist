@@ -1,5 +1,6 @@
 import { CardIconBase } from "../cardIcon";
 import { global } from "../../../boardGlobalData";
+import { ImageQueue } from "../../imageQueue";
 
 
 //iconリストのクラス
@@ -41,7 +42,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
         this.onMouseOverIconCallBack = onMouseOverIconCallBack;
     }
 
-    setResource(iconId: number, kind: K, imgIndex: number, queue: createjs.LoadQueue) {
+    setResource(iconId: number, kind: K, imgIndex: number, queue: ImageQueue) {
         this.icons[iconId].setKind(kind, imgIndex, queue);
     }
 }

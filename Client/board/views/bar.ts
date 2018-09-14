@@ -1,17 +1,19 @@
+import { ImageQueue } from "../imageQueue";
+
 //バー
 export class Bar extends createjs.Container {
     private optionVolumeCursor: createjs.Bitmap;
     private maxX: number;
     private minX: number = 0;
     private callBack: (value: number) => void = (value) => { };
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
 
-        const optionVolumeBar = new createjs.Bitmap(queue.getResult("optionVolumeBar"));
+        const optionVolumeBar = queue.getImage("optionVolumeBar");
         optionVolumeBar.regY = optionVolumeBar.image.height / 2;
         this.maxX = optionVolumeBar.image.width;
         this.addChild(optionVolumeBar);
-        this.optionVolumeCursor = new createjs.Bitmap(queue.getResult("optionVolumeCursor"));
+        this.optionVolumeCursor = queue.getImage("optionVolumeCursor");
         this.optionVolumeCursor.regX = this.optionVolumeCursor.image.width / 2;
         this.optionVolumeCursor.regY = this.optionVolumeCursor.image.width / 2;
         this.addEventListener("pressmove", _ => {

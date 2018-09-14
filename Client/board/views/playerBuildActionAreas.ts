@@ -1,12 +1,13 @@
 import { global } from "../../boardGlobalData"
 import { PlayerBuildAreaBase } from "./bases/playerBuildAreaBase"
+import { ImageQueue } from "../imageQueue";
 
 
 
 export class Player1BuildArea extends PlayerBuildAreaBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(15);
-        this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.buildArea.image = queue.getImage("oddPlayerRBArea").image;
         this.buildArea.regX = this.buildArea.image.width / 2;
         this.buildArea.regY = this.buildArea.image.height;
         this.buildArea.x = global.canvasWidth / 2;
@@ -20,9 +21,9 @@ export class Player1BuildArea extends PlayerBuildAreaBase {
 
 
 export class Player2BuildArea extends PlayerBuildAreaBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(5);
-        this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.buildArea.image = queue.getImage("evenPlayerRBArea").image;
         this.buildArea.regX = 0;
         this.buildArea.regY = this.buildArea.image.height / 2;
         this.buildArea.x = 100;
@@ -35,9 +36,9 @@ export class Player2BuildArea extends PlayerBuildAreaBase {
 
 
 export class Player3BuildArea extends PlayerBuildAreaBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(15);
-        this.buildArea.image = <any>queue.getResult("oddPlayerRBArea");
+        this.buildArea.image = queue.getImage("oddPlayerRBArea").image;
         this.buildArea.regX = this.buildArea.image.width / 2;
         this.buildArea.regY = 0;
         this.buildArea.x = global.canvasWidth / 2;
@@ -51,9 +52,9 @@ export class Player3BuildArea extends PlayerBuildAreaBase {
 
 
 export class Player4BuildArea extends PlayerBuildAreaBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(5);
-        this.buildArea.image = <any>queue.getResult("evenPlayerRBArea");
+        this.buildArea.image = queue.getImage("evenPlayerRBArea").image;
         this.buildArea.regX = this.buildArea.image.width;
         this.buildArea.regY = this.buildArea.image.height / 2;
         this.buildArea.x = global.canvasWidth - 100;

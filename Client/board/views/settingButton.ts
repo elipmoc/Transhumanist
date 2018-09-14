@@ -1,10 +1,11 @@
 import { ButtonBase } from "./bases/buttonBase"
+import { ImageQueue } from "../imageQueue";
 
 //設定ボタン
 export class SettingButton extends ButtonBase {
     private height: number;
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
-        const settingButton = new createjs.Bitmap(queue.getResult("setting"));
+    constructor(onClickCallback: () => void, queue: ImageQueue) {
+        const settingButton = queue.getImage("setting");
 
         settingButton.scaleX = 0.6;
         settingButton.scaleY = 0.6;

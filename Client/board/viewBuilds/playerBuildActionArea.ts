@@ -8,10 +8,10 @@ import * as playerBuildAreas from "../views/playerBuildActionAreas";
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
-        new playerBuildAreas.Player1BuildArea(bindParams.queue),
-        new playerBuildAreas.Player2BuildArea(bindParams.queue),
-        new playerBuildAreas.Player3BuildArea(bindParams.queue),
-        new playerBuildAreas.Player4BuildArea(bindParams.queue)
+        new playerBuildAreas.Player1BuildArea(bindParams.imgQueue),
+        new playerBuildAreas.Player2BuildArea(bindParams.imgQueue),
+        new playerBuildAreas.Player3BuildArea(bindParams.imgQueue),
+        new playerBuildAreas.Player4BuildArea(bindParams.imgQueue)
     ];
     for (let i = 0; i < 4; i++) {
         const buildActionKindList = new SocketBinderList<ActionCardName>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
@@ -20,24 +20,24 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                 playerBuildActionAreaList[i].setResource(
                     iconId, cardName,
                     bindParams.yamls.buildActionCardHash[cardName].index,
-                    bindParams.queue
+                    bindParams.imgQueue
                 ));
             bindParams.stage.update();
         });
         buildActionKindList.onSetAt((iconId: number, cardName: ActionCardName) => {
             playerBuildActionAreaList[i].setResource(
-                iconId, cardName, bindParams.yamls.buildActionCardHash[cardName].index, bindParams.queue);
+                iconId, cardName, bindParams.yamls.buildActionCardHash[cardName].index, bindParams.imgQueue);
             bindParams.stage.update();
         });
         bindParams.stage.addChild(playerBuildActionAreaList[i]);
         playerBuildActionAreaList[i].onMouseOveredIcon(cardName => {
             actionCardHover.visible = true;
-            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[cardName], bindParams.queue);
+            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[cardName], bindParams.imgQueue);
             bindParams.stage.update();
         });
         playerBuildActionAreaList[i].onMouseOutedIcon(() => {
             actionCardHover.visible = false;
-            actionCardHover.setYamlData(null, bindParams.queue);
+            actionCardHover.setYamlData(null, bindParams.imgQueue);
             bindParams.stage.update();
         });
     }

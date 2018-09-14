@@ -2,6 +2,7 @@ import { ResourceHash } from "../../../../Share/Yaml/resourceYamlData";
 import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
 import { getIconResource } from "../../../utility";
 import { global } from "../../../boardGlobalData";
+import { ImageQueue } from "../../imageQueue";
 
 export class Cost extends createjs.Container {
     private costIcons: createjs.Bitmap[] = [new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null), new createjs.Bitmap(null)];
@@ -38,7 +39,7 @@ export class Cost extends createjs.Container {
             this.addChild(num);
         });
     }
-    setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
+    setYamlData(yamlData: ActionCardYamlData | null, queue: ImageQueue) {
         for (let i = 0; i < global.costCountMax; i++) {
             if (yamlData != null && yamlData.cost.length > i) {
                 this.costIcons[i].image = getIconResource(this.resourceHash[yamlData.cost[i].name].index, "resource", queue);
