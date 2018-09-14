@@ -1,9 +1,10 @@
 import { global } from "../../boardGlobalData"
 import { PlayerWindowBase } from "./bases/playerWindowBase"
 import { createMyShadow } from "../../utility";
+import { ImageQueue } from "../imageQueue";
 
 export class Player1Window extends PlayerWindowBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(queue, "evenPlayerFrame", "evenPlayerFrame2");
 
         this.playerFrame.regX = this.playerFrame.image.width / 2;
@@ -69,7 +70,7 @@ export class Player1Window extends PlayerWindowBase {
 }
 
 export class Player2Window extends PlayerWindowBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(queue, "oddPlayerFrame", "oddPlayerFrame2");
 
         this.playerFrame.regY = this.playerFrame.image.height / 2;
@@ -134,7 +135,7 @@ export class Player2Window extends PlayerWindowBase {
 
 
 export class Player3Window extends PlayerWindowBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(queue, "evenPlayerFrame", "evenPlayerFrame2");
 
         this.playerFrame.regX = this.playerFrame.image.width / 2;
@@ -200,7 +201,7 @@ export class Player3Window extends PlayerWindowBase {
 }
 
 export class Player4Window extends PlayerWindowBase {
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super(queue, "oddPlayerFrame", "oddPlayerFrame2");
 
         this.playerFrame.regY = this.playerFrame.image.height / 2;

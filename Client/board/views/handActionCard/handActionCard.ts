@@ -1,6 +1,7 @@
 import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
 import { DetailsActionCard } from "../detailsActionCard";
 import { ActionCardHover } from "../actionCardHover";
+import { ImageQueue } from "../../imageQueue";
 
 //手札カードのクラス
 export class HandActionCard extends createjs.Container {
@@ -10,7 +11,7 @@ export class HandActionCard extends createjs.Container {
     readonly height: number = 126;
     //カードをクリックされた時に呼ばれる関数
     private onClickCallBack: (index: number, cardName: string) => void;
-    constructor(index: number, actionCardHover: ActionCardHover, queue: createjs.LoadQueue) {
+    constructor(index: number, actionCardHover: ActionCardHover, queue: ImageQueue) {
         super();
         this.addChild(this.cardInfo);
 
@@ -30,7 +31,7 @@ export class HandActionCard extends createjs.Container {
         });
 
     }
-    setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
+    setYamlData(yamlData: ActionCardYamlData | null, queue: ImageQueue) {
         this.yamlData = yamlData;
         if (yamlData != null) {
             this.cardInfo.setYamlData(yamlData, queue);

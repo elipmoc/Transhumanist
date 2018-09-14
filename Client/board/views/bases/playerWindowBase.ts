@@ -1,3 +1,5 @@
+import { ImageQueue } from "../../imageQueue";
+
 //プレイヤーウインドウ表示のベースクラス
 export class PlayerWindowBase extends createjs.Container {
     protected playerNameText: createjs.Text;
@@ -12,10 +14,10 @@ export class PlayerWindowBase extends createjs.Container {
     private playerFrameImage: HTMLImageElement;
     private myTurnPlayerFrameImage: HTMLImageElement;
 
-    constructor(queue: createjs.LoadQueue, playerFrameImageName: String, myTurnPlayerFrameImageName: String) {
+    constructor(queue: ImageQueue, playerFrameImageName: string, myTurnPlayerFrameImageName: string) {
         super();
-        this.playerFrameImage = <HTMLImageElement>queue.getResult(playerFrameImageName);
-        this.myTurnPlayerFrameImage = <HTMLImageElement>queue.getResult(myTurnPlayerFrameImageName);
+        this.playerFrameImage = <HTMLImageElement>queue.getImage(playerFrameImageName).image;
+        this.myTurnPlayerFrameImage = <HTMLImageElement>queue.getImage(myTurnPlayerFrameImageName).image;
         this.playerNameText = new createjs.Text();
         this.playerFrame = new createjs.Bitmap("");
         this.playerFrame.image = this.playerFrameImage;
@@ -25,7 +27,7 @@ export class PlayerWindowBase extends createjs.Container {
         this.uncertaintyText = new createjs.Text();
         this.positiveText = new createjs.Text();
         this.negativeText = new createjs.Text();
-        this.gmIcon = new createjs.Bitmap(queue.getResult("gm_icon"));
+        this.gmIcon = queue.getImage("gmIcon");
         this.gmIcon.visible = false;
         this.addChild(this.playerFrame);
         this.addChild(this.playerNameText);

@@ -1,6 +1,7 @@
 import { global } from "../../boardGlobalData";
 import { ResourceYamlData } from "../../../Share/Yaml/resourceYamlData";
 import { getIconResource } from "../../utility";
+import { ImageQueue } from "../imageQueue";
 
 export class ResourceHover extends createjs.Container {
     private cardIcon: createjs.Bitmap;
@@ -25,7 +26,7 @@ export class ResourceHover extends createjs.Container {
         this.addChild(this.cardIcon);
         this.addChild(this.cardName);
     }
-    setYamlData(yamlData: ResourceYamlData | null, queue: createjs.LoadQueue) {
+    setYamlData(yamlData: ResourceYamlData | null, queue: ImageQueue) {
         if (yamlData != null) {
             this.cardIcon.image = getIconResource(yamlData.index, "resource", queue);
             this.cardName.text = yamlData.name;

@@ -5,7 +5,7 @@ import { SocketBinder } from "../../socketBinder";
 
 //イベントログウインドウの生成
 export function build(bindParams: BindParams) {
-    const eventLogWindow = new EventLogWindow(bindParams.queue);
+    const eventLogWindow = new EventLogWindow(bindParams.imgQueue);
     const eventLogMessage = new SocketBinder<EventLogMessageForClient>("eventLogMessage", bindParams.socket);
     eventLogMessage.onUpdate(msg => {
         eventLogWindow.setMessaage(msg);

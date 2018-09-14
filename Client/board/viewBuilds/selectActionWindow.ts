@@ -5,7 +5,7 @@ import { SocketBinder } from "../../socketBinder";
 
 //ドローするアクションカードのレベル選択ウインドウの生成
 export function build(bindParams: BindParams) {
-    const selectActionWindow = new SelectActionWindow(bindParams.queue);
+    const selectActionWindow = new SelectActionWindow(bindParams.imgQueue);
     selectActionWindow.onSelectedLevel(level => bindParams.socket.emit("selectLevel", level));
     bindParams.stage.addChild(selectActionWindow);
     selectActionWindow.visible = false;

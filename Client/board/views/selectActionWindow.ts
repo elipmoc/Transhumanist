@@ -1,6 +1,7 @@
 import { global } from "../../boardGlobalData"
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 import { createMyShadow } from "../../utility";
+import { ImageQueue } from "../imageQueue";
 
 class NumberOfActionCardTexts extends createjs.Container {
     private texts: createjs.Text[] = new Array();
@@ -39,7 +40,7 @@ export class SelectActionWindow extends createjs.Container {
     private callBack: (value: number) => void;
     private numberOfActionCardTexts: NumberOfActionCardTexts;
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
 
         const frame = new createjs.Shape();
@@ -68,7 +69,7 @@ export class SelectActionWindow extends createjs.Container {
         this.addChild(this.numberOfActionCardTexts);
 
         for (var i = 1; i <= 3; i++) {
-            const level = new createjs.Bitmap(queue.getResult("b_level" + (4 - i)));
+            const level = queue.getImage("level" + (4 - i) + "mb");
             level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 - (level.image.width + 20) * (i) + 10;
             const levelValue = 4 - i;
@@ -77,7 +78,7 @@ export class SelectActionWindow extends createjs.Container {
         }
 
         for (var i = 4; i <= 6; i++) {
-            const level = new createjs.Bitmap(queue.getResult("b_level" + i));
+            const level = queue.getImage("level" + i + "mb");
             level.y = global.canvasHeight / 2 - 60;
             level.x = global.canvasWidth / 2 + (level.image.width + 20) * (i - 4) + 10;
             const levelValue = i;

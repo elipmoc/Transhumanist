@@ -1,6 +1,7 @@
 import { getIconResource } from "../../utility";
 import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { ImageQueue } from "../imageQueue";
 
 //アイコンのベースクラス
 export class CardIconBase<K> extends createjs.Bitmap {
@@ -10,7 +11,7 @@ export class CardIconBase<K> extends createjs.Bitmap {
 
     get Kind() { return this.kind; }
 
-    setKind(kind: K | null, imgIndex: number, queue: createjs.LoadQueue) {
+    setKind(kind: K | null, imgIndex: number, queue: ImageQueue) {
         this.kind = kind;
         this.image = getIconResource(imgIndex, this.img_name, queue);
 
