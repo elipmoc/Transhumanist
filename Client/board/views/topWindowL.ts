@@ -1,15 +1,16 @@
 import { OptionWindow } from "./optionWindow";
 import { SettingButton } from "./settingButton";
+import { ImageQueue } from "../imageQueue";
 
 //左上のやーつ
 export class TopWindowL extends createjs.Container {
     //ターン表示テキスト
     private text: createjs.Text;
 
-    constructor(queue: createjs.LoadQueue, optionWindow: OptionWindow) {
+    constructor(queue: ImageQueue, optionWindow: OptionWindow) {
         super();
         //設定枠
-        let topWindowsL = new createjs.Bitmap(queue.getResult("topWindows"));
+        let topWindowsL = queue.getImage("topWindows");
         this.addChild(topWindowsL);
         //設定ボタン
         const settingButton = new SettingButton(() => { optionWindow.visible = true; this.stage.update(); }, queue);

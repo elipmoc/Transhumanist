@@ -14,10 +14,10 @@ const spritesmith = require('gulp.spritesmith');
 const webpackConfig = require("./webpack.config");
 
 gulp.task('sprite', function () {
-    var spriteData = gulp.src('./Resource/Img/**/*.png')
+    var spriteData = gulp.src('./Resource/Img/boardSprite/**/*.png')
         .pipe(spritesmith({
-            imgName: 'sprite.png',
-            cssName: 'sprite.json'
+            imgName: 'boardSprite.png',
+            cssName: 'boardSprite.json'
         }));
     return spriteData.pipe(gulp.dest('./Resource/Sprite'));
 });
@@ -28,7 +28,7 @@ gulp.task('sprite_compress', () =>
             pngquant({ nofs: true, posterize: 2, speed: 1 })
         ]))
         .pipe(imagemin())
-        .pipe(gulp.dest('./Resource/PSprite'))
+        .pipe(gulp.dest('./Resource/Sprite'))
 );
 
 gulp.task('compress', () =>

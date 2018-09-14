@@ -1,6 +1,7 @@
 import { IconList } from "../bases/iconList";
 import { BuildActionCardIcon } from "../cardIcon";
 import { ActionCardName, BuildActionIndex } from "../../../../Share/Yaml/actionCardYamlData";
+import { ImageQueue } from "../../imageQueue";
 
 //プレイヤー設置アクション欄のベースクラス
 export class PlayerBuildAreaBase extends createjs.Container {
@@ -28,7 +29,7 @@ export class PlayerBuildAreaBase extends createjs.Container {
         this.buildList.onMouseOutedIcon(onMouseOutIconCallBack);
     }
 
-    setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: createjs.LoadQueue) {
+    setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: ImageQueue) {
         this.buildList.setResource(iconId, buildActionCardName, buildActionIndex, queue);
     }
 }

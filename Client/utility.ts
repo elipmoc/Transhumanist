@@ -1,4 +1,5 @@
 import { global } from "./boardGlobalData"
+import { ImageQueue } from "./board/imageQueue";
 
 
 //Bitmapから一部を切り取って新しいBitmapを作る関数
@@ -28,11 +29,11 @@ export function clipBitmap(
 }
 
 //カードアイコンの画像取得
-export function getIconResource(imgIndex: number, img_name: string, queue: createjs.LoadQueue) {
+export function getIconResource(imgIndex: number, img_name: string, queue: ImageQueue) {
     if (imgIndex == -1)
         return null;
     const bitmap = clipBitmap(
-        new createjs.Bitmap(<any>queue.getResult(img_name)),
+        queue.getImage(img_name),
         imgIndex % 5 * global.cardIconSize,
         Math.floor(imgIndex / 5) * global.cardIconSize,
         global.cardIconSize, global.cardIconSize);

@@ -5,7 +5,7 @@ import { TopWindowR } from "../views/topWindowR";
 
 //右上のやつ生成
 export function build(bindParams: BindParams) {
-    const topWindowR = new TopWindowR(bindParams.queue);
+    const topWindowR = new TopWindowR(bindParams.imgQueue);
     bindParams.stage.addChild(topWindowR);
     const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
     nowEvent.onUpdate(x => {

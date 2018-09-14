@@ -69,3 +69,4 @@ typings/
 /Server/*.d.ts
 /dist/*
 /Resource/PImg/*
+/Resource/Sprite/*

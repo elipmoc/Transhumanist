@@ -1,13 +1,14 @@
 import { global } from "../../boardGlobalData";
+import { ImageQueue } from "../imageQueue";
 
 export class TopWindowR extends createjs.Container {
 
     private text: createjs.Text;
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
         //イベント枠
-        let topWindowsRFrame = new createjs.Bitmap(queue.getResult("topWindows"));
+        let topWindowsRFrame = queue.getImage("topWindows");
         topWindowsRFrame.scaleX = -1;
         topWindowsRFrame.x = global.canvasWidth;
         this.addChild(topWindowsRFrame);

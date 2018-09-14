@@ -1,6 +1,7 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { EventLogMessageForClient } from "../../../Share/eventLogMessageForClient";
+import { ImageQueue } from "../imageQueue";
 
 
 //イベントログウインドウ
@@ -8,9 +9,9 @@ export class EventLogWindow extends createjs.Container {
     private titleText: createjs.Text;
     private descriptionText: createjs.Text;
 
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
-        const eventFrame = new createjs.Bitmap(queue.getResult("eventFrame"));
+        const eventFrame = queue.getImage("eventFrame");
         eventFrame.x = global.canvasWidth / 2 - eventFrame.image.width / 2;
         eventFrame.y = global.canvasHeight / 2 + eventFrame.image.height - 35 - 100;
         this.titleText = new createjs.Text();

@@ -2,14 +2,15 @@ import { global } from "../../boardGlobalData";
 import { LogMessageForClient } from "../../../Share/logMessageForClient";
 import { createMyShadow } from "../../utility";
 import { MessageBox, Message } from "./messageBox";
+import { ImageQueue } from "../imageQueue";
 
 
 //ログウインドウ
 export class LogWindow extends createjs.Container {
     private logMessageBox: MessageBox<LogMessage>;
-    constructor(queue: createjs.LoadQueue) {
+    constructor(queue: ImageQueue) {
         super();
-        const logFrame = new createjs.Bitmap(queue.getResult("logFrame"));
+        const logFrame = queue.getImage("logFrame");
         logFrame.x = global.canvasWidth / 2 - logFrame.image.width / 2;
         logFrame.y = global.canvasHeight / 2 - logFrame.image.height / 2 - 100;
         this.logMessageBox = new MessageBox<LogMessage>(logFrame.image.height);

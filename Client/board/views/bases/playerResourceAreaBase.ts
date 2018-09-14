@@ -1,6 +1,7 @@
 import { ResourceCardIcon } from "../cardIcon";
 import { ResourceName, ResourceIndex } from "../../../../Share/Yaml/resourceYamlData";
 import { IconList } from "../bases/iconList";
+import { ImageQueue } from "../../imageQueue";
 
 //プレイヤーリソース欄のベースクラス
 export class PlayerResourceAreaBase extends createjs.Container {
@@ -32,7 +33,7 @@ export class PlayerResourceAreaBase extends createjs.Container {
         this.resourceList.onMouseOutedIcon(onMouseOutIconCallBack);
     }
 
-    setResource(iconId: number, resourceName: ResourceName, resourceIndex: ResourceIndex, queue: createjs.LoadQueue) {
+    setResource(iconId: number, resourceName: ResourceName, resourceIndex: ResourceIndex, queue: ImageQueue) {
         this.resourceList.setResource(iconId, resourceName, resourceIndex, queue);
     }
 }

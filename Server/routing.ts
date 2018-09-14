@@ -18,6 +18,9 @@ export function createRouter() {
     myRouter.get("/Client/:path", (req: any, res: any) => {
         sendJs(res, "./dist/Client/" + req.params.path);
     });
+    myRouter.get("/Img/boardSprite.png", (req: any, res: any) => {
+        sendPng(res, "./Resource/Sprite/boardSprite.png");
+    });
     myRouter.get("/Img/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/Img/" + req.params.path);
     });
@@ -36,11 +39,14 @@ export function createRouter() {
     myRouter.get("/Img/background/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/PImg/background/" + req.params.path);
     });
-    myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
+    /*myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/PImg/card/back/" + req.params.path);
     });
     myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/PImg/card/front/action/" + req.params.path);
+    });*/
+    myRouter.get("/Json/boardSprite.json", (req: any, res: any) => {
+        sendJson(res, "./Resource/Sprite/boardSprite.json");
     });
     myRouter.get("/Json/:path", (req: any, res: any) => {
         sendYaml(res, "./Resource/Yaml/" + req.params.path);
@@ -79,7 +85,9 @@ function sendMp3(res: any, path: string) {
     readFileResponse(res, path, "audio/mp3");
 }
 
-
+function sendJson(res: any, path: string) {
+    readFileResponse(res, path, "text/plain", true);
+}
 
 function readFileResponse(res: any, path: string, contentType: string, gzip: boolean = false) {
     fs.readFile(path, (_, data) => {

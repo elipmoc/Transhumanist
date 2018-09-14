@@ -41,7 +41,7 @@
   "scripts": {
     "start": "node dist/Server/main.js",
     "test": "jasmine",
-    "postinstall": "gulp compress && webpack && tsc -p Server && mv dist/dist/Client/ dist/ && rm -r dist/dist",
+    "postinstall": "gulp compress && gulp sprite && gulp sprite_compress && webpack && tsc -p Server && mv dist/dist/Client/ dist/ && rm -r dist/dist",
     "build": "webpack && tsc -p Server && npm start",
     "build_only": "webpack && tsc -p Server && tsc -p Test"
   },

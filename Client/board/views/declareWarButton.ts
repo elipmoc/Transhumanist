@@ -1,12 +1,13 @@
 import { ButtonBase } from "./bases/buttonBase"
 import { global } from "../../boardGlobalData"
+import { ImageQueue } from "../imageQueue";
 
 
 //宣戦布告ボタン
 export class DeclareWarButton extends ButtonBase {
-    constructor(onClickCallback: () => void, queue: createjs.LoadQueue) {
+    constructor(onClickCallback: () => void, queue: ImageQueue) {
         //ボタン画像
-        const declareWarButton = new createjs.Bitmap(queue.getResult("button"));
+        const declareWarButton = queue.getImage("button");
         declareWarButton.regX = 0;
         declareWarButton.regY = declareWarButton.image.height;
         declareWarButton.x = 20;

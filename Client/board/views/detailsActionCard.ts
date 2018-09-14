@@ -1,4 +1,5 @@
 import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ImageQueue } from "../imageQueue";
 
 //詳細な情報が書かれたアクションカードのクラス
 export class DetailsActionCard extends createjs.Container {
@@ -50,10 +51,10 @@ export class DetailsActionCard extends createjs.Container {
         this.addChild(this.cardType);
     }
 
-    setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
+    setYamlData(yamlData: ActionCardYamlData | null, queue: ImageQueue) {
         if (yamlData != null) {
-            this.cardFrame.image = <any>queue.getResult("f_level" + yamlData.level);
-            this.cardImage.image = <any>queue.getResult(yamlData.name);
+            this.cardFrame.image = queue.getImage("level" + yamlData.level).image;
+            this.cardImage.image = queue.getImage(yamlData.name).image;
             this.cardName.text = yamlData.name;
             this.cardCap.text = yamlData.description;
             this.cardLevel.text = "LEVEL " + yamlData.level;

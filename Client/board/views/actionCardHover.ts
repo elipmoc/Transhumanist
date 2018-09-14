@@ -5,6 +5,7 @@ import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
 import { Cost } from "./actionCardHover/cost";
 import { WarUse } from "./actionCardHover/warUse";
 import { Condition } from "./actionCardHover/condition";
+import { ImageQueue } from "../imageQueue";
 
 export class ActionCardHover extends createjs.Container {
     private cardInfo: DetailsActionCard;
@@ -44,7 +45,7 @@ export class ActionCardHover extends createjs.Container {
         this.x = (global.canvasWidth / 2 - this.cardWidth / 2);
         this.y = (global.canvasHeight / 2 - this.cardHeight / 2);
     }
-    setYamlData(yamlData: ActionCardYamlData | null, queue: createjs.LoadQueue) {
+    setYamlData(yamlData: ActionCardYamlData | null, queue: ImageQueue) {
         this.cardInfo.setYamlData(yamlData, queue);
         this.costView.setYamlData(yamlData, queue);
         this.warUseView.setYamlData(yamlData);
