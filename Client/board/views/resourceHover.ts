@@ -30,7 +30,7 @@ export class ResourceHover extends createjs.Container {
         if (yamlData != null) {
             this.cardIcon.image = getIconResource(yamlData.index, "resource", queue);
             this.cardName.text = yamlData.name;
-            this.x = this.stage.mouseX;
+            this.x = this.stage.mouseX + global.cardIconSize;
             this.y = this.stage.mouseY;
         }
     }

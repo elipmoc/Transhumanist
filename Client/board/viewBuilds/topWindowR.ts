@@ -10,7 +10,7 @@ export function build(bindParams: BindParams) {
     const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
     nowEvent.onUpdate(x => {
         if (x == null) return;
-        topWindowR.setEventName(x.name);
+        topWindowR.setEventName(x);
         bindParams.stage.update();
     });
 }
