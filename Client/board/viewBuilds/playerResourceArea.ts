@@ -48,8 +48,10 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
             bindParams.stage.update();
         });
     }
-    playerResourceAreaList[0].onClickIcon((iconId, _) => {
-        const selectResourceData: SelectResourceData = { iconId };
+    playerResourceAreaList[0].onClickIcon((cardIcon) => {
+        cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        bindParams.stage.update();
+        const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
 }

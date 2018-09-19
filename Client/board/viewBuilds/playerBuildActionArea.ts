@@ -41,8 +41,8 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             bindParams.stage.update();
         });
     }
-    playerBuildActionAreaList[0].onClickedIcon((iconId, _) => {
-        const selectBuildActionData: SelectBuildActionData = { iconId };
+    playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
+        const selectBuildActionData: SelectBuildActionData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
     });
 }
