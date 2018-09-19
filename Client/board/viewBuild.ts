@@ -15,6 +15,7 @@ import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import { ActionCardUseDecisionWindow } from "./views/handActionCard/actionCardUseDecisionWindow";
+import { ResourceDialog } from "./views/resourceDialog";
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {
@@ -22,6 +23,8 @@ export function viewBuild(bindParams: BindParams) {
     warLine.build(bindParams);
     playerWindow.build(bindParams);
     const resourceHover = new ResourceHover();
+    const resourceDialog = new ResourceDialog();
+    resourceDialog.setThrowResourceNum(5);
     playerResourceArea.build(resourceHover, bindParams);
     logWindow.build(bindParams);
     eventLogWindow.build(bindParams);
@@ -29,7 +32,10 @@ export function viewBuild(bindParams: BindParams) {
     playerBuildActionArea.build(actionCardHover, bindParams);
     const decision = new ActionCardUseDecisionWindow();
     handActionCardStorageWindow.build(actionCardHover, decision, bindParams);
-    bindParams.stage.addChild(actionCardHover, resourceHover, decision);
+    bindParams.stage.addChild(
+        actionCardHover, resourceHover,
+        decision, resourceDialog
+    );
     turnFinishButton.build(bindParams);
     declareWarButton.build(bindParams);
     selectActionWindow.build(bindParams);
