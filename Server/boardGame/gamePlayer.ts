@@ -1,19 +1,18 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
 import { DiceNumber } from "../../Share/diceNumber";
-import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/resourceYamlData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardName, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
-import { yamlGet } from "../yamlGet";
+import { ResourceList } from "./ResourceList";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: GamePlayerState;
-    private resourceList: SocketBinder.BinderList<ResourceName | null>;
+    private resourceList: ResourceList;
     private buildActionList: SocketBinder.BinderList<ActionCardName>;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private actionCardList: SocketBinder.BinderList<string | null>;
@@ -33,7 +32,7 @@ export class GamePlayer {
 
     setMyTurn() {
         this.playerCond.Value = GamePlayerCondition.MyTurn;
-        this.addResource("人間");
+        this.resourceList.addResource("人間");
     }
 
     setWait() {
@@ -46,12 +45,12 @@ export class GamePlayer {
         boardSocketManager: SocketBinder.Namespace
     ) {
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
-        this.resourceList = new SocketBinder.BinderList<ResourceName | null>("ResourceKindList" + playerId);
+        this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
-        boardSocketManager.addSocketBinder(state, this.resourceList, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
+        boardSocketManager.addSocketBinder(state, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
 
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
@@ -64,24 +63,14 @@ export class GamePlayer {
             "教会", "教会", "教会", "核融合炉",
             "ロボット工場",
         ];
-        this.resourceList.Value = new Array(30);
-        this.resourceList.Value.fill(null);
+
 
         this.actionCardList.Value = [null, null, null, null, null];
         this.playerCond.Value = GamePlayerCondition.Start;
     }
 
-    private addResource(name: ResourceName) {
-        const idx = this.resourceList.Value.findIndex(x => x == null);
-        this.resourceList.setAt(idx, name);
-    }
-
     setResourceList() {
-        this.resourceList.Value.fill("人間", 0, 4);
-        const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
-            x.level == 2);
-        this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
-        this.resourceList.update();
+        this.resourceList.setResourceList();
     }
 
     drawActionCard(card: ActionCardYamlData) {
