@@ -5,9 +5,10 @@ import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { SelectResourceData } from "../../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
 import * as playerResourceAreas from "../views/playerResourceAreas";
+import { ResourceDialog } from "../views/resourceDialog";
 
 //プレイヤーのリソース欄生成
-export function build(resourceHover: ResourceHover, bindParams: BindParams) {
+export function build(resourceHover: ResourceHover, resourceDialog: ResourceDialog, bindParams: BindParams) {
     bindParams.stage.addChild(resourceHover);
     resourceHover.visible = false;
 
@@ -53,5 +54,10 @@ export function build(resourceHover: ResourceHover, bindParams: BindParams) {
         bindParams.stage.update();
         const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
+    });
+    resourceDialog.setThrowResourceNum(5);
+    resourceDialog.onClick(() => {
+        bindParams.socket
+            .emit("ThrowResource", JSON.stringify(playerResourceAreaList[0].getSelectedAllIconId()));
     });
 }

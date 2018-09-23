@@ -24,8 +24,7 @@ export function viewBuild(bindParams: BindParams) {
     playerWindow.build(bindParams);
     const resourceHover = new ResourceHover();
     const resourceDialog = new ResourceDialog();
-    resourceDialog.setThrowResourceNum(5);
-    playerResourceArea.build(resourceHover, bindParams);
+    playerResourceArea.build(resourceHover, resourceDialog, bindParams);
     logWindow.build(bindParams);
     eventLogWindow.build(bindParams);
     const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, 3);
