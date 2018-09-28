@@ -8,11 +8,13 @@ import * as playerResourceAreas from "../views/playerResourceAreas";
 import { ResourceDialog } from "../views/resourceDialog";
 import { SocketBinder } from "../../socketBinder";
 import { ResourceReserveArea } from "../views/resourceReserveArea";
+import { ThrowResource } from "../../../Share/throwResource";
 
 //プレイヤーのリソース欄生成
 export function build(resourceHover: ResourceHover, resourceDialog: ResourceDialog, bindParams: BindParams) {
     bindParams.stage.addChild(resourceHover);
     resourceHover.visible = false;
+    const resourceOver = new SocketBinder<number | null>("ResourceOver", bindParams.socket);
 
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new playerResourceAreas.Player1ResourceArea(bindParams.imgQueue),
@@ -52,20 +54,32 @@ export function build(resourceHover: ResourceHover, resourceDialog: ResourceDial
         });
     }
     playerResourceAreaList[0].onClickIcon((cardIcon) => {
-        cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        if (resourceOver.Value != 0)
+            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.stage.update();
         const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
 
+    const resourceReserveKindList = new SocketBinderList<ResourceName | null>("ResourceReserveKindList", bindParams.socket);
     const resourceReserveArea = new ResourceReserveArea();
-    for (var i = 0; i < 12; i++) {
+    resourceReserveKindList.onUpdate((list) => {
+        list.forEach((resourceName, iconId) =>
+            resourceReserveArea.setResource(
+                iconId,
+                resourceName,
+                resourceName != null ? bindParams.yamls.resourceHash[resourceName].index : -1,
+                bindParams.imgQueue));
+        bindParams.stage.update();
+    });
+    resourceReserveKindList.onSetAt((iconId: number, resourceName: ResourceName) => {
         resourceReserveArea.setResource(
-            i,
-            "人間",
-            bindParams.yamls.resourceHash["人間"].index,
+            iconId,
+            resourceName,
+            bindParams.yamls.resourceHash[resourceName].index,
             bindParams.imgQueue);
-    }
+        bindParams.stage.update();
+    });
     resourceReserveArea.onMouseOveredIcon(cardName => {
         resourceHover.visible = true;
         resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.imgQueue);
@@ -77,24 +91,30 @@ export function build(resourceHover: ResourceHover, resourceDialog: ResourceDial
         bindParams.stage.update();
     });
     resourceReserveArea.onClickIcon((cardIcon) => {
-        cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        if (resourceOver.Value != 0)
+            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.stage.update();
     });
     bindParams.stage.addChild(resourceReserveArea);
 
-    const resourceOver = new SocketBinder<number | null>("ResourceOver", bindParams.socket);
     resourceOver.onUpdate(x => {
-        if (x != null) {
+        if (x != 0) {
             resourceDialog.setThrowResourceNum(x);
             resourceDialog.visible = true;
         } else {
+            resourceReserveArea.unSelectFrameVisible();
+            playerResourceAreaList[0].unSelectFrameVisible();
             resourceDialog.visible = false;
         }
         bindParams.stage.update();
     })
     resourceDialog.visible = false;
     resourceDialog.onClick(() => {
+        const throwResource: ThrowResource = {
+            resourceList: playerResourceAreaList[0].getSelectedAllIconId(),
+            resourceReserveList: resourceReserveArea.getSelectedAllIconId()
+        };
         bindParams.socket
-            .emit("ThrowResource", JSON.stringify(playerResourceAreaList[0].getSelectedAllIconId()));
+            .emit("ThrowResource", JSON.stringify(throwResource));
     });
 }
