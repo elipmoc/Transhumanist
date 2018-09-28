@@ -9,9 +9,9 @@ export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceList: IconList<ResourceCardIcon, ResourceName>;
 
     //xNum:リソースを横に何個並べるかの数値
-    constructor(xNum: number) {
+    constructor(xNum: number, maxNum: number = 30) {
         super();
-        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(xNum, 30, ResourceCardIcon)
+        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(xNum, maxNum, ResourceCardIcon)
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);

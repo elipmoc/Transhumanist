@@ -6,6 +6,8 @@ import { SelectResourceData } from "../../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
 import * as playerResourceAreas from "../views/playerResourceAreas";
 import { ResourceDialog } from "../views/resourceDialog";
+import { SocketBinder } from "../../socketBinder";
+import { ResourceReserveArea } from "../views/resourceReserveArea";
 
 //プレイヤーのリソース欄生成
 export function build(resourceHover: ResourceHover, resourceDialog: ResourceDialog, bindParams: BindParams) {
@@ -55,7 +57,42 @@ export function build(resourceHover: ResourceHover, resourceDialog: ResourceDial
         const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
     });
-    resourceDialog.setThrowResourceNum(5);
+
+    const resourceReserveArea = new ResourceReserveArea();
+    for (var i = 0; i < 12; i++) {
+        resourceReserveArea.setResource(
+            i,
+            "人間",
+            bindParams.yamls.resourceHash["人間"].index,
+            bindParams.imgQueue);
+    }
+    resourceReserveArea.onMouseOveredIcon(cardName => {
+        resourceHover.visible = true;
+        resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.imgQueue);
+        bindParams.stage.update();
+    });
+    resourceReserveArea.onMouseOutedIcon(() => {
+        resourceHover.visible = false;
+        resourceHover.setYamlData(null, bindParams.imgQueue);
+        bindParams.stage.update();
+    });
+    resourceReserveArea.onClickIcon((cardIcon) => {
+        cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        bindParams.stage.update();
+    });
+    bindParams.stage.addChild(resourceReserveArea);
+
+    const resourceOver = new SocketBinder<number | null>("ResourceOver", bindParams.socket);
+    resourceOver.onUpdate(x => {
+        if (x != null) {
+            resourceDialog.setThrowResourceNum(x);
+            resourceDialog.visible = true;
+        } else {
+            resourceDialog.visible = false;
+        }
+        bindParams.stage.update();
+    })
+    resourceDialog.visible = false;
     resourceDialog.onClick(() => {
         bindParams.socket
             .emit("ThrowResource", JSON.stringify(playerResourceAreaList[0].getSelectedAllIconId()));
