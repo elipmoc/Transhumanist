@@ -69,8 +69,5 @@ export class BoardPlayerHandle {
         socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
         socket.on("useActionCardIndex", actionIndex =>
             console.log(`useActionCardIndex:${actionIndex}`));
-        socket.on("ThrowResource", throwResourceIconIdList => {
-            console.log(`ThrowResource:${throwResourceIconIdList}`);
-        });
     }
 }
