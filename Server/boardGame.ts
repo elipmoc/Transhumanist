@@ -27,7 +27,7 @@ export class BoardGame {
         this.boardGameStatusChanger = new BoardGameStatusChanger();
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
-        this.eventCardStack = new EventCardStack();
+        this.eventCardStack = new EventCardStack(this.boardsocketManager);
 
         this.gamePlayers =
             new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
