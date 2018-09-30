@@ -1,9 +1,12 @@
 import { yamlGet } from "../../yamlGet";
 import { GenerateEventYamlDataArray, Event } from "../../../Share/Yaml/eventYamlData"
 import { arrayshuffle } from "../../../Share/utility";
+import { NumberOfEventCard } from "../../../Share/numberOfEventCard";
+import { SocketBinder } from "../../socketBinder";
 export class EventCardStack {
     private eventCardList: Event[] = [];
-    constructor() {
+    private numberOfEventCard: SocketBinder.Binder<NumberOfEventCard>;
+    constructor(boardSocketManager: SocketBinder.Namespace) {
         const eventCardGroups = new Array(6);
         for (let i = 0; i < 6; i++) {
             eventCardGroups[i] = [];
@@ -15,9 +18,18 @@ export class EventCardStack {
             arrayshuffle(x);
             this.eventCardList = x.concat(this.eventCardList);
         });
+        this.numberOfEventCard = new SocketBinder.Binder("numberOfEventCard");
+        this.numberOfEventCard.Value = {
+            currentNumber: this.eventCardList.length,
+            maxNumber: this.eventCardList.length
+        }
+        boardSocketManager.addSocketBinder(this.numberOfEventCard);
     }
 
     draw() {
-        return this.eventCardList.pop();
+        const drawEvent = this.eventCardList.pop();
+        this.numberOfEventCard.Value.currentNumber = this.eventCardList.length
+        this.numberOfEventCard.update();
+        return drawEvent;
     }
 }
