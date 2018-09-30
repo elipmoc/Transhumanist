@@ -21,11 +21,18 @@ export class Message {
         for (var i = 0; i < 4; i++) {
             let sendChatMessage = new SocketBinder.EmitReceiveBinder("sendChatMessage", true, ["player" + i]);
             let ii = i + 1;
-            sendChatMessage.OnReceive((str: string) => this.logMessageList.push(
-                new LogMessageForClient(`[player${ii}]s${str}`, ii)
-            ));
+            sendChatMessage.OnReceive((str: string) => {
+                if (this.chatMessageValidation(str))
+                    this.logMessageList.push(
+                        new LogMessageForClient(`[player${ii}]${str}`, ii));
+            });
             boardsocketManager.addSocketBinder(sendChatMessage);
         }
         boardsocketManager.addSocketBinder(this.logMessageList, this.eventLogMessage);
+    }
+
+    private chatMessageValidation(str: string) {
+        var reg = new RegExp(/[^\s]/g);
+        return reg.test(str);
     }
 }
