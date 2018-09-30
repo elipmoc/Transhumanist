@@ -10,7 +10,7 @@ export function build(bindParams: BindParams) {
     bindParams.stage.addChild(topWindowR);
     const numberOfEventCard = new SocketBinder<NumberOfEventCard>("numberOfEventCard", bindParams.socket);
     numberOfEventCard.onUpdate(x => {
-        console.log(`イベント枚数${x.currentNumber}/${x.maxNumber}`);
+        topWindowR.setEventNum(`${x.maxNumber - x.currentNumber} / ${x.maxNumber}`);
     });
     const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
     nowEvent.onUpdate(x => {
