@@ -8,12 +8,15 @@ export function build(bindParams: BindParams) {
     const chatTextColor = $("#chatTextColor");
     const chatText = $("#chatText");
     const sendButton = $("#sendButton");
+    bindParams.socket.on("ReminderBell", () => {
+        SoundManager.sePlay("bell");
+    })
 
     bellButton.click(function () {
-        SoundManager.sePlay("bell");       
+        bindParams.socket.emit("ReminderBell");
     });
     sendButton.click(function () {
         bindParams.socket.emit("sendChatMessage", JSON.stringify(chatText.val()));
     });
-    
+
 }

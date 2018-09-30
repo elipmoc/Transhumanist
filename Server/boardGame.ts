@@ -10,6 +10,7 @@ import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
+import { ChatSe } from "./boardGame/chatSe";
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
@@ -19,6 +20,7 @@ export class BoardGame {
     private actionCardStacks: ActionCardStacks;
     private eventCardStack: EventCardStack;
     private boardGameStatusChanger: BoardGameStatusChanger;
+    private chatSe: ChatSe;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardsocketManager = new SocketBinder.BindManager().registNamespace("board", boardSocket);
@@ -34,6 +36,7 @@ export class BoardGame {
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
 
         this.message = new Message(this.boardsocketManager);
+        this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.boardsocketManager.addSocketBinder(this.warPairList);
     }

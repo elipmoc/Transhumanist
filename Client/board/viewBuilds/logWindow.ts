@@ -8,11 +8,11 @@ export function build(bindParams: BindParams) {
     const logWindow = new LogWindow(bindParams.imgQueue);
     const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
     logMessageList.onUpdate(msgList => {
-        msgList.forEach(msg => logWindow.addMessaage(new LogMessage(msg)));
+        msgList.forEach(msg => logWindow.addMessaage(new LogMessage(msg), bindParams.playerId));
         bindParams.stage.update();
     });
     logMessageList.onPush(msg => {
-        logWindow.addMessaage(new LogMessage(msg));
+        logWindow.addMessaage(new LogMessage(msg), bindParams.playerId);
         bindParams.stage.update();
     })
     bindParams.stage.addChild(logWindow);

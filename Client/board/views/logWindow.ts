@@ -1,5 +1,5 @@
 import { global } from "../../boardGlobalData";
-import { LogMessageForClient } from "../../../Share/logMessageForClient";
+import { LogMessageForClient, LogMessageType } from "../../../Share/logMessageForClient";
 import { createMyShadow } from "../../utility";
 import { MessageBox, Message } from "./messageBox";
 import { ImageQueue } from "../imageQueue";
@@ -25,8 +25,8 @@ export class LogWindow extends createjs.Container {
         this.addChild(this.logMessageBox);
         this.mask = shape;
     }
-    addMessaage(msg: LogMessage) {
-        this.logMessageBox.addMessage(msg);
+    addMessaage(msg: LogMessage, playerId: number) {
+        this.logMessageBox.addMessage(msg, playerId);
     }
 }
 
@@ -37,10 +37,12 @@ export class LogMessage implements Message {
     constructor(msg: LogMessageForClient) {
         this.msg = msg;
     }
-    msgToText() {
+    msgToText(playerId: number) {
+        console.log(`${playerId}asdf`);
         const text = new createjs.Text();
         text.text = this.msg.msg;
-        text.color = logMessageColorList[this.msg.msgType];
+        const colorId = this.msg.msgType == LogMessageType.EventMsg ? 0 : (4 + this.msg.msgType - 1 - playerId) % 4 + 1;
+        text.color = logMessageColorList[colorId];
         text.font = "16px Arial";
         text.shadow = createMyShadow();
         return text;

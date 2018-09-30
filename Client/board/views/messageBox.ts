@@ -1,6 +1,6 @@
 
 export interface Message {
-    msgToText(): createjs.Text;
+    msgToText(playerId: number): createjs.Text;
 }
 
 export class MessageBox<MsgT extends Message> extends createjs.Container {
@@ -25,8 +25,8 @@ export class MessageBox<MsgT extends Message> extends createjs.Container {
         window.addEventListener("DOMMouseScroll", mouseWheel, false);
     }
 
-    addMessage(msg: MsgT) {
-        const text = msg.msgToText();
+    addMessage(msg: MsgT, playerId: number) {
+        const text = msg.msgToText(playerId);
         text.x = 0;
         text.y = this.bottomY;
         this.bottomY += text.getMeasuredHeight();

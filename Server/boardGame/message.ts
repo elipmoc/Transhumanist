@@ -5,7 +5,6 @@ import { SocketBinder } from "../socketBinder";
 export class Message {
     private logMessageList: SocketBinder.BinderList<LogMessageForClient>;
     private eventLogMessage: SocketBinder.Binder<EventLogMessageForClient>;
-    private sendChatMessage: SocketBinder.EmitReceiveBinder<String>;
 
     constructor(boardsocketManager: SocketBinder.Namespace) {
         this.logMessageList = new SocketBinder.BinderList<LogMessageForClient>("logMessageList");
@@ -18,10 +17,22 @@ export class Message {
         setTimeout(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
         this.eventLogMessage = new SocketBinder.Binder<EventLogMessageForClient>("eventLogMessage");
         this.eventLogMessage.Value = new EventLogMessageForClient("イベント【人口爆発】が発生しました", "リソース欄にある『人間の』2倍の\n新たな『人間』を追加する。\n新たに追加する時、『人間』は削除対象に出来ない。");
-        this.sendChatMessage = new SocketBinder.EmitReceiveBinder("sendChatMessage");
-        this.sendChatMessage.OnReceive((str: string) => this.logMessageList.push(
-            new LogMessageForClient(str, LogMessageType.EventMsg)
-        ));
-        boardsocketManager.addSocketBinder(this.logMessageList, this.eventLogMessage, this.sendChatMessage);
+
+        for (var i = 0; i < 4; i++) {
+            let sendChatMessage = new SocketBinder.EmitReceiveBinder("sendChatMessage", true, ["player" + i]);
+            let ii = i + 1;
+            sendChatMessage.OnReceive((str: string) => {
+                if (this.chatMessageValidation(str))
+                    this.logMessageList.push(
+                        new LogMessageForClient(`[player${ii}]${str}`, ii));
+            });
+            boardsocketManager.addSocketBinder(sendChatMessage);
+        }
+        boardsocketManager.addSocketBinder(this.logMessageList, this.eventLogMessage);
+    }
+
+    private chatMessageValidation(str: string) {
+        var reg = new RegExp(/[^\s]/g);
+        return reg.test(str);
     }
 }
