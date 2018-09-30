@@ -14,6 +14,7 @@ import * as selectActionWindow from "./viewBuilds/selectActionWindow";
 import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
+import * as chatForm from "./viewBuilds/chatForm";
 import { ActionCardUseDecisionWindow } from "./views/handActionCard/actionCardUseDecisionWindow";
 import { ResourceDialog } from "./views/resourceDialog";
 
@@ -40,4 +41,5 @@ export function viewBuild(bindParams: BindParams) {
     selectActionWindow.build(bindParams);
     selectDiceWindow.build(bindParams);
     topWindowL.build(bindParams);
+    chatForm.build(bindParams);
 }
