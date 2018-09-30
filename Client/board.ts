@@ -8,6 +8,7 @@ import { SoundManager } from "./soundManager";
 import { BackGround } from "./board/views/backGround";
 import { ImageQueue } from "./board/imageQueue";
 import { getSpriteJson } from "./getSpriteJson";
+import { BgmChanger } from "./board/bgmChanger";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -82,14 +83,15 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
-
-    viewBuild({
+    const bindParams = {
         imgQueue,
         stage,
         socket,
         playerId: Number(cookies.get("playerId")),
         yamls
-    });
-
+    }
+    viewBuild(bindParams);
+    let bgmChanger = new BgmChanger(bindParams);
+        
     stage.update();
 }
