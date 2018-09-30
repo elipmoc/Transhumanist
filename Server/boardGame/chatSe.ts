@@ -4,7 +4,7 @@ import { SocketBinder } from "../socketBinder";
 export class ChatSe {
     constructor(boardSocketManager: Namespace) {
 
-        ["ReminderBell", "Crap"].forEach(x => {
+        ["ReminderBell", "ReminderClap"].forEach(x => {
             const se = new SocketBinder.TriggerBinder<undefined, undefined>(x);
             boardSocketManager.addSocketBinder(se);
             se.OnReceive(() => {
