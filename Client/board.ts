@@ -71,7 +71,6 @@ window.onload = () => {
 }
 
 function preloadImage(yamls: Yamls, spriteJson: any) {
-    SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     let background = new BackGround();
@@ -92,6 +91,6 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     }
     viewBuild(bindParams);
     let bgmChanger = new BgmChanger(bindParams);
-        
+
     stage.update();
 }
