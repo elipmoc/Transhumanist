@@ -9,39 +9,29 @@
 </head>
 
 <body>
-    <div>
-        プレイヤー名
-        <input type="text" name="playerName" id="playerName" maxlength="7">
+    <div class="pageTitle">
+        <img src="Img/page/game.png">
     </div>
-
-    <hr>
-
-    <div>
-        部屋名
-        <input type="text" name="roomName" id="roomName" maxlength="6">
-        <br> パス
-        <input type="password" name="pass" id="pass" maxlength="8">
-        <input type="checkbox" id="passwordFlag">
-        <br>
+    <div class="playerForm">
+        プレイヤー名
+        <input type="text" name="playerName" id="playerName" maxlength="7" required>
+    </div>
+    <div class="roomForms">
+        <div class="roomForm">
+            部屋名
+            <input type="text" name="roomName" id="roomName" maxlength="6">
+        </div>
+        <div class="passForm">
+            パス
+            <input type="password" name="pass" id="pass" maxlength="8">
+            <input type="checkbox" id="passwordFlag">
+        </div>
         <input type="submit" value="部屋を作成" id="createButton">
     </div>
 
     <br>
 
     <div id="roomListArea">
-        <!-- <table class="roomTable" id="roomID">
-            <tr>
-                <td>太陽フレア</td>
-                <td colspan="4">入室中のプレイヤー</td>
-            </tr>
-            <tr>
-                <td class="playFlag">プレイ中</td>
-                <td class="player1">スター</td>
-                <td class="player2">N.H</td>
-                <td class="player3">らいパン鳥</td>
-                <td class="player4">死んだライオン</td>
-            </tr>
-        </table> -->
     </div>
     <script src="Client/login.js"></script>
 </body>
