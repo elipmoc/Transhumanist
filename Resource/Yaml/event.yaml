@@ -46,7 +46,7 @@
   description: 『人間』をサイコロの出目と同じ数、『病人』に変化する。
   forever: false
 
-- name: サブカルチャーの流行
+- name: サブカルチャー
   level: 3
   description: N点が1点減少する。
   forever: false
@@ -104,7 +104,7 @@
   forever: false
 
 # レベル6
-- name: ブラックホールの発生
+- name: ブラックホール
   level: 6
   description: これ以降イベントは変更されない。　ランダムな『リソースカード』を破棄させる。
   forever: false
