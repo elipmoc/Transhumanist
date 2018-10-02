@@ -28,8 +28,9 @@ export class SoundManager {
 
     static bgmPlay(id: string) {
         if (SoundManager.bgmInstance != null) {
-            SoundManager.bgmInstance.destroy();
+            SoundManager.bgmInstance.stop();
             createjs.Sound.removeAllEventListeners();
+            createjs.Sound.removeAllSounds();
         }
         createjs.Sound.registerSound(mapping[id], id);
         createjs.Sound.addEventListener("fileload", (e) => {
