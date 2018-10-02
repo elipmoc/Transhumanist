@@ -9,6 +9,7 @@ import { BackGround } from "./board/views/backGround";
 import { ImageQueue } from "./board/imageQueue";
 import { getSpriteJson } from "./getSpriteJson";
 import { BgmChanger } from "./board/bgmChanger";
+import { BackGroundChanger } from "./board/backGroundChanger";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -74,15 +75,9 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
-    let background = new BackGround();
-    stage.addChild(background);
-    background.setBg("bg_level5");
-
+    
     const socket = io("/board");
     const imgQueue = new ImageQueue(queue, spriteJson);
-    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
-    socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
-
     const bindParams = {
         imgQueue,
         stage,
@@ -90,6 +85,17 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
         playerId: Number(cookies.get("playerId")),
         yamls
     }
+
+
+    let background = new BackGroundChanger(bindParams);
+    stage.addChild(background);
+    
+    //background.setBg("bg_level5");
+
+    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
+    socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
+
+
     viewBuild(bindParams);
     let bgmChanger = new BgmChanger(bindParams);
         
