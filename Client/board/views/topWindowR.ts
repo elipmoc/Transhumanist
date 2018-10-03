@@ -20,8 +20,8 @@ export class TopWindowR extends createjs.Container {
         this.addChild(topWindowsRFrame);
 
         //現在のイベントテキスト
-        this.eventTitle = new createjs.Text("", "28px Arial");
-        this.eventLevel = new createjs.Text("", "18px Arial");
+        this.eventTitle = new createjs.Text("", "20px Arial");
+        this.eventLevel = new createjs.Text("", "14px Arial");
         this.textEvent = new createjs.Text("EVENT", "18px Arial");
         this.textEvent.color = "white";
 
@@ -30,9 +30,9 @@ export class TopWindowR extends createjs.Container {
 
         //this.eventTitle.textAlign = "center";
         //this.eventTitle.regY = this.eventTitle.getMeasuredHeight() / 2;
-        this.eventTitle.x = topWindowsRFrame.x - topWindowsRFrame.image.width / 2 - 15;
-        this.eventTitle.y = topWindowsRFrame.y + topWindowsRFrame.image.height / 2 - 5;
-        this.eventLevel.x = topWindowsRFrame.x - topWindowsRFrame.image.width / 2 - 80;
+        this.eventTitle.x = topWindowsRFrame.x - topWindowsRFrame.image.width / 2 - 42;
+        this.eventTitle.y = topWindowsRFrame.y + topWindowsRFrame.image.height / 2;
+        this.eventLevel.x = topWindowsRFrame.x - topWindowsRFrame.image.width / 2 - 90;
         this.eventLevel.y = topWindowsRFrame.y + topWindowsRFrame.image.height / 2 + 5;
         this.textEvent.x = topWindowsRFrame.x - topWindowsRFrame.image.width / 2 - 90;
         this.textEvent.y = topWindowsRFrame.y + topWindowsRFrame.image.height / 2 - 25;
