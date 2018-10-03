@@ -9,29 +9,31 @@
 </head>
 
 <body>
-    <div class="pageTitle">
-        <img src="Img/page/game.png">
-    </div>
-    <div class="playerForm">
-        プレイヤー名
-        <input type="text" name="playerName" id="playerName" maxlength="7" required>
-    </div>
-    <div class="roomForms">
-        <div class="roomForm">
-            部屋名
-            <input type="text" name="roomName" id="roomName" maxlength="6">
+    <div class="content">
+        <div class="pageTitle">
+            <img src="Img/page/game.png">
         </div>
-        <div class="passForm">
-            パス
-            <input type="password" name="pass" id="pass" maxlength="8">
-            <input type="checkbox" id="passwordFlag">
+        <div class="inputForms">
+            <div class="playerForm">
+                プレイヤー名<br>
+                <input type="text" name="playerName" id="playerName" maxlength="7" required>
+            </div>
+            <div class="roomForms">
+                <div class="roomForm">
+                    部屋名<br>
+                    <input type="text" name="roomName" id="roomName" maxlength="6">
+                </div>
+                <div class="passForm">
+                    <input type="checkbox" id="passwordFlag">パス<input type="password" name="pass" id="pass" maxlength="8">
+                </div>
+                <div style="text-align:right"><input type="submit" value="部屋を作成" id="createButton" class="button"></div>
+            </div>
         </div>
-        <input type="submit" value="部屋を作成" id="createButton">
-    </div>
 
-    <br>
+        <br>
 
-    <div id="roomListArea">
+        <div id="roomListArea">
+        </div>
     </div>
     <script src="Client/login.js"></script>
 </body>

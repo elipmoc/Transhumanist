@@ -26,6 +26,7 @@ export class RoomView {
         let button = document.createElement("input");
         button.setAttribute("type", "button");
         button.setAttribute("value", "部屋に入室");
+        button.setAttribute("class", "roomInButton button");
         button.onclick = () => { this.clickRequestEnterCallBack(); };
 
         tr = document.createElement("tr");
