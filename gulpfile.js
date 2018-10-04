@@ -10,6 +10,7 @@ var plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const pngquant = require('imagemin-pngquant');
 const spritesmith = require('gulp.spritesmith');
+const watch = require('gulp-watch');
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
 
@@ -104,8 +105,15 @@ gulp.task("server", () =>
 gulp.task('watch', () => {
     return new Promise((resolve, reject) => {
         runSequence('build', 'webpack', 'start', () => {
-            gulp.watch(['Server/**/*.ts', 'Share/**/*.ts'], ['server'])
-            gulp.watch('Client/**/*.ts', ['webpack']);
+            watch('Server/**/*.ts', () =>
+                new Promise((resolve, _) => runSequence('server', resolve))
+            );
+            watch('Share/**/*.ts', () =>
+                new Promise((resolve, _) => runSequence('server', resolve))
+            );
+            watch('Client/**/*.ts', () =>
+                new Promise((resolve, _) => runSequence('webpack', resolve))
+            );
             resolve();
         });
     });
