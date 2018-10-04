@@ -44,7 +44,7 @@ export class EventCardStack {
 
     setEventMessage(event: Event | undefined) {
         if (event != undefined) {
-            this.eventLogMessage.Value = new EventLogMessageForClient(`イベント【${event.name}】が発生しました`,event.description);
+            this.eventLogMessage.Value = new EventLogMessageForClient(`イベント：【${event.name}】`,event.description);
         }
     }
 }

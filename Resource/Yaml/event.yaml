@@ -1,18 +1,22 @@
 # レベル1
 - name: 無風状態
   level: 1
-  description: 何も起こらない。
+  description: 　何も起こりません。
   forever: false
 
 - name: 技術革新
   level: 1
-  description: 「任意のアクションカード」を、コスト無しで1つ使用できる。
+  description: |-
+  「任意のアクションカード」を、コスト無しで1つ
+  使用できる。
   forever: true
 
 #　レベル2
 - name: ムーアの法則
   level: 2
-  description: 『任意のリソースカード』を、サイコロの出目と同じ数を入手できる。
+  description: |-
+  『任意のリソースカード』を、サイコロの出目と
+  同じ数を入手できる。
   forever: false
 
 - name: 地震
@@ -22,12 +26,16 @@
 
 - name: 暴風
   level: 2
-  description: サイコロの出目が3以外の場合のみ、リソースカードを1つ破棄する。
+  description: |-
+  　サイコロの出目が3以外の場合のみ、
+  『リソースカード』を1つ破棄する。
   forever: false
 
 - name: 産業革命
   level: 2
-  description: 「任意のアクションカード」を、コスト無しで1つ使用できる。
+  description: |-
+  「任意のアクションカード」を、コスト無しで1つ
+  使用できる。
   forever: true
 
 - name: 少子化
@@ -37,74 +45,94 @@
 
 - name: 人口爆発
   level: 2
-  description: リソース欄にある『人間』の2倍の数、『人間』を生産する。
+  description: |-
+  　リソース欄にある『人間』の2倍の数、
+  『人間』を生産する。
   forever: false
 
 # レベル3
 - name: 未知の病気
   level: 3
-  description: 『人間』をサイコロの出目と同じ数、『病人』に変化する。
+  description: |-
+  『人間』をサイコロの出目と同じ数、
+  『病人』に変化する。
   forever: false
 
 - name: サブカルチャー
   level: 3
-  description: N点が1点減少する。
+  description: 　N点が1点減少する。
   forever: false
 
 - name: 世界大戦の開幕
   level: 3
-  description: 全てのAIがN点を所持する場合、宣戦布告無しで攻撃が可能。
+  description: |-
+  　全てのAIがN点を所持する場合、宣戦布告無し
+  で攻撃が可能。
   forever: true
 
 - name: ニート化が進む
   level: 3
-  description: N点が2点以上ある場合、『人間』を使用できない。
+  description: 　N点が2点以上ある場合、『人間』を使用できない。
   forever: true
 
 # レベル4
 - name: AIへの反抗
   level: 4
-  description: AIの活動範囲が所持するN点の数、減少される。
+  description: 　AIの活動範囲が所持するN点の数、減少される。
   forever: false
 
 - name: 隕石
   level: 4
-  description: 『リソースカード』をサイコロの出目と同じ数、破棄される。
+  description: |-
+  『リソースカード』をサイコロの出目と同じ数、
+  破棄される。
   forever: false
 
 - name: AIへの友好
   level: 4
-  description: AIの活動範囲が所持するP点の数、増加される。
+  description: 　AIの活動範囲が所持するP点の数、増加される。
   forever: false
 
 - name: 亡命
   level: 4
-  description: N点が3点以上あるAIのリソースから、『人間』が3つ移動する。　移動先はサイコロの出目と同じ数、右隣のプレイヤー。
+  description: |-
+  　N点が3点以上あるAIの「リソース」から、
+  『人間』が3つ移動する。
+  　移動先はサイコロの出目と同じ数、右隣のプレ
+  イヤー。
   forever: false
 
 # レベル5
 - name: 天変地異
   level: 5
-  description: 『リソースカード』と「設置したアクションカード」をサイコロの出目と同じ数、破棄される。
+  description: |-
+  『リソースカード』と「設置したアクションカー
+  ド」をサイコロの出目と同じ数、破棄される。
   forever: false
 
 - name: 太陽風
   level: 5
-  description: 設置したアクションカードを使用できなくする。
+  description: 「設置したアクションカード」を使用できなくする。
   forever: true
 
 - name: 独立傾向
   level: 5
-  description: 『人間』をサイコロの出目と同じ数増やし、『ロボット』を同数減らす。
+  description: |-
+  『人間』をサイコロの出目と同じ数増やし、
+  『ロボット』を同数減らす。
   forever: false
 
 - name: 内乱
   level: 5
-  description: N点が6点以上のプレイヤーは、設置したアクションカードを3つ破壊する。
+  description: |-
+  　N点が6点以上のプレイヤーは、「設置したアクシ
+  ョンカード」を3つ破壊する。
   forever: false
 
 # レベル6
 - name: ブラックホール
   level: 6
-  description: これ以降イベントは変更されない。　ランダムな『リソースカード』を破棄させる。
+  description: |-
+  　これ以降イベントは変更されない。
+  　ランダムな『リソースカード』を破棄させる。
   forever: false
