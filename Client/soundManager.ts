@@ -20,9 +20,9 @@ export class SoundManager {
     }
 
     static get BgmPosition() {
-        if (this.bgmInstance != null){
+        if (this.bgmInstance != null) {
             return this.bgmInstance.position;
-        }        
+        }
         return 0;
     }
 
@@ -31,11 +31,12 @@ export class SoundManager {
 
     private static bgmInstance: createjs.AbstractSoundInstance = null;
 
-    static bgmPlay(id: string,pos: number) {
+    static bgmPlay(id: string, pos: number) {
         if (SoundManager.bgmInstance != null) {
             SoundManager.bgmInstance.stop();
             createjs.Sound.removeAllEventListeners();
-            createjs.Sound.removeAllSounds();
+            const src = SoundManager.bgmInstance.src;
+            createjs.Sound.removeSound(src, mapping[src]);
         }
         createjs.Sound.registerSound(mapping[id], id);
         createjs.Sound.addEventListener("fileload", (e) => {
