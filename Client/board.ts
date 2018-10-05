@@ -85,11 +85,8 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
         yamls
     }
 
-
     let background = new BackGroundChanger(bindParams);
     stage.addChild(background);
-    
-    //background.setBg("bg_level5");
 
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
