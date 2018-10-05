@@ -48,7 +48,7 @@ export class GamePlayer {
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
-        this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
+        this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList", true, [`player${playerId}`]);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         boardSocketManager.addSocketBinder(state, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
 
