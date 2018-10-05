@@ -10,6 +10,7 @@ export class BackGroundChanger extends createjs.Container{
         super();
         this.background = new BackGround();
         this.addChild(this.background);
+        this.background.setBg("bg_level1");
 
         const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
         nowEvent.onUpdate(x => {
