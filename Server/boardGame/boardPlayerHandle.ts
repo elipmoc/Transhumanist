@@ -67,7 +67,5 @@ export class BoardPlayerHandle {
         socket.on("SelectBuildAction", str =>
             this.selectBuildAction(JSON.parse(str)));
         socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
-        socket.on("useActionCardIndex", actionIndex =>
-            console.log(`useActionCardIndex:${actionIndex}`));
     }
 }

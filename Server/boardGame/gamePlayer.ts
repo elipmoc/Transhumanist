@@ -50,7 +50,6 @@ export class GamePlayer {
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList", true, [`player${playerId}`]);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
-        boardSocketManager.addSocketBinder(state, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
 
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
@@ -66,7 +65,11 @@ export class GamePlayer {
 
 
         this.actionCardList.Value = [null, null, null, null, null];
+        const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>("useActionCardIndex", true, [`player${playerId}`]);
+        useActionCardIndex.OnReceive(actionCardIndex => this.actionCardList.setAt(actionCardIndex, null));
         this.playerCond.Value = GamePlayerCondition.Start;
+        boardSocketManager.addSocketBinder(state, this.buildActionList, this.diceList, this.actionCardList, this.playerCond, useActionCardIndex);
+
     }
 
     setResourceList() {
