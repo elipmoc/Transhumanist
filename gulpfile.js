@@ -84,6 +84,27 @@ gulp.task("build", () => {
     });
 });
 
+gulp.task("test_build", () => {
+    var pj_test = typescript.createProject("./Test/tsconfig.json");
+    return new Promise((resolve, reject) => {
+        gulp.src([
+            "./Share/**/*.ts",
+            "./Test/**/*.ts",
+            "!./node_modules/**",
+            "./Server/**/*.ts",
+        ])
+            .pipe(plumber())
+            .pipe(pj_test())
+            .js
+            .pipe(gulp.dest("./dist/Test/"))
+            .on("end", resolve)
+    })
+        .then(_ => {
+            console.log("ビルド成功したよ！");
+            return Promise.resolve();
+        });
+});
+
 gulp.task("start", () => {
     return new Promise((resolve, reject) => {
         if (node) node.kill()

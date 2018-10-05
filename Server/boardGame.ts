@@ -53,6 +53,10 @@ export class BoardGame {
         }
     }
 
+    isWait() {
+        return this.boardGameStatusChanger.isWait();
+    }
+
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatusChanger.isWait())
             this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager);
