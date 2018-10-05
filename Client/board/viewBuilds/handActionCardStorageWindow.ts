@@ -7,7 +7,7 @@ import { SocketBinderList } from "../../socketBinderList";
 
 //手札ウインドウの生成
 export function build(actionCardHover: ActionCardHover, decision: ActionCardUseDecisionWindow, bindParams: BindParams) {
-    const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
+    const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList", bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.imgQueue);
     actionCardList.onUpdate(list => {
         list.forEach((actionCardName, index) =>
