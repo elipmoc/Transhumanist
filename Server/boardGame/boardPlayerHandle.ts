@@ -41,7 +41,7 @@ export class BoardPlayerHandle {
 
     //アクションカード選択ウインドウの表示非表示する
     setSelectActionWindowVisible(flag: boolean) {
-        this.socket.emit("setSelectActionWindowVisible", JSON.stringify(flag));
+        //  this.socket.emit("setSelectActionWindowVisible", JSON.stringify(flag));
     }
 
     //アクションカードの現在枚数、総山札数、捨て札数を変更する

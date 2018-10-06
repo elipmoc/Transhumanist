@@ -7,6 +7,7 @@ import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
+import { ActionCardStacks } from "./drawCard/actionCardStacks";
 
 export class GamePlayer {
     private playerId: number;
@@ -17,7 +18,9 @@ export class GamePlayer {
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private actionCardList: SocketBinder.BinderList<string | null>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
+    private actionCardDrawPhase: SocketBinder.Binder<boolean>;
     private isGameMaster: boolean = false;
+    private actionCardStacks: ActionCardStacks;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -31,6 +34,9 @@ export class GamePlayer {
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
     setMyTurn() {
+        if (this.actionCardList.Value.find(x => x == null) === null) {
+            this.actionCardDrawPhase.Value = true;
+        }
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         this.resourceList.addResource("人間");
     }
@@ -42,7 +48,8 @@ export class GamePlayer {
     constructor(
         playerData: PlayerData,
         playerId: number,
-        boardSocketManager: SocketBinder.Namespace
+        boardSocketManager: SocketBinder.Namespace,
+        actionCardStacks: ActionCardStacks
     ) {
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
@@ -50,7 +57,18 @@ export class GamePlayer {
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList", true, [`player${playerId}`]);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
+        this.actionCardDrawPhase = new SocketBinder.Binder<boolean>("actionCardDrawPhase", true, [`player${playerId}`]);
+        const selectActionCardLevel = new SocketBinder.EmitReceiveBinder<number>("selectActionCardLevel", true, [`player${playerId}`]);
+        this.actionCardStacks = actionCardStacks;
+        selectActionCardLevel.OnReceive(x => {
+            if (this.actionCardDrawPhase.Value) {
+                const idx = this.actionCardList.Value.findIndex(x => x == null);
+                this.actionCardList.setAt(idx, this.actionCardStacks.draw(x).name);
+                this.actionCardDrawPhase.Value = false;
+            }
+        });
 
+        this.actionCardDrawPhase.Value = false;
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
@@ -68,7 +86,11 @@ export class GamePlayer {
         const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>("useActionCardIndex", true, [`player${playerId}`]);
         useActionCardIndex.OnReceive(actionCardIndex => this.actionCardList.setAt(actionCardIndex, null));
         this.playerCond.Value = GamePlayerCondition.Start;
-        boardSocketManager.addSocketBinder(state, this.buildActionList, this.diceList, this.actionCardList, this.playerCond, useActionCardIndex);
+        boardSocketManager.addSocketBinder(
+            state, this.buildActionList,
+            this.diceList, this.actionCardList,
+            this.playerCond, useActionCardIndex,
+            this.actionCardDrawPhase, selectActionCardLevel);
 
     }
 

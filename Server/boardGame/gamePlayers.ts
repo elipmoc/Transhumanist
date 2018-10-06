@@ -5,6 +5,7 @@ import { arrayshuffle } from "../../Share/utility";
 import { TurnManager } from "./turnManager";
 import { SocketBinder } from "../socketBinder";
 import { EventCardDrawer } from "./eventCardDrawer";
+import { ActionCardStacks } from "./drawCard/actionCardStacks";
 
 
 export class GamePlayers {
@@ -33,9 +34,10 @@ export class GamePlayers {
 
     addMember(
         playerData: PlayerData, playerId: number,
-        boardSocketManager: SocketBinder.Namespace
+        boardSocketManager: SocketBinder.Namespace,
+        actionCardStacks: ActionCardStacks
     ) {
-        const player = new GamePlayer(playerData, playerId, boardSocketManager);
+        const player = new GamePlayer(playerData, playerId, boardSocketManager, actionCardStacks);
         if (this.gameMasterPlayerId.Value == null) {
             this.gameMasterPlayerId.Value = playerId;
             player.IsGameMaster = true;
