@@ -27,21 +27,11 @@ export class BoardPlayerHandle {
 
     declareWarButtonClick() { console.log("declareWarButtonClick"); }
 
-    selectLevel(level: number) {
-        console.log("level" + level);
-        this.setSelectActionWindowVisible(false);
-    }
-
     selectResource(data: SelectResourceData) {
         console.log(`selectResource player${this.player.PlayerId} iconId${data.iconId}`);
     }
     selectBuildAction(data: SelectBuildActionData) {
         console.log(`selectBuildAction player${this.player.PlayerId} iconId${data.iconId}`);
-    }
-
-    //アクションカード選択ウインドウの表示非表示する
-    setSelectActionWindowVisible(flag: boolean) {
-        //  this.socket.emit("setSelectActionWindowVisible", JSON.stringify(flag));
     }
 
     //アクションカードの現在枚数、総山札数、捨て札数を変更する
@@ -59,9 +49,6 @@ export class BoardPlayerHandle {
         socket.on("turnFinishButtonClick", () => this.turnFinishButtonClick());
 
         socket.on("declareWarButtonClick", () => this.declareWarButtonClick());
-        socket.on("selectLevel", (level) =>
-            this.selectLevel(level));
-        setTimeout(() => this.setSelectActionWindowVisible(true), 3000);
         socket.on("SelectResource", str =>
             this.selectResource(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
