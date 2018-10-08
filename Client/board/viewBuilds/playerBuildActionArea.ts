@@ -20,7 +20,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             list.forEach((cardName, iconId) =>
                 playerBuildActionAreaList[i].setResource(
                     iconId, cardName,
-                    bindParams.yamls.buildActionCardHash[cardName].index,
+                    cardName != null ? bindParams.yamls.buildActionCardHash[cardName].index : -1,
                     bindParams.imgQueue
                 ));
             bindParams.layerManager.update();

@@ -55,8 +55,7 @@ export class ResourceList {
     }
 
     setResourceList() {
-        //        this.resourceList.Value.fill("人間", 0, 4);
-        this.resourceList.Value.fill("人間", 0, 30);
+        this.resourceList.Value.fill("人間", 0, 4);
         const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
             x.level == 2);
         this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
