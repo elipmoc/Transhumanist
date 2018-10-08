@@ -2,6 +2,7 @@ import { LogMessage, LogWindow } from "../views/logWindow";
 import { BindParams } from "../bindParams";
 import { LogMessageForClient } from "../../../Share/logMessageForClient";
 import { SocketBinderList } from "../../socketBinderList";
+import { LayerTag } from "../../board";
 
 //ログウインドウの生成
 export function build(bindParams: BindParams) {
@@ -9,11 +10,11 @@ export function build(bindParams: BindParams) {
     const logMessageList = new SocketBinderList<LogMessageForClient>("logMessageList", bindParams.socket);
     logMessageList.onUpdate(msgList => {
         msgList.forEach(msg => logWindow.addMessaage(new LogMessage(msg), bindParams.playerId));
-        bindParams.stage.update();
+        logWindow.stage.update();
     });
     logMessageList.onPush(msg => {
         logWindow.addMessaage(new LogMessage(msg), bindParams.playerId);
-        bindParams.stage.update();
+        logWindow.stage.update();
     })
-    bindParams.stage.addChild(logWindow);
+    bindParams.layerManager.add(LayerTag.Ui, logWindow);
 }

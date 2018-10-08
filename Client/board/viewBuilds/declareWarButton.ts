@@ -1,5 +1,6 @@
 import { BindParams } from "../bindParams";
 import { DeclareWarButton } from "../views/declareWarButton";
+import { LayerTag } from "../../board";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {
@@ -8,5 +9,5 @@ export function build(bindParams: BindParams) {
             () => bindParams.socket.emit("declareWarButtonClick"),
             bindParams.imgQueue
         );
-    bindParams.stage.addChild(declareWarButton);
+    bindParams.layerManager.add(LayerTag.Ui, declareWarButton);
 }
