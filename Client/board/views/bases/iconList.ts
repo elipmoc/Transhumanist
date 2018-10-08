@@ -6,7 +6,7 @@ import { ImageQueue } from "../../imageQueue";
 //iconリストのクラス
 export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     protected icons: I[] = new Array();
-    private onClickIconCallBack: (iconId: number, kind: K) => void;
+    private onClickIconCallBack: (cardIcon: CardIconBase<K>) => void;
     private onMouseOverIconCallBack: (kind: K) => void;
     private onMouseOutIconCallBack: () => void;
     private xNum: number;
@@ -17,7 +17,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
         this.xNum = xNum;
         for (let i = 0; i < maxIcon; i++) {
             const cardIcon = new icon_creator(i);
-            cardIcon.onClicked((iconId, kind) => this.onClickIconCallBack(iconId, kind));
+            cardIcon.onClicked(() => this.onClickIconCallBack(cardIcon));
             cardIcon.onMouseOuted(() => this.onMouseOutIconCallBack());
             cardIcon.onMouseOvered((kind) => this.onMouseOverIconCallBack(kind));
             cardIcon.x = this.icons.length % this.xNum * global.cardIconSize;
@@ -28,7 +28,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (iconId: number, kind: K) => void) {
+    onClickedIcon(onClickIconCallBack: (cardIcon: CardIconBase<K>) => void) {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 
@@ -40,6 +40,14 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
     onMouseOveredIcon(onMouseOverIconCallBack: (kind: K) => void) {
         this.onMouseOverIconCallBack = onMouseOverIconCallBack;
+    }
+
+    unSelectFrameVisible() {
+        this.icons.forEach(x => x.selectFrameVisible = false);
+    }
+
+    getSelectedAllIconId() {
+        return this.icons.filter(x => x.selectFrameVisible).map(x => x.IconId);
     }
 
     setResource(iconId: number, kind: K, imgIndex: number, queue: ImageQueue) {

@@ -26,6 +26,8 @@ export class Room {
         if (this.roomData.getPasswordInfo().passwordCheck(requestEnterRoomData.password) == false)
             //パスワードが違う
             return faildResultEnterRoomData("パスワードが違います");
+        if (this.boardGame.isWait() == false)
+            return faildResultEnterRoomData("もうプレイ中です");
 
         //プレイヤー入室
         let playerData = new PlayerData(uuid, requestEnterRoomData.playerName);

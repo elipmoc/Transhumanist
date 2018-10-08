@@ -2,6 +2,7 @@ import { SelectDiceWindow } from "../views/selectDiceWindow";
 import { BindParams } from "../bindParams";
 import { DiceNumber } from "../../../Share/diceNumber";
 import { SocketBinder } from "../../socketBinder";
+import { LayerTag } from "../../board";
 
 //ダイス選択ウインドウの生成
 export function build(bindParams: BindParams) {
@@ -11,6 +12,6 @@ export function build(bindParams: BindParams) {
         bindParams.socket.emit("selectDice", index);
     });
     diceIconList.onUpdate(diceList => selectDiceWindow.setDiceList(diceList));
-    bindParams.stage.addChild(selectDiceWindow);
+    bindParams.layerManager.add(LayerTag.PopUp, selectDiceWindow);
     selectDiceWindow.visible = false;
 }

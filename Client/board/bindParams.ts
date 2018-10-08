@@ -1,8 +1,9 @@
 import { Yamls } from "../getYaml";
 import { ImageQueue } from "./imageQueue";
+import { LayerManager } from "./layerManager";
 
 export interface BindParams {
-    stage: createjs.Stage;
+    layerManager: LayerManager;
     imgQueue: ImageQueue;
     socket: SocketIOClient.Socket;
     playerId: number;

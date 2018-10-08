@@ -10,6 +10,7 @@ import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
+import { ChatSe } from "./boardGame/chatSe";
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
@@ -19,13 +20,14 @@ export class BoardGame {
     private actionCardStacks: ActionCardStacks;
     private eventCardStack: EventCardStack;
     private boardGameStatusChanger: BoardGameStatusChanger;
+    private chatSe: ChatSe;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardsocketManager = new SocketBinder.BindManager().registNamespace("board", boardSocket);
         this.boardGameStatusChanger = new BoardGameStatusChanger();
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
-        this.eventCardStack = new EventCardStack();
+        this.eventCardStack = new EventCardStack(this.boardsocketManager);
 
         this.gamePlayers =
             new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
@@ -34,6 +36,7 @@ export class BoardGame {
         setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
 
         this.message = new Message(this.boardsocketManager);
+        this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.boardsocketManager.addSocketBinder(this.warPairList);
     }
@@ -50,8 +53,12 @@ export class BoardGame {
         }
     }
 
+    isWait() {
+        return this.boardGameStatusChanger.isWait();
+    }
+
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatusChanger.isWait())
-            this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager);
+            this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
     }
 }

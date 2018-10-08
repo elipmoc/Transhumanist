@@ -1,5 +1,5 @@
 import { IconList } from "../bases/iconList";
-import { BuildActionCardIcon } from "../cardIcon";
+import { BuildActionCardIcon, CardIconBase } from "../cardIcon";
 import { ActionCardName, BuildActionIndex } from "../../../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../../imageQueue";
 
@@ -15,7 +15,7 @@ export class PlayerBuildAreaBase extends createjs.Container {
         this.addChild(this.buildList);
     }
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (iconId: number, buildActionCardName: ActionCardName) => void) {
+    onClickedIcon(onClickIconCallBack: (cardicon: CardIconBase<ActionCardName>) => void) {
         this.buildList.onClickedIcon(onClickIconCallBack);
     }
 

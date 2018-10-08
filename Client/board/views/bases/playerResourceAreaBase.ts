@@ -1,4 +1,4 @@
-import { ResourceCardIcon } from "../cardIcon";
+import { ResourceCardIcon, CardIconBase } from "../cardIcon";
 import { ResourceName, ResourceIndex } from "../../../../Share/Yaml/resourceYamlData";
 import { IconList } from "../bases/iconList";
 import { ImageQueue } from "../../imageQueue";
@@ -9,9 +9,9 @@ export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceList: IconList<ResourceCardIcon, ResourceName>;
 
     //xNum:リソースを横に何個並べるかの数値
-    constructor(xNum: number) {
+    constructor(xNum: number, maxNum: number = 30) {
         super();
-        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(xNum, 30, ResourceCardIcon)
+        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(xNum, maxNum, ResourceCardIcon)
         this.resourceArea = new createjs.Bitmap("");
         this.addChild(this.resourceArea);
         this.addChild(this.resourceList);
@@ -19,7 +19,7 @@ export class PlayerResourceAreaBase extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (iconId: number, resourceName: ResourceName) => void) {
+    onClickIcon(onClickIconCallBack: (cardIcon: CardIconBase<ResourceName>) => void) {
         this.resourceList.onClickedIcon(onClickIconCallBack);
     }
 
@@ -31,6 +31,14 @@ export class PlayerResourceAreaBase extends createjs.Container {
     //リソースアイコンがマウスアウトされた時に呼ばれる関数をセットする
     onMouseOutedIcon(onMouseOutIconCallBack: () => void) {
         this.resourceList.onMouseOutedIcon(onMouseOutIconCallBack);
+    }
+
+    unSelectFrameVisible() {
+        this.resourceList.unSelectFrameVisible();
+    }
+
+    getSelectedAllIconId() {
+        return this.resourceList.getSelectedAllIconId();
     }
 
     setResource(iconId: number, resourceName: ResourceName, resourceIndex: ResourceIndex, queue: ImageQueue) {

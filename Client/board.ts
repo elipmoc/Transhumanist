@@ -8,6 +8,9 @@ import { SoundManager } from "./soundManager";
 import { BackGround } from "./board/views/backGround";
 import { ImageQueue } from "./board/imageQueue";
 import { getSpriteJson } from "./getSpriteJson";
+import { BgmChanger } from "./board/bgmChanger";
+import { BackGroundChanger } from "./board/backGroundChanger";
+import { LayerManager } from "./board/layerManager";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -22,43 +25,6 @@ window.onload = () => {
         )
     }));
     queue.loadManifest([
-        /* { id: "evenPlayerFrame", src: "Img/ui/evenPlayerFrame.png" },
-         { id: "evenPlayerFrame2", src: "Img/ui/evenPlayerFrame2.png" },
-         { id: "oddPlayerFrame", src: "Img/ui/oddPlayerFrame.png" },
-         { id: "oddPlayerFrame2", src: "Img/ui/oddPlayerFrame2.png" },
-         { id: "topWindows", src: "Img/ui/topWindows.png" },
-         { id: "setting", src: "Img/ui/setting.png" },
-         { id: "evenPlayerRBArea", src: "Img/ui/evenPlayerRBArea.png" },
-         { id: "oddPlayerRBArea", src: "Img/ui/oddPlayerRBArea.png" },
-         { id: "logEvent", src: "Img/ui/logEvent.png" },
-         { id: "button", src: "Img/ui/button.png" },
-         { id: "actionStorageFrame", src: "Img/ui/actionStorageFrame.png" },
-         { id: "optionWindow", src: "Img/ui/optionWindow.png" },
-         { id: "optionCross", src: "Img/ui/optionCross.png" },
-         { id: "optionVolumeBar", src: "Img/ui/optionVolumeBar.png" },
-         { id: "optionVolumeCursor", src: "Img/ui/optionVolumeCursor.png" },
-         { id: "b_level1", src: "Img/card/back/level1mb.png" },
-         { id: "b_level2", src: "Img/card/back/level2mb.png" },
-         { id: "b_level3", src: "Img/card/back/level3mb.png" },
-         { id: "b_level4", src: "Img/card/back/level4mb.png" },
-         { id: "b_level5", src: "Img/card/back/level5mb.png" },
-         { id: "b_level6", src: "Img/card/back/level6mb.png" },
-         { id: "f_level1", src: "Img/card/front/action/level1.png" },
-         { id: "f_level2", src: "Img/card/front/action/level2.png" },
-         { id: "f_level3", src: "Img/card/front/action/level3.png" },
-         { id: "f_level4", src: "Img/card/front/action/level4.png" },
-         { id: "f_level5", src: "Img/card/front/action/level5.png" },
-         { id: "f_level6", src: "Img/card/front/action/level6.png" },
-         { id: "miningAction", src: "Img/card/front/action/mining.png" },
-         { id: "意識操作のテスト", src: "Img/card/front/action/意識操作のテスト.png" },
-         { id: "核融合炉", src: "Img/card/front/action/核融合炉.png" },
-         { id: "量子コンピュータ", src: "Img/card/front/action/量子コンピュータ.png" },
-         { id: "治療施設", src: "Img/card/front/action/治療施設.png" },
-         { id: "resource", src: "Img/resource.png" },
-         { id: "buildAction", src: "Img/buildAction.png" },
-         { id: "logFrame", src: "Img/ui/logFrame.png" },
-         { id: "eventFrame", src: "Img/ui/eventFrame.png" },
-         { id: "gm_icon", src: "Img/gmIcon.png" },*/
         { id: "boardSprite", src: "Img/boardSprite.png" },
         { id: "bell", src: "Se/bell.mp3" },
         { id: "clap", src: "Se/clap.mp3" },
@@ -69,27 +35,51 @@ window.onload = () => {
     ]);
 }
 
+export const enum LayerTag {
+    BackGround = "backGround",
+    UiUnder = "ui_under",
+    Ui = "ui",
+    UiOver = "ui_over",
+    Hover = "hover",
+    PopUp = "pop_up",
+    OptionUi = "option_ui"
+}
+
+function getLayerTags(): string[] {
+    return [
+        LayerTag.BackGround,
+        LayerTag.UiUnder,
+        LayerTag.Ui,
+        LayerTag.UiOver,
+        LayerTag.Hover,
+        LayerTag.PopUp,
+        LayerTag.OptionUi
+    ];
+}
+
 function preloadImage(yamls: Yamls, spriteJson: any) {
-    SoundManager.bgmPlay("bgm_level3");
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
-    let background = new BackGround();
-    stage.addChild(background);
-    background.setBg("bg_level5");
-
+    const layerManager = new LayerManager(getLayerTags(), stage);
     const socket = io("/board");
     const imgQueue = new ImageQueue(queue, spriteJson);
+    const bindParams = {
+        imgQueue,
+        layerManager,
+        socket,
+        playerId: Number(cookies.get("playerId")),
+        yamls
+    }
+
+    let background = new BackGroundChanger(bindParams);
+    layerManager.add("backGround", background);
+
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
 
 
-    viewBuild({
-        imgQueue,
-        stage,
-        socket,
-        playerId: Number(cookies.get("playerId")),
-        yamls
-    });
+    viewBuild(bindParams);
+    let bgmChanger = new BgmChanger(bindParams);
 
-    stage.update();
+    layerManager.update();
 }

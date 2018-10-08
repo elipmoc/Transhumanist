@@ -1,24 +1,28 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
 import { DiceNumber } from "../../Share/diceNumber";
-import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/resourceYamlData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardName, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
+import { ResourceList } from "./ResourceList";
+import { ActionCardStacks } from "./drawCard/actionCardStacks";
+import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: GamePlayerState;
-    private resourceList: SocketBinder.BinderList<ResourceName | null>;
-    private buildActionList: SocketBinder.BinderList<ActionCardName>;
+    private resourceList: ResourceList;
+    private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private actionCardList: SocketBinder.BinderList<string | null>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
+    private actionCardDrawPhase: SocketBinder.Binder<boolean>;
     private isGameMaster: boolean = false;
+    private actionCardStacks: ActionCardStacks;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -32,8 +36,11 @@ export class GamePlayer {
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
     setMyTurn() {
+        if (this.actionCardList.Value.find(x => x == null) === null) {
+            this.actionCardDrawPhase.Value = true;
+        }
         this.playerCond.Value = GamePlayerCondition.MyTurn;
-        this.addResource("人間");
+        this.resourceList.addResource("人間");
     }
 
     setWait() {
@@ -43,45 +50,59 @@ export class GamePlayer {
     constructor(
         playerData: PlayerData,
         playerId: number,
-        boardSocketManager: SocketBinder.Namespace
+        boardSocketManager: SocketBinder.Namespace,
+        actionCardStacks: ActionCardStacks
     ) {
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
-        this.resourceList = new SocketBinder.BinderList<ResourceName | null>("ResourceKindList" + playerId);
+        this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
-        this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList" + playerId, true, [`player${playerId}`]);
+        this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList", true, [`player${playerId}`]);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
-        boardSocketManager.addSocketBinder(state, this.resourceList, this.buildActionList, this.diceList, this.actionCardList, this.playerCond);
+        this.actionCardDrawPhase = new SocketBinder.Binder<boolean>("actionCardDrawPhase", true, [`player${playerId}`]);
+        const selectActionCardLevel = new SocketBinder.EmitReceiveBinder<number>("selectActionCardLevel", true, [`player${playerId}`]);
+        this.actionCardStacks = actionCardStacks;
+        selectActionCardLevel.OnReceive(x => {
+            if (this.actionCardDrawPhase.Value) {
+                const idx = this.actionCardList.Value.findIndex(x => x == null);
+                this.actionCardList.setAt(idx, this.actionCardStacks.draw(x).name);
+                this.actionCardDrawPhase.Value = false;
+            }
+        });
 
+        this.actionCardDrawPhase.Value = false;
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
         this.state = new GamePlayerState(state, playerData.getName());
-        this.buildActionList.Value = [
-            "採掘施設", "治療施設", "教会", "教会",
-            "教会", "教会", "教会", "教会", "教会",
-            "教会", "教会", "教会", "教会", "教会",
-            "教会", "教会", "教会", "核融合炉",
-            "ロボット工場",
-        ];
-        this.resourceList.Value = new Array(30);
-        this.resourceList.Value.fill(null);
-
+        this.buildActionList.Value = new Array(30);
+        this.buildActionList.Value.fill(null);
         this.actionCardList.Value = [null, null, null, null, null];
+        const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>("useActionCardIndex", true, [`player${playerId}`]);
+        useActionCardIndex.OnReceive(actionCardIndex => {
+            const useActionCardName = this.actionCardList.Value[actionCardIndex];
+            if (useActionCardName) {
+                const useActionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true)[useActionCardName];
+                if (useActionCard) {
+                    const idx = this.buildActionList.Value.findIndex(x => x == null);
+                    if (idx != -1)
+                        this.buildActionList.setAt(idx, useActionCardName);
+                }
+            }
+            this.actionCardList.setAt(actionCardIndex, null);
+        });
         this.playerCond.Value = GamePlayerCondition.Start;
-    }
+        boardSocketManager.addSocketBinder(
+            state, this.buildActionList,
+            this.diceList, this.actionCardList,
+            this.playerCond, useActionCardIndex,
+            this.actionCardDrawPhase, selectActionCardLevel);
+        state.update();
 
-    private addResource(name: ResourceName) {
-        const idx = this.resourceList.Value.findIndex(x => x == null);
-        this.resourceList.setAt(idx, name);
     }
 
     setResourceList() {
-        this.resourceList.Value.fill("人間", 0, 4);
-        const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
-            x.level == 2);
-        this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
-        this.resourceList.update();
+        this.resourceList.setResourceList();
     }
 
     drawActionCard(card: ActionCardYamlData) {

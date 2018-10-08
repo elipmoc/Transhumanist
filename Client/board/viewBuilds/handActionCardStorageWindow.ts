@@ -4,20 +4,23 @@ import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
+import { LayerTag } from "../../board";
 
 //手札ウインドウの生成
-export function build(actionCardHover: ActionCardHover, decision: ActionCardUseDecisionWindow, bindParams: BindParams) {
-    const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList" + bindParams.playerId, bindParams.socket);
+export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
+    const decision = new ActionCardUseDecisionWindow();
+
+    const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList", bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.imgQueue);
     actionCardList.onUpdate(list => {
         list.forEach((actionCardName, index) =>
             actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName])
         );
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
     actionCardList.onSetAt((index, actionCardName) => {
         actionStorageWindow.setActionCard(index, bindParams.yamls.actionCardHash[actionCardName]);
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
     decision.visible = false;
     decision.onClicked((r) => {
@@ -25,14 +28,15 @@ export function build(actionCardHover: ActionCardHover, decision: ActionCardUseD
             bindParams.socket.emit("useActionCardIndex", decision.CardIndex);
         }
         decision.visible = false;
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
     actionStorageWindow.onSelectedCard((index, name) => {
         decision.CardName = name;
         decision.CardIndex = index;
         decision.visible = true;
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
 
-    bindParams.stage.addChild(actionStorageWindow);
+    bindParams.layerManager.add(LayerTag.PopUp, decision);
+    bindParams.layerManager.add(LayerTag.Ui, actionStorageWindow);
 }
