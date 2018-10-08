@@ -15,6 +15,9 @@ import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
 import { LayerTag } from "../board";
+import { ActionCardUseDecisionWindow } from "./views/handActionCard/actionCardUseDecisionWindow";
+import { ResourceDialog } from "./views/resourceDialog";
+import { DeclareWarDialog } from "./views/declareWarDialog";
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {
