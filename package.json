@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "dependencies": {
     "@types/createjs": "0.0.29",
-    "@types/jquery": "^3.3.11",
+    "@types/jquery": "^3.3.12",
     "@types/js-cookie": "^2.2.0",
     "@types/js-yaml": "^3.11.2",
     "@types/node-uuid": "0.0.28",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.9",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^4.1.0",
     "gulp-plumber": "^1.2.0",
