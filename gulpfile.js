@@ -1,6 +1,5 @@
 var gulp = require("gulp");
 var typescript = require('gulp-typescript');
-var concat = require('gulp-concat');
 var spawn = require('child_process').spawn;
 var node;
 const webpackStream = require("webpack-stream");
@@ -9,8 +8,6 @@ var plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const pngquant = require('imagemin-pngquant');
 const spritesmith = require('gulp.spritesmith');
-// webpackの設定ファイルの読み込み
-const webpackConfig = require("./webpack.config");
 
 gulp.task('sprite', () => {
     var spriteData = gulp.src('./Resource/Img/boardSprite/**/*.png')
@@ -40,6 +37,17 @@ gulp.task('compress', () =>
 );
 
 gulp.task("webpack", done => {
+    const webpackConfig = require("./webpack.config");
+    gulp.src("./Client/**/*.ts")
+        .pipe(plumber())
+        .pipe(webpackStream(webpackConfig, webpack))
+        .pipe(gulp.dest("./"))
+        .on("end", done);
+});
+
+gulp.task("webpack_pro", done => {
+    const webpackConfig = require("./webpack.config");
+    webpackConfig.mode = "production";
     gulp.src("./Client/**/*.ts")
         .pipe(plumber())
         .pipe(webpackStream(webpackConfig, webpack))
