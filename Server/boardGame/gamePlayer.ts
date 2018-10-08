@@ -91,6 +91,7 @@ export class GamePlayer {
             this.diceList, this.actionCardList,
             this.playerCond, useActionCardIndex,
             this.actionCardDrawPhase, selectActionCardLevel);
+        state.update();
 
     }
 
