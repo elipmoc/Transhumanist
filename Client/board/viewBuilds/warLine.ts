@@ -2,6 +2,7 @@ import { BindParams } from "../bindParams";
 import { WarLineControl } from "../views/warLine";
 import { SocketBinderList } from "../../socketBinderList";
 import { WarPair } from "../../../Share/warPair";
+import { LayerTag } from "../../board";
 
 //戦争ライン表示の生成
 export function build(bindParams: BindParams) {
@@ -9,15 +10,15 @@ export function build(bindParams: BindParams) {
     const warLineControl = new WarLineControl();
     warPairList.onUpdate(xs => {
         xs.forEach(x => warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId))
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
     warPairList.onPush(x => {
         warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId)
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
     warPairList.onPop(x => {
         warLineControl.deleteWarLine(x.playerId1, x.playerId2)
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
-    bindParams.stage.addChild(warLineControl);
+    bindParams.layerManager.add(LayerTag.UiUnder, warLineControl);
 }

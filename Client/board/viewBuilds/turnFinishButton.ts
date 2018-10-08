@@ -3,6 +3,7 @@ import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { TurnFinishButton } from "../views/turnFinishButton";
 import { SoundManager } from "../../soundManager";
+import { LayerTag } from "../../board";
 
 //ターン終了ボタン生成
 export function build(bindParams: BindParams) {
@@ -12,7 +13,7 @@ export function build(bindParams: BindParams) {
             () => bindParams.socket.emit("turnFinishButtonClick"),
             bindParams.imgQueue
         );
-    bindParams.stage.addChild(turnFinishButton);
+    bindParams.layerManager.add(LayerTag.Ui, turnFinishButton);
 
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
@@ -36,13 +37,13 @@ export function build(bindParams: BindParams) {
                 break;
 
         }
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     })
     gameMasterPlayerId.onUpdate(playerId => {
         if (gamePlayerCondition.Value == GamePlayerCondition.Start && playerId == bindParams.playerId)
             turnFinishButton.setText("ゲーム開始");
         else
             turnFinishButton.setText("");
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     })
 }

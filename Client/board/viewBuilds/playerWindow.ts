@@ -3,6 +3,7 @@ import { PlayerWindowBase } from "../views/bases/playerWindowBase";
 import { ResponseGamePlayerState } from "../../../Share/responseGamePlayerState";
 import { SocketBinder } from "../../socketBinder";
 import * as playerWindows from "../views/playerWindows";
+import { LayerTag } from "../../board";
 
 export function build(bindParams: BindParams) {
     const playerWindowList: PlayerWindowBase[] = [
@@ -23,21 +24,21 @@ export function build(bindParams: BindParams) {
             playerWindowList[i].setNegative(state.negative);
             playerWindowList[i].setUncertainty(state.uncertainty);
             playerWindowList[i].setActivityRange(state.activityRange);
-            bindParams.stage.update();
+            bindParams.layerManager.update();
         };
         const gamePlayerState = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);
         gamePlayerState.onUpdate(updateState);
-        bindParams.stage.addChild(playerWindowList[i]);
+        bindParams.layerManager.add(LayerTag.Ui, playerWindowList[i]);
     }
     const currentTurnPlayerId = new SocketBinder<number>("currentTurnPlayerId", bindParams.socket);
     currentTurnPlayerId.onUpdate(id => {
         playerWindowList.forEach(x => x.setMyTurn(false));
         playerWindowList[(4 + id - bindParams.playerId) % 4].setMyTurn(true);
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     })
     const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
     gameMasterPlayerId.onUpdate(id => {
         playerWindowList[(4 + id - bindParams.playerId) % 4].visibleGMIcon(true);
-        bindParams.stage.update();
+        bindParams.layerManager.update();
     });
 }
