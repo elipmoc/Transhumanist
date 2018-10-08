@@ -1,6 +1,5 @@
 var gulp = require("gulp");
 var typescript = require('gulp-typescript');
-var runSequence = require('run-sequence');
 var concat = require('gulp-concat');
 var spawn = require('child_process').spawn;
 var node;
@@ -10,11 +9,10 @@ var plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const pngquant = require('imagemin-pngquant');
 const spritesmith = require('gulp.spritesmith');
-const watch = require('gulp-watch');
 // webpackの設定ファイルの読み込み
 const webpackConfig = require("./webpack.config");
 
-gulp.task('sprite', function () {
+gulp.task('sprite', () => {
     var spriteData = gulp.src('./Resource/Img/boardSprite/**/*.png')
         .pipe(spritesmith({
             imgName: 'boardSprite.png',
@@ -41,20 +39,18 @@ gulp.task('compress', () =>
         .pipe(gulp.dest('./Resource/PImg'))
 );
 
-gulp.task("webpack", () => {
-    return new Promise((resolve, reject) => {
-        gulp.src("./Client/**/*.ts")
-            .pipe(plumber())
-            .pipe(webpackStream(webpackConfig, webpack))
-            .pipe(gulp.dest("./"))
-            .on("end", resolve);
-    });
+gulp.task("webpack", done => {
+    gulp.src("./Client/**/*.ts")
+        .pipe(plumber())
+        .pipe(webpackStream(webpackConfig, webpack))
+        .pipe(gulp.dest("./"))
+        .on("end", done);
 });
 
-gulp.task("build", () => {
+gulp.task("build", done => {
     var pj_server = typescript.createProject("./Server/tsconfig.json");
     var pj_share = typescript.createProject("./Share/tsconfig.json");
-    return Promise.all([
+    Promise.all([
         new Promise((resolve, reject) => {
             gulp.src([
                 "./Share/**/*.ts",
@@ -80,65 +76,50 @@ gulp.task("build", () => {
         })
     ]).then(_ => {
         console.log("ビルド成功したよ！");
-        return Promise.resolve();
+        done();
     });
 });
 
-gulp.task("test_build", () => {
+gulp.task("test_build", done => {
     var pj_test = typescript.createProject("./Test/tsconfig.json");
-    return new Promise((resolve, reject) => {
-        gulp.src([
-            "./Share/**/*.ts",
-            "./Test/**/*.ts",
-            "!./node_modules/**",
-            "./Server/**/*.ts",
-        ])
-            .pipe(plumber())
-            .pipe(pj_test())
-            .js
-            .pipe(gulp.dest("./dist/Test/"))
-            .on("end", resolve)
-    })
-        .then(_ => {
+    gulp.src([
+        "./Share/**/*.ts",
+        "./Test/**/*.ts",
+        "!./node_modules/**",
+        "./Server/**/*.ts",
+    ])
+        .pipe(plumber())
+        .pipe(pj_test())
+        .js
+        .pipe(gulp.dest("./dist/Test/"))
+        .on("end", () => {
             console.log("ビルド成功したよ！");
-            return Promise.resolve();
+            done();
         });
 });
 
-gulp.task("start", () => {
-    return new Promise((resolve, reject) => {
-        if (node) node.kill()
-        node = spawn('node', ['dist/Server/main.js'], { stdio: 'inherit' })
-        console.log("サーバー起動")
-        node.on('close', code => {
-            if (code === 8) {
-                gulp.log('Error detected, waiting for changes...');
-            }
-        });
-        resolve();
+gulp.task("start", done => {
+    if (node) node.kill();
+    node = spawn('node', ['dist/Server/main.js'], { stdio: 'inherit' })
+    console.log("サーバー起動")
+    node.on('close', code => {
+        if (code === 8) {
+            gulp.log('Error detected, waiting for changes...');
+        }
     });
+    done();
+
 });
 
-gulp.task("server", () =>
-    new Promise((resolve, reject) => runSequence('build', 'start', resolve))
+gulp.task("server", gulp.series('build', 'start'));
+
+gulp.task('watch',
+    gulp.series('build', 'webpack', 'start', done => {
+        gulp.watch(['Server/**/*.ts', 'Share/**/*.ts'], gulp.task('server'))
+        gulp.watch('Client/**/*.ts', gulp.task('webpack'));
+        done();
+    })
 );
-
-gulp.task('watch', () => {
-    return new Promise((resolve, reject) => {
-        runSequence('build', 'webpack', 'start', () => {
-            watch('Server/**/*.ts', () =>
-                new Promise((resolve, _) => runSequence('server', resolve))
-            );
-            watch('Share/**/*.ts', () =>
-                new Promise((resolve, _) => runSequence('server', resolve))
-            );
-            watch('Client/**/*.ts', () =>
-                new Promise((resolve, _) => runSequence('webpack', resolve))
-            );
-            resolve();
-        });
-    });
-});
 
 // clean up if an error goes unhandled.
 process.on('exit', function () {
