@@ -8,13 +8,15 @@ import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
+import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
+import { yamlGet } from "../yamlGet";
 
 export class GamePlayer {
     private playerId: number;
     private uuid: string;
     private state: GamePlayerState;
     private resourceList: ResourceList;
-    private buildActionList: SocketBinder.BinderList<ActionCardName>;
+    private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private actionCardList: SocketBinder.BinderList<string | null>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
@@ -73,18 +75,22 @@ export class GamePlayer {
         this.playerId = playerId;
         this.uuid = playerData.getUuid();
         this.state = new GamePlayerState(state, playerData.getName());
-        this.buildActionList.Value = [
-            "採掘施設", "治療施設", "教会", "教会",
-            "教会", "教会", "教会", "教会", "教会",
-            "教会", "教会", "教会", "教会", "教会",
-            "教会", "教会", "教会", "核融合炉",
-            "ロボット工場",
-        ];
-
-
+        this.buildActionList.Value = new Array(30);
+        this.buildActionList.Value.fill(null);
         this.actionCardList.Value = [null, null, null, null, null];
         const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>("useActionCardIndex", true, [`player${playerId}`]);
-        useActionCardIndex.OnReceive(actionCardIndex => this.actionCardList.setAt(actionCardIndex, null));
+        useActionCardIndex.OnReceive(actionCardIndex => {
+            const useActionCardName = this.actionCardList.Value[actionCardIndex];
+            if (useActionCardName) {
+                const useActionCard = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true)[useActionCardName];
+                if (useActionCard) {
+                    const idx = this.buildActionList.Value.findIndex(x => x == null);
+                    if (idx != -1)
+                        this.buildActionList.setAt(idx, useActionCardName);
+                }
+            }
+            this.actionCardList.setAt(actionCardIndex, null);
+        });
         this.playerCond.Value = GamePlayerCondition.Start;
         boardSocketManager.addSocketBinder(
             state, this.buildActionList,
