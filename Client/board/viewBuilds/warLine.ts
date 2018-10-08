@@ -9,15 +9,15 @@ export function build(bindParams: BindParams) {
     const warPairList = new SocketBinderList<WarPair>("warPairList", bindParams.socket);
     const warLineControl = new WarLineControl();
     warPairList.onUpdate(xs => {
-        xs.forEach(x => warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId))
+        xs.forEach(x => warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId));
         bindParams.layerManager.update();
     });
     warPairList.onPush(x => {
-        warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId)
+        warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId);
         bindParams.layerManager.update();
     });
     warPairList.onPop(x => {
-        warLineControl.deleteWarLine(x.playerId1, x.playerId2)
+        warLineControl.deleteWarLine(x.playerId1, x.playerId2);
         bindParams.layerManager.update();
     });
     bindParams.layerManager.add(LayerTag.UiUnder, warLineControl);
