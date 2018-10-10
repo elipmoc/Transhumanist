@@ -76,7 +76,10 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
 
     const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
-
+    socket.on("rejectBoardGame", () => {
+        alert("部屋に参加出来ませんでした！");
+        location.href = "./login.html";
+    });
 
     viewBuild(bindParams);
     let bgmChanger = new BgmChanger(bindParams);

@@ -28,7 +28,7 @@ export class RoomControler {
     }
 
     joinUser(socket: SocketIO.Socket, requestBoardGameJoin: RequestBoardGameJoin) {
-        this.roomList.joinUser(socket, requestBoardGameJoin.roomid, requestBoardGameJoin.uuid);
+        return this.roomList.joinUser(socket, requestBoardGameJoin.roomid, requestBoardGameJoin.uuid);
     }
 
     deleteMember(roomId: number, uuid: string) {
