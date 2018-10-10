@@ -27,7 +27,8 @@ export function build(bindParams: BindParams) {
 
         //ここで2つの引数で連想配列を作る。
         //このemitには引数で作ったjsonを添える。
-        bindParams.socket.emit("declareWarButtonClick");
+        console.log("click");
+        bindParams.socket.emit("declareWar");
     });
 
     const declareWarButton =

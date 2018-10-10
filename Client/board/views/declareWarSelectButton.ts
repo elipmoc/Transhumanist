@@ -1,8 +1,10 @@
 import { global } from "../../boardGlobalData";
 import { BindParams } from "../bindParams";
+import { WarLine } from "../views/warLine";
 
 export class DeclareWarSelectButton extends createjs.Container {
     private selectButton: WarSelectHitArea[] = [null, null,null];
+    private warLine: WarLine[] = [null, null, null];
 
     //ここの関数型は変更されます。
     private clickEvent: () => void;
@@ -13,19 +15,36 @@ export class DeclareWarSelectButton extends createjs.Container {
     constructor(bindParams:BindParams) {
         super();
         this.selectButton.forEach((x,index) => {
-            x = new WarSelectHitArea(((index + 1) + bindParams.playerId) % 4,index);
+            let current: number = bindParams.playerId;
+            let playerId: number = ((index + 1) + current) % 4;
+            
+            this.warLine[index] = new WarLine(current, playerId, current);
+            this.warLine[index].alpha = 0.3;
+
+            x = new WarSelectHitArea(playerId, index, this.warLine[index]);
             x.addEventListener("click", () => this.clickEvent());
-            this.addChild(x);
-            console.log("");
+            this.warLine[index].visible = false;
+            x.addEventListener("mouseover", () => {
+                this.warLine[index].visible = true;
+                bindParams.layerManager.update();
+
+            });
+            x.addEventListener("mouseout", () => {
+                this.warLine[index].visible = false;
+                bindParams.layerManager.update();
+
+            });
+
+            this.addChild(x,this.warLine[index]);
         });
     }
 }
 
 class WarSelectHitArea extends createjs.Container{
     playerId: number;
-    
+    //warLine: WarLine;
     //playerID:対応するID
-    constructor(playerId:number,index:number) {
+    constructor(playerId:number,index:number,warLine:WarLine) {
         super();
         this.playerId = playerId;
 
@@ -36,8 +55,8 @@ class WarSelectHitArea extends createjs.Container{
                 index != 1 ? 94 : 448,
                 index != 1 ? 279 : 79);
         const rect = new createjs.Shape(g);
-        //this.hitArea = rect;
-        this.addChild(rect);
+        this.hitArea = rect;
+        //this.addChild(rect);
 
         switch (index) {
             case 0:
