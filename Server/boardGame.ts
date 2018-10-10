@@ -17,7 +17,6 @@ export class BoardGame {
     private message: Message;
     private boardsocketManager: SocketBinder.Namespace;
     private roomId: number;
-    private warPairList: SocketBinder.BinderList<WarPair>;
     private actionCardStacks: ActionCardStacks;
     private eventCardStack: EventCardStack;
     private boardGameStatusChanger: BoardGameStatusChanger;
@@ -34,15 +33,12 @@ export class BoardGame {
         this.gamePlayers =
             new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
         this.roomId = roomId;
-        this.warPairList = new SocketBinder.BinderList<WarPair>("warPairList");
-        setTimeout(() => this.warPairList.Value = [{ playerId1: 0, playerId2: 1 }], 3000);
 
         this.message = new Message(this.boardsocketManager);
         this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.war = new War(this.boardsocketManager);
 
-        this.boardsocketManager.addSocketBinder(this.warPairList);
     }
 
     joinUser(socket: SocketIO.Socket, uuid: string) {

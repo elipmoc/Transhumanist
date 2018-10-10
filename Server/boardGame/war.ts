@@ -1,8 +1,9 @@
 import { SocketBinder } from "../socketBinder";
 
 export class War {
+
     private declareWar: SocketBinder.EmitReceiveBinder<(number | null)[]>;
-    private warPair: SocketBinder.BinderList<number[]>;
+    private warPairList: SocketBinder.BinderList<{ playerId1: number, playerId2: number }>;
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.declareWar = new SocketBinder.EmitReceiveBinder<number[]>("declareWar");
         this.declareWar.OnReceive(x => {
@@ -13,16 +14,16 @@ export class War {
                 x[0] != x[1]
             ) {
                 console.log(`declareWar player_id[${x[0]},${x[1]}]`);
-                const same = this.warPair.Value.find(y =>
-                    y[0] == x[0] || y[1] == x[0] || y[0] == x[1] || y[1] == x[1]
+                const same = this.warPairList.Value.find(y =>
+                    y.playerId1 == x[0] || y.playerId2 == x[0] || y.playerId1 == x[1] || y.playerId2 == x[1]
                 );
                 if (same == undefined) {
-                    this.warPair.push(<number[]>x);
+                    this.warPairList.push({ playerId1: x[0]!, playerId2: x[1]! });
                 }
             }
         });
-        this.warPair = new SocketBinder.BinderList<number[]>("warPair");
-        this.warPair.Value = [];
-        boardSocketManager.addSocketBinder(this.declareWar, this.warPair);
+        this.warPairList = new SocketBinder.BinderList<{ playerId1: number, playerId2: number }>("warPairList");
+        this.warPairList.Value = [];
+        boardSocketManager.addSocketBinder(this.declareWar, this.warPairList);
     }
 }
