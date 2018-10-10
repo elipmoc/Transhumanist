@@ -28,8 +28,9 @@ export class RoomList {
     private bindRoomMap(roomId: number, f: (room: Room) => void) {
         const room = this.roomMap.get(roomId);
         if (room == undefined)
-            return;
+            return false;
         f(room);
+        return true;
     }
 
     isExistUuid(uuid: string) {
@@ -95,7 +96,7 @@ export class RoomList {
     }
 
     joinUser(socket: SocketIO.Socket, roomId: number, uuid: string) {
-        this.bindRoomMap(roomId, room => room.joinUser(socket, uuid));
+        return this.bindRoomMap(roomId, room => room.joinUser(socket, uuid));
     }
 
 }

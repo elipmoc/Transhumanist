@@ -10,7 +10,9 @@ export class BoardControler {
             (socket: SocketIO.Socket) => {
                 socket.on("joinBoardGame", (str) => {
                     const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
-                    roomControler.joinUser(socket, requestBoardGameJoin);
+                    if (roomControler.joinUser(socket, requestBoardGameJoin) == false) {
+                        socket.emit("rejectBoardGame");
+                    }
                 });
             }
         );
