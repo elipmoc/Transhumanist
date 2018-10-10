@@ -7,8 +7,8 @@ export class DeclareWarSelectButton extends createjs.Container {
     private warLine: WarLine[] = [null, null, null];
 
     //ここの関数型は変更されます。
-    private clickEvent: () => void;
-    OnselectedWarTarget(clickEvent:() => void) {
+    private clickEvent: (playerId:number,targetId:number) => void;
+    OnselectedWarTarget(clickEvent: (playerId: number, targetId: number) => void) {
         this.clickEvent = clickEvent;
     };
 
@@ -22,7 +22,7 @@ export class DeclareWarSelectButton extends createjs.Container {
             this.warLine[index].alpha = 0.3;
 
             x = new WarSelectHitArea(playerId, index, this.warLine[index]);
-            x.addEventListener("click", () => this.clickEvent());
+            x.addEventListener("click", () => this.clickEvent(current,playerId));
             this.warLine[index].visible = false;
             x.addEventListener("mouseover", () => {
                 this.warLine[index].visible = true;
