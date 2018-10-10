@@ -25,8 +25,6 @@ export class BoardPlayerHandle {
         }
     }
 
-    declareWarButtonClick() { console.log("declareWarButtonClick"); }
-
     selectResource(data: SelectResourceData) {
         console.log(`selectResource player${this.player.PlayerId} iconId${data.iconId}`);
     }
@@ -48,7 +46,6 @@ export class BoardPlayerHandle {
         this.boardGameTurnRotation = boardGameTurnRotation;
         socket.on("turnFinishButtonClick", () => this.turnFinishButtonClick());
 
-        socket.on("declareWarButtonClick", () => this.declareWarButtonClick());
         socket.on("SelectResource", str =>
             this.selectResource(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
