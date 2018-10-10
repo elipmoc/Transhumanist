@@ -48,6 +48,8 @@ socket.on("sendRoomList", (data: string) => {
 let button = document.getElementById("createButton");
 button.onclick = () => { requestCreate(); };
 
+let requestBuf: { name: string, data: any } = null;
+
 //requestCreateRoom
 function requestCreate() {
     let request: RequestCreateRoomData = {
@@ -63,9 +65,20 @@ function requestCreate() {
     } else if (request.passwordFlag && request.password == "") {
         alert("パスワードが入力されていません！");
     } else {
-        socket.emit("requestCreateRoom", JSON.stringify(request));
+        requestBuf = { name: "requestCreateRoom", data: request };
+        socket.emit("requestExistUuid", cookies.get("uuid"));
     }
 }
+
+
+
+socket.on("resultExistUuid", (data: any) => {
+    let isExist: boolean = JSON.parse(data);
+    if (isExist)
+        alert("あなたはすでに別の部屋に入室しています");
+    else
+        socket.emit(requestBuf.name, JSON.stringify(requestBuf.data));
+});
 
 //resultCreateRoom
 socket.on("resultCreateRoom", (data: string) => {
@@ -91,7 +104,8 @@ function requestEnter(roomId: number) {
             password: (<HTMLInputElement>document.getElementById("pass")).value
         }
         cookies.set("roomid", String(roomId));
-        socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
+        socket.emit("requestExistUuid", cookies.get("uuid"));
+        requestBuf = { name: "requestEnterRoom", data: requestEnterRoomData };
     } else {
         alert("プレイヤー名が入力されていません！");
     }
