@@ -9,6 +9,7 @@ export function build(bindParams: BindParams) {
     const warPairList = new SocketBinderList<WarPair>("warPairList", bindParams.socket);
     const warLineControl = new WarLineControl();
     warPairList.onUpdate(xs => {
+        warLineControl.deleteAllWarLine();
         xs.forEach(x => warLineControl.addWarLine(x.playerId1, x.playerId2, bindParams.playerId));
         bindParams.layerManager.update();
     });
