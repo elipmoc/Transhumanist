@@ -1,7 +1,7 @@
 import { BinderBase } from "./binderBase";
 
 //メッセージをクライアントから受け取るクラス
-export class EmitReceiveBinder<T> implements BinderBase {
+export class EmitReceiveBinder<T=undefined> implements BinderBase {
 
     private valueName: string;
     private privateFlag: boolean;
@@ -29,9 +29,12 @@ export class EmitReceiveBinder<T> implements BinderBase {
     setNamespace(namespace: SocketIO.Namespace) { }
 
     private setReceive(socket: SocketIO.Socket) {
-        socket.on(this.valueName, (data) =>
-            this.callback(JSON.parse(data))
-        );
+        socket.on(this.valueName, (data) => {
+            if (data)
+                this.callback(JSON.parse(data));
+            else
+                this.callback(data);
+        });
     }
 
     connect(tag: string, socket: SocketIO.Socket) {

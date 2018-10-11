@@ -15,7 +15,7 @@ export class Message {
         setTimeout(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
 
         for (var i = 0; i < 4; i++) {
-            let sendChatMessage = new SocketBinder.EmitReceiveBinder("sendChatMessage", true, ["player" + i]);
+            let sendChatMessage = new SocketBinder.EmitReceiveBinder<string>("sendChatMessage", true, ["player" + i]);
             let ii = i + 1;
             sendChatMessage.OnReceive((str: string) => {
                 if (this.chatMessageValidation(str))

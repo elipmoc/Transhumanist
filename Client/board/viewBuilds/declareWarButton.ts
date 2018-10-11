@@ -2,7 +2,6 @@ import { BindParams } from "../bindParams";
 import { DeclareWarButton } from "../views/declareWarButton";
 import { LayerTag } from "../../board";
 import { DeclareWarDialog } from "../views/declareWarDialog";
-import { WarLineControl } from "../views/warLine";
 import { DeclareWarSelectButton } from "../views/declareWarSelectButton";
 import { SocketBinder } from "../../socketBinder";
 
@@ -34,11 +33,14 @@ export function build(bindParams: BindParams) {
     const declareWarButton =
         new DeclareWarButton(
             () => {
-                if (warFlag.Value)
-                    return;
-                declareWarDialog.visible = true;
-                declareWarSelectButton.visible = true;
-                bindParams.layerManager.update();
+                if (warFlag.Value) {
+                    bindParams.socket.emit("surrender");
+                }
+                else {
+                    declareWarDialog.visible = true;
+                    declareWarSelectButton.visible = true;
+                    bindParams.layerManager.update();
+                }
             },
             bindParams.imgQueue
         );
@@ -47,6 +49,8 @@ export function build(bindParams: BindParams) {
             declareWarButton.Text = "降伏";
         else
             declareWarButton.Text = "宣戦布告";
+        declareWarDialog.visible = false;
+        declareWarSelectButton.visible = false;
         bindParams.layerManager.update();
     });
     bindParams.layerManager.add(LayerTag.Ui, declareWarButton);

@@ -32,7 +32,17 @@ export class War {
             const warFlag = new SocketBinder.Binder<boolean>("warFlag", true, [`player${i}`]);
             warFlag.Value = false;
             this.warFlags.push(warFlag);
-            boardSocketManager.addSocketBinder(warFlag);
+            const surrender = new SocketBinder.EmitReceiveBinder("surrender", true, [`player${i}`]);
+            const playerId = i;
+            surrender.OnReceive(() => {
+                if (this.warFlags[playerId].Value) {
+                    const warPair = this.warPairList.Value.find(x => x.playerId1 == playerId || x.playerId2 == playerId)!;
+                    this.warFlags[warPair.playerId1].Value = false;
+                    this.warFlags[warPair.playerId2].Value = false;
+                    this.warPairList.Value = this.warPairList.Value.filter(x => x.playerId1 != playerId && x.playerId2 != playerId);
+                }
+            });
+            boardSocketManager.addSocketBinder(warFlag, surrender);
         }
     }
 }

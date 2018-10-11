@@ -56,5 +56,9 @@ export class WarLineControl extends createjs.Container {
             return flag;
         });
     }
+    deleteAllWarLine() {
+        this.warLineList.forEach(x => this.removeChild(x));
+        this.warLineList = [];
+    }
 
 }
