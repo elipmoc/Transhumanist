@@ -32,6 +32,13 @@ export class LoginControler {
                 this.loginSocket.emit("addMember", JSON.stringify(playerDataForClient));
                 socket.emit("resultEnterRoom", JSON.stringify(result));
             });
+            socket.on("requestExistUuid", uuid => {
+                if (roomControler.isExistUuid(uuid)) {
+                    socket.emit("resultExistUuid", JSON.stringify(true));
+                } else {
+                    socket.emit("resultExistUuid", JSON.stringify(false));
+                }
+            });
         });
     }
 
