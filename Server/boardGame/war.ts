@@ -4,6 +4,7 @@ export class War {
 
     private declareWar: SocketBinder.EmitReceiveBinder<(number | null)[]>;
     private warPairList: SocketBinder.BinderList<{ playerId1: number, playerId2: number }>;
+    private warFlags: SocketBinder.Binder<boolean>[] = [];
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.declareWar = new SocketBinder.EmitReceiveBinder<number[]>("declareWar");
         this.declareWar.OnReceive(x => {
@@ -18,6 +19,8 @@ export class War {
                     y.playerId1 == x[0] || y.playerId2 == x[0] || y.playerId1 == x[1] || y.playerId2 == x[1]
                 );
                 if (same == undefined) {
+                    this.warFlags[x[0]!].Value = true;
+                    this.warFlags[x[1]!].Value = true;
                     this.warPairList.push({ playerId1: x[0]!, playerId2: x[1]! });
                 }
             }
@@ -25,5 +28,11 @@ export class War {
         this.warPairList = new SocketBinder.BinderList<{ playerId1: number, playerId2: number }>("warPairList");
         this.warPairList.Value = [];
         boardSocketManager.addSocketBinder(this.declareWar, this.warPairList);
+        for (let i = 0; i < 4; i++) {
+            const warFlag = new SocketBinder.Binder<boolean>("warFlag", true, [`player${i}`]);
+            warFlag.Value = false;
+            this.warFlags.push(warFlag);
+            boardSocketManager.addSocketBinder(warFlag);
+        }
     }
 }
