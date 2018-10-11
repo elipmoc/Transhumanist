@@ -4,6 +4,7 @@ import { LayerTag } from "../../board";
 import { DeclareWarDialog } from "../views/declareWarDialog";
 import { WarLineControl } from "../views/warLine";
 import { DeclareWarSelectButton } from "../views/declareWarSelectButton";
+import { SocketBinder } from "../../socketBinder";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {
@@ -26,18 +27,28 @@ export function build(bindParams: BindParams) {
         //ここで2つの引数で配列を作る。
         //このemitには引数で作ったjsonを添える。
         console.log(JSON.stringify(warPair));
-        bindParams.socket.emit("declareWar",JSON.stringify(warPair));
+        bindParams.socket.emit("declareWar", JSON.stringify(warPair));
     });
+    const warFlag = new SocketBinder<boolean>("warFlag", bindParams.socket);
 
     const declareWarButton =
         new DeclareWarButton(
             () => {
+                if (warFlag.Value)
+                    return;
                 declareWarDialog.visible = true;
                 declareWarSelectButton.visible = true;
                 bindParams.layerManager.update();
             },
             bindParams.imgQueue
         );
+    warFlag.onUpdate(x => {
+        if (x)
+            declareWarButton.Text = "降伏";
+        else
+            declareWarButton.Text = "宣戦布告";
+        bindParams.layerManager.update();
+    });
     bindParams.layerManager.add(LayerTag.Ui, declareWarButton);
     bindParams.layerManager.add(LayerTag.Ui, declareWarSelectButton);
 
