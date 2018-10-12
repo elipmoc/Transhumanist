@@ -1,7 +1,6 @@
 import { BoardPlayerHandle } from "./boardGame/boardPlayerHandle";
 import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
-import { WarPair } from "../Share/warPair";
 import { BoardGameStarter } from "./boardGame/boardGameStarter";
 import { BoardGameStatusChanger } from "./boardGame/boardGameStatusChanger";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
@@ -12,6 +11,7 @@ import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { War } from "./boardGame/war";
+
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
@@ -22,6 +22,7 @@ export class BoardGame {
     private boardGameStatusChanger: BoardGameStatusChanger;
     private chatSe: ChatSe;
     private war: War;
+    private deleteMemberCallback: (uuid: string) => void;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardsocketManager = new SocketBinder.BindManager().registNamespace("board", boardSocket);
@@ -38,7 +39,12 @@ export class BoardGame {
         this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.war = new War(this.boardsocketManager);
-
+        this.gamePlayers.onLeaveRoom(player => {
+            if (this.isWait) {
+                player.clear();
+                this.deleteMemberCallback(player.Uuid)
+            }
+        });
     }
 
     joinUser(socket: SocketIO.Socket, uuid: string) {
@@ -60,5 +66,9 @@ export class BoardGame {
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatusChanger.isWait())
             this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
+    }
+
+    onDeleteMember(callback: (uuid: string) => void) {
+        this.deleteMemberCallback = callback;
     }
 }

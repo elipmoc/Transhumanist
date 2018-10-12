@@ -12,11 +12,26 @@ export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
     private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
+    private leaveRoomCallback: (player: GamePlayer) => void;
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
         this.turnManager = new TurnManager(this.gamePlayerList, eventCardDrawer, boardSocketManager);
+        for (let i = 0; i < 4; i++) {
+            const leaveRoom = new SocketBinder.EmitReceiveBinder("leaveRoom", true, [`player${i}`]);
+            const playerId = i;
+            leaveRoom.OnReceive(() => {
+                if (this.gamePlayerList[playerId]) {
+                    this.leaveRoomCallback(this.gamePlayerList[playerId]);
+                }
+            });
+            boardSocketManager.addSocketBinder(leaveRoom);
+        }
+    }
+
+    onLeaveRoom(callback: (player: GamePlayer) => void) {
+        this.leaveRoomCallback = callback;
     }
 
     getPlayerAll(func: (x: GamePlayer) => void) {

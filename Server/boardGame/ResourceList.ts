@@ -10,6 +10,14 @@ export class ResourceList {
     private resourceOver: SocketBinder.Binder<number>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
 
+    clear() {
+        this.resourceList.Value = new Array(30);
+        this.resourceList.Value.fill(null);
+        this.resourceReserveList.Value = new Array(12);
+        this.resourceReserveList.Value.fill(null);
+        this.resourceOver.Value = 0;
+    }
+
     constructor(boardSocketManager: Namespace, playerId: number) {
         this.resourceList = new SocketBinder.BinderList<ResourceName | null>("ResourceKindList" + playerId)
         this.resourceList.Value = new Array(30);
