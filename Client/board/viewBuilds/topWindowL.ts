@@ -8,7 +8,7 @@ import { LayerTag } from "../../board";
 //左上のやつ生成
 export function build(bindParams: BindParams) {
     //オプションウインドウ生成
-    const optionWindow = new OptionWindow(bindParams.imgQueue);
+    const optionWindow = new OptionWindow(bindParams.imgQueue,bindParams.socket);
     optionWindow.x = global.canvasWidth / 2;
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;

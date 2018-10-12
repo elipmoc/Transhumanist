@@ -17,9 +17,28 @@ export class OptionCrossButton extends ButtonBase {
     }
 }
 
+//汎用ボタン基
+class GeneralOptionButton extends ButtonBase{
+    private text: createjs.Text;
+    constructor(callback: () => void, queue: ImageQueue) {
+        const leaveButton = queue.getImage("button");
+        super(leaveButton, callback);
+        
+        this.text = new createjs.Text("", "20px Arial");
+        this.text.textAlign = "center";
+        this.text.regY = this.text.getMeasuredHeight() / 2;
+        this.text.x = leaveButton.x + leaveButton.image.width / 2;
+        this.text.y = leaveButton.y + leaveButton.image.height / 2;
+        this.addChild(this.text);
+    }
+    setText(text: string) {
+        this.text.text = text;
+    }
+}
+
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
-    constructor(queue: ImageQueue) {
+    constructor(queue: ImageQueue, socket: SocketIOClient.Socket) {
         super();
 
         const optionFrame = queue.getImage("optionWindow");
@@ -31,6 +50,36 @@ export class OptionWindow extends createjs.Container {
         optionCrossButton.x = 200;
         optionCrossButton.y = - 270;
         this.addChild(optionCrossButton);
+
+        const ruleButton = new GeneralOptionButton(() => {
+            window.open("rule.html");
+            this.visible = false;
+            this.stage.update();
+        }, queue);
+        ruleButton.setText("ルール・ヘルプ");
+        ruleButton.x = -240;
+        ruleButton.y = 0;
+        this.addChild(ruleButton);
+
+        const leaveButton = new GeneralOptionButton(() => {
+            socket.emit("leaveRoom");
+            this.visible = false;
+            this.stage.update();
+        }, queue);
+        leaveButton.setText("部屋を退室");
+        leaveButton.x = -240;
+        leaveButton.y = +80;
+        this.addChild(leaveButton);
+
+        const gameEndButton = new GeneralOptionButton(() => {
+            socket.emit("gameEnd");
+            this.visible = false;
+            this.stage.update();
+        },queue);
+        gameEndButton.setText("ゲーム終了");
+        gameEndButton.x = -240;
+        gameEndButton.y = +160;
+        this.addChild(gameEndButton);
 
         const optionText = new createjs.Text();
         optionText.x = -180;
