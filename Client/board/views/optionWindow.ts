@@ -21,14 +21,14 @@ export class OptionCrossButton extends ButtonBase {
 class GeneralOptionButton extends ButtonBase{
     private text: createjs.Text;
     constructor(callback: () => void, queue: ImageQueue) {
-        const leaveButton = queue.getImage("button");
-        super(leaveButton, callback);
+        const Button = queue.getImage("button");
+        super(Button, callback);
         
         this.text = new createjs.Text("", "20px Arial");
         this.text.textAlign = "center";
         this.text.regY = this.text.getMeasuredHeight() / 2;
-        this.text.x = leaveButton.x + leaveButton.image.width / 2;
-        this.text.y = leaveButton.y + leaveButton.image.height / 2;
+        this.text.x = Button.x + Button.image.width / 2;
+        this.text.y = Button.y + Button.image.height / 2;
         this.addChild(this.text);
     }
     setText(text: string) {
@@ -38,7 +38,20 @@ class GeneralOptionButton extends ButtonBase{
 
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
-    constructor(queue: ImageQueue, socket: SocketIOClient.Socket) {
+    private ruleCallBack: () => void;
+    private leaveCallBack: () => void;
+    private endCallBack: () => void;
+    ruleOnClick(callback: () => void) {
+        this.ruleCallBack = callback;
+    }
+    leaveOnClick(callback: () => void) {
+        this.leaveCallBack = callback;
+    }
+    endOnClick(callback: () => void) {
+        this.endCallBack = callback;
+    }
+
+    constructor(queue: ImageQueue) {
         super();
 
         const optionFrame = queue.getImage("optionWindow");
@@ -51,31 +64,19 @@ export class OptionWindow extends createjs.Container {
         optionCrossButton.y = - 270;
         this.addChild(optionCrossButton);
 
-        const ruleButton = new GeneralOptionButton(() => {
-            window.open("rule.html");
-            this.visible = false;
-            this.stage.update();
-        }, queue);
+        const ruleButton = new GeneralOptionButton(() => this.ruleCallBack(), queue);
         ruleButton.setText("ルール・ヘルプ");
         ruleButton.x = -240;
         ruleButton.y = 0;
         this.addChild(ruleButton);
 
-        const leaveButton = new GeneralOptionButton(() => {
-            socket.emit("leaveRoom");
-            this.visible = false;
-            this.stage.update();
-        }, queue);
+        const leaveButton = new GeneralOptionButton(() => this.leaveCallBack(), queue);
         leaveButton.setText("部屋を退室");
         leaveButton.x = -240;
         leaveButton.y = +80;
         this.addChild(leaveButton);
 
-        const gameEndButton = new GeneralOptionButton(() => {
-            socket.emit("gameEnd");
-            this.visible = false;
-            this.stage.update();
-        },queue);
+        const gameEndButton = new GeneralOptionButton(() => this.endCallBack(),queue);
         gameEndButton.setText("ゲーム終了");
         gameEndButton.x = -240;
         gameEndButton.y = +160;

@@ -8,10 +8,33 @@ import { LayerTag } from "../../board";
 //左上のやつ生成
 export function build(bindParams: BindParams) {
     //オプションウインドウ生成
-    const optionWindow = new OptionWindow(bindParams.imgQueue,bindParams.socket);
+    const optionWindow = new OptionWindow(bindParams.imgQueue);
     optionWindow.x = global.canvasWidth / 2;
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;
+
+    optionWindow.ruleOnClick(
+        () => {
+            window.open("rule.html");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+    optionWindow.leaveOnClick(
+        () => {
+            bindParams.socket.emit("leaveRoom");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+    optionWindow.endOnClick(
+        () => {
+            bindParams.socket.emit("gameEnd");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+
     bindParams.layerManager.add(LayerTag.OptionUi, optionWindow);
 
     //左上のやつ生成
