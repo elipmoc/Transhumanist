@@ -12,6 +12,29 @@ export function build(bindParams: BindParams) {
     optionWindow.x = global.canvasWidth / 2;
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;
+
+    optionWindow.ruleOnClick(
+        () => {
+            window.open("rule.html");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+    optionWindow.leaveOnClick(
+        () => {
+            bindParams.socket.emit("leaveRoom");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+    optionWindow.endOnClick(
+        () => {
+            bindParams.socket.emit("gameEnd");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+
     bindParams.layerManager.add(LayerTag.OptionUi, optionWindow);
 
     //左上のやつ生成
