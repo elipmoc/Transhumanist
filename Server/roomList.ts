@@ -12,17 +12,22 @@ import {
 } from "../Share/resultEnterRoomData";
 import { PasswordInfo } from "./passwordInfo";
 import { RoomEvents } from "./roomEvents";
+import { SocketBinder } from "./socketBinder";
+import { RoomDataForClient } from "../Share/roomDataForClient";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 export class RoomList {
     private roomMap: Map<number, Room> = new Map();
+    private roomDataList: SocketBinder.BinderList<RoomDataForClient>;
     private roomIdGenerator: RoomIdGenerator = new RoomIdGenerator();
     private uuidGenerator: UuidGenerator = new UuidGenerator();
-    private roomListEvents: RoomListEvents;
     private boardSocket: SocketIO.Namespace;
 
-    constructor(roomListEvents: RoomListEvents, boardSocket: SocketIO.Namespace) {
-        this.roomListEvents = roomListEvents;
+
+    constructor(boardSocket: SocketIO.Namespace, loginSocketManager: SocketBinder.Namespace) {
+        this.roomDataList = new SocketBinder.BinderList<RoomDataForClient>("roomList");
         this.boardSocket = boardSocket;
+        loginSocketManager.addSocketBinder(this.roomDataList);
     }
 
     private bindRoomMap(roomId: number, f: (room: Room) => void) {
@@ -48,19 +53,20 @@ export class RoomList {
         const roomEvents: RoomEvents = {
             deleteMemberCallBack: (playerDataForClient, uuid) => {
                 this.uuidGenerator.releaseUuid(uuid);
-                this.roomListEvents.deleteMemberCallBack(playerDataForClient);
             },
             deleteRoomCallBack: (roomId) => {
                 this.roomIdGenerator.releaseRoomId(roomId);
-                this.roomListEvents.deleteRoomCallBack(roomId);
             },
-            updatePlayFlagCallBack: (playFlag) =>
-                this.roomListEvents.updatePlayFlagCallBack({ roomId: roomId!, playFlag: playFlag })
         };
 
         const room = new Room(roomId, req.roomName, passwordInfo, roomEvents, this.boardSocket);
+        room.onUpdate(() => {
+            const idx = this.roomDataList.Value.findIndex(x => x.roomId == room.RoomId);
+            if (idx != -1)
+                this.roomDataList.setAt(idx, room.getRoomDataForClient());
+        });
         this.roomMap.set(roomId, room);
-        this.roomListEvents.addRoomCallBack(room.getRoomDataForClient());
+        this.roomDataList.push(room.getRoomDataForClient());
         return successResultCreateRoomData(roomId);
     }
 
@@ -73,30 +79,19 @@ export class RoomList {
 
         const uuid = this.uuidGenerator.getUuid();
         const result: ResultEnterRoomData = room.enterRoom(req, uuid);
-        if (result.successFlag)
-            this.roomListEvents.addMemberCallBack({ roomId: req.roomId, playerId: result.playerId, playerName: req.playerName });
         return result;
     }
 
     deleteRoom(roomId: number) {
-        const room = this.roomMap.get(roomId);
-        if (room == undefined)
-            return;
-        room.deleteRoom();
+        this.bindRoomMap(roomId, room => room.deleteRoom);
     }
 
     deleteMember(roomId: number, uuid: string) {
         this.bindRoomMap(roomId, room => room.deleteMember(uuid));
     }
 
-    sendRoomList() {
-        return Array.from(this.roomMap.values()).map(
-            x => x.getRoomDataForClient()
-        );
-    }
-
-    joinUser(socket: SocketIO.Socket, roomId: number, uuid: string) {
-        return this.bindRoomMap(roomId, room => room.joinUser(socket, uuid));
+    joinUser(socket: SocketIO.Socket, data: RequestBoardGameJoin) {
+        return this.bindRoomMap(data.roomid, room => room.joinUser(socket, data.uuid));
     }
 
 }

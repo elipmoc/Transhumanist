@@ -1,7 +1,5 @@
 import { RoomDataForClient } from "../../Share/roomDataForClient";
-import { PlayerDataForClient } from "../../Share/playerDataForClient";
 import { RoomView } from "./roomView";
-import { PlayFlagDataForClient } from "../../Share/playFlagDataForClient";
 
 export class RoomViewList {
     private roomViewMap: Map<number, RoomView>;
@@ -13,11 +11,17 @@ export class RoomViewList {
     }
 
     initRoomList(roomDataForClientList: RoomDataForClient[]) {
+        Array.from(this.roomViewMap).forEach(x => {
+            x[1].deleteRoom();
+        });
+        this.roomViewMap.clear();
         for (let i = 0; i < roomDataForClientList.length; i++) {
             this.addRoom(roomDataForClientList[i]);
         }
     }
-
+    setRoom(roomData: RoomDataForClient) {
+        this.roomViewMap.get(roomData.roomId).setRoom(roomData);
+    }
     addRoom(roomDataForClient: RoomDataForClient) {
         const roomView = new RoomView(roomDataForClient);
         roomView.onClickRequestEnter(() => { this.requestEnterCallBack(roomDataForClient.roomId); });
@@ -27,15 +31,5 @@ export class RoomViewList {
     deleteRoom(roomId: number) {
         this.roomViewMap.get(roomId).deleteRoom();
         this.roomViewMap.delete(roomId);
-    }
-
-    addMember(playerData: PlayerDataForClient) {
-        this.roomViewMap.get(playerData.roomId).addMember(playerData.playerName, playerData.playerId);
-    }
-    deleteMember(playerData: PlayerDataForClient) {
-        this.roomViewMap.get(playerData.roomId).deleteMember(playerData.playerId);
-    }
-    updatePlayFlag(playFlagData: PlayFlagDataForClient) {
-        this.roomViewMap.get(playFlagData.roomId).setPlayFlag(playFlagData.playFlag);
     }
 }
