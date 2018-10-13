@@ -404,7 +404,7 @@
   description: 『拡張人間』を1つ得る。
   cost:
     - name: 人間
-      number: 
+      number: 1
     - name: 注射器
       number: 1
     - name: マイクロチップ
