@@ -533,6 +533,9 @@
       　また、山札内の2枚を入れ替
       える事ができる。
   conditions: built_quantum_computer
+  conditionDescript:
+    |-
+      　量子コンピュータが設置済み。
   cost:
     - name: 人間
       number: 3
