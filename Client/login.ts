@@ -8,6 +8,7 @@ import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import { SocketBinderList } from "./socketBinderList";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -24,7 +25,7 @@ socket.on("deleteRoom", (data: number) => {
     roomViewList.deleteRoom(roomId);
 });
 
-socket.on("addMember", (data: string) => {
+/*socket.on("addMember", (data: string) => {
     let member: PlayerDataForClient = JSON.parse(data);
     roomViewList.addMember(member);
 });
@@ -37,12 +38,17 @@ socket.on("deleteMember", (data: string) => {
 socket.on("updatePlayFlag", (data: string) => {
     let playData: PlayFlagDataForClient = JSON.parse(data);
     roomViewList.updatePlayFlag(playData);
-});
+});*/
 
-//sendRoomList
-socket.on("sendRoomList", (data: string) => {
-    let RoomList: RoomDataForClient[] = JSON.parse(data);
-    roomViewList.initRoomList(RoomList);
+const roomList = new SocketBinderList<RoomDataForClient>("roomList", socket);
+roomList.onUpdate(rooms => {
+    roomViewList.initRoomList(rooms);
+});
+roomList.onPush(room => {
+    roomViewList.addRoom(room);
+})
+roomList.onSetAt((id, room) => {
+    roomViewList.setRoom(room);
 });
 
 let button = document.getElementById("createButton");

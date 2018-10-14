@@ -47,6 +47,18 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Wait;
     }
 
+    clear() {
+        this.uuid = "";
+        this.buildActionList.Value = new Array(30);
+        this.buildActionList.Value.fill(null);
+        this.actionCardList.Value = [null, null, null, null, null];
+        this.playerCond.Value = GamePlayerCondition.Start;
+        this.actionCardDrawPhase.Value = false;
+        this.isGameMaster = false;
+        this.state.clear();
+        this.resourceList.clear();
+    }
+
     constructor(
         playerData: PlayerData,
         playerId: number,

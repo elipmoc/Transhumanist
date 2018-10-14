@@ -1,38 +1,53 @@
-import { RoomListEvents } from "./roomListEvents";
 import { RoomList } from "./roomList";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
+import { SocketBinder } from "./socketBinder";
+import { PlayerDataForClient } from "../Share/playerDataForClient";
+import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
+import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 
 export class RoomControler {
     private roomList: RoomList;
 
-    constructor(roomListEvents: RoomListEvents, boardSocket: SocketIO.Namespace) {
-        this.roomList = new RoomList(roomListEvents, boardSocket);
-    }
+    constructor(boardSocket: SocketIO.Namespace, loginSocket: SocketIO.Namespace) {
+        const loginSocketManager = new SocketBinder.BindManager().registNamespace("login", loginSocket);
+        this.roomList = new RoomList(boardSocket, loginSocketManager);
 
-    isExistUuid(uuid: string) {
-        return this.roomList.isExistUuid(uuid);
-    }
+        boardSocket.on("connection",
+            socket => {
+                socket.on("joinBoardGame", (str) => {
+                    const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
+                    if (this.roomList.joinUser(socket, requestBoardGameJoin) == false)
+                        socket.emit("rejectBoardGame");
+                });
+            }
+        );
 
-    sendRoomList() {
-        return this.roomList.sendRoomList();
-    }
+        //クライアントが繋がった時を処理
+        loginSocket.on("connection", (socket: SocketIO.Socket) => {
+            loginSocketManager.addSocket("", socket);
 
-    createRoom(requestCreateRoomData: RequestCreateRoomData) {
-        return this.roomList.createRoom(requestCreateRoomData);
-    }
+            socket.on("requestCreateRoom", (data: string) => {
+                let request: RequestCreateRoomData = JSON.parse(data);
+                let result: ResultCreateRoomData = this.roomList.createRoom(request);
 
-    enterRoom(requestEnterRoomData: RequestEnterRoomData) {
-        return this.roomList.enterRoom(requestEnterRoomData);
+                socket.emit("resultCreateRoom", JSON.stringify(result));
+            });
+            socket.on("requestEnterRoom", (data: string) => {
+                let request: RequestEnterRoomData = JSON.parse(data);
+                let result: ResultEnterRoomData = this.roomList.enterRoom(request);
+                const playerDataForClient: PlayerDataForClient =
+                    { roomId: request.roomId, playerId: result.playerId, playerName: request.playerName };
+                socket.emit("resultEnterRoom", JSON.stringify(result));
+            });
+            socket.on("requestExistUuid", uuid => {
+                if (this.roomList.isExistUuid(uuid)) {
+                    socket.emit("resultExistUuid", JSON.stringify(true));
+                } else {
+                    socket.emit("resultExistUuid", JSON.stringify(false));
+                }
+            });
+        });
     }
-
-    joinUser(socket: SocketIO.Socket, requestBoardGameJoin: RequestBoardGameJoin) {
-        return this.roomList.joinUser(socket, requestBoardGameJoin.roomid, requestBoardGameJoin.uuid);
-    }
-
-    deleteMember(roomId: number, uuid: string) {
-        this.roomList.deleteMember(roomId, uuid);
-    }
-
 }

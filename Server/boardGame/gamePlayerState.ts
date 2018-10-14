@@ -17,6 +17,15 @@ export class GamePlayerState {
         };
     }
 
+    clear() {
+        this.state.Value = {
+            playerName: "",
+            negative: 0, positive: 0,
+            uncertainty: 0, resource: 0,
+            activityRange: 0, speed: 0
+        };
+    }
+
     setAICard(startStatusYamlData: StartStatusYamlData) {
         this.state.Value.activityRange = startStatusYamlData.activityRange;
         this.state.Value.resource = startStatusYamlData.resource;
