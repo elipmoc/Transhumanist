@@ -4,7 +4,6 @@ var spawn = require('child_process').spawn;
 var node;
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
-var plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const pngquant = require('imagemin-pngquant');
 const spritesmith = require('gulp.spritesmith');
@@ -38,18 +37,15 @@ gulp.task('compress', () =>
 
 gulp.task("webpack", done => {
     const webpackConfig = require("./webpack.config");
-    gulp.src("./Client/**/*.ts")
-        .pipe(plumber())
-        .pipe(webpackStream(webpackConfig, webpack))
-        .pipe(gulp.dest("./"))
-        .on("end", done);
+    return webpackStream(webpackConfig, webpack).on('error', function (e) {
+        this.emit('end');
+    }).pipe(gulp.dest("./"));
 });
 
 gulp.task("webpack_pro", done => {
     const webpackConfig = require("./webpack.config");
     webpackConfig.mode = "production";
     gulp.src("./Client/**/*.ts")
-        .pipe(plumber())
         .pipe(webpackStream(webpackConfig, webpack))
         .pipe(gulp.dest("./"))
         .on("end", done);
@@ -64,9 +60,7 @@ gulp.task("build", done => {
                 "./Share/**/*.ts",
                 "!./node_modules/**"
             ])
-                .pipe(plumber())
                 .pipe(pj_share())
-                .js
                 .pipe(gulp.dest("./dist/Share/"))
                 .on("end", resolve)
         }),
@@ -76,9 +70,7 @@ gulp.task("build", done => {
                 "./Share/**/*.ts",
                 "!./node_modules/**"
             ])
-                .pipe(plumber())
                 .pipe(pj_server())
-                .js
                 .pipe(gulp.dest("./dist/Server/"))
                 .on("end", resolve)
         })
@@ -96,9 +88,7 @@ gulp.task("test_build", done => {
         "!./node_modules/**",
         "./Server/**/*.ts",
     ])
-        .pipe(plumber())
         .pipe(pj_test())
-        .js
         .pipe(gulp.dest("./dist/Test/"))
         .on("end", () => {
             console.log("ビルド成功したよ！");
