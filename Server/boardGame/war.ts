@@ -14,7 +14,6 @@ export class War {
                 x[1] != null &&
                 x[0] != x[1]
             ) {
-                console.log(`declareWar player_id[${x[0]},${x[1]}]`);
                 const same = this.warPairList.Value.find(y =>
                     y.playerId1 == x[0] || y.playerId2 == x[0] || y.playerId1 == x[1] || y.playerId2 == x[1]
                 );

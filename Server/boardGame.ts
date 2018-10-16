@@ -2,7 +2,7 @@ import { BoardPlayerHandle } from "./boardGame/boardPlayerHandle";
 import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
 import { BoardGameStarter } from "./boardGame/boardGameStarter";
-import { BoardGameStatusChanger } from "./boardGame/boardGameStatusChanger";
+import { BoardGameStatus } from "./boardGame/boardGameStatus";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
 import { BoardGameTurnRotation } from "./boardGame/boardGameTurnRotation";
 import { Message } from "./boardGame/message";
@@ -11,6 +11,7 @@ import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { War } from "./boardGame/war";
+import { TurnFinishButtonClick } from "./boardGame/turnFinishButtonClick";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -19,20 +20,26 @@ export class BoardGame {
     private roomId: number;
     private actionCardStacks: ActionCardStacks;
     private eventCardStack: EventCardStack;
-    private boardGameStatusChanger: BoardGameStatusChanger;
+    private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
     private war: War;
+    private boardGameStarter: BoardGameStarter;
+    private boardGameTurnRotation: BoardGameTurnRotation;
     private deleteMemberCallback: (uuid: string) => void;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardsocketManager = new SocketBinder.BindManager().registNamespace("board", boardSocket);
-        this.boardGameStatusChanger = new BoardGameStatusChanger();
+        this.boardGameStatus = new BoardGameStatus();
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
         this.eventCardStack = new EventCardStack(this.boardsocketManager);
 
         this.gamePlayers =
             new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
+
+        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatus, this.actionCardStacks);
+        this.boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
+
         this.roomId = roomId;
 
         this.message = new Message(this.boardsocketManager);
@@ -53,19 +60,20 @@ export class BoardGame {
             socket = socket.join(`room${this.roomId}`);
 
             this.boardsocketManager.addSocket(`player${gamePlayer.PlayerId}`, socket);
-            const boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatusChanger, this.actionCardStacks);
-            const boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
-            new BoardPlayerHandle(socket, gamePlayer, boardGameStarter, boardGameTurnRotation);
+            new BoardPlayerHandle(socket, gamePlayer);
         }
     }
 
     isWait() {
-        return this.boardGameStatusChanger.isWait();
+        return this.boardGameStatus.isWait();
     }
 
     addMember(playerData: PlayerData, playerId: number) {
-        if (this.boardGameStatusChanger.isWait())
-            this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
+        if (this.boardGameStatus.isWait()) {
+            const gamePlayer =
+                this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
+            new TurnFinishButtonClick(gamePlayer, this.boardGameStarter, this.boardGameTurnRotation, this.boardsocketManager);
+        }
     }
 
     onDeleteMember(callback: (uuid: string) => void) {

@@ -10,14 +10,12 @@ export class RoomData {
     private playerDataList: PlayerDataList;
     private playFlag: boolean;
     private passwordInfo: PasswordInfo;
-    //private roomEvents: RoomEvents;
 
     constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, /*roomEvents: RoomEvents*/) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.passwordInfo = passwordInfo;
         this.playFlag = false;
-        // this.roomEvents = roomEvents;
 
         this.playerDataList = new PlayerDataList;
 
@@ -28,7 +26,6 @@ export class RoomData {
             playerList: this.playerDataList.getPlayerNameList(),
             passwordFlag: this.passwordInfo.isNeedPassword()
         };
-        //  this.roomEvents.addRoom(roomData);
     }
 
     getRoomId() { return this.roomId; }
@@ -41,7 +38,6 @@ export class RoomData {
         this.playFlag = playFlag;
         let playFlagDataForClient: PlayFlagDataForClient
             = { playFlag: playFlag, roomId: this.roomId };
-        //this.roomEvents.updatePlayFlag(playFlagDataForClient);
     }
 
     getPlayerData(uuid: string) {
@@ -62,7 +58,6 @@ export class RoomData {
     deleteRoom() {
         this.playerDataList.getPlayerUuidList()
             .forEach(x => this.deleteMember(x));
-        //this.roomEvents.deleteRoom(this.roomId);
     }
 
     getPlayerCount() { return this.playerDataList.getPlayerCount(); }
