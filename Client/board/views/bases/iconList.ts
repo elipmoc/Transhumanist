@@ -20,8 +20,8 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
             cardIcon.onClicked(() => this.onClickIconCallBack(cardIcon));
             cardIcon.onMouseOuted(() => this.onMouseOutIconCallBack());
             cardIcon.onMouseOvered((kind) => this.onMouseOverIconCallBack(kind));
-            cardIcon.x = this.icons.length % this.xNum * global.cardIconSize;
-            cardIcon.y = Math.floor(this.icons.length / this.xNum) * global.cardIconSize;
+            cardIcon.x = this.icons.length % this.xNum * (global.cardIconSize/2);
+            cardIcon.y = Math.floor(this.icons.length / this.xNum) * (global.cardIconSize/2);
             this.icons.push(cardIcon);
             this.addChild(cardIcon);
         }
