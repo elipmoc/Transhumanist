@@ -50,6 +50,9 @@ export class GamePlayer {
         this.actionCard.clear();
     }
 
+    winWar() { this.state.winWar(); }
+    loseWar() { this.state.loseWar(); }
+
     constructor(
         playerData: PlayerData,
         playerId: number,

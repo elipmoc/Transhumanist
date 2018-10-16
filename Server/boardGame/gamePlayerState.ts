@@ -33,4 +33,18 @@ export class GamePlayerState {
         this.state.Value.uncertainty = startStatusYamlData.uncertainty;
         this.state.update();
     }
+
+    winWar() {
+        this.state.Value.positive += 2;
+        this.state.Value.negative -= 2;
+        this.state.Value.negative =
+            this.state.Value.negative < 0 ? 0 : this.state.Value.negative;
+        this.state.update();
+    }
+
+    loseWar() {
+        this.state.Value.positive++;
+        this.state.Value.negative += 2;
+        this.state.update();
+    }
 }

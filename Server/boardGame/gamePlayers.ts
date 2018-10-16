@@ -79,4 +79,12 @@ export class GamePlayers {
             else player.setMyTurn();
         })
     }
+
+    winWar(playerId: number) {
+        this.gamePlayerList.find(x => x.PlayerId == playerId)!.winWar();
+    }
+    loseWar(playerId: number) {
+        this.gamePlayerList.find(x => x.PlayerId == playerId)!.loseWar();
+    }
+
 }
