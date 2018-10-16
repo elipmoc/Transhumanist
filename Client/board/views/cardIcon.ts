@@ -16,7 +16,8 @@ export class CardIconBase<K> extends createjs.Container {
     setKind(kind: K | null, imgIndex: number, queue: ImageQueue) {
         this.kind = kind;
         this.image.image = getIconResource(imgIndex, this.img_name, queue);
-
+        this.image.scaleX = 0.5;
+        this.image.scaleY = 0.5;
     }
     get IconId() { return this.iconId; }
 
@@ -31,7 +32,7 @@ export class CardIconBase<K> extends createjs.Container {
 
     constructor(iconId: number, kind: K | null, img_name: string) {
         super();
-        const iconSize = global.cardIconSize;
+        const iconSize = global.cardIconSize / 2;
         this.selectFrame = new createjs.Shape(new createjs.Graphics().beginStroke("red").drawRect(0, 0, iconSize, iconSize));
         this.selectFrame.visible = false;
         this.addChild(this.image, this.selectFrame);
