@@ -6,6 +6,7 @@ import { TurnManager } from "./turnManager";
 import { SocketBinder } from "../socketBinder";
 import { EventCardDrawer } from "./eventCardDrawer";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
+import { LeaveRoom } from "./leaveRoom";
 
 
 export class GamePlayers {
@@ -18,24 +19,14 @@ export class GamePlayers {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
         this.turnManager = new TurnManager(this.gamePlayerList, eventCardDrawer, boardSocketManager);
-        for (let i = 0; i < 4; i++) {
-            const leaveRoom = new SocketBinder.EmitReceiveBinder("leaveRoom", true, [`player${i}`]);
-            const playerId = i;
-            leaveRoom.OnReceive(() => {
-                if (this.gamePlayerList[playerId]) {
-                    this.leaveRoomCallback(this.gamePlayerList[playerId]);
-                }
+        new LeaveRoom(boardSocketManager)
+            .onLeaveRoom(id => {
+                this.leaveRoomCallback(this.gamePlayerList[id]);
             });
-            boardSocketManager.addSocketBinder(leaveRoom);
-        }
     }
 
     onLeaveRoom(callback: (player: GamePlayer) => void) {
         this.leaveRoomCallback = callback;
-    }
-
-    getPlayerAll(func: (x: GamePlayer) => void) {
-        this.gamePlayerList.forEach(func);
     }
 
     canStart() {
@@ -58,11 +49,19 @@ export class GamePlayers {
             player.IsGameMaster = true;
         }
         this.gamePlayerList.push(player);
+        return player;
     }
 
-    setAICard(startStatusList: StartStatusYamlData[]) {
+    initCard(startStatusList: StartStatusYamlData[], actionCardStacks: ActionCardStacks) {
         arrayshuffle(startStatusList);
-        this.gamePlayerList.forEach((player, index) => player.setAICard(startStatusList[index]));
+        this.gamePlayerList.forEach((x, idx) => {
+            x.setAICard(startStatusList[idx]);
+            x.drawActionCard(actionCardStacks.draw(1));
+            for (let i = 0; i < 4; i++) {
+                x.drawActionCard(actionCardStacks.draw(Math.floor(Math.random() * 2) + 2));
+                x.setResourceList();
+            }
+        });
     }
 
     initTurnSet() {
@@ -80,4 +79,12 @@ export class GamePlayers {
             else player.setMyTurn();
         })
     }
+
+    winWar(playerId: number) {
+        this.gamePlayerList.find(x => x.PlayerId == playerId)!.winWar();
+    }
+    loseWar(playerId: number) {
+        this.gamePlayerList.find(x => x.PlayerId == playerId)!.loseWar();
+    }
+
 }
