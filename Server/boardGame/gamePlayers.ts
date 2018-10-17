@@ -86,5 +86,8 @@ export class GamePlayers {
     loseWar(playerId: number) {
         this.gamePlayerList.find(x => x.PlayerId == playerId)!.loseWar();
     }
+    startWar(playerId: number) {
+        this.gamePlayerList.find(x => x.PlayerId == playerId)!.startWar();
+    }
 
 }

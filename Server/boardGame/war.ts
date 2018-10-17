@@ -7,6 +7,7 @@ export class War {
     private warFlags: SocketBinder.Binder<boolean>[] = [];
     private winCallback: (playerId: number) => void;
     private loseCallback: (playerId: number) => void;
+    private startWarCallback: (playerId: number) => void;
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.declareWar = new SocketBinder.EmitReceiveBinder<number[]>("declareWar");
@@ -23,6 +24,8 @@ export class War {
                 if (same == undefined) {
                     this.warFlags[x[0]!].Value = true;
                     this.warFlags[x[1]!].Value = true;
+                    this.startWarCallback(x[0]!);
+                    this.startWarCallback(x[1]!);
                     this.warPairList.push({ playerId1: x[0]!, playerId2: x[1]! });
                 }
             }
@@ -57,5 +60,8 @@ export class War {
 
     onLose(f: (playerId: number) => void) {
         this.loseCallback = f;
+    }
+    onStartWar(f: (playerId: number) => void) {
+        this.startWarCallback = f;
     }
 }

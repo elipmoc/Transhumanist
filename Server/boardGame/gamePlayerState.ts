@@ -47,4 +47,11 @@ export class GamePlayerState {
         this.state.Value.negative += 2;
         this.state.update();
     }
+    warStateChange() {
+        if (this.state.Value.positive <= 0)
+            this.state.Value.negative++;
+        else
+            this.state.Value.positive--;
+        this.state.update();
+    }
 }
