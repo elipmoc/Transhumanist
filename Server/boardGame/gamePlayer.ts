@@ -19,6 +19,7 @@ export class GamePlayer {
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private isGameMaster: boolean = false;
     private actionCard: PlayerActionCard;
+    private warFlag: boolean = false;
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -35,6 +36,8 @@ export class GamePlayer {
         this.actionCard.set_drawPhase();
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         this.resourceList.addResource("人間");
+        if (this.warFlag)
+            this.state.warStateChange();
     }
 
     setWait() {
@@ -50,8 +53,9 @@ export class GamePlayer {
         this.actionCard.clear();
     }
 
-    winWar() { this.state.winWar(); }
-    loseWar() { this.state.loseWar(); }
+    winWar() { this.state.winWar(); this.warFlag = false; }
+    loseWar() { this.state.loseWar(); this.warFlag = false; }
+    startWar() { this.warFlag = true; }
 
     constructor(
         playerData: PlayerData,

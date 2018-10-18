@@ -48,6 +48,7 @@ export class BoardGame {
         this.war = new War(this.boardsocketManager);
         this.war.onWin(playerId => this.gamePlayers.winWar(playerId));
         this.war.onLose(playerId => this.gamePlayers.loseWar(playerId));
+        this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait) {
                 player.clear();
