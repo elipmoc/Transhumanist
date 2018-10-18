@@ -7,55 +7,55 @@ export class RoomView {
 
     constructor(roomDataForClient: RoomDataForClient) {
         this.roomId = roomDataForClient.roomId;
+        const trLine1 = $("<tr>");
+        const tdRoomName = $("<td>");
+        const table = $("<table>");
 
-        let tr = document.createElement("tr");
-        let td = document.createElement("td");
-        let table = document.createElement("table");
-
-        table.setAttribute("class", "roomTable");
-        table.setAttribute("id", String(roomDataForClient.roomId));
+        table.attr("class", "roomTable");
+        table.attr("id", String(roomDataForClient.roomId));
 
         //テーブル上段
-        td.textContent = roomDataForClient.roomName;
-        td.setAttribute("class", "roomName");
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.setAttribute("colspan", "4");
-        td.textContent = "入室中のプレイヤー";
-        tr.appendChild(td);
-        table.appendChild(tr);
+        tdRoomName.text(roomDataForClient.roomName);
+        tdRoomName.attr("class", "roomName");
+        trLine1.append(tdRoomName);
+        
+        const tdInPlayer = $("<td>");
+        tdInPlayer.attr("colspan", "4");
+        tdInPlayer.text("入室中のプレイヤー");
+        trLine1.append(tdInPlayer);
+        table.append(trLine1);
         //テーブル下段
-        let button = document.createElement("input");
-        button.setAttribute("type", "button");
-        button.setAttribute("value", "部屋に入室");
-        button.setAttribute("class", "roomInButton button");
-        button.onclick = () => { this.clickRequestEnterCallBack(); };
+        const button = $("<input>");
+        button.attr("type", "button");
+        button.attr("value", "部屋に入室");
+        button.attr("class", "roomInButton button");
+        button.click(() => { this.clickRequestEnterCallBack(); });
 
-        tr = document.createElement("tr");
-        td = document.createElement("td");
-        td.setAttribute("class", "playFlag");
+        const trLine2 = $("<tr>");
+        const tdPlayFlag = $("<td>");
+        tdPlayFlag.attr("class", "playFlag");
         if (roomDataForClient.playFlag) {
-            td.textContent = "プレイ中";
+            tdPlayFlag.text("プレイ中");
         }
         else {
             //ここにボタンを追加。
-            td.appendChild(button);
+            tdPlayFlag.append(button);
         }
-        tr.appendChild(td);
+        trLine2.append(tdPlayFlag);
 
         for (let i = 0; i < 4; i++) {
-            td = document.createElement("td");
-            td.setAttribute("class", `player${i}`);
+            const tdPlayerName = $("<td>");
+            tdPlayerName.attr("class", `player${i}`);
             if (!(roomDataForClient.playerList.length < i)) {
-                td.textContent = roomDataForClient.playerList[i];
+                tdPlayerName.text(roomDataForClient.playerList[i]);
             }
-            tr.appendChild(td);
+            trLine2.append(tdPlayerName);
         }
-        table.appendChild(tr);
+        table.append(trLine2);
 
-        let roomListArea = document.getElementById("roomListArea");
+        const roomListArea = $("#roomListArea");
         if (roomListArea != null)
-            roomListArea.appendChild(table);
+            roomListArea.append(table);
     }
     setRoom(roomData: RoomDataForClient) {
         const room = $(`#${this.roomId}`);
