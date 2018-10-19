@@ -75,6 +75,7 @@ export class BoardGame {
         if (this.boardGameStatus.isWait()) {
             const gamePlayer =
                 this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
+            this.message.addPlayerName(playerId, playerData.getName());
             new TurnFinishButtonClick(gamePlayer, this.boardGameStarter, this.boardGameTurnRotation, this.boardsocketManager);
         }
     }
