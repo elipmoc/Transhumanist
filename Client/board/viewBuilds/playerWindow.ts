@@ -4,7 +4,6 @@ import { ResponseGamePlayerState } from "../../../Share/responseGamePlayerState"
 import { SocketBinder } from "../../socketBinder";
 import * as playerWindows from "../views/playerWindows";
 import { LayerTag } from "../../board";
-import { stat } from "fs";
 
 export function build(bindParams: BindParams) {
     const playerWindowList: PlayerWindowBase[] = [
