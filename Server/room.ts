@@ -20,6 +20,7 @@ export class Room {
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
         this.boardGame = new BoardGame(boardSocket.in(`room${roomId}`), roomId);
+        this.boardGame.onDeleteMember(uuid => this.deleteMember(uuid));
     }
 
     get RoomId() { return this.roomId; }
@@ -62,7 +63,9 @@ export class Room {
     }
 
     deleteMember(uuid: string) {
-        //TODOあとで実装する
+        this.roomData.deleteMember(uuid);
+        this.roomEvents.deleteMemberCallBack(uuid);
+        this.updateCallback();
     }
 
     deleteRoom() {
