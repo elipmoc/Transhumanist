@@ -60,6 +60,17 @@ export class PlayerWindowBase extends createjs.Container {
     setNegative(negative: number) {
         this.negativeText.text = "Negative:" + negative;
     }
+
+    clearState() {
+        this.playerNameText.text = "";
+        this.speedText.text = "";
+        this.resourceText.text = "";
+        this.activityRangeText.text = "";
+        this.uncertaintyText.text = "";
+        this.positiveText.text = "";
+        this.negativeText.text = "";
+    }
+
     visibleGMIcon(flag: boolean) {
         this.gmIcon.visible = flag;
     }
