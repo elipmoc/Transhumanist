@@ -51,10 +51,10 @@ export class RoomList {
 
         const passwordInfo = new PasswordInfo(req.password, req.passwordFlag);
         const roomEvents: RoomEvents = {
-            deleteMemberCallBack: (playerDataForClient, uuid) => {
+            deleteMemberCallBack: uuid => {
                 this.uuidGenerator.releaseUuid(uuid);
             },
-            deleteRoomCallBack: (roomId) => {
+            deleteRoomCallBack: roomId => {
                 this.roomIdGenerator.releaseRoomId(roomId);
             },
         };

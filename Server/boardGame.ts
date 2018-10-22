@@ -50,9 +50,9 @@ export class BoardGame {
         this.war.onLose(playerId => this.gamePlayers.loseWar(playerId));
         this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
         this.gamePlayers.onLeaveRoom(player => {
-            if (this.isWait) {
-                player.clear();
+            if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid)
+                player.clear();
             }
         });
     }
