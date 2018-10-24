@@ -46,7 +46,7 @@ export class GamePlayer {
 
     clear() {
         this.uuid = "";
-        this.playerCond.Value = GamePlayerCondition.Start;
+        this.playerCond.Value = GamePlayerCondition.Empty;
         this.isGameMaster = false;
         this.state.clear();
         this.resourceList.clear();

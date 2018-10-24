@@ -13,6 +13,10 @@ export function build(bindParams: BindParams) {
     optionWindow.y = global.canvasHeight / 2;
     optionWindow.visible = false;
 
+    bindParams.socket.on("leaveRoom", () => {
+        location.href = "login.html";
+    });
+
     optionWindow.ruleOnClick(
         () => {
             window.open("rule.html");
@@ -23,6 +27,7 @@ export function build(bindParams: BindParams) {
     optionWindow.leaveOnClick(
         () => {
             bindParams.socket.emit("leaveRoom");
+
             optionWindow.visible = false;
             bindParams.layerManager.update();
         }
