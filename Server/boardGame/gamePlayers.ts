@@ -7,6 +7,7 @@ import { SocketBinder } from "../socketBinder";
 import { EventCardDrawer } from "./eventCardDrawer";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { LeaveRoom } from "./leaveRoom";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 
 
 export class GamePlayers {
@@ -31,7 +32,7 @@ export class GamePlayers {
 
     canStart() {
         //プレイヤーが二人以上でゲーム開始できる
-        return this.gamePlayerList.length > 1;
+        return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty).length > 1;
     }
 
     getGamePlayer(uuid: string) {
