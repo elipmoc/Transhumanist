@@ -14,19 +14,19 @@ export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
     private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
-    private leaveRoomCallback: (player: GamePlayer) => void;
+    private leaveRoomCallback: (player: GamePlayer) => boolean;
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
         this.turnManager = new TurnManager(this.gamePlayerList, eventCardDrawer, boardSocketManager);
         new LeaveRoom(boardSocketManager)
-            .onLeaveRoom(id => {
-                this.leaveRoomCallback(this.gamePlayerList[id]);
-            });
+            .onLeaveRoom(id =>
+                this.leaveRoomCallback(this.gamePlayerList[id])
+            );
     }
 
-    onLeaveRoom(callback: (player: GamePlayer) => void) {
+    onLeaveRoom(callback: (player: GamePlayer) => boolean) {
         this.leaveRoomCallback = callback;
     }
 

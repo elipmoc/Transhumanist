@@ -53,7 +53,9 @@ export class BoardGame {
             if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid)
                 player.clear();
+                return true;
             }
+            return false;
         });
     }
 
@@ -64,7 +66,9 @@ export class BoardGame {
 
             this.boardsocketManager.addSocket(`player${gamePlayer.PlayerId}`, socket);
             new BoardPlayerHandle(socket, gamePlayer);
+            return true;
         }
+        return false;
     }
 
     isWait() {
