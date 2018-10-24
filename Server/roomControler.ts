@@ -18,7 +18,7 @@ export class RoomControler {
             socket => {
                 socket.on("joinBoardGame", (str) => {
                     const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
-                    if (this.roomList.joinUser(socket, requestBoardGameJoin) == false)
+                    if (!this.roomList.joinUser(socket, requestBoardGameJoin))
                         socket.emit("rejectBoardGame");
                 });
             }

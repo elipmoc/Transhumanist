@@ -48,7 +48,7 @@ export class Room {
     }
 
     joinUser(socket: SocketIO.Socket, uuid: string) {
-        this.boardGame.joinUser(socket, uuid);
+        return this.boardGame.joinUser(socket, uuid);
     }
 
     getRoomDataForClient() {

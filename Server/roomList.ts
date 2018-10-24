@@ -30,12 +30,11 @@ export class RoomList {
         loginSocketManager.addSocketBinder(this.roomDataList);
     }
 
-    private bindRoomMap(roomId: number, f: (room: Room) => void) {
+    private bindRoomMap<T>(roomId: number, f: (room: Room) => T) {
         const room = this.roomMap.get(roomId);
         if (room == undefined)
-            return false;
-        f(room);
-        return true;
+            return undefined;
+        return f(room);
     }
 
     isExistUuid(uuid: string) {
