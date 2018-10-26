@@ -8,6 +8,7 @@ import {
 } from "../Share/resultEnterRoomData";
 import { PlayerData } from "./playerData";
 import { RoomDataForClient } from "../Share/roomDataForClient";
+import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 
 export class Room {
     private roomData: RoomData;
@@ -15,12 +16,22 @@ export class Room {
     private roomEvents: RoomEvents;
     private updateCallback: () => void;
     private roomId: number;
+
     constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, boardSocket: SocketIO.Namespace) {
         this.roomId = roomId;
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
         this.boardGame = new BoardGame(boardSocket.in(`room${roomId}`), roomId);
         this.boardGame.onDeleteMember(uuid => this.deleteMember(uuid));
+        this.boardGame.onChangeStatus(status => {
+            if (
+                this.roomData.PlayFlag && status == BoardGameStatusKind.wait ||
+                !this.roomData.PlayFlag && status != BoardGameStatusKind.wait
+            ) {
+                this.roomData.PlayFlag = !this.roomData.PlayFlag;
+                this.updateCallback();
+            }
+        });
     }
 
     get RoomId() { return this.roomId; }
@@ -55,7 +66,7 @@ export class Room {
         let roomDataForClient: RoomDataForClient = {
             roomName: this.roomData.getRoomName(),
             roomId: this.roomData.getRoomId(),
-            playFlag: this.roomData.getPlayFlag(),
+            playFlag: this.roomData.PlayFlag,
             playerList: this.roomData.getPlayerNameList(),
             passwordFlag: this.roomData.getPasswordInfo().isNeedPassword()
         };
