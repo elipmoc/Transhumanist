@@ -9,6 +9,7 @@ import {
 import { PlayerData } from "./playerData";
 import { RoomDataForClient } from "../Share/roomDataForClient";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 export class Room {
     private roomData: RoomData;
@@ -17,11 +18,21 @@ export class Room {
     private updateCallback: () => void;
     private roomId: number;
 
-    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, boardSocket: SocketIO.Namespace) {
+    constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, socket: SocketIO.Server) {
         this.roomId = roomId;
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
-        this.boardGame = new BoardGame(boardSocket.in(`room${roomId}`), roomId);
+        const boardSocket = socket.of(`/room${roomId}`);
+        boardSocket.on("connection",
+            socket => {
+                socket.on("joinBoardGame", (str) => {
+                    const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
+                    if (!this.boardGame.joinUser(socket, requestBoardGameJoin.uuid))
+                        socket.emit("rejectBoardGame");
+                });
+            }
+        );
+        this.boardGame = new BoardGame(boardSocket, roomId);
         this.boardGame.onDeleteMember(uuid => this.deleteMember(uuid));
         this.boardGame.onChangeStatus(status => {
             if (
@@ -56,10 +67,6 @@ export class Room {
         this.boardGame.addMember(playerData, playerId);
         this.updateCallback();
         return successResultEnterRoomData(playerData.getUuid(), playerId);
-    }
-
-    joinUser(socket: SocketIO.Socket, uuid: string) {
-        return this.boardGame.joinUser(socket, uuid);
     }
 
     getRoomDataForClient() {

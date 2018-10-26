@@ -10,19 +10,9 @@ import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 export class RoomControler {
     private roomList: RoomList;
 
-    constructor(boardSocket: SocketIO.Namespace, loginSocket: SocketIO.Namespace) {
+    constructor(socket: SocketIO.Server, loginSocket: SocketIO.Namespace) {
         const loginSocketManager = new SocketBinder.BindManager().registNamespace("login", loginSocket);
-        this.roomList = new RoomList(boardSocket, loginSocketManager);
-
-        boardSocket.on("connection",
-            socket => {
-                socket.on("joinBoardGame", (str) => {
-                    const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
-                    if (!this.roomList.joinUser(socket, requestBoardGameJoin))
-                        socket.emit("rejectBoardGame");
-                });
-            }
-        );
+        this.roomList = new RoomList(socket, loginSocketManager);
 
         //クライアントが繋がった時を処理
         loginSocket.on("connection", (socket: SocketIO.Socket) => {
