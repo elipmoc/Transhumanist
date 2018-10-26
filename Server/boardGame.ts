@@ -27,6 +27,7 @@ export class BoardGame {
     private boardGameStarter: BoardGameStarter;
     private boardGameTurnRotation: BoardGameTurnRotation;
     private deleteMemberCallback: (uuid: string) => void;
+    private deleteRoomCallback: (roomId: number) => void;
 
     constructor(boardSocket: SocketIO.Namespace, roomId: number) {
         this.boardsocketManager = new SocketBinder.BindManager().registNamespace("board", boardSocket);
@@ -52,8 +53,10 @@ export class BoardGame {
         this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait()) {
-                this.deleteMemberCallback(player.Uuid)
+                this.deleteMemberCallback(player.Uuid);
                 player.clear();
+                if (this.gamePlayers.getPlayerCount() == 0)
+                    this.deleteRoomCallback(this.roomId);
                 return true;
             }
             return false;
@@ -89,7 +92,11 @@ export class BoardGame {
         }
     }
 
-    onDeleteMember(callback: (uuid: string) => void) {
-        this.deleteMemberCallback = callback;
+    onDeleteMember(f: (uuid: string) => void) {
+        this.deleteMemberCallback = f;
+    }
+
+    onDeleteRoom(f: (roomId: number) => void) {
+        this.deleteRoomCallback = f;
     }
 }

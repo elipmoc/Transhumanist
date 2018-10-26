@@ -14,7 +14,8 @@ export class BoardGameStarter {
         this.actionCardStacks = actionCardStacks;
     }
     Init() {
-        if (this.gamePlayers.canStart() && this.boardGameStatus.start()) {
+        //プレイヤーが二人以上でゲーム開始できる
+        if (this.gamePlayers.getPlayerCount() > 1 && this.boardGameStatus.start()) {
             const startStatusYamlData = yamlGet("./Resource/Yaml/startStatus.yaml");
             this.gamePlayers.initCard(startStatusYamlData, this.actionCardStacks);
             this.gamePlayers.initTurnSet();
