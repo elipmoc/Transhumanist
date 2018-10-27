@@ -61,7 +61,7 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     const layerManager = new LayerManager(getLayerTags(), stage);
-    const socket = io("/board");
+    const socket = io(`/room${Number(cookies.get("roomid"))}`);
     const imgQueue = new ImageQueue(queue, spriteJson);
     const bindParams = {
         imgQueue,
@@ -74,7 +74,7 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     let background = new BackGroundChanger(bindParams);
     layerManager.add("backGround", background);
 
-    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid"), roomid: Number(cookies.get("roomid")) };
+    const requestBoardGameJoin: RequestBoardGameJoin = { uuid: cookies.get("uuid") };
     socket.emit("joinBoardGame", JSON.stringify(requestBoardGameJoin));
     socket.on("rejectBoardGame", () => {
         alert("部屋に参加出来ませんでした！");

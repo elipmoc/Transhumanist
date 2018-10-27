@@ -21,12 +21,12 @@ export class RoomList {
     private roomDataList: SocketBinder.BinderList<RoomDataForClient>;
     private roomIdGenerator: RoomIdGenerator = new RoomIdGenerator();
     private uuidGenerator: UuidGenerator = new UuidGenerator();
-    private boardSocket: SocketIO.Namespace;
+    private socket: SocketIO.Server;
 
 
-    constructor(boardSocket: SocketIO.Namespace, loginSocketManager: SocketBinder.Namespace) {
+    constructor(socket: SocketIO.Server, loginSocketManager: SocketBinder.Namespace) {
         this.roomDataList = new SocketBinder.BinderList<RoomDataForClient>("roomList");
-        this.boardSocket = boardSocket;
+        this.socket = socket;
         loginSocketManager.addSocketBinder(this.roomDataList);
     }
 
@@ -58,7 +58,8 @@ export class RoomList {
             },
         };
 
-        const room = new Room(roomId, req.roomName, passwordInfo, roomEvents, this.boardSocket);
+        const room =
+            new Room(roomId, req.roomName, passwordInfo, roomEvents, this.socket);
         room.onUpdate(() => {
             const idx = this.roomDataList.Value.findIndex(x => x.roomId == room.RoomId);
             if (idx != -1)
@@ -88,9 +89,4 @@ export class RoomList {
     deleteMember(roomId: number, uuid: string) {
         this.bindRoomMap(roomId, room => room.deleteMember(uuid));
     }
-
-    joinUser(socket: SocketIO.Socket, data: RequestBoardGameJoin) {
-        return this.bindRoomMap(data.roomid, room => room.joinUser(socket, data.uuid));
-    }
-
 }
