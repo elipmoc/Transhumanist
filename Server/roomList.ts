@@ -54,6 +54,7 @@ export class RoomList {
                 this.uuidGenerator.releaseUuid(uuid);
             },
             deleteRoomCallBack: roomId => {
+                this.roomDataList.Value = this.roomDataList.Value.filter(x => x.roomId != roomId);
                 this.roomIdGenerator.releaseRoomId(roomId);
             },
         };
@@ -80,13 +81,5 @@ export class RoomList {
         const uuid = this.uuidGenerator.getUuid();
         const result: ResultEnterRoomData = room.enterRoom(req, uuid);
         return result;
-    }
-
-    deleteRoom(roomId: number) {
-        this.bindRoomMap(roomId, room => room.deleteRoom);
-    }
-
-    deleteMember(roomId: number, uuid: string) {
-        this.bindRoomMap(roomId, room => room.deleteMember(uuid));
     }
 }

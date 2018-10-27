@@ -30,9 +30,8 @@ export class GamePlayers {
         this.leaveRoomCallback = callback;
     }
 
-    canStart() {
-        //プレイヤーが二人以上でゲーム開始できる
-        return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty).length > 1;
+    getPlayerCount() {
+        return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty).length;
     }
 
     getGamePlayer(uuid: string) {

@@ -34,6 +34,7 @@ export class Room {
         );
         this.boardGame = new BoardGame(boardSocket, roomId);
         this.boardGame.onDeleteMember(uuid => this.deleteMember(uuid));
+        this.boardGame.onDeleteRoom(this.roomEvents.deleteRoomCallBack);
         this.boardGame.onChangeStatus(status => {
             if (
                 this.roomData.PlayFlag && status == BoardGameStatusKind.wait ||
@@ -80,13 +81,9 @@ export class Room {
         return roomDataForClient;
     }
 
-    deleteMember(uuid: string) {
+    private deleteMember(uuid: string) {
         this.roomData.deleteMember(uuid);
         this.roomEvents.deleteMemberCallBack(uuid);
         this.updateCallback();
-    }
-
-    deleteRoom() {
-        //TODOあとで実装する
     }
 }
