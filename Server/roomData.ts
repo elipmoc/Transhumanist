@@ -18,26 +18,16 @@ export class RoomData {
         this.playFlag = false;
 
         this.playerDataList = new PlayerDataList;
-
-        let roomData: RoomDataForClient = {
-            roomName: this.roomName,
-            roomId: this.roomId,
-            playFlag: this.playFlag,
-            playerList: this.playerDataList.getPlayerNameList(),
-            passwordFlag: this.passwordInfo.isNeedPassword()
-        };
     }
 
     getRoomId() { return this.roomId; }
 
     getRoomName() { return this.roomName; }
 
-    getPlayFlag() { return this.playFlag; }
+    get PlayFlag() { return this.playFlag; }
 
-    setPlayFlag(playFlag: boolean) {
+    set PlayFlag(playFlag: boolean) {
         this.playFlag = playFlag;
-        let playFlagDataForClient: PlayFlagDataForClient
-            = { playFlag: playFlag, roomId: this.roomId };
     }
 
     getPlayerData(uuid: string) {

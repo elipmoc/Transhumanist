@@ -18,7 +18,7 @@ export class RoomView {
         tdRoomName.text(roomDataForClient.roomName);
         tdRoomName.attr("class", "roomName");
         trLine1.append(tdRoomName);
-        
+
         const tdInPlayer = $("<td>");
         tdInPlayer.attr("colspan", "4");
         tdInPlayer.text("入室中のプレイヤー");
@@ -61,19 +61,19 @@ export class RoomView {
         const room = $(`#${this.roomId}`);
         room.attr("id", String(roomData.roomId));
         room.find(".roomName").text(roomData.roomName);
-        console.log(roomData.playerList);
         for (let i = 0; i < 4; i++)
             room.find(`.player${i}`).text("");
         roomData.playerList.forEach((name, id) =>
             room.find(`.player${id}`).text(name)
         );
-        const playFlag = room.find(".playFlag td");
+        const playFlag = room.find(".playFlag");
         playFlag.empty();
         if (roomData.playFlag)
             playFlag.text("プレイ中");
         else {
-            $('<input type="button" value="部屋に入室" class="roomInButton button">')
+            const button = $('<input type="button" value="部屋に入室" class="roomInButton button">')
                 .click(() => this.clickRequestEnterCallBack());
+            playFlag.append(button);
         }
     }
 

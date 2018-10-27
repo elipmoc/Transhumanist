@@ -12,6 +12,7 @@ import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { War } from "./boardGame/war";
 import { TurnFinishButtonClick } from "./boardGame/turnFinishButtonClick";
+import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -57,6 +58,10 @@ export class BoardGame {
             }
             return false;
         });
+    }
+
+    onChangeStatus(f: (state: BoardGameStatusKind) => void) {
+        this.boardGameStatus.onChangeCallback(f);
     }
 
     joinUser(socket: SocketIO.Socket, uuid: string) {
