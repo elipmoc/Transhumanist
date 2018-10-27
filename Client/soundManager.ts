@@ -53,9 +53,7 @@ export class SoundManager {
             });
         } else {
             SoundManager.bgmInstance = createjs.Sound.play(nowId, SoundManager.bgmprops);
-            if (SoundManager.bgmInstance != null) {
-                SoundManager.bgmInstance.position = pos;
-            }
+            SoundManager.bgmInstance.position = pos;
             this.bgmLoad(level + 1);
         }
 
