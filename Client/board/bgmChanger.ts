@@ -11,7 +11,7 @@ export class BgmChanger {
             if (x == null) return;
             if (this.nowLevel != x.level) {
                 this.nowLevel = x.level;
-                SoundManager.bgmPlay("bgm_level" + x.level, x.level == 1 ? 0 : SoundManager.BgmPosition);
+                SoundManager.bgmPlay(x.level, x.level == 1 ? 0 : SoundManager.BgmPosition);
             }
         });
     }
