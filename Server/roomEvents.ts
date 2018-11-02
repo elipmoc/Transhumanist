@@ -1,7 +1,5 @@
-import { PlayerDataForClient } from "../Share/playerDataForClient";
 
 export interface RoomEvents {
-    deleteMemberCallBack: (playerDataForClient: PlayerDataForClient, uuid: string) => void;
+    deleteMemberCallBack: (uuid: string) => void;
     deleteRoomCallBack: (roomId: number) => void;
-    updatePlayFlagCallBack: (playFlag: boolean) => void;
 }

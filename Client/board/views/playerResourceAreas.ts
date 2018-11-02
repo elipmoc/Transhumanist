@@ -13,7 +13,9 @@ export class Player1ResourceArea extends PlayerResourceAreaBase {
         this.resourceArea.y = global.canvasHeight - 85;
 
         this.resourceList.x = global.canvasWidth / 2 - this.resourceArea.image.width / 2;
+        this.resourceList.x += 1;
         this.resourceList.y = global.canvasHeight - this.resourceArea.image.height - 85;
+        this.resourceList.y += 1;
 
     }
 }
@@ -27,7 +29,10 @@ export class Player2ResourceArea extends PlayerResourceAreaBase {
         this.resourceArea.x = 100;
         this.resourceArea.y = global.canvasHeight / 2 - (this.resourceArea.image.height / 2) - 2;
         this.resourceList.x = 100;
+        this.resourceList.x += 1;
         this.resourceList.y = global.canvasHeight / 2 - (this.resourceArea.image.height) - 2;
+        this.resourceList.y += 1;
+
     }
 }
 
@@ -40,7 +45,10 @@ export class Player3ResourceArea extends PlayerResourceAreaBase {
         this.resourceArea.x = global.canvasWidth / 2;
         this.resourceArea.y = 85;
         this.resourceList.x = global.canvasWidth / 2 - this.resourceArea.image.width / 2;
+        this.resourceList.x += 1;
         this.resourceList.y = 85;
+        this.resourceList.y += 1;
+
     }
 }
 
@@ -53,6 +61,9 @@ export class Player4ResourceArea extends PlayerResourceAreaBase {
         this.resourceArea.x = global.canvasWidth - 100;
         this.resourceArea.y = global.canvasHeight / 2 - (this.resourceArea.image.height / 2) - 2;
         this.resourceList.x = global.canvasWidth - 100 - this.resourceArea.image.width;
+        this.resourceList.x += 1;
         this.resourceList.y = global.canvasHeight / 2 - (this.resourceArea.image.height) - 2;
+        this.resourceList.y += 1;
+
     }
 }

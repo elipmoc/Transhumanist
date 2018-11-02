@@ -12,24 +12,29 @@ import {
 } from "../Share/resultEnterRoomData";
 import { PasswordInfo } from "./passwordInfo";
 import { RoomEvents } from "./roomEvents";
+import { SocketBinder } from "./socketBinder";
+import { RoomDataForClient } from "../Share/roomDataForClient";
+import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 export class RoomList {
     private roomMap: Map<number, Room> = new Map();
+    private roomDataList: SocketBinder.BinderList<RoomDataForClient>;
     private roomIdGenerator: RoomIdGenerator = new RoomIdGenerator();
     private uuidGenerator: UuidGenerator = new UuidGenerator();
-    private roomListEvents: RoomListEvents;
-    private boardSocket: SocketIO.Namespace;
+    private socket: SocketIO.Server;
 
-    constructor(roomListEvents: RoomListEvents, boardSocket: SocketIO.Namespace) {
-        this.roomListEvents = roomListEvents;
-        this.boardSocket = boardSocket;
+
+    constructor(socket: SocketIO.Server, loginSocketManager: SocketBinder.Namespace) {
+        this.roomDataList = new SocketBinder.BinderList<RoomDataForClient>("roomList");
+        this.socket = socket;
+        loginSocketManager.addSocketBinder(this.roomDataList);
     }
 
-    private bindRoomMap(roomId: number, f: (room: Room) => void) {
+    private bindRoomMap<T>(roomId: number, f: (room: Room) => T) {
         const room = this.roomMap.get(roomId);
         if (room == undefined)
-            return;
-        f(room);
+            return undefined;
+        return f(room);
     }
 
     isExistUuid(uuid: string) {
@@ -45,21 +50,28 @@ export class RoomList {
 
         const passwordInfo = new PasswordInfo(req.password, req.passwordFlag);
         const roomEvents: RoomEvents = {
-            deleteMemberCallBack: (playerDataForClient, uuid) => {
+            deleteMemberCallBack: uuid => {
                 this.uuidGenerator.releaseUuid(uuid);
-                this.roomListEvents.deleteMemberCallBack(playerDataForClient);
             },
-            deleteRoomCallBack: (roomId) => {
+            deleteRoomCallBack: roomId => {
+                this.roomDataList.Value = this.roomDataList.Value.filter(x => x.roomId != roomId);
                 this.roomIdGenerator.releaseRoomId(roomId);
-                this.roomListEvents.deleteRoomCallBack(roomId);
+                const room = this.roomMap.get(roomId);
+                if (room)
+                    room.dispose();
+                this.roomMap.delete(roomId);
             },
-            updatePlayFlagCallBack: (playFlag) =>
-                this.roomListEvents.updatePlayFlagCallBack({ roomId: roomId!, playFlag: playFlag })
         };
 
-        const room = new Room(roomId, req.roomName, passwordInfo, roomEvents, this.boardSocket);
+        const room =
+            new Room(roomId, req.roomName, passwordInfo, roomEvents, this.socket);
+        room.onUpdate(() => {
+            const idx = this.roomDataList.Value.findIndex(x => x.roomId == room.RoomId);
+            if (idx != -1)
+                this.roomDataList.setAt(idx, room.getRoomDataForClient());
+        });
         this.roomMap.set(roomId, room);
-        this.roomListEvents.addRoomCallBack(room.getRoomDataForClient());
+        this.roomDataList.push(room.getRoomDataForClient());
         return successResultCreateRoomData(roomId);
     }
 
@@ -72,30 +84,6 @@ export class RoomList {
 
         const uuid = this.uuidGenerator.getUuid();
         const result: ResultEnterRoomData = room.enterRoom(req, uuid);
-        if (result.successFlag)
-            this.roomListEvents.addMemberCallBack({ roomId: req.roomId, playerId: result.playerId, playerName: req.playerName });
         return result;
     }
-
-    deleteRoom(roomId: number) {
-        const room = this.roomMap.get(roomId);
-        if (room == undefined)
-            return;
-        room.deleteRoom();
-    }
-
-    deleteMember(roomId: number, uuid: string) {
-        this.bindRoomMap(roomId, room => room.deleteMember(uuid));
-    }
-
-    sendRoomList() {
-        return Array.from(this.roomMap.values()).map(
-            x => x.getRoomDataForClient()
-        );
-    }
-
-    joinUser(socket: SocketIO.Socket, roomId: number, uuid: string) {
-        this.bindRoomMap(roomId, room => room.joinUser(socket, uuid));
-    }
-
 }

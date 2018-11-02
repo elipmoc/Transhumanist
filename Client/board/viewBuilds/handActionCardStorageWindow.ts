@@ -9,7 +9,6 @@ import { LayerTag } from "../../board";
 //手札ウインドウの生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const decision = new ActionCardUseDecisionWindow();
-
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList", bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.imgQueue);
     actionCardList.onUpdate(list => {

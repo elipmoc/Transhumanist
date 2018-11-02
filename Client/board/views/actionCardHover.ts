@@ -36,7 +36,7 @@ export class ActionCardHover extends createjs.Container {
         this.addChild(this.costView);
 
         this.warUseView.x = (this.cardWidth) + (7 * 2) + 7;
-        this.warUseView.y = ((global.cardIconSize + 2) * 6) + (7 * 2) + 7
+        this.warUseView.y = ((global.cardIconSize/2 + 2) * 6) + (7 * 2) + 7
         this.addChild(this.warUseView);
 
         this.conditionView.y = (this.cardHeight) + (7 * 2) + 7;

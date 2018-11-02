@@ -5,5 +5,7 @@ export enum GamePlayerCondition {
     //自分のターンが来ている時
     MyTurn,
     //待機中
-    Wait
+    Wait,
+    //プレイヤーが存在しない
+    Empty
 }

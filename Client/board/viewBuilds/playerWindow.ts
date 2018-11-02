@@ -17,13 +17,19 @@ export function build(bindParams: BindParams) {
     for (let i = 0; i < playerWindowList.length; i++) {
         //プレイヤーの状態が更新されたら呼ばれるイベント
         const updateState = (state: ResponseGamePlayerState) => {
-            playerWindowList[i].setPlayerName(state.playerName);
-            playerWindowList[i].setSpeed(state.speed);
-            playerWindowList[i].setResource(state.resource);
-            playerWindowList[i].setPositive(state.positive);
-            playerWindowList[i].setNegative(state.negative);
-            playerWindowList[i].setUncertainty(state.uncertainty);
-            playerWindowList[i].setActivityRange(state.activityRange);
+            if (state.playerName != "") {
+                playerWindowList[i].setPlayerName(state.playerName);
+                playerWindowList[i].setSpeed(state.speed);
+                playerWindowList[i].setResource(state.resource);
+                playerWindowList[i].setPositive(state.positive);
+                playerWindowList[i].setNegative(state.negative);
+                playerWindowList[i].setUncertainty(state.uncertainty);
+                playerWindowList[i].setActivityRange(state.activityRange);
+            } else {
+                console.log(state.playerName);
+                playerWindowList[i].clearState();
+            }
+            
             bindParams.layerManager.update();
         };
         const gamePlayerState = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);

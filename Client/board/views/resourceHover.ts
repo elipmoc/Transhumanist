@@ -13,15 +13,15 @@ export class ResourceHover extends createjs.Container {
         this.cardIcon = new createjs.Bitmap("");
         this.cardName = new createjs.Text(null);
 
-        this.cardName.x = (global.cardIconSize * 1) + 2;
+        this.cardName.x = (global.cardIconSize) + 2;
         this.cardName.y = (global.cardIconSize / 2) - 6;
-        this.cardName.font = "12px Arial";
+        this.cardName.font = "16px Arial";
 
         this.backGround = new createjs.Shape();
         this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 * 8)) + 8, (global.cardIconSize) + 8);
 
-        this.scaleX = 1.5;
-        this.scaleY = 1.5;
+        this.scaleX = 0.75;
+        this.scaleY = 0.75;
         this.addChild(this.backGround);
         this.addChild(this.cardIcon);
         this.addChild(this.cardName);
@@ -30,7 +30,7 @@ export class ResourceHover extends createjs.Container {
         if (yamlData != null) {
             this.cardIcon.image = getIconResource(yamlData.index, "resource", queue);
             this.cardName.text = yamlData.name;
-            this.x = this.stage.mouseX + global.cardIconSize;
+            this.x = this.stage.mouseX + global.cardIconSize / 2;
             this.y = this.stage.mouseY;
         }
     }

@@ -8,6 +8,7 @@ import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
 import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import { SocketBinderList } from "./socketBinderList";
 
 //サンプルソケットに繋げる
 const socket = io("/login");
@@ -24,7 +25,7 @@ socket.on("deleteRoom", (data: number) => {
     roomViewList.deleteRoom(roomId);
 });
 
-socket.on("addMember", (data: string) => {
+/*socket.on("addMember", (data: string) => {
     let member: PlayerDataForClient = JSON.parse(data);
     roomViewList.addMember(member);
 });
@@ -37,16 +38,23 @@ socket.on("deleteMember", (data: string) => {
 socket.on("updatePlayFlag", (data: string) => {
     let playData: PlayFlagDataForClient = JSON.parse(data);
     roomViewList.updatePlayFlag(playData);
-});
+});*/
 
-//sendRoomList
-socket.on("sendRoomList", (data: string) => {
-    let RoomList: RoomDataForClient[] = JSON.parse(data);
-    roomViewList.initRoomList(RoomList);
+const roomList = new SocketBinderList<RoomDataForClient>("roomList", socket);
+roomList.onUpdate(rooms => {
+    roomViewList.initRoomList(rooms);
+});
+roomList.onPush(room => {
+    roomViewList.addRoom(room);
+})
+roomList.onSetAt((id, room) => {
+    roomViewList.setRoom(room);
 });
 
 let button = document.getElementById("createButton");
 button.onclick = () => { requestCreate(); };
+
+let requestBuf: { name: string, data: any } = null;
 
 //requestCreateRoom
 function requestCreate() {
@@ -63,9 +71,20 @@ function requestCreate() {
     } else if (request.passwordFlag && request.password == "") {
         alert("パスワードが入力されていません！");
     } else {
-        socket.emit("requestCreateRoom", JSON.stringify(request));
+        requestBuf = { name: "requestCreateRoom", data: request };
+        socket.emit("requestExistUuid", cookies.get("uuid"));
     }
 }
+
+
+
+socket.on("resultExistUuid", (data: any) => {
+    let isExist: boolean = JSON.parse(data);
+    if (isExist)
+        alert("あなたはすでに別の部屋に入室しています");
+    else
+        socket.emit(requestBuf.name, JSON.stringify(requestBuf.data));
+});
 
 //resultCreateRoom
 socket.on("resultCreateRoom", (data: string) => {
@@ -91,7 +110,8 @@ function requestEnter(roomId: number) {
             password: (<HTMLInputElement>document.getElementById("pass")).value
         }
         cookies.set("roomid", String(roomId));
-        socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
+        socket.emit("requestExistUuid", cookies.get("uuid"));
+        requestBuf = { name: "requestEnterRoom", data: requestEnterRoomData };
     } else {
         alert("プレイヤー名が入力されていません！");
     }

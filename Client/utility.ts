@@ -34,9 +34,9 @@ export function getIconResource(imgIndex: number, img_name: string, queue: Image
         return null;
     const bitmap = clipBitmap(
         queue.getImage(img_name),
-        imgIndex % 5 * global.cardIconSize,
-        Math.floor(imgIndex / 5) * global.cardIconSize,
-        global.cardIconSize, global.cardIconSize);
+        imgIndex % 5 * (global.cardIconSize),
+        Math.floor(imgIndex / 5) * (global.cardIconSize),
+        (global.cardIconSize), (global.cardIconSize));
     return bitmap.image;
 }
 

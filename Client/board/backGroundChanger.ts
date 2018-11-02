@@ -3,7 +3,7 @@ import { SocketBinder } from "../socketBinder";
 import { BackGround } from "./views/backGround";
 import { Event } from "../../Share/Yaml/eventYamlData";
 
-export class BackGroundChanger extends createjs.Container{
+export class BackGroundChanger extends createjs.Container {
     private background: BackGround;
 
     constructor(bindParams: BindParams) {
@@ -11,7 +11,6 @@ export class BackGroundChanger extends createjs.Container{
         this.background = new BackGround();
         this.addChild(this.background);
         this.background.setBg("bg_level1");
-
         const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
         nowEvent.onUpdate(x => {
             if (x == null) return;

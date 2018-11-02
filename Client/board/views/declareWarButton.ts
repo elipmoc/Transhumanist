@@ -5,6 +5,11 @@ import { ImageQueue } from "../imageQueue";
 
 //宣戦布告ボタン
 export class DeclareWarButton extends ButtonBase {
+    private declareWarText: createjs.Text;
+    set Text(val: string) {
+        this.declareWarText.text = val;
+    }
+
     constructor(onClickCallback: () => void, queue: ImageQueue) {
         //ボタン画像
         const declareWarButton = queue.getImage("button");
@@ -15,11 +20,11 @@ export class DeclareWarButton extends ButtonBase {
         super(declareWarButton, onClickCallback);
 
         //ボタンテキスト
-        const declareWarText = new createjs.Text("宣戦布告/降伏", "20px Arial");
-        declareWarText.regX = declareWarText.getMeasuredWidth() / 2;
-        declareWarText.regY = declareWarText.getMeasuredHeight() / 2;
-        declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
-        declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
-        this.addChild(declareWarText);
+        this.declareWarText = new createjs.Text("宣戦布告", "20px Arial");
+        this.declareWarText.textAlign = "center";
+        this.declareWarText.regY = this.declareWarText.getMeasuredHeight() / 2;
+        this.declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
+        this.declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
+        this.addChild(this.declareWarText);
     }
 }

@@ -5,7 +5,7 @@ interface Pos {
     y: number
 }
 
-class WarLine extends createjs.Container {
+export class WarLine extends createjs.Container {
     private playerPos: Pos[] = [
         { x: global.canvasWidth / 2, y: global.canvasHeight },
         { x: 0, y: global.canvasHeight / 2 },
@@ -55,6 +55,10 @@ export class WarLineControl extends createjs.Container {
                 this.removeChild(x);
             return flag;
         });
+    }
+    deleteAllWarLine() {
+        this.warLineList.forEach(x => this.removeChild(x));
+        this.warLineList = [];
     }
 
 }

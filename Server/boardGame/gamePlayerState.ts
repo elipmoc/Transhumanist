@@ -7,10 +7,24 @@ export class GamePlayerState {
 
     get State() { return this.state.Value; }
 
-    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>, playerName: string) {
+    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>) {
         this.state = state;
         this.state.Value = {
-            playerName: playerName,
+            playerName: "",
+            negative: 0, positive: 0,
+            uncertainty: 0, resource: 0,
+            activityRange: 0, speed: 0
+        };
+    }
+
+    setPlayerName(playerName: string) {
+        this.state.Value.playerName = playerName;
+        this.state.update();
+    }
+
+    clear() {
+        this.state.Value = {
+            playerName: "",
             negative: 0, positive: 0,
             uncertainty: 0, resource: 0,
             activityRange: 0, speed: 0
@@ -22,6 +36,27 @@ export class GamePlayerState {
         this.state.Value.resource = startStatusYamlData.resource;
         this.state.Value.speed = startStatusYamlData.speed;
         this.state.Value.uncertainty = startStatusYamlData.uncertainty;
+        this.state.update();
+    }
+
+    winWar() {
+        this.state.Value.positive += 2;
+        this.state.Value.negative -= 2;
+        this.state.Value.negative =
+            this.state.Value.negative < 0 ? 0 : this.state.Value.negative;
+        this.state.update();
+    }
+
+    loseWar() {
+        this.state.Value.positive++;
+        this.state.Value.negative += 2;
+        this.state.update();
+    }
+    warStateChange() {
+        if (this.state.Value.positive <= 0)
+            this.state.Value.negative++;
+        else
+            this.state.Value.positive--;
         this.state.update();
     }
 }
