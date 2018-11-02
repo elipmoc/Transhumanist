@@ -43,27 +43,41 @@ export class SoundManager {
         if (SoundManager.bgmInstance == null) {
             //ソース先ファイルのロード
             this.bgmLoad(level);
-            this.bgmLoad(level + 1);
 
-            //ファイルロードの
+            //ファイルロード完了した時に実行
             createjs.Sound.addEventListener("fileload", (e: any) => {
                 if (e.id == nowId) {
                     SoundManager.bgmInstance = createjs.Sound.play(nowId, SoundManager.bgmprops);
                 }
             });
+            
+            this.bgmLoad(level + 1);
         } else {
-            SoundManager.bgmInstance = createjs.Sound.play(nowId, SoundManager.bgmprops);
-            SoundManager.bgmInstance.position = pos;
+            if (createjs.Sound.loadComplete(nowId)) {
+                //ロード済み
+                SoundManager.bgmInstance = createjs.Sound.play(nowId, SoundManager.bgmprops);
+                SoundManager.bgmInstance.position = pos;
+
+            } else {
+                //ロードまだです。
+                console.log("ロードまだでした");
+                this.bgmLoad(level);
+                createjs.Sound.addEventListener("fileload", (e: any) => {
+                    if (e.id == nowId) {
+                        SoundManager.bgmInstance = createjs.Sound.play(nowId, SoundManager.bgmprops);
+                    }
+                });
+            }
             this.bgmLoad(level + 1);
         }
 
     }
 
     //次のBgmロード（レベル6以外）
-    private static bgmLoad(level:number) {
+    static bgmLoad(level:number) {
         if (level >= 1 && level <= 6) {
             const nextId = "bgm_level" + level;
-            console.log(nextId);
+            console.log("bgm_level"+level+"loading");
             createjs.Sound.registerSound(mapping[nextId], nextId);
         }
     }
