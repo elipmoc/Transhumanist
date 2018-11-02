@@ -43,7 +43,7 @@ export class GamePlayers {
     }
 
     getGamePlayer(uuid: string) {
-        return this.gamePlayerList.find(x => x.Uuid == uuid);
+        return this.getNowPlayers().find(x => x.Uuid == uuid);
     }
 
     addMember(
