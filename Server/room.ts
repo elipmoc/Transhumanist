@@ -17,13 +17,14 @@ export class Room {
     private roomEvents: RoomEvents;
     private updateCallback: () => void;
     private roomId: number;
+    private boardSocket: SocketIO.Namespace;
 
     constructor(roomId: number, roomName: string, passwordInfo: PasswordInfo, roomEvents: RoomEvents, socket: SocketIO.Server) {
         this.roomId = roomId;
         this.roomEvents = roomEvents;
         this.roomData = new RoomData(roomId, roomName, passwordInfo);
-        const boardSocket = socket.of(`/room${roomId}`);
-        boardSocket.on("connection",
+        this.boardSocket = socket.of(`/room${roomId}`);
+        this.boardSocket.on("connection",
             socket => {
                 socket.on("joinBoardGame", (str) => {
                     const requestBoardGameJoin: RequestBoardGameJoin = JSON.parse(str);
@@ -32,7 +33,7 @@ export class Room {
                 });
             }
         );
-        this.boardGame = new BoardGame(boardSocket, roomId);
+        this.boardGame = new BoardGame(this.boardSocket, roomId);
         this.boardGame.onDeleteMember(uuid => this.deleteMember(uuid));
         this.boardGame.onDeleteRoom(this.roomEvents.deleteRoomCallBack);
         this.boardGame.onChangeStatus(status => {
@@ -44,6 +45,11 @@ export class Room {
                 this.updateCallback();
             }
         });
+    }
+
+
+    dispose() {
+        this.boardSocket.removeAllListeners();
     }
 
     get RoomId() { return this.roomId; }

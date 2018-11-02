@@ -37,7 +37,11 @@ export class BoardGame {
         this.eventCardStack = new EventCardStack(this.boardsocketManager);
 
         this.gamePlayers =
-            new GamePlayers(this.boardsocketManager, new EventCardDrawer(this.eventCardStack, this.boardsocketManager));
+            new GamePlayers(
+                this.boardsocketManager,
+                new EventCardDrawer(this.eventCardStack, this.boardsocketManager),
+                this.actionCardStacks
+            );
 
         this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatus, this.actionCardStacks);
         this.boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
@@ -86,7 +90,7 @@ export class BoardGame {
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatus.isWait()) {
             const gamePlayer =
-                this.gamePlayers.addMember(playerData, playerId, this.boardsocketManager, this.actionCardStacks);
+                this.gamePlayers.addMember(playerData, playerId);
             this.message.addPlayerName(playerId, playerData.getName());
             new TurnFinishButtonClick(gamePlayer, this.boardGameStarter, this.boardGameTurnRotation, this.boardsocketManager);
         }

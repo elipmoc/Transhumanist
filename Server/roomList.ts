@@ -56,6 +56,10 @@ export class RoomList {
             deleteRoomCallBack: roomId => {
                 this.roomDataList.Value = this.roomDataList.Value.filter(x => x.roomId != roomId);
                 this.roomIdGenerator.releaseRoomId(roomId);
+                const room = this.roomMap.get(roomId);
+                if (room)
+                    room.dispose();
+                this.roomMap.delete(roomId);
             },
         };
 

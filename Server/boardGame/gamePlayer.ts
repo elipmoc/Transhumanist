@@ -58,7 +58,6 @@ export class GamePlayer {
     startWar() { this.warFlag = true; }
 
     constructor(
-        playerData: PlayerData,
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
         actionCardStacks: ActionCardStacks
@@ -70,16 +69,22 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
         this.diceList.Value = [0, 1, 2];
         this.playerId = playerId;
-        this.uuid = playerData.getUuid();
-        this.state = new GamePlayerState(state, playerData.getName());
+        this.uuid = "";
+        this.state = new GamePlayerState(state);
 
-        this.playerCond.Value = GamePlayerCondition.Start;
+        this.playerCond.Value = GamePlayerCondition.Empty;
         boardSocketManager.addSocketBinder(
             state,
             this.diceList,
             this.playerCond);
         state.update();
 
+    }
+
+    setPlayer(playerData: PlayerData) {
+        this.state.setPlayerName(playerData.getName());
+        this.uuid = playerData.getUuid();
+        this.playerCond.Value = GamePlayerCondition.Start;
     }
 
     setResourceList() {

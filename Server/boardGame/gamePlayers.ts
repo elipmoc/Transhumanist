@@ -16,14 +16,22 @@ export class GamePlayers {
     private turnManager: TurnManager;
     private leaveRoomCallback: (player: GamePlayer) => boolean;
 
-    constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer) {
+    constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
-        this.turnManager = new TurnManager(this.gamePlayerList, eventCardDrawer, boardSocketManager);
+        this.turnManager = new TurnManager(eventCardDrawer, boardSocketManager);
         new LeaveRoom(boardSocketManager)
             .onLeaveRoom(id =>
                 this.leaveRoomCallback(this.gamePlayerList[id])
             );
+        for (let i = 0; i < 4; i++) {
+            const player = new GamePlayer(i, boardSocketManager, actionCardStacks);
+            this.gamePlayerList.push(player);
+        }
+    }
+
+    getNowPlayers() {
+        return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty);
     }
 
     onLeaveRoom(callback: (player: GamePlayer) => boolean) {
@@ -31,30 +39,28 @@ export class GamePlayers {
     }
 
     getPlayerCount() {
-        return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty).length;
+        return this.getNowPlayers().length;
     }
 
     getGamePlayer(uuid: string) {
-        return this.gamePlayerList.find(x => x.Uuid == uuid);
+        return this.getNowPlayers().find(x => x.Uuid == uuid);
     }
 
     addMember(
         playerData: PlayerData, playerId: number,
-        boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
     ) {
-        const player = new GamePlayer(playerData, playerId, boardSocketManager, actionCardStacks);
+        const player = this.gamePlayerList[playerId];
+        player.setPlayer(playerData);
         if (this.gameMasterPlayerId.Value == null) {
             this.gameMasterPlayerId.Value = playerId;
             player.IsGameMaster = true;
         }
-        this.gamePlayerList.push(player);
         return player;
     }
 
     initCard(startStatusList: StartStatusYamlData[], actionCardStacks: ActionCardStacks) {
         arrayshuffle(startStatusList);
-        this.gamePlayerList.forEach((x, idx) => {
+        this.getNowPlayers().forEach((x, idx) => {
             x.setAICard(startStatusList[idx]);
             x.drawActionCard(actionCardStacks.draw(1));
             for (let i = 0; i < 4; i++) {
@@ -65,8 +71,9 @@ export class GamePlayers {
     }
 
     initTurnSet() {
+        this.turnManager.setPlayers(this.getNowPlayers());
         const firstTurnPlayerId = this.turnManager.nextTurnPlayerId()!;
-        this.gamePlayerList.forEach(player => {
+        this.getNowPlayers().forEach(player => {
             if (player.PlayerId != firstTurnPlayerId) player.setWait();
             else player.setMyTurn();
         });
@@ -74,20 +81,20 @@ export class GamePlayers {
 
     rotateTurn() {
         const currentPlayerId = this.turnManager.nextTurnPlayerId();
-        this.gamePlayerList.forEach(player => {
+        this.getNowPlayers().forEach(player => {
             if (player.PlayerId != currentPlayerId) player.setWait();
             else player.setMyTurn();
         })
     }
 
     winWar(playerId: number) {
-        this.gamePlayerList.find(x => x.PlayerId == playerId)!.winWar();
+        this.getNowPlayers().find(x => x.PlayerId == playerId)!.winWar();
     }
     loseWar(playerId: number) {
-        this.gamePlayerList.find(x => x.PlayerId == playerId)!.loseWar();
+        this.getNowPlayers().find(x => x.PlayerId == playerId)!.loseWar();
     }
     startWar(playerId: number) {
-        this.gamePlayerList.find(x => x.PlayerId == playerId)!.startWar();
+        this.getNowPlayers().find(x => x.PlayerId == playerId)!.startWar();
     }
 
 }
