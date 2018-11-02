@@ -7,14 +7,19 @@ export class GamePlayerState {
 
     get State() { return this.state.Value; }
 
-    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>, playerName: string) {
+    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>) {
         this.state = state;
         this.state.Value = {
-            playerName: playerName,
+            playerName: "",
             negative: 0, positive: 0,
             uncertainty: 0, resource: 0,
             activityRange: 0, speed: 0
         };
+    }
+
+    setPlayerName(playerName: string) {
+        this.state.Value.playerName = playerName;
+        this.state.update();
     }
 
     clear() {

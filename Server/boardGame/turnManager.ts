@@ -21,14 +21,17 @@ export class TurnManager {
 
     get CurrentPlayerId() { return this.currentTurnPlayerId.Value; }
 
-    constructor(players: Array<GamePlayer>, eventCardDrawer: EventCardDrawer, boardSocketManager: SocketBinder.Namespace) {
+    constructor(eventCardDrawer: EventCardDrawer, boardSocketManager: SocketBinder.Namespace) {
         this.turn = new SocketBinder.Binder<number>("turn");
         this.currentTurnPlayerId = new SocketBinder.Binder<number>("currentTurnPlayerId");
         this.eventCardDrawer = eventCardDrawer;
         boardSocketManager.addSocketBinder(this.turn, this.currentTurnPlayerId);
-        this.players = players;
         this.turn.Value = 0;
         this.currentTurnPlayerId.Value = 0;
+    }
+
+    setPlayers(players: Array<GamePlayer>) {
+        this.players = players;
     }
 
     //1週分のターンを計算
