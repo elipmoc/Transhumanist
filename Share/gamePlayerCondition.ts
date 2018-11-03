@@ -7,5 +7,7 @@ export enum GamePlayerCondition {
     //待機中
     Wait,
     //プレイヤーが存在しない
-    Empty
+    Empty,
+    //ダイスを選択中
+    Dice
 }
