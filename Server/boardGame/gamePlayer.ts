@@ -39,6 +39,7 @@ export class GamePlayer {
         this.resourceList.addResource("人間");
         if (this.warFlag)
             this.state.warStateChange();
+        this.diceRoll();
     }
 
     setWait() {
@@ -69,6 +70,11 @@ export class GamePlayer {
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
+        const selectDice = new SocketBinder.EmitReceiveBinder<Number>("selectDice", true, [`player${playerId}`]);
+        selectDice.OnReceive(diceIndex => {
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            console.log(`diceIndex:${diceIndex}`)
+        });
         this.diceList.Value = [];
         this.playerId = playerId;
         this.uuid = "";
@@ -78,7 +84,9 @@ export class GamePlayer {
         boardSocketManager.addSocketBinder(
             state,
             this.diceList,
-            this.playerCond);
+            this.playerCond,
+            selectDice
+        );
         state.update();
 
     }
@@ -98,7 +106,7 @@ export class GamePlayer {
     }
 
     diceRoll() {
-        this.diceList.Value = new Array(this.state.State.uncertainty).fill(diceRoll());
+        this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
 
