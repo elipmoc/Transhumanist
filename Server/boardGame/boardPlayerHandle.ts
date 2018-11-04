@@ -30,6 +30,5 @@ export class BoardPlayerHandle {
             this.selectResource(JSON.parse(str)));
         socket.on("SelectBuildAction", str =>
             this.selectBuildAction(JSON.parse(str)));
-        socket.on("selectDice", diceIndex => console.log(`diceIndex:${diceIndex}`));
     }
 }

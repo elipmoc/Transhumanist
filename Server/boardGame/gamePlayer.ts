@@ -9,6 +9,7 @@ import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { PlayerActionCard } from "./playerActionCard";
+import { diceRoll } from "./dice";
 
 export class GamePlayer {
     private playerId: number;
@@ -38,6 +39,7 @@ export class GamePlayer {
         this.resourceList.addResource("人間");
         if (this.warFlag)
             this.state.warStateChange();
+        this.diceRoll();
     }
 
     setWait() {
@@ -51,6 +53,7 @@ export class GamePlayer {
         this.state.clear();
         this.resourceList.clear();
         this.actionCard.clear();
+        this.diceList.Value = [];
     }
 
     winWar() { this.state.winWar(); this.warFlag = false; }
@@ -67,7 +70,12 @@ export class GamePlayer {
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
-        this.diceList.Value = [0, 1, 2];
+        const selectDice = new SocketBinder.EmitReceiveBinder<Number>("selectDice", true, [`player${playerId}`]);
+        selectDice.OnReceive(diceIndex => {
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            console.log(`diceIndex:${diceIndex}`)
+        });
+        this.diceList.Value = [];
         this.playerId = playerId;
         this.uuid = "";
         this.state = new GamePlayerState(state);
@@ -76,7 +84,9 @@ export class GamePlayer {
         boardSocketManager.addSocketBinder(
             state,
             this.diceList,
-            this.playerCond);
+            this.playerCond,
+            selectDice
+        );
         state.update();
 
     }
@@ -94,4 +104,10 @@ export class GamePlayer {
     drawActionCard(card: ActionCardYamlData) {
         this.actionCard.drawActionCard(card);
     }
+
+    diceRoll() {
+        this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
+        this.playerCond.Value = GamePlayerCondition.Dice;
+    }
+
 }
