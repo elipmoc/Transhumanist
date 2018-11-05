@@ -21,6 +21,10 @@ export class GamePlayer {
     private isGameMaster: boolean = false;
     private actionCard: PlayerActionCard;
     private warFlag: boolean = false;
+    private turnFinishButtonClickCallback: () => void;
+    onTurnFinishButtonClick(f: () => void) {
+        this.turnFinishButtonClickCallback = f;
+    }
 
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
@@ -71,6 +75,12 @@ export class GamePlayer {
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
         const selectDice = new SocketBinder.EmitReceiveBinder<Number>("selectDice", true, [`player${playerId}`]);
+        const turnFinishButtonClick =
+            new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
+        turnFinishButtonClick.OnReceive(() => {
+            this.turnFinishButtonClickCallback();
+        });
+
         selectDice.OnReceive(diceIndex => {
             this.playerCond.Value = GamePlayerCondition.MyTurn;
             console.log(`diceIndex:${diceIndex}`)
@@ -81,14 +91,9 @@ export class GamePlayer {
         this.state = new GamePlayerState(state);
 
         this.playerCond.Value = GamePlayerCondition.Empty;
-        boardSocketManager.addSocketBinder(
-            state,
-            this.diceList,
-            this.playerCond,
-            selectDice
-        );
+        boardSocketManager.addSocketBinder(state, this.diceList,
+            this.playerCond, selectDice, turnFinishButtonClick);
         state.update();
-
     }
 
     setPlayer(playerData: PlayerData) {

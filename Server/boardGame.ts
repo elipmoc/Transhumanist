@@ -11,8 +11,9 @@ import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { War } from "./boardGame/war";
-import { TurnFinishButtonClick } from "./boardGame/turnFinishButtonClick";
+//import { TurnFinishButtonClick } from "./boardGame/turnFinishButtonClick";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
+import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -92,7 +93,17 @@ export class BoardGame {
             const gamePlayer =
                 this.gamePlayers.addMember(playerData, playerId);
             this.message.addPlayerName(playerId, playerData.getName());
-            new TurnFinishButtonClick(gamePlayer, this.boardGameStarter, this.boardGameTurnRotation, this.boardsocketManager);
+            gamePlayer.onTurnFinishButtonClick(() => {
+                switch (gamePlayer.Condition) {
+                    case GamePlayerCondition.Start:
+                        if (gamePlayer.IsGameMaster)
+                            this.boardGameStarter.Init();
+                        break;
+                    case GamePlayerCondition.MyTurn:
+                        this.boardGameTurnRotation.next();
+                        break;
+                }
+            });
         }
     }
 
