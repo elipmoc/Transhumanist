@@ -1,7 +1,6 @@
 import { Room } from "./room";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { UuidGenerator } from "./uuidGenerator";
-import { RoomListEvents } from "./roomListEvents";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import {
@@ -14,7 +13,6 @@ import { PasswordInfo } from "./passwordInfo";
 import { RoomEvents } from "./roomEvents";
 import { SocketBinder } from "./socketBinder";
 import { RoomDataForClient } from "../Share/roomDataForClient";
-import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 
 export class RoomList {
     private roomMap: Map<number, Room> = new Map();
@@ -28,13 +26,6 @@ export class RoomList {
         this.roomDataList = new SocketBinder.BinderList<RoomDataForClient>("roomList");
         this.socket = socket;
         loginSocketManager.addSocketBinder(this.roomDataList);
-    }
-
-    private bindRoomMap<T>(roomId: number, f: (room: Room) => T) {
-        const room = this.roomMap.get(roomId);
-        if (room == undefined)
-            return undefined;
-        return f(room);
     }
 
     isExistUuid(uuid: string) {

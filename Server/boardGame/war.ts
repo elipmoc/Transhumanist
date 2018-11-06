@@ -9,6 +9,11 @@ export class War {
     private loseCallback: (playerId: number) => void;
     private startWarCallback: (playerId: number) => void;
 
+    reset() {
+        this.warPairList.Value = [];
+        this.warFlags.forEach(x => x.Value = false);
+    }
+
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.declareWar = new SocketBinder.EmitReceiveBinder<number[]>("declareWar");
         this.declareWar.OnReceive(x => {

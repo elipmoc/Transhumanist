@@ -44,10 +44,15 @@ export class TopWindowR extends createjs.Container {
         this.addChild(this.textEvent);
         this.addChild(this.currentNum);
     }
-    setEventNum(num: string){
+    setEventNum(num: string) {
         this.currentNum.text = num;
     }
-    setEventName(event: Event) {
+    setEventName(event: Event | null) {
+        if (event == null) {
+            this.eventTitle.text = "";
+            this.eventLevel.text = "";
+            return;
+        }
         this.eventTitle.text = event.name;
         this.eventLevel.text = "Level." + event.level;
 
