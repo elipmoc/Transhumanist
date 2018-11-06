@@ -26,6 +26,14 @@ export class GamePlayer {
         this.turnFinishButtonClickCallback = f;
     }
 
+    reset() {
+        this.state.reset();
+        this.warFlag = false;
+        this.playerCond.Value = GamePlayerCondition.Start;
+        this.actionCard.clear();
+        this.resourceList.clear();
+    }
+
     get Uuid() { return this.uuid; }
     get PlayerId() { return this.playerId; }
     get IsGameMaster() { return this.isGameMaster; }

@@ -3,7 +3,6 @@ import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
 import { BoardGameStatus } from "./boardGame/boardGameStatus";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
-import { BoardGameTurnRotation } from "./boardGame/boardGameTurnRotation";
 import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
@@ -14,6 +13,7 @@ import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
+import { EmitReceiveBinder } from "./socketBinder/emitReceiveBinder";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -24,7 +24,7 @@ export class BoardGame {
     private eventCardStack: EventCardStack;
     private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
-    private boardGameTurnRotation: BoardGameTurnRotation;
+    private war: War;
     private deleteMemberCallback: (uuid: string) => void;
     private deleteRoomCallback: (roomId: number) => void;
 
@@ -42,17 +42,16 @@ export class BoardGame {
                 this.actionCardStacks
             );
 
-        this.boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
 
         this.roomId = roomId;
 
         this.message = new Message(this.boardsocketManager);
         this.chatSe = new ChatSe(this.boardsocketManager);
 
-        const war = new War(this.boardsocketManager);
-        war.onWin(playerId => this.gamePlayers.winWar(playerId));
-        war.onLose(playerId => this.gamePlayers.loseWar(playerId));
-        war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
+        this.war = new War(this.boardsocketManager);
+        this.war.onWin(playerId => this.gamePlayers.winWar(playerId));
+        this.war.onLose(playerId => this.gamePlayers.loseWar(playerId));
+        this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid);
@@ -63,7 +62,18 @@ export class BoardGame {
             }
             return false;
         });
-        this.gamePlayers.onTurnFinishButtonClick(this.turnFinishButtonClick);
+        this.gamePlayers.onTurnFinishButtonClick(player => this.turnFinishButtonClick(player));
+        this.boardsocketManager.addSocketBinder();
+        this.gamePlayers.onEndGameRequest(() => this.resetGame());
+    }
+
+    //ゲームのリセット処理をする
+    private resetGame() {
+        this.boardGameStatus.reset();
+        this.actionCardStacks.settingCard();
+        this.eventCardStack.settingCard();
+        this.war.reset();
+        this.gamePlayers.reset();
     }
 
     onChangeStatus(f: (state: BoardGameStatusKind) => void) {
@@ -99,7 +109,7 @@ export class BoardGame {
                 }
                 break;
             case GamePlayerCondition.MyTurn:
-                this.boardGameTurnRotation.next();
+                this.gamePlayers.rotateTurn();
                 break;
         }
     }

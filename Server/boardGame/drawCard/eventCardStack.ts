@@ -11,6 +11,14 @@ export class EventCardStack {
     private eventLogMessage: SocketBinder.Binder<EventLogMessageForClient>;
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
+        this.numberOfEventCard = new SocketBinder.Binder("numberOfEventCard");
+        this.eventLogMessage = new SocketBinder.Binder<EventLogMessageForClient>("eventLogMessage");
+        this.settingCard();
+        boardSocketManager.addSocketBinder(this.numberOfEventCard, this.eventLogMessage);
+    }
+
+    settingCard() {
+        this.eventCardList = [];
         const eventCardGroups = new Array(6);
         for (let i = 0; i < 6; i++) {
             eventCardGroups[i] = [];
@@ -22,16 +30,12 @@ export class EventCardStack {
             arrayshuffle(x);
             this.eventCardList = x.concat(this.eventCardList);
         });
-        this.numberOfEventCard = new SocketBinder.Binder("numberOfEventCard");
         this.numberOfEventCard.Value = {
             currentNumber: this.eventCardList.length,
             maxNumber: this.eventCardList.length
         }
 
-        this.eventLogMessage = new SocketBinder.Binder<EventLogMessageForClient>("eventLogMessage");
         this.eventLogMessage.Value = new EventLogMessageForClient("", "");
-
-        boardSocketManager.addSocketBinder(this.numberOfEventCard, this.eventLogMessage);
     }
 
     draw() {
@@ -42,9 +46,9 @@ export class EventCardStack {
         return drawEvent;
     }
 
-    setEventMessage(event: Event | undefined) {
+    private setEventMessage(event: Event | undefined) {
         if (event != undefined) {
-            this.eventLogMessage.Value = new EventLogMessageForClient(`イベント：【${event.name}】`,event.description);
+            this.eventLogMessage.Value = new EventLogMessageForClient(`イベント：【${event.name}】`, event.description);
         }
     }
 }
