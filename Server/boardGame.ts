@@ -13,6 +13,7 @@ import { War } from "./boardGame/war";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
+import { GamePlayer } from "./boardGame/gamePlayer";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -23,7 +24,6 @@ export class BoardGame {
     private eventCardStack: EventCardStack;
     private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
-    private war: War;
     private boardGameTurnRotation: BoardGameTurnRotation;
     private deleteMemberCallback: (uuid: string) => void;
     private deleteRoomCallback: (roomId: number) => void;
@@ -42,7 +42,6 @@ export class BoardGame {
                 this.actionCardStacks
             );
 
-        // this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatus, this.actionCardStacks);
         this.boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
 
         this.roomId = roomId;
@@ -50,10 +49,10 @@ export class BoardGame {
         this.message = new Message(this.boardsocketManager);
         this.chatSe = new ChatSe(this.boardsocketManager);
 
-        this.war = new War(this.boardsocketManager);
-        this.war.onWin(playerId => this.gamePlayers.winWar(playerId));
-        this.war.onLose(playerId => this.gamePlayers.loseWar(playerId));
-        this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
+        const war = new War(this.boardsocketManager);
+        war.onWin(playerId => this.gamePlayers.winWar(playerId));
+        war.onLose(playerId => this.gamePlayers.loseWar(playerId));
+        war.onStartWar(playerId => this.gamePlayers.startWar(playerId));
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid);
@@ -64,6 +63,7 @@ export class BoardGame {
             }
             return false;
         });
+        this.gamePlayers.onTurnFinishButtonClick(this.turnFinishButtonClick);
     }
 
     onChangeStatus(f: (state: BoardGameStatusKind) => void) {
@@ -86,28 +86,28 @@ export class BoardGame {
         return this.boardGameStatus.isWait();
     }
 
+    private turnFinishButtonClick(gamePlayer: GamePlayer) {
+        switch (gamePlayer.Condition) {
+            case GamePlayerCondition.Start:
+                if (gamePlayer.IsGameMaster) {
+                    //プレイヤーが二人以上でゲーム開始できる
+                    if (this.gamePlayers.getPlayerCount() > 1 && this.boardGameStatus.start()) {
+                        const startStatusYamlData = yamlGet("./Resource/Yaml/startStatus.yaml");
+                        this.gamePlayers.initCard(startStatusYamlData, this.actionCardStacks);
+                        this.gamePlayers.initTurnSet();
+                    }
+                }
+                break;
+            case GamePlayerCondition.MyTurn:
+                this.boardGameTurnRotation.next();
+                break;
+        }
+    }
+
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatus.isWait()) {
-            const gamePlayer =
-                this.gamePlayers.addMember(playerData, playerId);
+            this.gamePlayers.addMember(playerData, playerId);
             this.message.addPlayerName(playerId, playerData.getName());
-            gamePlayer.onTurnFinishButtonClick(() => {
-                switch (gamePlayer.Condition) {
-                    case GamePlayerCondition.Start:
-                        if (gamePlayer.IsGameMaster) {
-                            //プレイヤーが二人以上でゲーム開始できる
-                            if (this.gamePlayers.getPlayerCount() > 1 && this.boardGameStatus.start()) {
-                                const startStatusYamlData = yamlGet("./Resource/Yaml/startStatus.yaml");
-                                this.gamePlayers.initCard(startStatusYamlData, this.actionCardStacks);
-                                this.gamePlayers.initTurnSet();
-                            }
-                        }
-                        break;
-                    case GamePlayerCondition.MyTurn:
-                        this.boardGameTurnRotation.next();
-                        break;
-                }
-            });
         }
     }
 

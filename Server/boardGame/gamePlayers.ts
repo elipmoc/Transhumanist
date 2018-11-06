@@ -15,6 +15,7 @@ export class GamePlayers {
     private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
     private leaveRoomCallback: (player: GamePlayer) => boolean;
+    private turnFinishButtonClickCallback: (player: GamePlayer) => void;
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
@@ -26,6 +27,7 @@ export class GamePlayers {
             );
         for (let i = 0; i < 4; i++) {
             const player = new GamePlayer(i, boardSocketManager, actionCardStacks);
+            player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
             this.gamePlayerList.push(player);
         }
     }
@@ -34,8 +36,12 @@ export class GamePlayers {
         return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty);
     }
 
-    onLeaveRoom(callback: (player: GamePlayer) => boolean) {
-        this.leaveRoomCallback = callback;
+    onLeaveRoom(f: (player: GamePlayer) => boolean) {
+        this.leaveRoomCallback = f;
+    }
+
+    onTurnFinishButtonClick(f: (player: GamePlayer) => void) {
+        this.turnFinishButtonClickCallback = f;
     }
 
     getPlayerCount() {
