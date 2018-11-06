@@ -1,7 +1,6 @@
 import { BoardPlayerHandle } from "./boardGame/boardPlayerHandle";
 import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
-import { BoardGameStarter } from "./boardGame/boardGameStarter";
 import { BoardGameStatus } from "./boardGame/boardGameStatus";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
 import { BoardGameTurnRotation } from "./boardGame/boardGameTurnRotation";
@@ -11,9 +10,9 @@ import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { War } from "./boardGame/war";
-//import { TurnFinishButtonClick } from "./boardGame/turnFinishButtonClick";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
+import { yamlGet } from "./yamlGet";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -25,7 +24,6 @@ export class BoardGame {
     private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
     private war: War;
-    private boardGameStarter: BoardGameStarter;
     private boardGameTurnRotation: BoardGameTurnRotation;
     private deleteMemberCallback: (uuid: string) => void;
     private deleteRoomCallback: (roomId: number) => void;
@@ -44,7 +42,7 @@ export class BoardGame {
                 this.actionCardStacks
             );
 
-        this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatus, this.actionCardStacks);
+        // this.boardGameStarter = new BoardGameStarter(this.gamePlayers, this.boardGameStatus, this.actionCardStacks);
         this.boardGameTurnRotation = new BoardGameTurnRotation(this.gamePlayers);
 
         this.roomId = roomId;
@@ -96,8 +94,14 @@ export class BoardGame {
             gamePlayer.onTurnFinishButtonClick(() => {
                 switch (gamePlayer.Condition) {
                     case GamePlayerCondition.Start:
-                        if (gamePlayer.IsGameMaster)
-                            this.boardGameStarter.Init();
+                        if (gamePlayer.IsGameMaster) {
+                            //プレイヤーが二人以上でゲーム開始できる
+                            if (this.gamePlayers.getPlayerCount() > 1 && this.boardGameStatus.start()) {
+                                const startStatusYamlData = yamlGet("./Resource/Yaml/startStatus.yaml");
+                                this.gamePlayers.initCard(startStatusYamlData, this.actionCardStacks);
+                                this.gamePlayers.initTurnSet();
+                            }
+                        }
                         break;
                     case GamePlayerCondition.MyTurn:
                         this.boardGameTurnRotation.next();
