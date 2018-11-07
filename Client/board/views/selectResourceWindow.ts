@@ -14,8 +14,8 @@ export class SelectResourceWindow extends createjs.Container {
     constructor(maxNum:number) {
         super();
         this.maxLength = maxNum;
-        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(this.maxLength, this.maxLength, ResourceCardIcon)
-        this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength / 2) / 2;
+        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(this.maxLength, this.maxLength, ResourceCardIcon,1.0)
+        this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength) / 2;
         this.resourceList.y = global.canvasHeight / 2 - global.cardIconSize / 2;
  
         const frame = new createjs.Shape();
