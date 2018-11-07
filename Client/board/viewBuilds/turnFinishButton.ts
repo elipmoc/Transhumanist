@@ -22,17 +22,23 @@ export function build(bindParams: BindParams) {
     gamePlayerCondition.onUpdate(cond => {
         switch (cond) {
             case GamePlayerCondition.Start:
-                if (gameMasterPlayerId.Value == bindParams.playerId)
+                if (gameMasterPlayerId.Value == bindParams.playerId) {
                     turnFinishButton.setText("ゲーム開始");
-                else
+                    turnFinishButton.visible = true;
+                }
+                else {
                     turnFinishButton.setText("");
+                    turnFinishButton.visible = false;
+                }
                 break;
             case GamePlayerCondition.MyTurn:
                 turnFinishButton.setText("ターン終了");
+                turnFinishButton.visible = true;
                 SoundManager.sePlay("turnStart");
                 break;
             case GamePlayerCondition.Wait:
                 turnFinishButton.setText("");
+                turnFinishButton.visible = false;
                 SoundManager.sePlay("turnStart2");
                 break;
 

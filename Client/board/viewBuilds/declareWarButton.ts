@@ -4,6 +4,7 @@ import { LayerTag } from "../../board";
 import { DeclareWarDialog } from "../views/declareWarDialog";
 import { DeclareWarSelectButton } from "../views/declareWarSelectButton";
 import { SocketBinder } from "../../socketBinder";
+import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {
@@ -53,6 +54,27 @@ export function build(bindParams: BindParams) {
         declareWarSelectButton.visible = false;
         bindParams.layerManager.update();
     });
+
+    const gamePlayerCondition =
+        new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
+
+    gamePlayerCondition.onUpdate(cond => {
+        switch (cond) {
+            case GamePlayerCondition.Start:
+                declareWarButton.visible = false;
+                break;
+            case GamePlayerCondition.MyTurn:
+                declareWarButton.visible = true;
+                break;
+            case GamePlayerCondition.Wait:
+                declareWarButton.visible = false;
+                break;
+
+        }
+        bindParams.layerManager.update();
+    })
+
+
     bindParams.layerManager.add(LayerTag.Ui, declareWarButton);
     bindParams.layerManager.add(LayerTag.Ui, declareWarSelectButton);
 
