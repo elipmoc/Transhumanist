@@ -13,11 +13,11 @@ export class CardIconBase<K> extends createjs.Container {
 
     get Kind() { return this.kind; }
 
-    setKind(kind: K | null, imgIndex: number, queue: ImageQueue) {
+    setKind(kind: K | null, imgIndex: number, queue: ImageQueue, iconScale:number) {
         this.kind = kind;
         this.image.image = getIconResource(imgIndex, this.img_name, queue);
-        this.image.scaleX = 0.5;
-        this.image.scaleY = 0.5;
+        this.image.scaleX = iconScale;
+        this.image.scaleY = iconScale;
     }
     get IconId() { return this.iconId; }
 
