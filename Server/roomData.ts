@@ -1,8 +1,6 @@
 import { PlayerData } from "./playerData";
 import { PlayerDataList } from "./playerDataList";
-import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { PasswordInfo } from "./passwordInfo";
-import { RoomDataForClient } from "../Share/roomDataForClient";
 
 export class RoomData {
     private roomId: number;

@@ -79,7 +79,10 @@ export class SoundManager {
 
     static bgmStop() {
         if (SoundManager.bgmInstance != null) {
-            SoundManager.bgmInstance.destroy();
+            SoundManager.bgmInstance.stop();
+            createjs.Sound.removeAllEventListeners();
+            const src = SoundManager.bgmInstance.src;
+            createjs.Sound.removeSound(src, mapping[src]);
             SoundManager.bgmInstance = null;
         }
     }

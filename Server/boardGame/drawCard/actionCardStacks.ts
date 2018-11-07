@@ -14,6 +14,12 @@ export class ActionCardStacks {
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.numberOfActionCardList = new SocketBinder.Binder<NumberOfActionCard[]>("numberOfActionCard");
         boardSocketManager.addSocketBinder(this.numberOfActionCardList);
+        this.settingCard();
+    }
+
+    //山札をセットする
+    settingCard() {
+        this.actionCardStackPairList = [];
         const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         for (let i = 0; i < ActionCardStacks.maxLevel; i++)
             this.actionCardStackPairList.push(new ActionCardStackPair());

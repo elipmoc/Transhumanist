@@ -21,13 +21,20 @@ export class TurnManager {
 
     get CurrentPlayerId() { return this.currentTurnPlayerId.Value; }
 
+    reset() {
+        this.turnPlayerIdList = [];
+        this.currentTurnPlayerId.Value = 0;
+        this.players = [];
+        this.turn.Value = 0;
+        this.eventCardDrawer.reset();
+    }
+
     constructor(eventCardDrawer: EventCardDrawer, boardSocketManager: SocketBinder.Namespace) {
         this.turn = new SocketBinder.Binder<number>("turn");
         this.currentTurnPlayerId = new SocketBinder.Binder<number>("currentTurnPlayerId");
         this.eventCardDrawer = eventCardDrawer;
         boardSocketManager.addSocketBinder(this.turn, this.currentTurnPlayerId);
-        this.turn.Value = 0;
-        this.currentTurnPlayerId.Value = 0;
+        this.reset();
     }
 
     setPlayers(players: Array<GamePlayer>) {
