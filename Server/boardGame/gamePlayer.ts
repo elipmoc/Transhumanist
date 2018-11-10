@@ -10,6 +10,7 @@ import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { PlayerActionCard } from "./playerActionCard";
 import { diceRoll } from "./dice";
+import { CandidateResources } from "../../Share/candidateResources";
 
 export class GamePlayer {
     private playerId: number;
@@ -77,6 +78,17 @@ export class GamePlayer {
         boardSocketManager: SocketBinder.Namespace,
         actionCardStacks: ActionCardStacks
     ) {
+        //とりあえず表示すべきものが来たとする。
+        const serverData = {
+            number: 3,
+            resource_names: ["人間", "メタル", "ガス", "ケイ素", "硫黄", "人間"]
+        };
+        const candidateResources = new SocketBinder.Binder<CandidateResources>("candidateResources" + playerId);
+        setTimeout(() => { candidateResources.Value = serverData }, 4000);
+        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<number>("selectedGetResourceId" + playerId);
+        selectedGetResourceId.OnReceive(id => {
+            this.resourceList.addResource(serverData.resource_names[id])
+        });
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
@@ -99,8 +111,10 @@ export class GamePlayer {
         this.state = new GamePlayerState(state);
 
         this.playerCond.Value = GamePlayerCondition.Empty;
-        boardSocketManager.addSocketBinder(state, this.diceList,
-            this.playerCond, selectDice, turnFinishButtonClick);
+        boardSocketManager.addSocketBinder(
+            state, this.diceList,
+            this.playerCond, selectDice, candidateResources,
+            turnFinishButtonClick, selectedGetResourceId);
         state.update();
     }
 

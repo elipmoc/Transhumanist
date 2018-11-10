@@ -1,6 +1,8 @@
 import { SelectResourceWindow } from "../views/selectResourceWindow";
 import { BindParams } from "../bindParams";
 import { LayerTag } from "../../board";
+import { SocketBinder } from "../../socketBinder";
+import { CandidateResources } from "../../../Share/candidateResources";
 
 export function build(bindParams: BindParams) {
     //選択可能なリソースの最大数
@@ -9,35 +11,21 @@ export function build(bindParams: BindParams) {
     selectResourceWindow.visible = false;
 
     //onClickの設定
-    selectResourceWindow.onClickIcon((cardIcon) => { 
-        bindParams.socket.emit("selectedGetResource", cardIcon.Kind);
-        console.log(cardIcon.Kind);
+    selectResourceWindow.onClickIcon((cardIcon) => {
+        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, cardIcon.IconId);
         selectResourceWindow.decreaseNumber();
         if (selectResourceWindow.getNumber() <= 0) {
             selectResourceWindow.visible = false;
-            
+
         }
         bindParams.layerManager.update();
     });
 
-    //とりあえず表示すべきものが来たとする。
-    const serverData = {
-        number: 3,
-        resources: ["人間", "メタル", "ガス", "ケイ素", "硫黄", "人間"]
-    };
-    //リソースセット
-    for (let i = 0; maxLength > i; i++){
-        let resourceName: string = serverData.resources[i];
-        selectResourceWindow.setResource(
-            i,
-            resourceName,
-            resourceName != "" ? bindParams.yamls.resourceHash[resourceName].index : -1,
-            bindParams.imgQueue
-        );
-    }
-    //ナンバーぶちこみ
-    selectResourceWindow.setNumber(serverData.number);
-    selectResourceWindow.visible = true;
-
+    const candidateResources = new SocketBinder<CandidateResources>("candidateResources" + bindParams.playerId, bindParams.socket);
+    candidateResources.onUpdate(data => {
+        if (!data) return;
+        selectResourceWindow.setResource(data, bindParams.yamls.resourceHash, bindParams.imgQueue);
+        selectResourceWindow.visible = true;
+    });
     bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
 }
