@@ -16,7 +16,9 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     constructor(xNum: number, maxIcon: number, icon_creator: { new(i: number): I; }, iconScale?: number) {
         super();
         this.iconScale = iconScale === undefined ? 0.5 : iconScale;
-        console.log(iconScale);
+        this.onClickIconCallBack =
+            this.onMouseOverIconCallBack =
+            this.onMouseOutIconCallBack = () => { }
 
         this.xNum = xNum;
         for (let i = 0; i < maxIcon; i++) {
