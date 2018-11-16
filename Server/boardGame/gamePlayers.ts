@@ -111,6 +111,8 @@ export class GamePlayers {
         const { playerId, turnChanged } = this.turnManager.nextPlayer();
         if (turnChanged) this.eventCardDrawer.draw();
         this.getNowPlayers().forEach(player => {
+            if (["技術革新", "産業革命"].includes(this.eventCardDrawer.NowEvent!.name))
+                player.setOnceNoCost();
             if (player.PlayerId != playerId) player.setWait();
             else player.setMyTurn(this.eventCardDrawer.NowEvent!);
         })

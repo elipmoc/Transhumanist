@@ -2,7 +2,7 @@ import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
 import { DiceNumber } from "../../Share/diceNumber";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
@@ -20,9 +20,12 @@ export class GamePlayer {
     private resourceList: ResourceList;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
-    private isGameMaster: boolean = false;
+    private isGameMaster = false;
     private actionCard: PlayerActionCard;
-    private warFlag: boolean = false;
+    private warFlag = false;
+    private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
+    private onceNoCostFlag = false;
+
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
         this.turnFinishButtonClickCallback = f;
@@ -34,6 +37,7 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Start;
         this.actionCard.clear();
         this.resourceList.clear();
+        this.onceNoCostFlag = false;
     }
 
     get Uuid() { return this.uuid; }
@@ -74,6 +78,9 @@ export class GamePlayer {
         this.resourceList.clear();
         this.actionCard.clear();
         this.diceList.Value = [];
+        this.buildActionList.Value = new Array(30);
+        this.buildActionList.Value.fill(null);
+        this.onceNoCostFlag = false;
     }
 
     winWar() { this.state.winWar(); this.warFlag = false; }
@@ -118,7 +125,26 @@ export class GamePlayer {
         this.state = new GamePlayerState(state);
 
         this.playerCond.Value = GamePlayerCondition.Empty;
+        this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
+        this.buildActionList.Value = new Array(30);
+        this.buildActionList.Value.fill(null);
+        this.actionCard.onUseActionCard(
+            card => {
+                if (card.build_use == false) {
+                    if (this.onceNoCostFlag) {
+                        this.onceNoCostFlag = false;
+                        return true;
+                    }
+                    return false
+                };
+                const idx = this.buildActionList.Value.findIndex(x => x == null);
+                if (idx != -1)
+                    this.buildActionList.setAt(idx, card.name);
+                return true;
+            }
+        );
         boardSocketManager.addSocketBinder(
+            this.buildActionList,
             state, this.diceList,
             this.playerCond, selectDice, candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
@@ -142,6 +168,11 @@ export class GamePlayer {
     diceRoll() {
         this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
         this.playerCond.Value = GamePlayerCondition.Dice;
+    }
+
+    //一度だけアクションカードをノーコストで使用できるようにする
+    setOnceNoCost() {
+        this.onceNoCostFlag = true;
     }
 
 }
