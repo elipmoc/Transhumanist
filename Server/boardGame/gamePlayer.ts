@@ -11,6 +11,7 @@ import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { PlayerActionCard } from "./playerActionCard";
 import { diceRoll } from "./dice";
 import { CandidateResources } from "../../Share/candidateResources";
+import { Event } from "../../Share/Yaml/eventYamlData";
 
 export class GamePlayer {
     private playerId: number;
@@ -46,10 +47,16 @@ export class GamePlayer {
 
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
-    setMyTurn() {
+    setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
         this.playerCond.Value = GamePlayerCondition.MyTurn;
-        this.resourceList.addResource("人間");
+        if (eventCard.name == "人口爆発") {
+            const len = this.resourceList.getArray().filter(x => x == "人間").length * 2;
+            for (let i = 0; i < len; i++)
+                this.resourceList.addResource("人間");
+        }
+        else if (eventCard.name != "少子化")
+            this.resourceList.addResource("人間");
         if (this.warFlag)
             this.state.warStateChange();
         this.diceRoll();

@@ -18,17 +18,20 @@ export class GamePlayers {
     private leaveRoomCallback: (player: GamePlayer) => boolean;
     private turnFinishButtonClickCallback: (player: GamePlayer) => void;
     private endGameRequestCallback: () => void;
+    private eventCardDrawer: EventCardDrawer;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
         this.getNowPlayers().forEach(x => x.reset());
         this.turnManager.reset();
+        this.eventCardDrawer.reset();
     }
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
-        this.turnManager = new TurnManager(eventCardDrawer, boardSocketManager);
+        this.eventCardDrawer = eventCardDrawer;
+        this.turnManager = new TurnManager(boardSocketManager);
         new LeaveRoom(boardSocketManager)
             .onLeaveRoom(id =>
                 this.leaveRoomCallback(this.gamePlayerList[id])
@@ -96,18 +99,20 @@ export class GamePlayers {
 
     initTurnSet() {
         this.turnManager.setPlayers(this.getNowPlayers());
-        const firstTurnPlayerId = this.turnManager.nextTurnPlayerId()!;
+        const firstTurnPlayerId = this.turnManager.nextPlayer()!.playerId;
+        this.eventCardDrawer.draw();
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != firstTurnPlayerId) player.setWait();
-            else player.setMyTurn();
+            else player.setMyTurn(this.eventCardDrawer.NowEvent!);
         });
     }
 
     rotateTurn() {
-        const currentPlayerId = this.turnManager.nextTurnPlayerId();
+        const { playerId, turnChanged } = this.turnManager.nextPlayer();
+        if (turnChanged) this.eventCardDrawer.draw();
         this.getNowPlayers().forEach(player => {
-            if (player.PlayerId != currentPlayerId) player.setWait();
-            else player.setMyTurn();
+            if (player.PlayerId != playerId) player.setWait();
+            else player.setMyTurn(this.eventCardDrawer.NowEvent!);
         })
     }
 

@@ -11,7 +11,12 @@ export class EventCardDrawer {
     }
 
     reset() {
+        this.eventCardStack.settingCard();
         this.nowEvent.Value = null;
+    }
+
+    get NowEvent() {
+        return this.nowEvent.Value;
     }
     draw() {
         const eventCard = this.eventCardStack.draw();
