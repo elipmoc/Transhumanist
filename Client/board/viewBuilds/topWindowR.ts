@@ -13,9 +13,11 @@ export function build(bindParams: BindParams) {
     numberOfEventCard.onUpdate(x => {
         topWindowR.setEventNum(`${x.maxNumber - x.currentNumber} / ${x.maxNumber}`);
     });
-    const nowEvent = new SocketBinder<Event>("nowEvent", bindParams.socket);
+    const nowEvent = new SocketBinder<Event | null>("nowEvent", bindParams.socket);
     nowEvent.onUpdate(x => {
-        if (x == null) return;
+        if (x == null) {
+            topWindowR.setEventName(null);
+        };
         topWindowR.setEventName(x);
         bindParams.layerManager.update();
     });

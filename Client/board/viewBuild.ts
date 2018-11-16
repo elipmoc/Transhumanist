@@ -12,6 +12,9 @@ import * as turnFinishButton from "./viewBuilds/turnFinishButton";
 import * as selectActionWindow from "./viewBuilds/selectActionWindow";
 import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
+import * as selectResourceWindow from "./viewBuilds/selectResourceWindow";
+import * as selectWinCardWindow from "./viewBuilds/selectWinCardWindow";
+import * as unavailableDialog from "./viewBuilds/unavailableDialog";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
 import { LayerTag } from "../board";
@@ -32,6 +35,9 @@ export function viewBuild(bindParams: BindParams) {
     declareWarButton.build(bindParams);
     selectActionWindow.build(bindParams);
     selectDiceWindow.build(bindParams);
+    selectResourceWindow.build(bindParams);
+    selectWinCardWindow.build(bindParams);
+    unavailableDialog.build(bindParams);
     topWindowL.build(bindParams);
     chatForm.build(bindParams);
 }

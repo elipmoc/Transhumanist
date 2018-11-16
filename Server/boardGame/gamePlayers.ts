@@ -8,6 +8,7 @@ import { EventCardDrawer } from "./eventCardDrawer";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
+import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 
 
 export class GamePlayers {
@@ -15,6 +16,14 @@ export class GamePlayers {
     private gameMasterPlayerId: SocketBinder.Binder<number | null>;
     private turnManager: TurnManager;
     private leaveRoomCallback: (player: GamePlayer) => boolean;
+    private turnFinishButtonClickCallback: (player: GamePlayer) => void;
+    private endGameRequestCallback: () => void;
+
+    //ゲームを再び開始できるようにステータスをリセットする
+    reset() {
+        this.getNowPlayers().forEach(x => x.reset());
+        this.turnManager.reset();
+    }
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
@@ -26,6 +35,13 @@ export class GamePlayers {
             );
         for (let i = 0; i < 4; i++) {
             const player = new GamePlayer(i, boardSocketManager, actionCardStacks);
+            const endGame = new EmitReceiveBinder("gameEnd", true, [`player${player.PlayerId}`]);
+            endGame.OnReceive(() => {
+                if (player.IsGameMaster)
+                    this.endGameRequestCallback();
+            });
+            boardSocketManager.addSocketBinder(endGame);
+            player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
             this.gamePlayerList.push(player);
         }
     }
@@ -34,8 +50,16 @@ export class GamePlayers {
         return this.gamePlayerList.filter(x => x.Condition != GamePlayerCondition.Empty);
     }
 
-    onLeaveRoom(callback: (player: GamePlayer) => boolean) {
-        this.leaveRoomCallback = callback;
+    onLeaveRoom(f: (player: GamePlayer) => boolean) {
+        this.leaveRoomCallback = f;
+    }
+
+    onTurnFinishButtonClick(f: (player: GamePlayer) => void) {
+        this.turnFinishButtonClickCallback = f;
+    }
+
+    onEndGameRequest(f: () => void) {
+        this.endGameRequestCallback = f;
     }
 
     getPlayerCount() {

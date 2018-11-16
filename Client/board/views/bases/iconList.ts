@@ -10,18 +10,24 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     private onMouseOverIconCallBack: (kind: K) => void;
     private onMouseOutIconCallBack: () => void;
     private xNum: number;
+    private iconScale: number;
 
     //xNum:iconを横に何個並べるかの数値
-    constructor(xNum: number, maxIcon: number, icon_creator: { new(i: number): I; }) {
+    constructor(xNum: number, maxIcon: number, icon_creator: { new(i: number): I; }, iconScale?: number) {
         super();
+        this.iconScale = iconScale === undefined ? 0.5 : iconScale;
+        this.onClickIconCallBack =
+            this.onMouseOverIconCallBack =
+            this.onMouseOutIconCallBack = () => { }
+
         this.xNum = xNum;
         for (let i = 0; i < maxIcon; i++) {
             const cardIcon = new icon_creator(i);
             cardIcon.onClicked(() => this.onClickIconCallBack(cardIcon));
             cardIcon.onMouseOuted(() => this.onMouseOutIconCallBack());
             cardIcon.onMouseOvered((kind) => this.onMouseOverIconCallBack(kind));
-            cardIcon.x = this.icons.length % this.xNum * (global.cardIconSize/2);
-            cardIcon.y = Math.floor(this.icons.length / this.xNum) * (global.cardIconSize/2);
+            cardIcon.x = this.icons.length % this.xNum * (global.cardIconSize * this.iconScale);
+            cardIcon.y = Math.floor(this.icons.length / this.xNum) * (global.cardIconSize * this.iconScale);
             this.icons.push(cardIcon);
             this.addChild(cardIcon);
         }
@@ -51,6 +57,6 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     }
 
     setResource(iconId: number, kind: K, imgIndex: number, queue: ImageQueue) {
-        this.icons[iconId].setKind(kind, imgIndex, queue);
+        this.icons[iconId].setKind(kind, imgIndex, queue, this.iconScale);
     }
 }

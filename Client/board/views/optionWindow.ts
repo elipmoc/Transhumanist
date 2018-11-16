@@ -18,12 +18,12 @@ export class OptionCrossButton extends ButtonBase {
 }
 
 //汎用ボタン基
-class GeneralOptionButton extends ButtonBase{
+class GeneralOptionButton extends ButtonBase {
     private text: createjs.Text;
     constructor(callback: () => void, queue: ImageQueue) {
         const Button = queue.getImage("button");
         super(Button, callback);
-        
+
         this.text = new createjs.Text("", "20px Arial");
         this.text.textAlign = "center";
         this.text.regY = this.text.getMeasuredHeight() / 2;
@@ -41,6 +41,13 @@ export class OptionWindow extends createjs.Container {
     private ruleCallBack: () => void;
     private leaveCallBack: () => void;
     private endCallBack: () => void;
+
+    private gameEndButton: GeneralOptionButton;
+
+    set visibleGameEndButton(val: boolean) {
+        this.gameEndButton.visible = val;
+    }
+
     ruleOnClick(callback: () => void) {
         this.ruleCallBack = callback;
     }
@@ -76,11 +83,11 @@ export class OptionWindow extends createjs.Container {
         leaveButton.y = +80;
         this.addChild(leaveButton);
 
-        const gameEndButton = new GeneralOptionButton(() => this.endCallBack(),queue);
-        gameEndButton.setText("ゲーム終了");
-        gameEndButton.x = -240;
-        gameEndButton.y = +160;
-        this.addChild(gameEndButton);
+        this.gameEndButton = new GeneralOptionButton(() => this.endCallBack(), queue);
+        this.gameEndButton.setText("ゲーム終了");
+        this.gameEndButton.x = -240;
+        this.gameEndButton.y = +160;
+        this.addChild(this.gameEndButton);
 
         const optionText = new createjs.Text();
         optionText.x = -180;

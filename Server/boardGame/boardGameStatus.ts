@@ -19,6 +19,12 @@ export class BoardGameStatus {
         } else
             return false;
     }
+    reset() {
+        if (this.state != BoardGameStatusKind.wait) {
+            this.state = BoardGameStatusKind.wait;
+            this.changeCallback(this.state);
+        }
+    }
 
     isWait() {
         return this.state == BoardGameStatusKind.wait;

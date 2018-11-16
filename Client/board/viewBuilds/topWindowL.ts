@@ -41,6 +41,13 @@ export function build(bindParams: BindParams) {
     );
 
     bindParams.layerManager.add(LayerTag.OptionUi, optionWindow);
+    const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
+    optionWindow.visibleGameEndButton = false;
+    gameMasterPlayerId.onUpdate(id => {
+        optionWindow.visibleGameEndButton = id == bindParams.playerId;
+        bindParams.layerManager.update();
+    })
+
 
     //左上のやつ生成
     const topWindowL = new TopWindowL(bindParams.imgQueue, optionWindow);
