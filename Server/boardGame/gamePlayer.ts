@@ -5,6 +5,7 @@ import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
+import { UnavailableState } from "../../Share/unavailableState";
 import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
@@ -125,19 +126,22 @@ export class GamePlayer {
 
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(boardSocketManager, playerId);
+        const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
         this.actionCard.onUseActionCard(
             card => {
                 if (this.onceNoCostFlag)
                     this.onceNoCostFlag = false;
-                else if (this.resourceList.costPayment(card.cost) == false)
+                else if (this.resourceList.costPayment(card.cost) == false) {
+                    unavailable.emit(UnavailableState.Cost);
                     return false;
+                }
                 if (card.build_use)
                     this.buildActionList.addBuildAction(card.name);
                 return true;
             }
         );
         boardSocketManager.addSocketBinder(
-            state, this.diceList,
+            state, this.diceList, unavailable,
             this.playerCond, selectDice, candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
         state.update();
