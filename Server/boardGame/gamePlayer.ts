@@ -26,6 +26,7 @@ export class GamePlayer {
     private actionCard: PlayerActionCard;
     private warFlag = false;
     private buildActionList: BuildActionList;
+    //一度だけアクションカードをノーコストで使用できるようにするフラグ
     private onceNoCostFlag = false;
 
     private turnFinishButtonClickCallback: () => void;
@@ -39,7 +40,6 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Start;
         this.actionCard.clear();
         this.resourceList.clear();
-        this.onceNoCostFlag = false;
     }
 
     get Uuid() { return this.uuid; }
@@ -55,6 +55,7 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
+        this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
@@ -80,7 +81,6 @@ export class GamePlayer {
         this.actionCard.clear();
         this.diceList.Value = [];
         this.buildActionList.clear();
-        this.onceNoCostFlag = false;
     }
 
     winWar() { this.state.winWar(); this.warFlag = false; }
@@ -165,10 +165,4 @@ export class GamePlayer {
         this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
-
-    //一度だけアクションカードをノーコストで使用できるようにするフラグをセットする
-    setOnceNoCost(flag: boolean) {
-        this.onceNoCostFlag = flag;
-    }
-
 }
