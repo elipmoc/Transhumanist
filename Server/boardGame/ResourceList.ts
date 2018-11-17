@@ -69,4 +69,8 @@ export class ResourceList {
         this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
         this.resourceList.update();
     }
+
+    getArray() {
+        return this.resourceList.Value;
+    }
 }
