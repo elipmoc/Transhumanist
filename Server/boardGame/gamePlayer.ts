@@ -2,7 +2,7 @@ import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
 import { DiceNumber } from "../../Share/diceNumber";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, ActionCardName } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
@@ -12,6 +12,7 @@ import { PlayerActionCard } from "./playerActionCard";
 import { diceRoll } from "./dice";
 import { CandidateResources } from "../../Share/candidateResources";
 import { Event } from "../../Share/Yaml/eventYamlData";
+import { BuildActionList } from "./buildActionList";
 
 export class GamePlayer {
     private playerId: number;
@@ -23,7 +24,7 @@ export class GamePlayer {
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
     private warFlag = false;
-    private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
+    private buildActionList: BuildActionList;
     private onceNoCostFlag = false;
 
     private turnFinishButtonClickCallback: () => void;
@@ -55,9 +56,8 @@ export class GamePlayer {
         this.actionCard.set_drawPhase();
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
-            const len = this.resourceList.getArray().filter(x => x == "人間").length * 2;
-            for (let i = 0; i < len; i++)
-                this.resourceList.addResource("人間");
+            const len = this.resourceList.getCount("人間");
+            this.resourceList.addResource("人間", len);
         }
         else if (eventCard.name != "少子化")
             this.resourceList.addResource("人間");
@@ -78,8 +78,7 @@ export class GamePlayer {
         this.resourceList.clear();
         this.actionCard.clear();
         this.diceList.Value = [];
-        this.buildActionList.Value = new Array(30);
-        this.buildActionList.Value.fill(null);
+        this.buildActionList.clear();
         this.onceNoCostFlag = false;
     }
 
@@ -125,26 +124,19 @@ export class GamePlayer {
         this.state = new GamePlayerState(state);
 
         this.playerCond.Value = GamePlayerCondition.Empty;
-        this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
-        this.buildActionList.Value = new Array(30);
-        this.buildActionList.Value.fill(null);
+        this.buildActionList = new BuildActionList(boardSocketManager, playerId);
         this.actionCard.onUseActionCard(
             card => {
-                if (card.build_use == false) {
-                    if (this.onceNoCostFlag) {
-                        this.onceNoCostFlag = false;
-                        return true;
-                    }
-                    return false
-                };
-                const idx = this.buildActionList.Value.findIndex(x => x == null);
-                if (idx != -1)
-                    this.buildActionList.setAt(idx, card.name);
+                if (this.onceNoCostFlag)
+                    this.onceNoCostFlag = false;
+                else if (this.resourceList.costPayment(card.cost) == false)
+                    return false;
+                if (card.build_use)
+                    this.buildActionList.addBuildAction(card.name);
                 return true;
             }
         );
         boardSocketManager.addSocketBinder(
-            this.buildActionList,
             state, this.diceList,
             this.playerCond, selectDice, candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
