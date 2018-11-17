@@ -5,6 +5,7 @@ import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
+import { UnavailableState } from "../../Share/unavailableState";
 import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
@@ -12,6 +13,7 @@ import { PlayerActionCard } from "./playerActionCard";
 import { diceRoll } from "./dice";
 import { CandidateResources } from "../../Share/candidateResources";
 import { Event } from "../../Share/Yaml/eventYamlData";
+import { BuildActionList } from "./buildActionList";
 
 export class GamePlayer {
     private playerId: number;
@@ -20,9 +22,15 @@ export class GamePlayer {
     private resourceList: ResourceList;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
-    private isGameMaster: boolean = false;
+    private isGameMaster = false;
     private actionCard: PlayerActionCard;
-    private warFlag: boolean = false;
+    private warFlag = false;
+    private buildActionList: BuildActionList;
+    //一度だけアクションカードをノーコストで使用できるようにするフラグ
+    private onceNoCostFlag = false;
+    //人間を使用できなくするフラグ
+    private noUseHumanFlag = false;
+
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
         this.turnFinishButtonClickCallback = f;
@@ -49,11 +57,12 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
+        this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
+        this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
-            const len = this.resourceList.getArray().filter(x => x == "人間").length * 2;
-            for (let i = 0; i < len; i++)
-                this.resourceList.addResource("人間");
+            const len = this.resourceList.getCount("人間");
+            this.resourceList.addResource("人間", len);
         }
         else if (eventCard.name != "少子化")
             this.resourceList.addResource("人間");
@@ -74,6 +83,7 @@ export class GamePlayer {
         this.resourceList.clear();
         this.actionCard.clear();
         this.diceList.Value = [];
+        this.buildActionList.clear();
     }
 
     winWar() { this.state.winWar(); this.warFlag = false; }
@@ -118,8 +128,29 @@ export class GamePlayer {
         this.state = new GamePlayerState(state);
 
         this.playerCond.Value = GamePlayerCondition.Empty;
+        this.buildActionList = new BuildActionList(boardSocketManager, playerId);
+        const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
+
+        //アクションカードの使用処理
+        this.actionCard.onUseActionCard(
+            card => {
+                if (this.noUseHumanFlag && this.state.State.negative >= 2 && card.cost.find(x => x.name == "人間")) {
+                    unavailable.emit(UnavailableState.Event);
+                    return false;
+                }
+                if (this.onceNoCostFlag)
+                    this.onceNoCostFlag = false;
+                else if (this.resourceList.costPayment(card.cost) == false) {
+                    unavailable.emit(UnavailableState.Cost);
+                    return false;
+                }
+                if (card.build_use)
+                    this.buildActionList.addBuildAction(card.name);
+                return true;
+            }
+        );
         boardSocketManager.addSocketBinder(
-            state, this.diceList,
+            state, this.diceList, unavailable,
             this.playerCond, selectDice, candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
         state.update();
@@ -143,5 +174,4 @@ export class GamePlayer {
         this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
-
 }

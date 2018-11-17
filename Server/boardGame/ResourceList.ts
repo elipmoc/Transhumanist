@@ -3,6 +3,7 @@ import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/re
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
 import { ThrowResource } from "../../Share/throwResource";
+import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 
 export class ResourceList {
     private resourceList: SocketBinder.BinderList<ResourceName | null>;
@@ -51,15 +52,18 @@ export class ResourceList {
         boardSocketManager.addSocketBinder(this.resourceList, this.resourceOver, this.throwResource, this.resourceReserveList);
     }
 
-    public addResource(name: ResourceName) {
-        let idx = this.resourceList.Value.findIndex(x => x == null);
-        if (idx == -1) {
-            this.resourceOver.Value = this.resourceOver.Value + 1;
-            idx = this.resourceReserveList.Value.findIndex(x => x == null);
-            this.resourceReserveList.setAt(idx, name);
-        } else {
-            this.resourceList.setAt(idx, name);
+    //リソースを任意個数追加
+    public addResource(name: ResourceName, num: number = 1) {
+        for (let i = 0; i < num; i++) {
+            let idx = this.resourceList.Value.findIndex(x => x == null);
+            if (idx == -1) {
+                this.resourceOver.Value = this.resourceOver.Value + 1;
+                idx = this.resourceReserveList.Value.findIndex(x => x == null);
+                this.resourceReserveList.setAt(idx, name);
+            } else
+                this.resourceList.setAt(idx, name);
         }
+
     }
 
     setResourceList() {
@@ -70,7 +74,26 @@ export class ResourceList {
         this.resourceList.update();
     }
 
-    getArray() {
-        return this.resourceList.Value;
+    //指定したリソースがいくつあるかを計算する
+    getCount(name: ResourceName) {
+        return this.resourceList.Value.filter(x => x == name).length;
+    }
+
+    //カードのコストを支払う。
+    //払えなければ、falseを返す
+    costPayment(cost: ResourceItem[]) {
+        if (cost.filter(x => this.getCount(x.name) < x.number).length != 0)
+            return false;
+        let arr = this.resourceList.Value;
+        cost.forEach(x => {
+            let count = 0;
+            arr = arr.map(y => {
+                if (x.name == y) count++;
+                if (y != x.name || count > x.number) return y;
+                return null;
+            })
+        });
+        this.resourceList.Value = arr;
+        return true;
     }
 }

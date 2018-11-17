@@ -1,11 +1,8 @@
-import { global } from "./boardGlobalData"
 import * as io from "socket.io-client";
 import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
 import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
-import { SoundManager } from "./soundManager";
-import { BackGround } from "./board/views/backGround";
 import { ImageQueue } from "./board/imageQueue";
 import { getSpriteJson } from "./getSpriteJson";
 import { BgmChanger } from "./board/bgmChanger";
