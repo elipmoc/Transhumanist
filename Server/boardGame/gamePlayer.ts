@@ -166,9 +166,9 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
 
-    //一度だけアクションカードをノーコストで使用できるようにする
-    setOnceNoCost() {
-        this.onceNoCostFlag = true;
+    //一度だけアクションカードをノーコストで使用できるようにするフラグをセットする
+    setOnceNoCost(flag: boolean) {
+        this.onceNoCostFlag = flag;
     }
 
 }

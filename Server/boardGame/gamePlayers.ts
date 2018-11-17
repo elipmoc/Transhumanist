@@ -112,7 +112,9 @@ export class GamePlayers {
         if (turnChanged) this.eventCardDrawer.draw();
         this.getNowPlayers().forEach(player => {
             if (["技術革新", "産業革命"].includes(this.eventCardDrawer.NowEvent!.name))
-                player.setOnceNoCost();
+                player.setOnceNoCost(true);
+            else
+                player.setOnceNoCost(false);
             if (player.PlayerId != playerId) player.setWait();
             else player.setMyTurn(this.eventCardDrawer.NowEvent!);
         })
