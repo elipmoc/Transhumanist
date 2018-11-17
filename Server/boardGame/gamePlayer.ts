@@ -28,6 +28,8 @@ export class GamePlayer {
     private buildActionList: BuildActionList;
     //一度だけアクションカードをノーコストで使用できるようにするフラグ
     private onceNoCostFlag = false;
+    //人間を使用できなくするフラグ
+    private noUseHumanFlag = false;
 
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
@@ -56,6 +58,7 @@ export class GamePlayer {
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
+        this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
@@ -127,8 +130,14 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(boardSocketManager, playerId);
         const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
+
+        //アクションカードの使用処理
         this.actionCard.onUseActionCard(
             card => {
+                if (this.noUseHumanFlag && this.state.State.negative >= 2 && card.cost.find(x => x.name == "人間")) {
+                    unavailable.emit(UnavailableState.Event);
+                    return false;
+                }
                 if (this.onceNoCostFlag)
                     this.onceNoCostFlag = false;
                 else if (this.resourceList.costPayment(card.cost) == false) {

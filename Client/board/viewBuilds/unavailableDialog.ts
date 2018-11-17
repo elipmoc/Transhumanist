@@ -27,6 +27,9 @@ export function build(bindParams: BindParams) {
             case UnavailableState.Condition:
                 unavailableDialog.setText("条件が満たされていない為、\nカードを使用出来ません。");
                 break;
+            case UnavailableState.Event:
+                unavailableDialog.setText("イベントの効果により、\nカードを使用出来ません。");
+                break;
         };
         unavailableDialog.visible = true;
         unavailableDialog.stage.update();
