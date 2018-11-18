@@ -71,7 +71,6 @@ export class BoardGame {
     private resetGame() {
         this.boardGameStatus.reset();
         this.actionCardStacks.settingCard();
-        this.eventCardStack.settingCard();
         this.war.reset();
         this.gamePlayers.reset();
     }

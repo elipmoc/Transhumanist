@@ -17,7 +17,6 @@ export class TurnManager {
     private currentTurnPlayerId: SocketBinder.Binder<number>;
     private players: Array<GamePlayer>;
     private turn: SocketBinder.Binder<number>;
-    private eventCardDrawer: EventCardDrawer;
 
     get CurrentPlayerId() { return this.currentTurnPlayerId.Value; }
 
@@ -26,13 +25,11 @@ export class TurnManager {
         this.currentTurnPlayerId.Value = 0;
         this.players = [];
         this.turn.Value = 0;
-        this.eventCardDrawer.reset();
     }
 
-    constructor(eventCardDrawer: EventCardDrawer, boardSocketManager: SocketBinder.Namespace) {
+    constructor(boardSocketManager: SocketBinder.Namespace) {
         this.turn = new SocketBinder.Binder<number>("turn");
         this.currentTurnPlayerId = new SocketBinder.Binder<number>("currentTurnPlayerId");
-        this.eventCardDrawer = eventCardDrawer;
         boardSocketManager.addSocketBinder(this.turn, this.currentTurnPlayerId);
         this.reset();
     }
@@ -43,18 +40,19 @@ export class TurnManager {
 
     //1週分のターンを計算
     private calculate() {
-        this.eventCardDrawer.draw();
         this.turnPlayerIdList = this.players.sort(cmp).map(x => x.PlayerId);
         this.turn.Value = this.turn.Value + 1;
     }
 
-    nextTurnPlayerId(): number {
+    nextPlayer(): { playerId: number, turnChanged: boolean } {
         const nextPlayerId = this.turnPlayerIdList.pop();
         if (nextPlayerId == undefined) {
             this.calculate();
-            return this.nextTurnPlayerId();
+            const ret = this.nextPlayer();
+            ret.turnChanged = true;
+            return ret;
         }
         this.currentTurnPlayerId.Value = nextPlayerId;
-        return this.currentTurnPlayerId.Value;
+        return { playerId: nextPlayerId, turnChanged: false };
     }
 }

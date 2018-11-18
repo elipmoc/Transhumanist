@@ -2,7 +2,7 @@ import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { DecisionButton } from "./decisionButton";
 
-//戦争相手選択しろのダイアログ
+//何かしら不都合が起きた時のダイアログ
 export class UnavailableDialog extends createjs.Container {
     private label: createjs.Text;
     private callBack: () => void;
@@ -15,7 +15,7 @@ export class UnavailableDialog extends createjs.Container {
         const height = 250;
         const background = new createjs.Shape(new createjs.Graphics().beginFill("gray")
             .drawRect(global.canvasWidth / 2 - width / 2, global.canvasHeight / 2 - height / 2, width, height));
-        
+
         this.label = new createjs.Text("");
         this.label.font = "28px Bold ＭＳ ゴシック";
         this.label.color = "white";
