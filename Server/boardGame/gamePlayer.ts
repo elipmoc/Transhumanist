@@ -40,6 +40,11 @@ export class GamePlayer {
     onEventClearCallback(f: () => void) {
         this.eventClearCallback = f;
     }
+    //設置アクションカードを使用できなくするフラグ
+    private noUseBuildActionFlag = false;
+    //世界大戦の開幕が起きてる時のフラグ
+    private noLimitUseWarActionFlag = false;
+
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
         this.turnFinishButtonClickCallback = f;
@@ -66,6 +71,8 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
+        this.noLimitUseWarActionFlag = "世界大戦の開幕" == eventCard.name;
+        this.noUseBuildActionFlag = "太陽風" == eventCard.name;
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
         this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
@@ -184,17 +191,30 @@ export class GamePlayer {
                     unavailable.emit(UnavailableState.Event);
                     return false;
                 }
-                if (this.onceNoCostFlag)
-                    this.onceNoCostFlag = false;
-                else if (this.resourceList.costPayment(card.cost) == false) {
+                if (this.onceNoCostFlag == false && this.resourceList.costPayment(card.cost) == false) {
                     unavailable.emit(UnavailableState.Cost);
+                    return false;
+                }
+                if (
+                    card.war_use
+                    && this.warFlag == false
+                    && (this.noLimitUseWarActionFlag && this.state.State.negative >= 1) == false
+                ) {
+                    unavailable.emit(UnavailableState.War);
                     return false;
                 }
                 if (card.build_use)
                     this.buildActionList.addBuildAction(card.name);
+                if (this.onceNoCostFlag)
+                    this.onceNoCostFlag = false;
                 return true;
             }
         );
+        //設置アクションカードの使用
+        this.buildActionList.onUseBuildActionCard(card => {
+            if (this.noUseBuildActionFlag)
+                unavailable.emit(UnavailableState.Event);
+        });
         boardSocketManager.addSocketBinder(
             state, this.diceList, unavailable,
             this.playerCond, selectDice, this.candidateResources,
