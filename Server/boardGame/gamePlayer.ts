@@ -30,6 +30,8 @@ export class GamePlayer {
     private onceNoCostFlag = false;
     //人間を使用できなくするフラグ
     private noUseHumanFlag = false;
+    //設置アクションカードを使用できなくするフラグ
+    private noUseBuildAction = false;
 
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
@@ -57,6 +59,7 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
+        this.noUseBuildAction = "太陽風" == eventCard.name;
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
         this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
@@ -155,7 +158,8 @@ export class GamePlayer {
         );
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard(card => {
-
+            if (this.noUseBuildAction)
+                unavailable.emit(UnavailableState.Event);
         });
         boardSocketManager.addSocketBinder(
             state, this.diceList, unavailable,
