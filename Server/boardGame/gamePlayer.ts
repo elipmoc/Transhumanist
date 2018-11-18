@@ -138,17 +138,25 @@ export class GamePlayer {
                     unavailable.emit(UnavailableState.Event);
                     return false;
                 }
-                if (this.onceNoCostFlag)
-                    this.onceNoCostFlag = false;
-                else if (this.resourceList.costPayment(card.cost) == false) {
+                if (this.onceNoCostFlag == false && this.resourceList.costPayment(card.cost) == false) {
                     unavailable.emit(UnavailableState.Cost);
+                    return false;
+                }
+                if (card.war_use && this.warFlag == false) {
+                    unavailable.emit(UnavailableState.War);
                     return false;
                 }
                 if (card.build_use)
                     this.buildActionList.addBuildAction(card.name);
+                if (this.onceNoCostFlag)
+                    this.onceNoCostFlag = false;
                 return true;
             }
         );
+        //設置アクションカードの使用
+        this.buildActionList.onUseBuildActionCard(card => {
+
+        });
         boardSocketManager.addSocketBinder(
             state, this.diceList, unavailable,
             this.playerCond, selectDice, candidateResources,
