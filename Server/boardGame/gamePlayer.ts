@@ -31,7 +31,9 @@ export class GamePlayer {
     //人間を使用できなくするフラグ
     private noUseHumanFlag = false;
     //設置アクションカードを使用できなくするフラグ
-    private noUseBuildAction = false;
+    private noUseBuildActionFlag = false;
+    //世界大戦の開幕が起きてる時のフラグ
+    private noLimitUseWarActionFlag = false;
 
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
@@ -59,7 +61,8 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
-        this.noUseBuildAction = "太陽風" == eventCard.name;
+        this.noLimitUseWarActionFlag = "世界大戦の開幕" == eventCard.name;
+        this.noUseBuildActionFlag = "太陽風" == eventCard.name;
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
         this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
@@ -145,7 +148,11 @@ export class GamePlayer {
                     unavailable.emit(UnavailableState.Cost);
                     return false;
                 }
-                if (card.war_use && this.warFlag == false) {
+                if (
+                    card.war_use
+                    && this.warFlag == false
+                    && (this.noLimitUseWarActionFlag && this.state.State.negative >= 1) == false
+                ) {
                     unavailable.emit(UnavailableState.War);
                     return false;
                 }
@@ -158,7 +165,7 @@ export class GamePlayer {
         );
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard(card => {
-            if (this.noUseBuildAction)
+            if (this.noUseBuildActionFlag)
                 unavailable.emit(UnavailableState.Event);
         });
         boardSocketManager.addSocketBinder(
