@@ -11,9 +11,6 @@ export class BoardPlayerHandle {
     selectResource(data: SelectResourceData) {
         console.log(`selectResource player${this.player.PlayerId} iconId${data.iconId}`);
     }
-    selectBuildAction(data: SelectBuildActionData) {
-        console.log(`selectBuildAction player${this.player.PlayerId} iconId${data.iconId}`);
-    }
 
     //アクションカードの現在枚数、総山札数、捨て札数を変更する
     setNumberOfActionCard(numberOfActionCardList: NumberOfActionCard[]) {
@@ -28,7 +25,5 @@ export class BoardPlayerHandle {
 
         socket.on("SelectResource", str =>
             this.selectResource(JSON.parse(str)));
-        socket.on("SelectBuildAction", str =>
-            this.selectBuildAction(JSON.parse(str)));
     }
 }
