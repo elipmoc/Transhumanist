@@ -9,5 +9,7 @@ export enum GamePlayerCondition {
     //プレイヤーが存在しない
     Empty,
     //ダイスを選択中
-    Dice
+    Dice,
+    Event,
+    EventClear
 }

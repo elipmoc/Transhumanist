@@ -12,9 +12,9 @@ export function build(bindParams: BindParams) {
 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
-        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, cardIcon.IconId);
+        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, cardIcon.IconId, selectResourceWindow.getAllSelected());
         selectResourceWindow.decreaseNumber();
-        if (selectResourceWindow.getNumber() <= 0) {
+        if (selectResourceWindow.getAllSelected()) {
             selectResourceWindow.visible = false;
 
         }

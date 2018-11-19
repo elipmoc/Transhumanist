@@ -12,6 +12,7 @@ import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { PlayerActionCard } from "./playerActionCard";
 import { diceRoll } from "./dice";
 import { CandidateResources } from "../../Share/candidateResources";
+import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 
@@ -22,6 +23,8 @@ export class GamePlayer {
     private resourceList: ResourceList;
     private diceList: SocketBinder.Binder<DiceNumber[]>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
+    private candidateResources: SocketBinder.Binder<CandidateResources>;
+    private beforeCond: number;
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
     private warFlag = false;
@@ -30,6 +33,13 @@ export class GamePlayer {
     private onceNoCostFlag = false;
     //人間を使用できなくするフラグ
     private noUseHumanFlag = false;
+    //現在のイベント名
+    private nowEvent: Event;
+    
+    private eventClearCallback: () => void;
+    onEventClearCallback(f: () => void) {
+        this.eventClearCallback = f;
+    }
     //設置アクションカードを使用できなくするフラグ
     private noUseBuildActionFlag = false;
     //世界大戦の開幕が起きてる時のフラグ
@@ -81,6 +91,41 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Wait;
     }
 
+    setEvent(eventCard: Event) {
+        this.playerCond.Value = GamePlayerCondition.Event;
+        this.nowEvent = eventCard;
+
+        switch(this.nowEvent.name){
+            case "無風状態":
+                this.playerCond.Value = GamePlayerCondition.EventClear;
+                this.eventClearCallback();
+                break;
+            case "ムーアの法則":
+                this.diceRoll();
+                break;
+        }
+    }
+    diceSelectAfterEvent(diceNumber:number) {
+        switch (this.nowEvent.name) {
+            case "ムーアの法則":
+                let data = {
+                    number: diceNumber,
+                    resource_names: this.nowEvent.resources!
+                };
+                this.candidateResources.Value = data;
+                break;
+        }
+    }
+    resourceSelectAfterEvent(data: SelectedGetResourceId) {
+        if (this.nowEvent.name == "ムーアの法則") {
+            this.resourceList.addResource(this.nowEvent.resources![data.id]);
+            if (data.allSelected) {
+                this.playerCond.Value = GamePlayerCondition.EventClear;
+                this.eventClearCallback();
+            }
+        }
+    }
+
     clear() {
         this.uuid = "";
         this.playerCond.Value = GamePlayerCondition.Empty;
@@ -101,32 +146,34 @@ export class GamePlayer {
         boardSocketManager: SocketBinder.Namespace,
         actionCardStacks: ActionCardStacks
     ) {
-        //とりあえず表示すべきものが来たとする。
-        const serverData = {
-            number: 3,
-            resource_names: ["人間", "メタル", "ガス", "ケイ素", "硫黄", "人間"]
-        };
-        const candidateResources = new SocketBinder.Binder<CandidateResources>("candidateResources" + playerId);
-        setTimeout(() => { candidateResources.Value = serverData }, 4000);
-        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<number>("selectedGetResourceId" + playerId);
-        selectedGetResourceId.OnReceive(id => {
-            this.resourceList.addResource(serverData.resource_names[id])
-        });
+        this.candidateResources = new SocketBinder.Binder<CandidateResources>("candidateResources" + playerId);
+        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>("selectedGetResourceId" + playerId);
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
-        const selectDice = new SocketBinder.EmitReceiveBinder<Number>("selectDice", true, [`player${playerId}`]);
+        const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
         turnFinishButtonClick.OnReceive(() => {
             this.turnFinishButtonClickCallback();
         });
 
+        //選択されてリソース追加
+        selectedGetResourceId.OnReceive(data => {
+            if (this.playerCond.Value == GamePlayerCondition.Event) {
+                this.resourceSelectAfterEvent(data)
+            }
+        });
+
+        //サイコロのダイス選択
         selectDice.OnReceive(diceIndex => {
-            this.playerCond.Value = GamePlayerCondition.MyTurn;
-            console.log(`diceIndex:${diceIndex}`)
+            this.playerCond.Value = this.beforeCond;
+            console.log(`diceIndex:${diceIndex}`);
+            if (this.playerCond.Value == GamePlayerCondition.Event) {
+                this.diceSelectAfterEvent(this.diceList.Value[diceIndex]);
+            }
         });
         this.diceList.Value = [];
         this.playerId = playerId;
@@ -170,7 +217,7 @@ export class GamePlayer {
         });
         boardSocketManager.addSocketBinder(
             state, this.diceList, unavailable,
-            this.playerCond, selectDice, candidateResources,
+            this.playerCond, selectDice, this.candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
         state.update();
     }
@@ -191,6 +238,7 @@ export class GamePlayer {
 
     diceRoll() {
         this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
+        this.beforeCond = this.playerCond.Value;
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
 }

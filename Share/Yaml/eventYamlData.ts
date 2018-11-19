@@ -37,5 +37,6 @@ export interface Event {
     index: EventIndex,
     level: number,
     description: string,
-    forever: boolean
+    forever: boolean,
+    resources:string[] | undefined
 }

@@ -46,9 +46,7 @@ export class SelectResourceWindow extends createjs.Container {
         this.resourceNumber = number;
         this.descriptionText.text = "欲しいリソースを" + this.resourceNumber + "つ選択してください";
     }
-    getNumber() {
-        return this.resourceNumber;
-    }
+    
     //numberの減算
     decreaseNumber() {
         this.resourceNumber--;
@@ -81,5 +79,10 @@ export class SelectResourceWindow extends createjs.Container {
         for (let i = 0; this.maxLength > i; i++) {
             this.resourceList.setResource(i, "", -1, queue);
         }
+    }
+
+    //もうリソースは0よ！
+    getAllSelected() {
+        return this.resourceNumber <= 0;
     }
 }
