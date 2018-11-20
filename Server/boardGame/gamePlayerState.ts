@@ -4,9 +4,11 @@ import { SocketBinder } from "../socketBinder";
 
 export class GamePlayerState {
     private state: SocketBinder.Binder<ResponseGamePlayerState>;
-
+    private beforeActivityRange: number;
+    private temporarilyNow: boolean;
+  
     get State() { return this.state.Value; }
-
+        
     constructor(state: SocketBinder.Binder<ResponseGamePlayerState>) {
         this.state = state;
         this.state.Value = {
@@ -38,6 +40,46 @@ export class GamePlayerState {
             uncertainty: 0, resource: 0,
             activityRange: 0, speed: 0
         };
+    }
+
+    addPositive(num:number) {
+        this.state.Value.positive += num;
+        if (this.state.Value.positive >= 30) this.state.Value.positive = 30;
+    }
+    subPositive(num: number) {
+        this.state.Value.positive -= num;
+        if (this.state.Value.positive <= 0) this.state.Value.positive = 0;
+    }
+    addNegative(num: number) {
+        this.state.Value.negative += num;
+        if (this.state.Value.negative >= 30) this.state.Value.negative = 30;
+    }
+    subNegative(num: number) {
+        this.state.Value.negative -= num;
+        if (this.state.Value.negative <= 0) this.state.Value.negative = 0;
+    }
+
+    addAcivityRange(num: number) {
+        if (this.temporarilyNow) {
+            this.beforeActivityRange += num;
+        } else {
+            this.state.Value.activityRange += num;
+            if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
+        }
+    }
+
+    temporarilyActivityRangeSet(num: number) {
+        this.temporarilyNow = true;
+        this.beforeActivityRange = this.state.Value.activityRange;
+        this.state.Value.activityRange += num;
+        if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
+
+    }
+
+    temporarilyReset() {
+        this.temporarilyNow = false;
+        this.state.Value.activityRange = this.beforeActivityRange;
+        if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
     }
 
     setAICard(startStatusYamlData: StartStatusYamlData) {

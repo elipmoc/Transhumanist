@@ -46,7 +46,7 @@ export class GamePlayers {
             });
             boardSocketManager.addSocketBinder(endGame);
             player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
-            player.onEventClearCallback(() => this.eventClearCheck());
+            player.onEventClearCallback(() => this.eventClearCheck(player));
             this.gamePlayerList.push(player);
         }
     }
@@ -123,8 +123,9 @@ export class GamePlayers {
         })
     }
 
-    eventClearCheck() {
+    eventClearCheck(player:GamePlayer) {
         let clearFlag: boolean = false;
+        player.setEventClear();
         
         this.getNowPlayers().forEach(player => {
             clearFlag = player.Condition == GamePlayerCondition.EventClear;

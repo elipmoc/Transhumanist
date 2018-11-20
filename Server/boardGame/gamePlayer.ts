@@ -82,6 +82,14 @@ export class GamePlayer {
         }
         else if (eventCard.name != "少子化")
             this.resourceList.addResource("人間");
+        
+        if (eventCard.name == "AIへの反抗") {
+            this.state.temporarilyActivityRangeSet(this.state.State.negative * -1);
+        }
+        if (eventCard.name == "AIへの友好") {
+            this.state.temporarilyActivityRangeSet(this.state.State.positive);
+        }
+
         if (this.warFlag)
             this.state.warStateChange();
         this.diceRoll();
@@ -96,12 +104,41 @@ export class GamePlayer {
         this.nowEvent = eventCard;
 
         switch(this.nowEvent.name){
-            case "無風状態":
-                this.playerCond.Value = GamePlayerCondition.EventClear;
-                this.eventClearCallback();
-                break;
             case "ムーアの法則":
                 this.diceRoll();
+                break;
+            case "地震":
+                this.diceRoll();
+                break;
+            case "暴風":
+                this.diceRoll();
+                break;
+            case "未知の病気":
+                this.diceRoll();
+                break;
+            case "サブカルチャー":
+                this.state.subNegative(1);
+                this.eventClearCallback();
+                break;
+            case "AIへの反抗":
+                break;
+            case "AIへの友好":
+                break;
+            case "隕石":
+                break;
+            case "亡命":
+                break;
+            case "天変地異":
+                break;
+            case "独立傾向":
+                break;
+            case "内乱":
+                break;
+            case "ブラックホール":
+                break;
+
+            default:
+                this.eventClearCallback();
                 break;
         }
     }
@@ -120,10 +157,12 @@ export class GamePlayer {
         if (this.nowEvent.name == "ムーアの法則") {
             this.resourceList.addResource(this.nowEvent.resources![data.id]);
             if (data.allSelected) {
-                this.playerCond.Value = GamePlayerCondition.EventClear;
                 this.eventClearCallback();
             }
         }
+    }
+    setEventClear() {
+        this.playerCond.Value = GamePlayerCondition.EventClear;
     }
 
     clear() {
@@ -156,7 +195,10 @@ export class GamePlayer {
         const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
+        
+        //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
+            if (this.nowEvent.name == "AIへの反抗" || this.nowEvent.name == "AIへの友好") this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
