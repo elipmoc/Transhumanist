@@ -96,12 +96,11 @@ export class GamePlayer {
         this.nowEvent = eventCard;
 
         switch(this.nowEvent.name){
-            case "無風状態":
-                this.playerCond.Value = GamePlayerCondition.EventClear;
-                this.eventClearCallback();
-                break;
             case "ムーアの法則":
                 this.diceRoll();
+                break;
+            default:
+                this.eventClearCallback();
                 break;
         }
     }
@@ -120,10 +119,12 @@ export class GamePlayer {
         if (this.nowEvent.name == "ムーアの法則") {
             this.resourceList.addResource(this.nowEvent.resources![data.id]);
             if (data.allSelected) {
-                this.playerCond.Value = GamePlayerCondition.EventClear;
                 this.eventClearCallback();
             }
         }
+    }
+    setEventClear() {
+        this.playerCond.Value = GamePlayerCondition.EventClear;
     }
 
     clear() {
