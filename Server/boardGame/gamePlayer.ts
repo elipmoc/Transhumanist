@@ -82,6 +82,14 @@ export class GamePlayer {
         }
         else if (eventCard.name != "少子化")
             this.resourceList.addResource("人間");
+        
+        if (eventCard.name == "AIへの反抗") {
+            this.state.temporarilyActivityRangeSet(this.state.State.negative * -1);
+        }
+        if (eventCard.name == "AIへの友好") {
+            this.state.temporarilyActivityRangeSet(this.state.State.positive);
+        }
+
         if (this.warFlag)
             this.state.warStateChange();
         this.diceRoll();
@@ -187,7 +195,10 @@ export class GamePlayer {
         const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
+        
+        //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
+            if (this.state.TemporarilyNow) this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
