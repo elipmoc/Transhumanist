@@ -8,7 +8,6 @@ export class GamePlayerState {
     private temporarilyNow: boolean;
   
     get State() { return this.state.Value; }
-    get TemporarilyNow() { return this.temporarilyNow;}
         
     constructor(state: SocketBinder.Binder<ResponseGamePlayerState>) {
         this.state = state;

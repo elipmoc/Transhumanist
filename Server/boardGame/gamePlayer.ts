@@ -198,7 +198,7 @@ export class GamePlayer {
         
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            if (this.state.TemporarilyNow) this.state.temporarilyReset();
+            if (this.nowEvent.name == "AIへの反抗" || this.nowEvent.name == "AIへの友好") this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
