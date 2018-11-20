@@ -40,6 +40,23 @@ export class GamePlayerState {
         };
     }
 
+    addPositive(num:number) {
+        this.state.Value.positive += num;
+        if (this.state.Value.positive >= 30) this.state.Value.positive = 30;
+    }
+    subPositive(num: number) {
+        this.state.Value.positive -= num;
+        if (this.state.Value.positive <= 0) this.state.Value.positive = 0;
+    }
+    addNegative(num: number) {
+        this.state.Value.negative += num;
+        if (this.state.Value.negative >= 30) this.state.Value.negative = 30;
+    }
+    subNegative(num: number) {
+        this.state.Value.negative -= num;
+        if (this.state.Value.negative <= 0) this.state.Value.negative = 0;
+    }
+    
     setAICard(startStatusYamlData: StartStatusYamlData) {
         this.state.Value.activityRange = startStatusYamlData.activityRange;
         this.state.Value.resource = startStatusYamlData.resource;

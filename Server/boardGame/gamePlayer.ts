@@ -99,6 +99,36 @@ export class GamePlayer {
             case "ムーアの法則":
                 this.diceRoll();
                 break;
+            case "地震":
+                this.diceRoll();
+                break;
+            case "暴風":
+                this.diceRoll();
+                break;
+            case "未知の病気":
+                this.diceRoll();
+                break;
+            case "サブカルチャー":
+                this.state.subNegative(1);
+                this.eventClearCallback();
+                break;
+            case "AIへの反抗":
+                break;
+            case "AIへの友好":
+                break;
+            case "隕石":
+                break;
+            case "亡命":
+                break;
+            case "天変地異":
+                break;
+            case "独立傾向":
+                break;
+            case "内乱":
+                break;
+            case "ブラックホール":
+                break;
+
             default:
                 this.eventClearCallback();
                 break;
