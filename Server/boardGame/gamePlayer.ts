@@ -185,6 +185,9 @@ export class GamePlayer {
                 break;
             case "天変地異":
                 //サイコロの値分、リソースと設置済みを消す。
+                this.resourceList.randomDeleteResource(diceNumber);
+                this.buildActionList.randomDeleteResource(diceNumber);
+                this.eventClearCallback();
                 break;
             case "独立傾向":
                 let robotNum = diceNumber;
