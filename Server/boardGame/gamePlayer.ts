@@ -121,16 +121,30 @@ export class GamePlayer {
                 this.eventClearCallback();
                 break;
             case "隕石":
+                this.diceRoll();
                 break;
             case "亡命":
+                if (this.state.State.negative >= 3) {
+                    this.diceRoll();
+                }
                 break;
             case "天変地異":
+                this.diceRoll();
                 break;
             case "独立傾向":
+                if (this.resourceList.getCount("ロボット") >= 1) {
+                    this.diceRoll();
+                }
+                else this.eventClearCallback();
                 break;
             case "内乱":
+                if (this.state.State.negative >= 6) {
+                    //任意の設置済みアクションカードを2つ選択して削除
+                }
                 break;
             case "ブラックホール":
+                this.resourceList.randomDeleteResource(1);
+                this.eventClearCallback();
                 break;
 
             default:
@@ -157,9 +171,25 @@ export class GamePlayer {
                 }
                 break;
             case "未知の病気":
-                let num = diceNumber;
-                if (diceNumber > this.resourceList.getCount("人間")) num = this.resourceList.getCount("人間");
-                this.resourceList.changeResource("人間", "病人", num);
+                let humanNum = diceNumber;
+                if (diceNumber > this.resourceList.getCount("人間")) humanNum = this.resourceList.getCount("人間");
+                this.resourceList.changeResource("人間", "病人", humanNum);
+                this.eventClearCallback();
+                break;
+            case "隕石":
+                this.resourceList.randomDeleteResource(diceNumber);
+                this.eventClearCallback();
+                break;
+            case "亡命":
+                //サイコロの値分、右にずれた人に人間を３つ移動。リソース上限は有効。
+                break;
+            case "天変地異":
+                //サイコロの値分、リソースと設置済みを消す。
+                break;
+            case "独立傾向":
+                let robotNum = diceNumber;
+                if (diceNumber > this.resourceList.getCount("ロボット")) robotNum = this.resourceList.getCount("ロボット");
+                this.resourceList.changeResource("ロボット", "人間", robotNum);
                 this.eventClearCallback();
                 break;
         }
