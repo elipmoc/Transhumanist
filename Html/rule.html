@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>トランスヒューマニスト - Transhumanist</title>
+    <link rel="stylesheet" href="Css\rule.css" type="text/css">
+    <!-- <link rel="java"> -->
+</head>
+
+<body>
+    <header class="menubar">
+        <ul class="menubuttons">
+            <li class="menubutton">
+                <a href="index.html">トップ</a>
+            </li>
+            <li class="menubutton">
+                <a href="rule.html">ルール</a>
+            </li>
+            <li class="menubutton">
+                <a href="login.html" target="_blank">ゲーム</a>
+            </li>
+            <li class="menubutton">
+                <a href="link.html">リンク</a>
+            </li>
+        </ul>
+    </header>
+    <div class="content">
+        <div class="document">
+            <div class="data">2045年6月23日</div>
+            <div class="to">プレイヤー様</div>
+            <div class="from">創電アドバンス</div>
+            <div class="title">本作をプレイする為のルール説明書</div>
+            <p>　まずは、本サイトをご覧いただきまして、誠にありがとうございます。このページは、本作のルール説明を記載するものです。なお、ゲームのプレイはサイト内上部にあるメニューの、ゲームからお入りください。
+            </p>
+            <h4>目次</h4>
+            <ol>
+                <li>
+                    <a href="#intro">ゲーム準備</a>
+                </li>
+                <li>
+                    <a href="#playing">ゲーム中</a>
+                    <ol style="list-style-type: upper-alpha">
+                        <li>
+                            <a href="#turnIn">ターン開始</a>
+                        </li>
+                        <li>
+                            <a href="#event">イベント</a>
+                        </li>
+                        <li>
+                            <a href="#war">戦争中</a>
+                        </li>
+                        <li>
+                            <a href="#action">アクション</a>
+                        </li>
+                        <li>
+                            <a href="#turnOut">ターン終了</a>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <a href="#end">ゲーム終了</a>
+                </li>
+                <li>
+                    <a href="#help">その他</a>
+                </li>
+            </ol>
+            <h5>括弧の説明</h5>
+            <table>
+                <tr>
+                    <td>『』</td>
+                    <td>リソースカードを示します。</td>
+                </tr>
+                <tr>
+                    <td>「」</td>
+                    <td>アクションカードを示します。</td>
+                </tr>
+                <tr>
+                    <td>【】</td>
+                    <td>イベントを示します。</td>
+                </tr>
+            </table>
+        </div>
+        <div class="document">
+            <h2 id="intro">ゲーム準備</h2>
+            <p>　各プレイヤーに、4つのステータスをランダムで割り振られます。
+                <br>　4つのステータスとは、以下のものです。
+                <table>
+                    <tr class="colorA">
+                        <td>処理速度</td>
+                        <td>ターンの優先順位</td>
+                    </tr>
+                    <tr class="colorB">
+                        <td>リソース</td>
+                        <td>リソースカードの上限</td>
+                    </tr>
+                    <tr class="colorC">
+                        <td>活動範囲</td>
+                        <td>アクションカードの設置数の上限</td>
+                    </tr>
+                    <tr class="colorD">
+                        <td>不確定性</td>
+                        <td>選択可能なサイコロの数</td>
+                    </tr>
+                </table>
+            </p>
+            <p>　また、各プレイヤーに
+                <h5>アクションカード</h5>
+                <ul>
+                    <li>「採掘施設」を1枚、</li>
+                    <li>「レベル2～3までのアクションカード」をランダムで4枚。</li>
+                </ul>
+                <h5>リソースカード</h5>
+                <ul>
+                    <li>『人間』を4枚、</li>
+                    <li>『レベル2のリソースカード』をランダムで1枚。</li>
+                </ul>　を予め渡した状態で開始します。
+            </p>
+
+        </div>
+        <div class="document">
+            <h2 id="playing">ゲーム準備</h2>
+            <p>　各プレイヤーの<span class="colorA">処理速度</span>を参照し、ターンの順番が決まります。
+                <br>　この時、<span class="colorA">処理速度</span>が同じ場合、プレイヤーIDが小さい方が優先されます。
+            </p>
+            <p>　以上の事が終了したら、このターン中に発生する
+                <span class="colorE">イベント</span>を表示します。</p>
+            <h3 id="turnIn">ターン開始</h3>
+            <p>　<span class="caution">これ以降はターン終了の処理まで、ターンが回ってきたプレイヤーに対する物になります。</span></p>
+            <p>　ターン中のプレイヤーに対し、『人間』を1枚追加する。
+                <br>　※この時、リソースの数が上限に達している状態の時、リソースカードを1つ捨てなければならない。
+            </p>
+            <h3 id="event">イベント</h3>
+            <p>　このターン中に適用されるイベントがターン開始時の物は、このタイミングで発生します。
+                <br>　<span class="caution">ただし、【少子化】と【人口爆発】は、ターン開始の『人間』の生成に関係するため、これより前に発生します。
+            </p>
+            <h3 id="warning">戦争中</h3>
+            <p>　ターン中のプレイヤーが戦争状態にある場合、P点が1つ減ります。
+                <br>　P点が0だった場合、N点が1つ増えます。
+            </p>
+            <h3 id="action">アクション</h3>
+            <p>　以下のアクションをターン中、プレイヤーは任意で行う事が出来ます。
+                <ol>
+                    <li>アクションカードの使用</li>
+                        <p>　手札にあるアクションカードを選択し、対応するコストを消費する事で、効果を使用する事が出来ます。
+                            <br>　設置してから使用するカードの場合、アクションカード置き場に設置されます。
+                            <br>　アクションカードを使用した場合、手札から消費されます。
+                            <br>　<span class="caution" style="font-weight:bold;">使用された物が「勝利カード」の場合、その場でゲーム終了となり、使用したプレイヤーの勝利になります。</span>
+                            <br>　※戦争中のみ使用可能なカードは、コストが足りていても発動しません。
+                        </p>
+                    <li>設置したカードの使用</li>
+                        <p>　アクションカード置き場に表示されたアイコンをクリックして、該当する効果を使用します。
+                            <br>　各カードの効果は1回のみ使用でき、使用後はターンを終了するまで使用出来ません。
+                        </p>
+                    <li>宣戦布告・降伏</li>
+                        <p>　<span class="caution">※このアクションは一度しか出来ません。</span>
+                            <ol>
+                                <li>宣戦布告</li>
+                                <p>　戦争状態でない時に行えます。
+                                    <br>　宣戦布告ボタンを押して、戦争対象のプレイヤーを1人選択する事で、戦争状態に入ります。
+                                    <br>　戦争相手とは赤い線で結ばれます。
+                                </p>
+                                <li>降伏</li>
+                                <p>　戦争状態の時に行えます。戦争状態を解除する唯一の方法です。
+                                    <br>　降伏ボタンを押す事で、その場で戦争状態を解除出来ます。
+                                </p>
+                                　ただし、
+                                <ul>
+                                    <li>降伏ボタンを押したプレイヤーは、P点が1つ増え、N点が2つ増えます。</li>
+                                    <li>戦争相手だったプレイヤーは、P点が2つ増え、N点が2つ減ります。</li>
+                                </ul>
+                            </ol>
+                        </p>
+                    <li>ターン終了</li>
+                    　ターン終了ボタンを押す事で、自分のターンを終了します。
+                </ol>
+            </p>
+            <h3 id="turnOut">ターン終了</h3>
+            <p>　次のターンのプレイヤーがまだ残っている場合は、そのプレイヤーにターンが移ります。
+                <br>　全てのプレイヤーがターンを終えている場合、本項目の冒頭まで戻ります。
+            </p>
+        </div>
+        <div class="document">
+            <h2 id="end">ゲーム終了</h2>
+            <p>　ゲーム中、1番最初に「勝利カード」を出せたら、そのプレイヤーの勝ちになります。
+                <br>　あらゆるイベントと他からの妨害を乗り越えて、特異点まで到達してください！
+            </p>
+        </div>
+        <div class="document">
+            <h2 id="help">その他</h2>
+            <p>Q.サイコロは何・不確定性って何？
+                <br>　ゲーム中に使用するサイコロは、1,1,2,2,3,3の面を持つ六面体です。
+                <br>　<span class="colorD">不確定性</span>の値は、サイコロをいくつ同時に振れる事が出来るかを意味します。
+                <br>　例えば、<span class="colorD">不確定性</span>が3のプレイヤーは、同時に3個振る事が出来、その中から自由に1つを選択出来るという事です。
+            </p>
+            <p>Q.手札の枚数は？
+                <br>　5枚で固定です。
+            </p> 
+            <p>Q.イベントの効果で“<span class="colorC">活動範囲</span>が増減”とあるが、既に設置されたアクションカードが、イベント効果で減った<span class="colorC">活動範囲</span>より多い場合は？
+                <br>　新たに設置出来なくなる以外、何も起こりません。
+            </p>
+        </div>
+    </div>
+    <footer>
+        © 2018 創電アドバンス
+    </footer>
+</body>
+
+</html>

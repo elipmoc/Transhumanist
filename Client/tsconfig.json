@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         "target": "es2017",
-        "module": "commonjs",
+        "module": "es6",
         "sourceMap": false,
-        "outDir": "../dist",
-        "declaration": true,
+        "outDir": "./dist",
+        "declaration": false,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noUnusedLocals": false,
@@ -14,10 +14,10 @@
         "noEmitOnError": true
     },
     "include": [
-        "../Client/**/*",
-        "../Share/**/*"
+        "../Client/**/*"
     ],
     "exclude": [
-        "../Server"
+        "../Server",
+        "../Share/**/*"
     ]
 }

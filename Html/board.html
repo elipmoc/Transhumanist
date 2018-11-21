@@ -7,10 +7,21 @@
 </head>
 
 <body>
-    <canvas id="myCanvas" width="960px" height="876px"></canvas>
-    <script src="Client/Lib/easel.js"></script>
-    <script src="Client/Lib/preload.js"></script>
-    <script src="Client/board.js"></script>
+    <div class="content">
+        <div>
+            <canvas id="myCanvas" width="960px" height="876px"></canvas>
+            <script src="Client/Lib/soundjs.min.js"></script>
+            <script src="Client/Lib/easeljs-0.8.2.min.js"></script>
+            <script src="Client/Lib/preloadjs-0.6.2.min.js"></script>
+            <script src="Client/board.js"></script>
+        </div>
+        <div>
+            <input type="image" class="seButton" id="bellButton" src="Img/page/bell.png">
+            <input type="image" class="seButton" id="clapButton" src="Img/page/clap.png">
+            <input type="textArea" id="chatText">
+            <input type="button" id="sendButton" class="button" value="送信">
+        </div>
+    </div>
 </body>
 
 </html>

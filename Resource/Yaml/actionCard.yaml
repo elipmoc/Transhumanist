@@ -1,0 +1,646 @@
+- name: 採掘施設
+  level: 1
+  build_use: true
+  description: 
+    |-
+      　『メタル、ガス、ケイ素、
+      硫黄』をどれか1つ獲得する事
+      ができる。
+  cost:
+    - name: 人間
+      number: 2
+  commands:
+    - kind: rand_get
+      body: 
+        select_number: 1
+        items:
+          - name: メタル
+            number: 1
+          - name: ガス
+            number: 1
+          - name: ケイ素
+            number: 1
+          - name: 硫黄
+            number: 1
+  number: 10
+  war_use: false
+
+- name: 加工施設
+  level: 2
+  build_use: true
+  description: 
+    |-
+      　『ケイ素』を2つ消費して
+      『注射器』を1つ、
+      　『ケイ素』と『メタル』を1
+      つ消費して『CPU』を1つ、
+      　『硫黄』を1つ消費して
+      『爆弾』を1つ得る。
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 1
+  commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: ケイ素
+            number: 2
+        get:
+          - name: 注射器
+            number: 1
+
+    - kind: create_get
+      body:
+        cost:
+          - name: ケイ素
+            number: 1
+          - name: メタル
+            number: 1
+        get:
+          - name: CPU
+            number: 1
+
+    - kind: create_get
+      body:
+        cost:
+          - name: 硫黄
+            number: 2
+        get:
+          - name: 爆弾
+            number: 1
+  number: 15
+  war_use: false
+
+- name: 核融合炉
+  level: 2
+  build_use: true
+  description: 
+    |-
+      　コストとして消費する
+      『ガス』を1から2つ、任意で
+      支払った事にする。
+  cost:
+    - name: 人間
+      number: 2
+    - name: ガス
+      number: 2
+  commands:
+    - kind: cost_take_over
+      body:
+        name: ガス
+        max_cost: 2
+  number: 5
+  war_use: false
+
+- name: 倉庫
+  level: 2
+  build_use: true
+  description: 　リソース枠を+10する。
+  cost:
+    - name: 人間
+      number: 1
+    - name: メタル
+      number: 2
+  commands:
+    - kind: resource_plus
+      body:
+        add: 10
+  number: 8 
+  war_use: false
+
+- name: 地下シェルター
+  level: 2
+  build_use: true
+  description: 
+    |-
+      　リソース枠にある5つのリソ
+      ースを、破壊の対象から外せ
+      る。
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 4
+  commands:
+    - kind: resource_guard
+      body:
+        number: 5
+  number: 4
+  war_use: false
+
+- name: 印刷所
+  level: 2
+  build_use: true
+  description: 　『聖書』を1つ得る。
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 2
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: 聖書
+            number: 1
+  number: 8
+  war_use: false
+
+- name: ロケットの開発
+  level: 3
+  build_use: false
+  description: 　『ロケット』を1つ得る。
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 1
+    - name: CPU
+      number: 1
+    - name: ガス
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: ロケット
+            number: 1
+  number: 10
+  war_use: false
+
+- name: 治療施設
+  level: 3
+  build_use: true
+  description: 
+    |-
+      　『注射器』を1つ消費して、
+      『病人』を『人間』に変える。
+  cost:
+    - name: 人間
+      number: 1 
+    - name: 注射器
+      number: 1
+  commands:
+    - kind: trade
+      body:
+        cost_items:
+          - name: 注射器
+            number: 1
+        from_item:
+          name: 病人
+          number: 1
+        to_item:
+          name: 人間
+          number: 1
+  number: 8
+  war_use: false
+
+- name: 研究施設
+  level: 3
+  build_use: true
+  description:
+    |-
+      　『人間』を1つ消費して
+      『遺伝子データ』を1つ、
+      　『遺伝子データ』を1つ消費
+      して『人間』を4つ、
+      　『CPU』を1つ消費して
+      『マイクロチップ』を1つ得る。
+  cost:
+    - name: 人間
+      number: 3
+    - name: メタル
+      number: 2
+    - name: CPU
+      number: 1
+    - name: 注射器
+      number: 1
+  commands:
+    - kind: create_get
+      body:  
+        cost:
+          - name: 人間
+            number: 1
+        get:
+          - name: 遺伝子データ
+            number: 1
+    - kind: create_get
+      body:  
+        cost:
+          - name: 遺伝子データ
+            number: 1
+        get:
+          - name: 人間
+            number: 4
+    - kind: create_get
+      body:  
+        cost:
+          - name: CPU
+            number: 1
+        get:
+          - name: マイクロチップ
+            number: 1
+  number: 10
+  war_use: false
+
+- name: 花火大会
+  level: 3
+  build_use: false
+  description: 
+    |-
+      　P点がリソースにいる
+      『人間』の数の半分（端数切り
+      捨て）の数点が増える。
+  cost:
+    - name: 人間
+      number: 3
+    - name: 爆弾
+      number: 3
+  commands:
+    - kind: human_p_plus
+  number: 4
+  war_use: false
+  
+- name: 布教活動
+  level: 3
+  build_use: false
+  description: 
+    |- 
+      　『人間』を1つ消費して
+      『信者』を1つ得る。
+  cost:
+    - name: 人間
+      number: 1
+    - name: 聖書
+      number: 1
+  commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: 人間
+            number: 1
+        get: 
+          - name: 信者
+            number: 1
+  number: 8
+  war_use: false
+
+- name: 火星探査
+  level: 4
+  build_use: false
+  description: 　『火星の情報』を1つ得る。
+  cost:
+    - name: 人間
+      number: 4
+    - name: ロケット
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: 火星の情報
+            number: 1
+  number: 10
+  war_use: false
+
+- name: ミサイル発射
+  level: 4
+  build_use: false
+  description:
+    |-
+      　戦争相手が設置したアクショ
+      ンカードを1つ破壊する。
+      　ただし、[サイコロの数]が3
+      の場合のみ実行される。
+      　戦争相手がこのアクションカ
+      ードを使用した場合、このアク
+      ションカードを使用する事で迎
+      撃出来る。
+  cost:
+    - name: 人間
+      number: 1
+    - name: 爆弾
+      number: 1
+    - name: CPU
+      number: 1
+    - name: ガス
+      number: 1
+  commands:
+     - kind: missile_start
+  number: 5
+  war_use: true
+
+- name: 衛星の打ち上げ
+  level: 4
+  build_use: false
+  description: 『衛星』を1つ得る。
+  cost:
+    - name: 人間
+      number: 2
+    - name: ロケット
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: 衛星
+            number: 1
+  number: 5
+  war_use: false
+
+- name: ロボット工場
+  level: 4
+  build_use: true
+  description: 
+    |-
+      　『メタル』を1つ消費して
+      『ロボット』を2つ得る。
+  cost:
+    - name: 人間
+      number: 4
+    - name: メタル
+      number: 2
+    - name: CPU
+      number: 1
+    - name: マイクロチップ
+      number: 1
+  commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: メタル
+            number: 1
+        get:
+          - name: ロボット
+            number: 2
+  number: 8
+  war_use: false
+
+- name: 量子コンピュータ
+  level: 4
+  build_use: true
+  description: 処理速度を+3する。
+  cost:
+    - name: 人間
+      number: 2
+    - name: メタル
+      number: 1
+    - name: CPU
+      number: 1
+    - name: ケイ素
+      number: 2
+  commands:
+    - kind: speed_plus
+      body:
+        plus: 3
+  number: 4
+  war_use: false
+
+- name: チップの埋め込み
+  level: 4
+  build_use: false
+  description: 『拡張人間』を1つ得る。
+  cost:
+    - name: 人間
+      number: 1
+    - name: 注射器
+      number: 1
+    - name: マイクロチップ
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: 拡張人間
+            number: 1
+  number: 5
+  war_use: false
+
+- name: 細菌兵器
+  level: 4
+  build_use: false
+  description: 
+    |-
+      　戦争相手のリソースにある
+      『人間』を[サイコロの数]と
+      同じ数の『病人』に変える。
+  cost:
+    - name: 人間
+      number: 1
+    - name: 爆弾
+      number: 1
+    - name: 遺伝子データ
+      number: 1
+  commands:
+    - kind: bacterial_weapon
+  number: 5
+  war_use: true
+
+- name: 教会
+  level: 4
+  build_use: true
+  description: 
+    |-
+      　『人間』を1つ消費して
+      『信者』を1つ得る。
+      　信者の数分、P点・N点を増減
+      出来る。
+  cost:
+    - name: 信者
+      number: 3
+    - name: 聖書
+      number: 1
+    - name: メタル
+      number: 2
+  commands:
+    - kind: missionary
+  number: 8
+  war_use: false
+
+- name: テラフォーミングの実行
+  level: 5
+  build_use: false
+  description: 
+    |-
+      　『テラフォーミング』を1つ
+      得る。
+  cost:
+    - name: 人間
+      number: 4
+    - name: ロボット
+      number: 4
+    - name: 衛星
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: テラフォーミング
+            number: 1
+  number: 8
+  war_use: false
+
+- name: 神の杖
+  level: 5
+  build_use: false
+  description:
+    |- 
+      　戦争相手の設置したアクショ
+      ンカードを1つ、リソースを
+      [サイコロの数]つ破壊する。
+  cost:
+    - name: 人間
+      number: 1
+    - name: 衛星
+      number: 1
+    - name: CPU
+      number: 1
+    - name: 爆弾
+      number: 2
+    - name: メタル
+      number: 2
+  commands:
+    - kind : god_wand
+  number: 4
+  war_use: true
+
+- name: 意識操作のテスト
+  level: 5
+  build_use: false
+  description:
+    |-
+      　このアクションカードは
+      コストを消費しない。
+      　N点を1点減らし、P点を1点
+      増やす。
+  cost:
+    - name: 拡張人間
+      number: 1
+  commands:
+    - kind:  n_minus_p_plus
+  number: 8
+  war_use: false
+
+- name: 未来予報装置
+  level: 5
+  build_use: true
+  description: 
+    |-
+      　イベントカードを自由に見る
+      事ができる。
+      　また、山札内の2枚を入れ替
+      える事ができる。
+  conditions: built_quantum_computer
+  conditionDescript:
+    |-
+      　量子コンピュータが設置済み。
+  cost:
+    - name: 人間
+      number: 3
+    - name: メタル
+      number: 2
+    - name: CPU
+      number: 2
+    - name: 爆弾
+      number: 2
+    - name: メタル
+      number: 2
+  commands:
+    - kind: future_forecast
+  number: 5
+  war_use: false
+
+- name: 御神体の再生
+  level: 5
+  build_use: false
+  description: 『神体』を1つ得る。
+  cost:
+    - name: 信者
+      number: 4
+    - name: 遺伝子データ
+      number: 2
+    - name: マイクロチップ
+      number: 1
+    - name: CPU
+      number: 1
+  commands:
+    - kind: get
+      body:
+        items:
+          - name: 神体
+            number: 1
+  number: 5
+  war_use: false
+    
+- name: 火星の支配
+  level: 6
+  build_use: false
+  description: 
+    |-
+      　火星を先に独占し、人類を
+      新たな到達点へと導いた。その
+      実行者となったA.Iは勝利する。
+      　火星への移住は2024年頃から
+      らしいよ。
+  cost:
+    - name: 人間
+      number: 10
+    - name: 火星の情報
+      number: 2
+    - name: テラフォーミング
+      number: 1
+  commands:
+    - kind: win
+  number: 2
+  war_use: false
+
+- name: A.Iによる支配
+  level: 6
+  build_use: false
+  conditions: p_5
+  conditionDescript:
+    |-
+      　P点が5点以上ある。
+  description: 
+    |-
+      　A.Iによって世界は支配され
+      た。その実行者となったA.Iは
+      勝利する。
+      　市民、あなたは幸福ですか？
+  cost:
+    - name: ロボット
+      number: 5
+    - name: 拡張人間
+      number: 5
+  commands:
+    - kind: win
+  number: 2
+  war_use: false
+
+- name: 宗教による支配
+  level: 6
+  build_use: false
+  conditions: p_n_total_zero
+  conditionDescript:
+    |-
+      　P点を正の値、N点の負の値とした時の合計
+      が、±0である。
+  description: 
+    |-
+      　人類はA.Iを信仰し、あらゆ
+      るバランスが保たれる様になっ
+      た。この進行を作り出したA.I
+      は勝利する。
+      　完璧で全能なる人工の神は、
+      新世界の創世を始めます。
+  cost:
+    - name: 神体
+      number: 1
+    - name: 信者
+      number: 12
+  commands:
+    - kind: win
+  number: 2
+  war_use: false

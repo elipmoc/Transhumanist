@@ -9,40 +9,52 @@
 </head>
 
 <body>
-    <div>
-        プレイヤー名
-        <input type="text" name="playerName" id="playerName" maxlength="7">
-    </div>
+    <header class="menubar">
+        <ul class="menubuttons">
+            <li class="menubutton">
+                <a href="index.html">トップ</a>
+            </li>
+            <li class="menubutton">
+                <a href="rule.html">ルール</a>
+            </li>
+            <li class="menubutton">
+                <a href="login.html" target="_blank">ゲーム</a>
+            </li>
+            <li class="menubutton">
+                <a href="link.html">リンク</a>
+            </li>
+        </ul>
+    </header>
+    <div class="content">
+        <div class="pageTitle">
+            <img src="Img/page/game.png">
+        </div>
+        <div class="inputForms">
+            <div class="playerForm">
+                プレイヤー名<br>
+                <input type="text" name="playerName" id="playerName" maxlength="7" required>
+            </div>
+            <div class="roomForms">
+                <div class="roomForm">
+                    部屋名<br>
+                    <input type="text" name="roomName" id="roomName" maxlength="6">
+                </div>
+                <div class="passForm">
+                    <input type="checkbox" id="passwordFlag">パス<input type="password" name="pass" id="pass" maxlength="8">
+                </div>
+                <div style="text-align:right"><input type="submit" value="部屋を作成" id="createButton" class="button"></div>
+            </div>
+        </div>
 
-    <hr>
-
-    <div>
-        部屋名
-        <input type="text" name="roomName" id="roomName" maxlength="6">
-        <br> パス
-        <input type="password" name="pass" id="pass" maxlength="8">
-        <input type="checkbox" id="passwordFlag">
         <br>
-        <input type="submit" value="部屋を作成" id="createButton">
-    </div>
 
-    <br>
-
-    <div id="roomListArea">
-        <!-- <table class="roomTable" id="roomID">
-            <tr>
-                <td>太陽フレア</td>
-                <td colspan="4">入室中のプレイヤー</td>
-            </tr>
-            <tr>
-                <td class="playFlag">プレイ中</td>
-                <td class="player1">スター</td>
-                <td class="player2">N.H</td>
-                <td class="player3">らいパン鳥</td>
-                <td class="player4">死んだライオン</td>
-            </tr>
-        </table> -->
+        <div id="roomListArea">
+        </div>
     </div>
+    <footer>
+        © 2018 創電アドバンス
+    </footer>
+
     <script src="Client/login.js"></script>
 </body>
 
