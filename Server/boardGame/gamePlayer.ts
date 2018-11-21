@@ -147,6 +147,21 @@ export class GamePlayer {
                 };
                 this.candidateResources.Value = data;
                 break;
+            case "地震":
+                this.resourceList.deleteResource("人間", diceNumber);
+                this.eventClearCallback();
+                break;
+            case "暴風":
+                if (diceNumber != 3) {
+                    //消すリソースを1つ選択してください
+                }
+                break;
+            case "未知の病気":
+                let num = diceNumber;
+                if (diceNumber > this.resourceList.getCount("人間")) num = this.resourceList.getCount("人間");
+                this.resourceList.changeResource("人間", "病人", num);
+                this.eventClearCallback();
+                break;
         }
     }
     resourceSelectAfterEvent(data: SelectedGetResourceId) {
