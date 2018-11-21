@@ -117,12 +117,8 @@ export class GamePlayer {
                 this.diceRoll();
                 break;
             case "サブカルチャー":
-                this.state.subNegative(1);
+                this.state.addNegative(-1);
                 this.eventClearCallback();
-                break;
-            case "AIへの反抗":
-                break;
-            case "AIへの友好":
                 break;
             case "隕石":
                 break;
@@ -198,7 +194,7 @@ export class GamePlayer {
         
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            if (this.nowEvent.name == "AIへの反抗" || this.nowEvent.name == "AIへの友好") this.state.temporarilyReset();
+            if (["AIへの反抗","AIへの友好"].includes(this.nowEvent.name)) this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
