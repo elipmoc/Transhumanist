@@ -33,6 +33,49 @@ export class BuildActionList {
         if (idx != -1)
             this.buildActionList.setAt(idx, name);
     }
+    deleteBuildAction(name: ActionCardName,num:number) {
+        let arr = this.buildActionList.Value;
+        let count = 0;
+        
+        arr = arr.map(x => {
+            if (count > num) return x;
+            if (x != name) return x;
+
+            count++;
+            return null;
+        });
+    }
+
+    //randomに消す
+    public randomDeleteResource(num: number) {
+        let arr = this.buildActionList.Value;
+
+        //乱数で消す数以上リソースがある
+        if (this.buildActionList.Value.length >= num) {
+            let target: number[];
+            target = new Array(num);
+            target.fill(-1);
+
+            for (let i = 0; i > target.length; i++) {
+                let ranNum = Math.floor(Math.random() * this.buildActionList.Value.length);
+                while (!target.includes(ranNum)) {
+                    ranNum = Math.floor(Math.random() * this.buildActionList.Value.length);
+                }
+                target[i] = ranNum;
+            }
+
+            arr = arr.map((x, index) => {
+                if (target.includes(index)) return null;
+                return x;
+            });
+        }
+        //消す数より少なかった
+        else {
+            arr.fill(null);
+        }
+        this.buildActionList.Value = arr;
+    }
+
     //カードが使用されるときに呼ばれる関数をセット
     onUseBuildActionCard(f: (card: ActionCardYamlData) => void) {
         this.useBuildActionCardCallback = f;
