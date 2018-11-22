@@ -28,6 +28,16 @@ export class BuildActionList {
         this.buildActionList.Value = new Array(30);
         this.buildActionList.Value.fill(null);
     }
+
+    //null以外の数
+    getAllCount() {
+        let count = 0;
+        this.buildActionList.Value.forEach(x => {
+            if (x != null) count++;
+        });
+        return count;
+    }
+
     addBuildAction(name: ActionCardName) {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
         if (idx != -1)
@@ -49,17 +59,18 @@ export class BuildActionList {
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.buildActionList.Value;
+        let allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
-        if (this.buildActionList.Value.length >= num) {
+        if (allCount >= num) {
             let target: number[];
             target = new Array(num);
             target.fill(-1);
 
             for (let i = 0; i > target.length; i++) {
-                let ranNum = Math.floor(Math.random() * this.buildActionList.Value.length);
+                let ranNum = Math.floor(Math.random() * allCount);
                 while (!target.includes(ranNum)) {
-                    ranNum = Math.floor(Math.random() * this.buildActionList.Value.length);
+                    ranNum = Math.floor(Math.random() * allCount);
                 }
                 target[i] = ranNum;
             }

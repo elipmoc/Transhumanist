@@ -83,17 +83,18 @@ export class ResourceList {
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.resourceList.Value;
+        let allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
-        if (this.resourceList.Value.length >= num) {
+        if (allCount >= num) {
             let target: number[];
             target = new Array(num);
             target.fill(-1);
 
             for (let i = 0; i > target.length; i++) {
-                let ranNum = Math.floor(Math.random() * this.resourceList.Value.length);
+                let ranNum = Math.floor(Math.random() * allCount);
                 while (!target.includes(ranNum)) {
-                    ranNum = Math.floor(Math.random() * this.resourceList.Value.length);
+                    ranNum = Math.floor(Math.random() * allCount);
                 }
                 target[i] = ranNum;
             }
@@ -136,6 +137,15 @@ export class ResourceList {
     //指定したリソースがいくつあるかを計算する
     getCount(name: ResourceName) {
         return this.resourceList.Value.filter(x => x == name).length;
+    }
+
+    //null以外の数
+    getAllCount(){
+        let count = 0;
+        this.resourceList.Value.forEach(x => {
+            if (x != null) count++;
+        });
+        return count;
     }
 
     //カードのコストを支払う。
