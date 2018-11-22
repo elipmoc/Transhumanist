@@ -43,6 +43,7 @@ export class BuildActionList {
         if (idx != -1)
             this.buildActionList.setAt(idx, name);
     }
+
     deleteBuildAction(name: ActionCardName,num:number) {
         let arr = this.buildActionList.Value;
         let count = 0;
@@ -54,6 +55,9 @@ export class BuildActionList {
             count++;
             return null;
         });
+
+        this.buildActionList.Value = arr;
+        this.crowdList();
     }
 
     //randomに消す
@@ -84,6 +88,20 @@ export class BuildActionList {
         else {
             arr.fill(null);
         }
+        this.buildActionList.Value = arr;
+        this.crowdList();
+    }
+
+    crowdList() {
+        let nullCount = 0;
+        let arr = this.buildActionList.Value;
+        arr.fill(null);
+
+        this.buildActionList.Value.forEach((x, index) => {
+            if (x != null) arr[index - nullCount] = x;
+            else nullCount++;
+        });
+
         this.buildActionList.Value = arr;
     }
 

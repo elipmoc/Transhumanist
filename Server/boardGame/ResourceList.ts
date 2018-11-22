@@ -78,6 +78,7 @@ export class ResourceList {
             return null;
         });
         this.resourceList.Value = arr;
+        this.crowdList();
     }
 
     //randomに消す
@@ -109,6 +110,7 @@ export class ResourceList {
             arr.fill(null);
         }
         this.resourceList.Value = arr;
+        this.crowdList();
     }
 
     //リソースを任意個数交換
@@ -146,6 +148,19 @@ export class ResourceList {
             if (x != null) count++;
         });
         return count;
+    }
+
+    crowdList() {
+        let nullCount = 0;
+        let arr = this.resourceList.Value;
+        arr.fill(null);
+
+        this.resourceList.Value.forEach((x,index) => {
+            if (x != null) arr[index - nullCount] = x;
+            else nullCount++;
+        });
+
+        this.resourceList.Value = arr;
     }
 
     //カードのコストを支払う。
