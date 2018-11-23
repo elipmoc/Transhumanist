@@ -1,13 +1,22 @@
 import { ActionCardHover } from "../views/actionCardHover";
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
+import { SocketBinder } from "../../socketBinder";
 import { SocketBinderList } from "../../socketBinderList";
 import { SelectBuildActionData } from "../../../Share/selectBuildActionData";
 import { PlayerBuildAreaBase } from "../views/bases/playerBuildAreaBase";
 import * as playerBuildAreas from "../views/playerBuildActionAreas";
+import { BuildthrowDialog } from "../views/buildthrowDialog";
+import { BuildOver } from "../../../Share/elementOver";
+
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
+
+    const buildOver = new SocketBinder<BuildOver | null>("BuildOver", bindParams.socket);
+    const buildthrowDialog = new BuildthrowDialog();
+
+    
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
         new playerBuildAreas.Player1BuildArea(bindParams.imgQueue),
         new playerBuildAreas.Player2BuildArea(bindParams.imgQueue),
@@ -43,7 +52,28 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         });
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
-        const selectBuildActionData: SelectBuildActionData = { iconId: cardIcon.IconId };
-        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        if (buildOver.Value.overCount != 0) 
+            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        bindParams.layerManager.update();
+
+        //const selectBuildActionData: SelectBuildActionData = { iconId: cardIcon.IconId };
+        //bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+    });
+
+    buildOver.onUpdate(x => {
+        if (x.overCount != 0) {
+            buildthrowDialog.setThrowBuildNum(x.overCount, x.causeText);
+            buildthrowDialog.visible = true;
+        } else {
+            playerBuildActionAreaList[0].unSelectFrameVisible();
+            buildthrowDialog.visible = false;
+        }
+        bindParams.layerManager.update();
+    })
+    buildthrowDialog.visible = false;
+    buildthrowDialog.onClick(() => {
+        const throwBuild = playerBuildActionAreaList[0].getSelectedAllIconId();
+        bindParams.socket
+            .emit("ThrowBuild", JSON.stringify(throwBuild));
     });
 }

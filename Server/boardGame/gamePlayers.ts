@@ -19,6 +19,7 @@ export class GamePlayers {
     private turnFinishButtonClickCallback: (player: GamePlayer) => void;
     private endGameRequestCallback: () => void;
     private eventCardDrawer: EventCardDrawer;
+    private currentPlayerId: number;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
@@ -45,8 +46,14 @@ export class GamePlayers {
             });
             boardSocketManager.addSocketBinder(endGame);
             player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
+            player.onEventClearCallback(() => this.eventClearCheck(player));
+            player.onExileCallback((diceNumber) => this.exileMove(player,diceNumber));
             this.gamePlayerList.push(player);
         }
+    }
+
+    exileMove(player:GamePlayer,diceNumber:number) {
+        this.gamePlayerList[(player.PlayerId + diceNumber) % this.getNowPlayers.length].addExileResource(player.ExileNumber);
     }
 
     getNowPlayers() {
@@ -99,21 +106,37 @@ export class GamePlayers {
 
     initTurnSet() {
         this.turnManager.setPlayers(this.getNowPlayers());
-        const firstTurnPlayerId = this.turnManager.nextPlayer()!.playerId;
+        this.currentPlayerId = this.turnManager.nextPlayer()!.playerId;
         this.eventCardDrawer.draw();
-        this.getNowPlayers().forEach(player => {
-            if (player.PlayerId != firstTurnPlayerId) player.setWait();
-            else player.setMyTurn(this.eventCardDrawer.NowEvent!);
-        });
+        this.startEvent();
     }
 
     rotateTurn() {
         const { playerId, turnChanged } = this.turnManager.nextPlayer();
-        if (turnChanged) this.eventCardDrawer.draw();
+        this.currentPlayerId = playerId;
+        if (turnChanged) {
+            this.eventCardDrawer.draw();
+            this.startEvent();
+        }
+        else this.playerTurnSet();
+    }
+
+    playerTurnSet() {
         this.getNowPlayers().forEach(player => {
-            if (player.PlayerId != playerId) player.setWait();
+            if (player.PlayerId != this.currentPlayerId) player.setWait();
             else player.setMyTurn(this.eventCardDrawer.NowEvent!);
         })
+    }
+
+    eventClearCheck(player:GamePlayer) {
+        let clearFlag: boolean[] = [false,false,false,false];
+        player.setEventClear();
+        
+        this.getNowPlayers().forEach((player,index) => {
+            clearFlag[index] = player.Condition == GamePlayerCondition.EventClear;
+        });
+
+        if (clearFlag.filter(x => x == true).length == 4) this.playerTurnSet();
     }
 
     winWar(playerId: number) {
@@ -124,6 +147,12 @@ export class GamePlayers {
     }
     startWar(playerId: number) {
         this.getNowPlayers().find(x => x.PlayerId == playerId)!.startWar();
+    }
+
+    startEvent() {
+        this.getNowPlayers().forEach(player => {
+            player.setEvent(this.eventCardDrawer.NowEvent!);
+        });
     }
 
 }
