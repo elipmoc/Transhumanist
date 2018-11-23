@@ -121,16 +121,32 @@ export class GamePlayer {
                 this.eventClearCallback();
                 break;
             case "隕石":
+                this.diceRoll();
                 break;
             case "亡命":
+                if (this.state.State.negative >= 3) {
+                    this.diceRoll();
+                }
                 break;
             case "天変地異":
+                this.diceRoll();
                 break;
             case "独立傾向":
+                if (this.resourceList.getCount("ロボット") >= 1) {
+                    this.diceRoll();
+                }
+                else this.eventClearCallback();
                 break;
             case "内乱":
+                if (this.state.State.negative >= 6) {
+                    //任意の設置済みアクションカードを2つ選択して削除
+                    this.buildActionList.setNowEvent(true);
+                    this.buildActionList.deleteRequest(2,"内乱の効果が適用されました。");
+                }
                 break;
             case "ブラックホール":
+                this.resourceList.randomDeleteResource(1);
+                this.eventClearCallback();
                 break;
 
             default:
@@ -146,6 +162,42 @@ export class GamePlayer {
                     resource_names: this.nowEvent.resources!
                 };
                 this.candidateResources.Value = data;
+                break;
+            case "地震":
+                this.resourceList.deleteResource("人間", diceNumber);
+                this.eventClearCallback();
+                break;
+            case "暴風":
+                if (diceNumber != 3) {
+                    //消すリソースを1つ選択してください
+                    this.resourceList.setNowEvent(true);
+                    this.resourceList.deleteRequest(1, "暴風の効果が適用されました。");
+                }
+                break;
+            case "未知の病気":
+                let humanNum = diceNumber;
+                if (diceNumber > this.resourceList.getCount("人間")) humanNum = this.resourceList.getCount("人間");
+                this.resourceList.changeResource("人間", "病人", humanNum);
+                this.eventClearCallback();
+                break;
+            case "隕石":
+                this.resourceList.randomDeleteResource(diceNumber);
+                this.eventClearCallback();
+                break;
+            case "亡命":
+                //サイコロの値分、右にずれた人に人間を３つ移動。リソース上限は有効。
+                break;
+            case "天変地異":
+                //サイコロの値分、リソースと設置済みを消す。
+                this.resourceList.randomDeleteResource(diceNumber);
+                this.buildActionList.randomDeleteResource(diceNumber);
+                this.eventClearCallback();
+                break;
+            case "独立傾向":
+                let robotNum = diceNumber;
+                if (diceNumber > this.resourceList.getCount("ロボット")) robotNum = this.resourceList.getCount("ロボット");
+                this.resourceList.changeResource("ロボット", "人間", robotNum);
+                this.eventClearCallback();
                 break;
         }
     }
@@ -185,6 +237,10 @@ export class GamePlayer {
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>("selectedGetResourceId" + playerId);
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
+        this.resourceList.onEventClearCallback(() => {
+            this.eventClearCallback;
+            this.resourceList.setNowEvent(false);
+        });
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
@@ -220,6 +276,10 @@ export class GamePlayer {
 
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(boardSocketManager, playerId);
+        this.buildActionList.onEventClearCallback(() => {
+            this.eventClearCallback;
+            this.buildActionList.setNowEvent(false);
+        });
         const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
 
         //アクションカードの使用処理
