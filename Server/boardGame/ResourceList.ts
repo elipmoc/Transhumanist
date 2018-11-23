@@ -12,6 +12,14 @@ export class ResourceList {
     private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
 
+    //頑張ってリファクタリングして
+    private nowEvent = false;
+    setNowEvent(flag:boolean){this.nowEvent = flag}
+    private eventClearCallback: () => void;
+    onEventClearCallback(f: () => void) {
+        this.eventClearCallback = f;
+    }
+
     clear() {
         this.resourceList.Value = new Array(30);
         this.resourceList.Value.fill(null);
@@ -48,6 +56,7 @@ export class ResourceList {
                 this.resourceReserveList.update();
                 this.resourceList.update();
 
+                if (this.nowEvent) this.eventClearCallback();
             }
         });
         boardSocketManager.addSocketBinder(this.resourceList, this.resourceOver, this.throwResource, this.resourceReserveList);

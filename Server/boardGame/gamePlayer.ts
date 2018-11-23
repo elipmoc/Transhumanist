@@ -168,6 +168,7 @@ export class GamePlayer {
             case "暴風":
                 if (diceNumber != 3) {
                     //消すリソースを1つ選択してください
+                    this.resourceList.setNowEvent(true);
                     this.resourceList.deleteRequest(1, "暴風の効果が適用されました。");
                 }
                 break;
@@ -234,6 +235,10 @@ export class GamePlayer {
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>("selectedGetResourceId" + playerId);
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
+        this.resourceList.onEventClearCallback(() => {
+            this.eventClearCallback;
+            this.resourceList.setNowEvent(false);
+        });
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
