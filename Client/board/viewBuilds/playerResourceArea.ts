@@ -9,7 +9,7 @@ import { ResourceDialog } from "../views/resourceDialog";
 import { SocketBinder } from "../../socketBinder";
 import { ResourceReserveArea } from "../views/resourceReserveArea";
 import { ThrowResource } from "../../../Share/throwResource";
-import { ResourceOver } from "../../../Share/resourceOver";
+import { ResourceOver } from "../../../Share/elementOver";
 import { LayerTag } from "../../board";
 
 //プレイヤーのリソース欄生成

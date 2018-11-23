@@ -140,6 +140,8 @@ export class GamePlayer {
             case "内乱":
                 if (this.state.State.negative >= 6) {
                     //任意の設置済みアクションカードを2つ選択して削除
+                    this.buildActionList.setNowEvent(true);
+                    this.buildActionList.deleteRequest(2,"内乱の効果が適用されました。");
                 }
                 break;
             case "ブラックホール":
@@ -274,6 +276,10 @@ export class GamePlayer {
 
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(boardSocketManager, playerId);
+        this.buildActionList.onEventClearCallback(() => {
+            this.eventClearCallback;
+            this.buildActionList.setNowEvent(false);
+        });
         const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
 
         //アクションカードの使用処理

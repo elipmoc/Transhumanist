@@ -3,7 +3,7 @@ import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/re
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
 import { ThrowResource } from "../../Share/throwResource";
-import { ResourceOver } from "../../Share/resourceOver";
+import { ResourceOver } from "../../Share/elementOver";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 
 export class ResourceList {
@@ -54,6 +54,7 @@ export class ResourceList {
                 });
                 this.resourceReserveList.Value.fill(null);
                 this.resourceReserveList.update();
+                this.crowdList();
                 this.resourceList.update();
 
                 if (this.nowEvent) this.eventClearCallback();

@@ -3,10 +3,21 @@ import { ActionCardName, ActionCardYamlData } from "../../Share/Yaml/actionCardY
 import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
+import { BuildOver } from "../../Share/elementOver";
 
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
     private useBuildActionCardCallback: (card: ActionCardYamlData) => void;
+    private buildOver: SocketBinder.Binder<BuildOver>;
+    private throwBuild: SocketBinder.EmitReceiveBinder<number[]>;
+
+    //頑張ってリファクタリングして
+    private nowEvent = false;
+    setNowEvent(flag: boolean) { this.nowEvent = flag }
+    private eventClearCallback: () => void;
+    onEventClearCallback(f: () => void) {
+        this.eventClearCallback = f;
+    }
 
     constructor(boardSocketManager: SocketBinder.Namespace, playerId: number) {
         this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
@@ -20,7 +31,24 @@ export class BuildActionList {
             if (useBuildActionCard) {
                 this.useBuildActionCardCallback(useBuildActionCard)
             }
-        })
+        });
+        this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, ["player" + playerId]);
+        this.buildOver.Value.overCount = 0;
+        this.throwBuild = new SocketBinder.EmitReceiveBinder("ThrowBuild", true, ["player" + playerId])
+        this.throwBuild.OnReceive(throwBuild => {
+            console.log(`throwBuild: ${throwBuild}`);
+            if (this.buildOver.Value.overCount == throwBuild.length) {
+                this.buildOver.Value.overCount = 0;
+                throwBuild.forEach(id => {
+                    this.buildActionList.Value[id] = null;
+                });
+                this.crowdList();
+                this.buildActionList.update();
+
+                if (this.nowEvent) this.eventClearCallback();
+            }
+        });
+        
         boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction);
         this.clear();
     }
@@ -90,6 +118,14 @@ export class BuildActionList {
         }
         this.buildActionList.Value = arr;
         this.crowdList();
+    }
+
+    deleteRequest(num: number, text: string) {
+        const emitValue: BuildOver = {
+            overCount: num,
+            causeText: text
+        };
+        this.buildOver.Value = emitValue;
     }
 
     crowdList() {

@@ -28,7 +28,13 @@ export class PlayerBuildAreaBase extends createjs.Container {
     onMouseOutedIcon(onMouseOutIconCallBack: () => void) {
         this.buildList.onMouseOutedIcon(onMouseOutIconCallBack);
     }
+    unSelectFrameVisible() {
+        this.buildList.unSelectFrameVisible();
+    }
 
+    getSelectedAllIconId() {
+        return this.buildList.getSelectedAllIconId();
+    }
     setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: ImageQueue) {
         this.buildList.setResource(iconId, buildActionCardName, buildActionIndex, queue);
     }
