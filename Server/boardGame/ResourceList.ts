@@ -14,7 +14,7 @@ export class ResourceList {
 
     //頑張ってリファクタリングして
     private nowEvent = false;
-    setNowEvent(flag:boolean){this.nowEvent = flag}
+    setNowEvent(flag: boolean) { this.nowEvent = flag }
     private eventClearCallback: () => void;
     onEventClearCallback(f: () => void) {
         this.eventClearCallback = f;
@@ -36,7 +36,7 @@ export class ResourceList {
         this.resourceReserveList.Value = new Array(12);
         this.resourceReserveList.Value.fill(null);
         this.resourceOver = new SocketBinder.Binder<ResourceOver>("ResourceOver", true, ["player" + playerId]);
-        this.resourceOver.Value.overCount = 0;
+        this.resourceOver.Value = { overCount: 0, causeText: "" };
         this.throwResource = new SocketBinder.EmitReceiveBinder("ThrowResource", true, ["player" + playerId])
         this.throwResource.OnReceive(throwResource => {
             console.log(`throwResource: ${throwResource.resourceList},,${throwResource.resourceReserveList}`);
@@ -130,7 +130,7 @@ export class ResourceList {
     }
 
     //リソースを任意個数交換
-    public changeResource(targetName: ResourceName,changeName :ResourceName, num: number) {
+    public changeResource(targetName: ResourceName, changeName: ResourceName, num: number) {
         //ちなみに無くてもスルーします。
         let arr = this.resourceList.Value;
         let count = 0;
@@ -166,7 +166,7 @@ export class ResourceList {
     }
 
     //null以外の数
-    getAllCount(){
+    getAllCount() {
         let count = 0;
         this.resourceList.Value.forEach(x => {
             if (x != null) count++;
@@ -179,7 +179,7 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         arr.fill(null);
 
-        this.resourceList.Value.forEach((x,index) => {
+        this.resourceList.Value.forEach((x, index) => {
             if (x != null) arr[index - nullCount] = x;
             else nullCount++;
         });

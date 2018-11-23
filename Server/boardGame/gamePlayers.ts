@@ -9,6 +9,7 @@ import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
+import { WarList } from "./warList";
 
 
 export class GamePlayers {
@@ -20,12 +21,14 @@ export class GamePlayers {
     private endGameRequestCallback: () => void;
     private eventCardDrawer: EventCardDrawer;
     private currentPlayerId: number;
+    private warList: WarList;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
         this.getNowPlayers().forEach(x => x.reset());
         this.turnManager.reset();
         this.eventCardDrawer.reset();
+        this.warList.reset();
     }
 
     constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
@@ -33,6 +36,7 @@ export class GamePlayers {
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
         this.eventCardDrawer = eventCardDrawer;
         this.turnManager = new TurnManager(boardSocketManager);
+        this.warList = new WarList(boardSocketManager);
         new LeaveRoom(boardSocketManager)
             .onLeaveRoom(id =>
                 this.leaveRoomCallback(this.gamePlayerList[id])
@@ -47,12 +51,20 @@ export class GamePlayers {
             boardSocketManager.addSocketBinder(endGame);
             player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
             player.onEventClearCallback(() => this.eventClearCheck(player));
-            player.onExileCallback((diceNumber) => this.exileMove(player,diceNumber));
+            player.onExileCallback((diceNumber) => this.exileMove(player, diceNumber));
+            player.onStartWar(targetPlayerId => this.warList.startWar(player.PlayerId, targetPlayerId));
+            player.onSurrender(() => {
+                const winPlayerId = this.warList.surrender(player.PlayerId);
+                if (winPlayerId) {
+                    this.gamePlayerList[winPlayerId].winWar();
+                    return true;
+                } return false;
+            });
             this.gamePlayerList.push(player);
         }
     }
 
-    exileMove(player:GamePlayer,diceNumber:number) {
+    exileMove(player: GamePlayer, diceNumber: number) {
         this.gamePlayerList[(player.PlayerId + diceNumber) % this.getNowPlayers.length].addExileResource(player.ExileNumber);
     }
 
@@ -128,25 +140,10 @@ export class GamePlayers {
         })
     }
 
-    eventClearCheck(player:GamePlayer) {
-        let clearFlag: boolean[] = [false,false,false,false];
+    eventClearCheck(player: GamePlayer) {
         player.setEventClear();
-        
-        this.getNowPlayers().forEach((player,index) => {
-            clearFlag[index] = player.Condition == GamePlayerCondition.EventClear;
-        });
-
-        if (clearFlag.filter(x => x == true).length == 4) this.playerTurnSet();
-    }
-
-    winWar(playerId: number) {
-        this.getNowPlayers().find(x => x.PlayerId == playerId)!.winWar();
-    }
-    loseWar(playerId: number) {
-        this.getNowPlayers().find(x => x.PlayerId == playerId)!.loseWar();
-    }
-    startWar(playerId: number) {
-        this.getNowPlayers().find(x => x.PlayerId == playerId)!.startWar();
+        if (this.getNowPlayers().every(x => x.Condition == GamePlayerCondition.EventClear))
+            this.playerTurnSet();
     }
 
     startEvent() {

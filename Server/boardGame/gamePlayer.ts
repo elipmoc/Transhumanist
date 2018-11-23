@@ -15,6 +15,7 @@ import { CandidateResources } from "../../Share/candidateResources";
 import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
+import { War, WarSuccessFlag } from "./war";
 
 export class GamePlayer {
     private playerId: number;
@@ -27,7 +28,8 @@ export class GamePlayer {
     private beforeCond: number;
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
-    private warFlag = false;
+    // private warFlag = false;
+    private war: War;
     private buildActionList: BuildActionList;
     //一度だけアクションカードをノーコストで使用できるようにするフラグ
     private onceNoCostFlag = false;
@@ -35,7 +37,7 @@ export class GamePlayer {
     private noUseHumanFlag = false;
     //現在のイベント名
     private nowEvent: Event;
-    
+
     //亡命する人の数
     private exileNumber: number;
 
@@ -48,6 +50,16 @@ export class GamePlayer {
     private exileCallback: (num: number) => void;
     onExileCallback(f: (num: number) => void) {
         this.exileCallback = f;
+    }
+    //プレイヤーが戦争を始めようとした時に呼ばれるコールバック
+    private startWarCallback: (targetPlayerId: number) => WarSuccessFlag;
+    onStartWar(f: (targetPlayerId: number) => WarSuccessFlag) {
+        this.startWarCallback = f;
+    }
+    //プレイヤーが戦争を降伏しようとした時に呼ばれるコールバック
+    private surrenderCallback: () => WarSuccessFlag;
+    onSurrender(f: () => WarSuccessFlag) {
+        this.surrenderCallback = f;
     }
 
     //設置アクションカードを使用できなくするフラグ
@@ -62,7 +74,7 @@ export class GamePlayer {
 
     reset() {
         this.state.reset();
-        this.warFlag = false;
+        this.war.reset();
         this.playerCond.Value = GamePlayerCondition.Start;
         this.actionCard.clear();
         this.resourceList.clear();
@@ -92,7 +104,7 @@ export class GamePlayer {
         }
         else if (eventCard.name != "少子化")
             this.resourceList.addResource("人間");
-        
+
         if (eventCard.name == "AIへの反抗") {
             this.state.temporarilyActivityRangeSet(this.state.State.negative * -1);
         }
@@ -100,7 +112,7 @@ export class GamePlayer {
             this.state.temporarilyActivityRangeSet(this.state.State.positive);
         }
 
-        if (this.warFlag)
+        if (this.war.getWarFlag())
             this.state.warStateChange();
         this.diceRoll();
     }
@@ -113,7 +125,7 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Event;
         this.nowEvent = eventCard;
 
-        switch(this.nowEvent.name){
+        switch (this.nowEvent.name) {
             case "ムーアの法則":
                 this.diceRoll();
                 break;
@@ -140,7 +152,7 @@ export class GamePlayer {
                     }
                     else {
                         this.exileNumber = this.resourceList.getCount("人間");
-                    }    
+                    }
                     this.resourceList.deleteRequest(this.exileNumber, "人間");
                     this.diceRoll();
                 }
@@ -158,7 +170,7 @@ export class GamePlayer {
                 if (this.state.State.negative >= 6) {
                     //任意の設置済みアクションカードを2つ選択して削除
                     this.buildActionList.setNowEvent(true);
-                    this.buildActionList.deleteRequest(2,"内乱の効果が適用されました。");
+                    this.buildActionList.deleteRequest(2, "内乱の効果が適用されました。");
                 }
                 break;
             case "ブラックホール":
@@ -171,7 +183,7 @@ export class GamePlayer {
                 break;
         }
     }
-    diceSelectAfterEvent(diceNumber:number) {
+    diceSelectAfterEvent(diceNumber: number) {
         switch (this.nowEvent.name) {
             case "ムーアの法則":
                 let data = {
@@ -233,7 +245,7 @@ export class GamePlayer {
     }
 
     //移民
-    addExileResource(num:number) {
+    addExileResource(num: number) {
         this.resourceList.addResource("人間", num);
     }
 
@@ -246,11 +258,10 @@ export class GamePlayer {
         this.actionCard.clear();
         this.diceList.Value = [];
         this.buildActionList.clear();
+        this.war.reset();
     }
 
-    winWar() { this.state.winWar(); this.warFlag = false; }
-    loseWar() { this.state.loseWar(); this.warFlag = false; }
-    startWar() { this.warFlag = true; }
+    winWar() { this.state.winWar(); this.war.win() }
 
     constructor(
         playerId: number,
@@ -262,8 +273,17 @@ export class GamePlayer {
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.resourceList.onEventClearCallback(() => {
-            this.eventClearCallback;
+            this.eventClearCallback();
             this.resourceList.setNowEvent(false);
+        });
+        this.war = new War(boardSocketManager, playerId);
+        this.war.onStartWar(targetPlayerId => this.startWarCallback(targetPlayerId));
+        this.war.onSurrender(() => {
+            if (this.surrenderCallback()) {
+                this.state.loseWar();
+                return true;
+            }
+            return false;
         });
         this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
@@ -271,10 +291,10 @@ export class GamePlayer {
         const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
-        
+
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            if (["AIへの反抗","AIへの友好"].includes(this.nowEvent.name)) this.state.temporarilyReset();
+            if (this.nowEvent && ["AIへの反抗", "AIへの友好"].includes(this.nowEvent.name)) this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
@@ -301,7 +321,7 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(boardSocketManager, playerId);
         this.buildActionList.onEventClearCallback(() => {
-            this.eventClearCallback;
+            this.eventClearCallback();
             this.buildActionList.setNowEvent(false);
         });
         const unavailable = new SocketBinder.TriggerBinder<void, UnavailableState>("Unavailable", true, [`player${playerId}`]);
@@ -319,7 +339,7 @@ export class GamePlayer {
                 }
                 if (
                     card.war_use
-                    && this.warFlag == false
+                    && this.war.getWarFlag() == false
                     && (this.noLimitUseWarActionFlag && this.state.State.negative >= 1) == false
                 ) {
                     unavailable.emit(UnavailableState.War);

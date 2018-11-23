@@ -21,13 +21,8 @@ export function build(bindParams: BindParams) {
     });
 
     declareWarSelectButton.visible = false;
-    declareWarSelectButton.OnselectedWarTarget((playerId: number, targetId: number) => {
-        let warPair: number[] = [playerId, targetId];
-
-        //ここで2つの引数で配列を作る。
-        //このemitには引数で作ったjsonを添える。
-        console.log(JSON.stringify(warPair));
-        bindParams.socket.emit("declareWar", JSON.stringify(warPair));
+    declareWarSelectButton.OnselectedWarTarget(targetPlayerId => {
+        bindParams.socket.emit("declareWar", targetPlayerId);
     });
     const warFlag = new SocketBinder<boolean>("warFlag", bindParams.socket);
 

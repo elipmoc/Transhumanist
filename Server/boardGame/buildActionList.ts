@@ -33,7 +33,7 @@ export class BuildActionList {
             }
         });
         this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, ["player" + playerId]);
-        this.buildOver.Value.overCount = 0;
+        this.buildOver.Value = { overCount: 0, causeText: "" };
         this.throwBuild = new SocketBinder.EmitReceiveBinder("ThrowBuild", true, ["player" + playerId])
         this.throwBuild.OnReceive(throwBuild => {
             console.log(`throwBuild: ${throwBuild}`);
@@ -48,7 +48,7 @@ export class BuildActionList {
                 if (this.nowEvent) this.eventClearCallback();
             }
         });
-        
+
         boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction);
         this.clear();
     }
@@ -72,10 +72,10 @@ export class BuildActionList {
             this.buildActionList.setAt(idx, name);
     }
 
-    deleteBuildAction(name: ActionCardName,num:number) {
+    deleteBuildAction(name: ActionCardName, num: number) {
         let arr = this.buildActionList.Value;
         let count = 0;
-        
+
         arr = arr.map(x => {
             if (count > num) return x;
             if (x != name) return x;
