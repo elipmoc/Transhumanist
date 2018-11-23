@@ -168,6 +168,7 @@ export class GamePlayer {
             case "暴風":
                 if (diceNumber != 3) {
                     //消すリソースを1つ選択してください
+                    this.resourceList.deleteRequest(1, "暴風の効果が適用されました。");
                 }
                 break;
             case "未知の病気":

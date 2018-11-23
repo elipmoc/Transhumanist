@@ -9,6 +9,7 @@ import { ResourceDialog } from "../views/resourceDialog";
 import { SocketBinder } from "../../socketBinder";
 import { ResourceReserveArea } from "../views/resourceReserveArea";
 import { ThrowResource } from "../../../Share/throwResource";
+import { ResourceOver } from "../../../Share/resourceOver";
 import { LayerTag } from "../../board";
 
 //プレイヤーのリソース欄生成
@@ -18,7 +19,7 @@ export function build(bindParams: BindParams) {
     bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
     bindParams.layerManager.add(LayerTag.Hover, resourceHover);
     resourceHover.visible = false;
-    const resourceOver = new SocketBinder<number | null>("ResourceOver", bindParams.socket);
+    const resourceOver = new SocketBinder<ResourceOver | null>("ResourceOver", bindParams.socket);
 
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new playerResourceAreas.Player1ResourceArea(bindParams.imgQueue),
@@ -58,7 +59,7 @@ export function build(bindParams: BindParams) {
         });
     }
     playerResourceAreaList[0].onClickIcon((cardIcon) => {
-        if (resourceOver.Value != 0)
+        if (resourceOver.Value.overCount != 0)
             cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.layerManager.update();
         const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
@@ -95,15 +96,15 @@ export function build(bindParams: BindParams) {
         bindParams.layerManager.update();
     });
     resourceReserveArea.onClickIcon((cardIcon) => {
-        if (resourceOver.Value != 0)
+        if (resourceOver.Value.overCount != 0)
             cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.layerManager.update();
     });
     bindParams.layerManager.add(LayerTag.Ui, resourceReserveArea);
 
     resourceOver.onUpdate(x => {
-        if (x != 0) {
-            resourceDialog.setThrowResourceNum(x);
+        if (x.overCount != 0) {
+            resourceDialog.setThrowResourceNum(x.overCount,x.causeText);
             resourceDialog.visible = true;
         } else {
             resourceReserveArea.unSelectFrameVisible();

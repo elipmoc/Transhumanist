@@ -3,12 +3,13 @@ import { ResourceName, GenerateResourceYamlDataArray } from "../../Share/Yaml/re
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
 import { ThrowResource } from "../../Share/throwResource";
+import { ResourceOver } from "../../Share/resourceOver";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 
 export class ResourceList {
     private resourceList: SocketBinder.BinderList<ResourceName | null>;
     private resourceReserveList: SocketBinder.BinderList<ResourceName | null>;
-    private resourceOver: SocketBinder.Binder<number>;
+    private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
 
     clear() {
@@ -16,7 +17,7 @@ export class ResourceList {
         this.resourceList.Value.fill(null);
         this.resourceReserveList.Value = new Array(12);
         this.resourceReserveList.Value.fill(null);
-        this.resourceOver.Value = 0;
+        this.resourceOver.Value.overCount = 0;
     }
 
     constructor(boardSocketManager: Namespace, playerId: number) {
@@ -26,13 +27,13 @@ export class ResourceList {
         this.resourceReserveList = new SocketBinder.BinderList<ResourceName | null>("ResourceReserveKindList", true, ["player" + playerId]);
         this.resourceReserveList.Value = new Array(12);
         this.resourceReserveList.Value.fill(null);
-        this.resourceOver = new SocketBinder.Binder<number>("ResourceOver", true, ["player" + playerId]);
-        this.resourceOver.Value = 0;
+        this.resourceOver = new SocketBinder.Binder<ResourceOver>("ResourceOver", true, ["player" + playerId]);
+        this.resourceOver.Value.overCount = 0;
         this.throwResource = new SocketBinder.EmitReceiveBinder("ThrowResource", true, ["player" + playerId])
         this.throwResource.OnReceive(throwResource => {
             console.log(`throwResource: ${throwResource.resourceList},,${throwResource.resourceReserveList}`);
-            if (this.resourceOver.Value == throwResource.resourceList.length + throwResource.resourceReserveList.length) {
-                this.resourceOver.Value = 0;
+            if (this.resourceOver.Value.overCount == throwResource.resourceList.length + throwResource.resourceReserveList.length) {
+                this.resourceOver.Value.overCount = 0;
                 throwResource.resourceList.forEach(id => {
                     this.resourceList.Value[id] = null;
                 })
@@ -57,7 +58,12 @@ export class ResourceList {
         for (let i = 0; i < num; i++) {
             let idx = this.resourceList.Value.findIndex(x => x == null);
             if (idx == -1) {
-                this.resourceOver.Value = this.resourceOver.Value + 1;
+                const emitValue: ResourceOver = {
+                    overCount: this.resourceOver.Value.overCount + 1,
+                    causeText: "リソースがいっぱいです。"
+                };
+                this.resourceOver.Value = emitValue;
+
                 idx = this.resourceReserveList.Value.findIndex(x => x == null);
                 this.resourceReserveList.setAt(idx, name);
             } else
@@ -126,6 +132,14 @@ export class ResourceList {
             return changeName;
         });
         this.resourceList.Value = arr;
+    }
+
+    deleteRequest(num: number, text: string) {
+        const emitValue: ResourceOver = {
+            overCount: num,
+            causeText: text
+        };
+        this.resourceOver.Value = emitValue;
     }
 
     setResourceList() {
