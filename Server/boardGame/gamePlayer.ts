@@ -36,10 +36,20 @@ export class GamePlayer {
     //現在のイベント名
     private nowEvent: Event;
     
+    //亡命する人の数
+    private exileNumber: number;
+
+    //イベントのクリア関数
     private eventClearCallback: () => void;
     onEventClearCallback(f: () => void) {
         this.eventClearCallback = f;
     }
+    //亡命処理のコールバック
+    private exileCallback: (num: number) => void;
+    onExileCallback(f: (num: number) => void) {
+        this.exileCallback = f;
+    }
+
     //設置アクションカードを使用できなくするフラグ
     private noUseBuildActionFlag = false;
     //世界大戦の開幕が起きてる時のフラグ
@@ -62,7 +72,7 @@ export class GamePlayer {
     get PlayerId() { return this.playerId; }
     get IsGameMaster() { return this.isGameMaster; }
     set IsGameMaster(x) { this.isGameMaster = x; }
-
+    get ExileNumber() { return this.exileNumber; }
     get Condition() { return this.playerCond.Value; }
 
     get GameState() { return this.state; }
@@ -125,6 +135,13 @@ export class GamePlayer {
                 break;
             case "亡命":
                 if (this.state.State.negative >= 3) {
+                    if (this.resourceList.getCount("人間") >= 3) {
+                        this.exileNumber = 3;
+                    }
+                    else {
+                        this.exileNumber = this.resourceList.getCount("人間");
+                    }    
+                    this.resourceList.deleteRequest(this.exileNumber, "人間");
                     this.diceRoll();
                 }
                 break;
@@ -185,7 +202,9 @@ export class GamePlayer {
                 this.eventClearCallback();
                 break;
             case "亡命":
-                //サイコロの値分、右にずれた人に人間を３つ移動。リソース上限は有効。
+                //サイコロの値分、左にずれた人に人間を３つ移動。リソース上限は有効。
+                this.exileCallback(diceNumber);
+                this.eventClearCallback();
                 break;
             case "天変地異":
                 //サイコロの値分、リソースと設置済みを消す。
@@ -211,6 +230,11 @@ export class GamePlayer {
     }
     setEventClear() {
         this.playerCond.Value = GamePlayerCondition.EventClear;
+    }
+
+    //移民
+    addExileResource(num:number) {
+        this.resourceList.addResource("人間", num);
     }
 
     clear() {
