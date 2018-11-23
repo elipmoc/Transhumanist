@@ -47,8 +47,13 @@ export class GamePlayers {
             boardSocketManager.addSocketBinder(endGame);
             player.onTurnFinishButtonClick(() => this.turnFinishButtonClickCallback(player));
             player.onEventClearCallback(() => this.eventClearCheck(player));
+            player.onExileCallback((diceNumber) => this.exileMove(player,diceNumber));
             this.gamePlayerList.push(player);
         }
+    }
+
+    exileMove(player:GamePlayer,diceNumber:number) {
+        this.gamePlayerList[(player.PlayerId + diceNumber) % this.getNowPlayers.length].addExileResource(player.ExileNumber);
     }
 
     getNowPlayers() {
@@ -124,14 +129,14 @@ export class GamePlayers {
     }
 
     eventClearCheck(player:GamePlayer) {
-        let clearFlag: boolean = false;
+        let clearFlag: boolean[] = [false,false,false,false];
         player.setEventClear();
         
-        this.getNowPlayers().forEach(player => {
-            clearFlag = player.Condition == GamePlayerCondition.EventClear;
+        this.getNowPlayers().forEach((player,index) => {
+            clearFlag[index] = player.Condition == GamePlayerCondition.EventClear;
         });
 
-        if (clearFlag) this.playerTurnSet();
+        if (clearFlag.filter(x => x == true).length == 4) this.playerTurnSet();
     }
 
     winWar(playerId: number) {
