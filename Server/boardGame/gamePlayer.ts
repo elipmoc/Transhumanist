@@ -28,7 +28,6 @@ export class GamePlayer {
     private beforeCond: number;
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
-    // private warFlag = false;
     private war: War;
     private buildActionList: BuildActionList;
     //一度だけアクションカードをノーコストで使用できるようにするフラグ
@@ -261,7 +260,7 @@ export class GamePlayer {
         this.war.reset();
     }
 
-    winWar() { this.state.winWar(); this.war.win() }
+    winWar() { this.state.winWar(); this.war.win(); }
 
     constructor(
         playerId: number,
@@ -277,9 +276,13 @@ export class GamePlayer {
             this.resourceList.setNowEvent(false);
         });
         this.war = new War(boardSocketManager, playerId);
-        this.war.onStartWar(targetPlayerId => this.startWarCallback(targetPlayerId));
+        this.war.onStartWar(targetPlayerId => {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn)
+                return this.startWarCallback(targetPlayerId);
+            return false;
+        });
         this.war.onSurrender(() => {
-            if (this.surrenderCallback()) {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn && this.surrenderCallback()) {
                 this.state.loseWar();
                 return true;
             }

@@ -54,17 +54,12 @@ export function build(bindParams: BindParams) {
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
 
     gamePlayerCondition.onUpdate(cond => {
-        switch (cond) {
-            case GamePlayerCondition.Start:
-                declareWarButton.visible = false;
-                break;
-            case GamePlayerCondition.MyTurn:
-                declareWarButton.visible = true;
-                break;
-            case GamePlayerCondition.Wait:
-                declareWarButton.visible = false;
-                break;
-
+        if (cond == GamePlayerCondition.MyTurn) {
+            declareWarButton.visible = true;
+        } else {
+            declareWarButton.visible = false;
+            declareWarDialog.visible = false;
+            declareWarSelectButton.visible = false;
         }
         bindParams.layerManager.update();
     })

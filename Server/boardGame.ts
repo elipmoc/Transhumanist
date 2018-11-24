@@ -8,12 +8,10 @@ import { SocketBinder } from "./socketBinder";
 import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
 import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
-//import { War } from "./boardGame/war";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
-import { EmitReceiveBinder } from "./socketBinder/emitReceiveBinder";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -24,7 +22,6 @@ export class BoardGame {
     private eventCardStack: EventCardStack;
     private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
-    //private war: War;
     private deleteMemberCallback: (uuid: string) => void;
     private deleteRoomCallback: (roomId: number) => void;
 
@@ -48,10 +45,6 @@ export class BoardGame {
         this.message = new Message(this.boardsocketManager);
         this.chatSe = new ChatSe(this.boardsocketManager);
 
-        /*this.war = new War(this.boardsocketManager);
-        this.war.onWin(playerId => this.gamePlayers.winWar(playerId));
-        this.war.onLose(playerId => this.gamePlayers.loseWar(playerId));
-        this.war.onStartWar(playerId => this.gamePlayers.startWar(playerId));*/
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid);

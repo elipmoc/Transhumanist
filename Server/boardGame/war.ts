@@ -20,7 +20,8 @@ export class War {
     constructor(boardSocketManager: SocketBinder.Namespace, playerId: number) {
         const declareWar = new SocketBinder.EmitReceiveBinder<number | null>("declareWar", true, [`player${playerId}`]);
         declareWar.OnReceive(x => {
-            if (x && this.warFlag == false && this.startWarCallback(x)) {
+
+            if (x != null && x != undefined && this.warFlag == false && this.startWarCallback(x)) {
                 this.warFlag = true;
             }
         });
