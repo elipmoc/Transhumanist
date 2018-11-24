@@ -21,7 +21,7 @@ export class WarList {
             if (same == undefined) {
                 this.warFlags[playerId1].Value = true;
                 this.warFlags[playerId2].Value = true;
-                this.warPairList.push({ playerId1: playerId1, playerId2: playerId2 });
+                this.warPairList.push({ playerId1, playerId2 });
                 return true;
             }
         }
