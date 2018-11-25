@@ -4,18 +4,11 @@ import { LayerTag } from "../../board";
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 
 export function build(bindParams: BindParams) {
-    const selectWinCardWindow = new SelectWinCardWindow(bindParams.yamls.actionCardHash,bindParams.imgQueue);
-    
+    const selectWinCardWindow = new SelectWinCardWindow(bindParams.yamls.actionCardHash, bindParams.imgQueue);
+    selectWinCardWindow.visible = false;
     //カードをクリックしたら発火
     selectWinCardWindow.cardOnClick((index) => {
-        console.log(index);
         bindParams.socket.emit("selectedWinCard", index);
-        selectWinCardWindow.visible = false;
-        bindParams.layerManager.update();
-    });
-
-    //ボタンをクリックしたら発火
-    selectWinCardWindow.buttonOnClick(() => {
         selectWinCardWindow.visible = false;
         bindParams.layerManager.update();
     });
@@ -27,6 +20,7 @@ export function build(bindParams: BindParams) {
         { currentNumber: 2, maxNumber: 2, dustNumber: 0 }
     ];
     selectWinCardWindow.setCardNumber(numberOFActionCard);
-        
+
     bindParams.layerManager.add(LayerTag.PopUp, selectWinCardWindow);
+    return selectWinCardWindow;
 }

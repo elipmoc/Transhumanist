@@ -36,7 +36,6 @@ export function viewBuild(bindParams: BindParams) {
     selectActionWindow.build(bindParams);
     selectDiceWindow.build(bindParams);
     selectResourceWindow.build(bindParams);
-    selectWinCardWindow.build(bindParams);
     unavailableDialog.build(bindParams);
     topWindowL.build(bindParams);
     chatForm.build(bindParams);
