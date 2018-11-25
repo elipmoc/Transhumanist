@@ -125,25 +125,16 @@ export class GamePlayer {
         this.nowEvent = eventCard;
 
         switch (this.nowEvent.name) {
-            case "ムーアの法則":
-                this.diceRoll();
-                break;
-            case "地震":
-                this.diceRoll();
-                break;
-            case "暴風":
-                this.diceRoll();
-                break;
-            case "未知の病気":
+            case "ムーアの法則": case "地震":
+            case "暴風": case "未知の病気":
+            case "隕石": case "天変地異":
                 this.diceRoll();
                 break;
             case "サブカルチャー":
                 this.state.addNegative(-1);
                 this.eventClearCallback();
                 break;
-            case "隕石":
-                this.diceRoll();
-                break;
+
             case "亡命":
                 if (this.state.State.negative >= 3) {
                     if (this.resourceList.getCount("人間") >= 3) {
@@ -156,9 +147,7 @@ export class GamePlayer {
                     this.diceRoll();
                 }
                 break;
-            case "天変地異":
-                this.diceRoll();
-                break;
+
             case "独立傾向":
                 if (this.resourceList.getCount("ロボット") >= 1) {
                     this.diceRoll();
@@ -260,6 +249,7 @@ export class GamePlayer {
         this.war.reset();
     }
 
+    //プレイヤーが戦争に勝利した時の処理
     winWar() { this.state.winWar(); this.war.win(); }
 
     constructor(
