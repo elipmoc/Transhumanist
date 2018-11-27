@@ -1,6 +1,6 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { DiceNumber } from "../../../Share/diceNumber";
+import { DiceData } from "../../../Share/diceData";
 
 
 //ダイスアイコン
@@ -30,8 +30,9 @@ export class DiceIcon extends createjs.Container {
 export class SelectDiceWindow extends createjs.Container {
     private diceIconList: DiceIcon[] = new Array();
     private callBack: (index: number) => void;
+    private causeText = new createjs.Text("");
 
-    setDiceList(diceList: DiceNumber[]) {
+    setDiceList(diceList: number[]) {
         this.diceIconList.forEach(x => this.removeChild(x));
         this.diceIconList = diceList.map(x => new DiceIcon(x));
         const diceOdd = diceList.length % 2 != 0;
@@ -70,7 +71,17 @@ export class SelectDiceWindow extends createjs.Container {
         descriptionText.x = global.canvasWidth / 2;
         descriptionText.y = global.canvasHeight / 2 - 130;
 
+        this.causeText.font = "16px Bold ＭＳ ゴシック";
+        this.causeText.color = "white";
+        this.causeText.shadow = createMyShadow();
+        this.causeText.x = global.canvasWidth / 2;
+        this.causeText.y = global.canvasHeight / 2 - 130 + 20;
+
         this.addChild(frame);
-        this.addChild(descriptionText);
+        this.addChild(descriptionText,this.causeText);
+    }
+
+    setText(text:string) {
+        this.causeText.text = text;
     }
 }

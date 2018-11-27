@@ -1,6 +1,6 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
-import { DiceNumber } from "../../Share/diceNumber";
+import { DiceData } from "../../Share/diceData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
@@ -22,7 +22,7 @@ export class GamePlayer {
     private uuid: string;
     private state: GamePlayerState;
     private resourceList: ResourceList;
-    private diceList: SocketBinder.Binder<DiceNumber[]>;
+    private diceData: SocketBinder.Binder<DiceData>;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private candidateResources: SocketBinder.Binder<CandidateResources>;
     private beforeCond: number;
@@ -113,7 +113,7 @@ export class GamePlayer {
 
         if (this.war.getWarFlag())
             this.state.warStateChange();
-        this.diceRoll();
+        this.diceRoll("テスト用テキスト");
     }
 
     setWait() {
@@ -128,7 +128,7 @@ export class GamePlayer {
             case "ムーアの法則": case "地震":
             case "暴風": case "未知の病気":
             case "隕石": case "天変地異":
-                this.diceRoll();
+                this.diceRoll(this.nowEvent.diceCause!);
                 break;
             case "サブカルチャー":
                 this.state.addNegative(-1);
@@ -144,13 +144,13 @@ export class GamePlayer {
                         this.exileNumber = this.resourceList.getCount("人間");
                     }
                     this.resourceList.deleteRequest(this.exileNumber, "人間");
-                    this.diceRoll();
+                    this.diceRoll(this.nowEvent.diceCause!);
                 }
                 break;
 
             case "独立傾向":
                 if (this.resourceList.getCount("ロボット") >= 1) {
-                    this.diceRoll();
+                    this.diceRoll(this.nowEvent.diceCause!);
                 }
                 else this.eventClearCallback();
                 break;
@@ -244,7 +244,7 @@ export class GamePlayer {
         this.state.clear();
         this.resourceList.clear();
         this.actionCard.clear();
-        this.diceList.Value = [];
+        this.diceData.Value.diceNumber = [];
         this.buildActionList.clear();
         this.war.reset();
     }
@@ -278,7 +278,7 @@ export class GamePlayer {
             }
             return false;
         });
-        this.diceList = new SocketBinder.Binder<DiceNumber[]>("diceList" + playerId);
+        this.diceData = new SocketBinder.Binder<DiceData>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
         const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
@@ -303,10 +303,11 @@ export class GamePlayer {
             this.playerCond.Value = this.beforeCond;
             console.log(`diceIndex:${diceIndex}`);
             if (this.playerCond.Value == GamePlayerCondition.Event) {
-                this.diceSelectAfterEvent(this.diceList.Value[diceIndex]);
+                this.diceSelectAfterEvent(this.diceData.Value.diceNumber[diceIndex]);
             }
         });
-        this.diceList.Value = [];
+        this.diceData.Value.diceNumber = [];
+        this.diceData.Value.text = "";
         this.playerId = playerId;
         this.uuid = "";
         this.state = new GamePlayerState(state);
@@ -351,7 +352,7 @@ export class GamePlayer {
                 unavailable.emit(UnavailableState.Event);
         });
         boardSocketManager.addSocketBinder(
-            state, this.diceList, unavailable,
+            state, this.diceData, unavailable,
             this.playerCond, selectDice, this.candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
         state.update();
@@ -371,8 +372,9 @@ export class GamePlayer {
         this.actionCard.drawActionCard(card);
     }
 
-    diceRoll() {
-        this.diceList.Value = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
+    diceRoll(causeText:string) {
+        this.diceData.Value.diceNumber = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
+        this.diceData.Value.text = causeText;
         this.beforeCond = this.playerCond.Value;
         this.playerCond.Value = GamePlayerCondition.Dice;
     }
