@@ -258,6 +258,7 @@ export class GamePlayer {
         actionCardStacks: ActionCardStacks
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>("candidateResources" + playerId);
+        this.diceData = new SocketBinder.Binder<DiceData>("diceList" + playerId);
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>("selectedGetResourceId" + playerId);
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
@@ -278,7 +279,6 @@ export class GamePlayer {
             }
             return false;
         });
-        this.diceData = new SocketBinder.Binder<DiceData>("diceList" + playerId);
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
         const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
@@ -306,8 +306,6 @@ export class GamePlayer {
                 this.diceSelectAfterEvent(this.diceData.Value.diceNumber[diceIndex]);
             }
         });
-        this.diceData.Value.diceNumber = [];
-        this.diceData.Value.text = "";
         this.playerId = playerId;
         this.uuid = "";
         this.state = new GamePlayerState(state);
@@ -372,9 +370,12 @@ export class GamePlayer {
         this.actionCard.drawActionCard(card);
     }
 
-    diceRoll(causeText:string) {
-        this.diceData.Value.diceNumber = new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll());
-        this.diceData.Value.text = causeText;
+    diceRoll(causeText: string) {
+        const Data: DiceData = {
+            diceNumber: new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll()),
+            text: causeText
+        };
+        this.diceData.Value = Data;
         this.beforeCond = this.playerCond.Value;
         this.playerCond.Value = GamePlayerCondition.Dice;
     }

@@ -42,6 +42,7 @@ export function build(bindParams: BindParams) {
                 SoundManager.sePlay("turnStart2");
                 break;
             case GamePlayerCondition.Event:
+            case GamePlayerCondition.Dice:
                 turnFinishButton.setText("");
                 turnFinishButton.visible = false;
                 break;

@@ -71,6 +71,7 @@ export class SelectDiceWindow extends createjs.Container {
         descriptionText.x = global.canvasWidth / 2;
         descriptionText.y = global.canvasHeight / 2 - 130;
 
+        this.causeText.textAlign = "center";
         this.causeText.font = "16px Bold ＭＳ ゴシック";
         this.causeText.color = "white";
         this.causeText.shadow = createMyShadow();

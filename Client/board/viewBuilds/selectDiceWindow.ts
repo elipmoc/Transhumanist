@@ -9,10 +9,12 @@ import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 export function build(bindParams: BindParams) {
     const diceData = new SocketBinder<DiceData>("diceList" + bindParams.playerId, bindParams.socket);
     const selectDiceWindow = new SelectDiceWindow();
+    selectDiceWindow.visible = false;
     selectDiceWindow.onSelectedDise((index: number) => {
         bindParams.socket.emit("selectDice", index);
     });
     diceData.onUpdate(diceData => {
+        if (!diceData) return;
         selectDiceWindow.setDiceList(diceData.diceNumber);
         selectDiceWindow.setText(diceData.text);
     });
