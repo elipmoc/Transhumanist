@@ -129,16 +129,20 @@ export class BuildActionList {
     }
 
     crowdList() {
-        let nullCount = 0;
-        let arr = this.buildActionList.Value;
-        arr.fill(null);
+        /*let nullCount = 0;
+            let arr = this.buildActionList.Value;
+            arr.fill(null);
 
-        this.buildActionList.Value.forEach((x, index) => {
-            if (x != null) arr[index - nullCount] = x;
-            else nullCount++;
+            this.buildActionList.Value.forEach((x, index) => {
+                if (x != null) arr[index - nullCount] = x;
+                else nullCount++;
+            });
+        
+        this.buildActionList.Value = arr; */
+        this.buildActionList.Value.sort((a, b) => {
+            if (b == null) return -1;
+            return 0;
         });
-
-        this.buildActionList.Value = arr;
         this.buildActionList.update();
     }
 

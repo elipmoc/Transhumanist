@@ -41,7 +41,7 @@ export class ResourceList {
         this.throwResource.OnReceive(throwResource => {
             console.log(`throwResource: ${throwResource.resourceList},,${throwResource.resourceReserveList}`);
             if (this.resourceOver.Value.overCount == throwResource.resourceList.length + throwResource.resourceReserveList.length) {
-                this.resourceOver.Value.overCount = 0;
+                this.resourceOver.Value = { overCount: 0, causeText: "" };
                 throwResource.resourceList.forEach(id => {
                     this.resourceList.Value[id] = null;
                 })
@@ -55,9 +55,10 @@ export class ResourceList {
                 this.resourceReserveList.Value.fill(null);
                 this.resourceReserveList.update();
                 this.crowdList();
-                this.resourceList.update();
 
-                if (this.nowEvent) this.eventClearCallback();
+                if (this.nowEvent) {
+                    this.eventClearCallback();
+                }
             }
         });
         boardSocketManager.addSocketBinder(this.resourceList, this.resourceOver, this.throwResource, this.resourceReserveList);
@@ -176,6 +177,7 @@ export class ResourceList {
     }
 
     crowdList() {
+        /*
         let nullCount = 0;
         let arr = this.resourceList.Value;
         arr.fill(null);
@@ -186,6 +188,11 @@ export class ResourceList {
         });
 
         this.resourceList.Value = arr;
+        */
+        this.resourceList.Value.sort((a, b) => {
+            if (b == null) return -1;
+            return 0;
+        });
         this.resourceList.update();
     }
 

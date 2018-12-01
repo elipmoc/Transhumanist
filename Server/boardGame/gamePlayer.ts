@@ -222,8 +222,10 @@ export class GamePlayer {
     }
     resourceSelectAfterEvent(data: SelectedGetResourceId) {
         if (this.nowEvent.name == "ムーアの法則") {
+            console.log(data.id);
+            console.log(this.nowEvent.resources![data.id]);
             this.resourceList.addResource(this.nowEvent.resources![data.id]);
-            if (data.allSelected) {
+            if (data.id <= 0) {
                 this.eventClearCallback();
             }
         }
@@ -294,7 +296,11 @@ export class GamePlayer {
         //選択されてリソース追加
         selectedGetResourceId.OnReceive(data => {
             if (this.playerCond.Value == GamePlayerCondition.Event) {
-                this.resourceSelectAfterEvent(data)
+                this.candidateResources.Value = {
+                    number: this.candidateResources.Value.number - 1,
+                    resource_names: this.candidateResources.Value.resource_names
+                };
+                this.resourceSelectAfterEvent(data);
             }
         });
 
