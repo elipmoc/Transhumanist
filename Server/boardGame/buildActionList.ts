@@ -139,6 +139,7 @@ export class BuildActionList {
         });
 
         this.buildActionList.Value = arr;
+        this.buildActionList.update();
     }
 
     //カードが使用されるときに呼ばれる関数をセット

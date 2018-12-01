@@ -142,6 +142,7 @@ export class ResourceList {
             return changeName;
         });
         this.resourceList.Value = arr;
+        this.resourceList.update();
     }
 
     deleteRequest(num: number, text: string) {
@@ -185,6 +186,7 @@ export class ResourceList {
         });
 
         this.resourceList.Value = arr;
+        this.resourceList.update();
     }
 
     //カードのコストを支払う。

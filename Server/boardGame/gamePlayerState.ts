@@ -47,12 +47,14 @@ export class GamePlayerState {
         this.state.Value.positive += num;
         if (this.state.Value.positive >= 30) this.state.Value.positive = 30;
         else if (this.state.Value.positive <= 0) this.state.Value.positive = 0;
+        this.state.update();
     }
 
     addNegative(num: number) {
         this.state.Value.negative += num;
         if (this.state.Value.negative >= 30) this.state.Value.negative = 30;
         else if (this.state.Value.negative <= 0) this.state.Value.negative = 0;
+        this.state.update();
     }
 
     //加減対応済み
@@ -70,6 +72,7 @@ export class GamePlayerState {
             if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
             else if (this.state.Value.activityRange <= 0) this.state.Value.activityRange = 0;
         }
+        this.state.update();
     }
 
     //加減対応済み
@@ -81,6 +84,7 @@ export class GamePlayerState {
         if (this.afterActivityRange >= 30) this.state.Value.activityRange = 30;
         else if (this.afterActivityRange <= 0) this.state.Value.activityRange = 0;
         else this.state.Value.activityRange = this.afterActivityRange;
+        this.state.update();
     }
 
     //加減対応済み
@@ -89,6 +93,7 @@ export class GamePlayerState {
         this.state.Value.activityRange = this.beforeActivityRange;
         if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
         else if (this.state.Value.activityRange <= 0) this.state.Value.activityRange = 0;
+        this.state.update();
     }
 
     setAICard(startStatusYamlData: StartStatusYamlData) {
