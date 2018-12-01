@@ -225,7 +225,7 @@ export class GamePlayer {
             console.log(data.id);
             console.log(this.nowEvent.resources![data.id]);
             this.resourceList.addResource(this.nowEvent.resources![data.id]);
-            if (data.id <= 0) {
+            if (this.candidateResources.Value.number <= 0) {
                 this.eventClearCallback();
             }
         }
