@@ -1,6 +1,5 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
-import { DiceData } from "../../Share/diceData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
@@ -22,7 +21,6 @@ export class GamePlayer {
     private uuid: string;
     private state: GamePlayerState;
     private resourceList: ResourceList;
-    //   private diceData: SocketBinder.Binder<DiceData>;
     private dice: Dice;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private candidateResources: SocketBinder.Binder<CandidateResources>;
@@ -105,7 +103,6 @@ export class GamePlayer {
 
         if (this.war.getWarFlag())
             this.state.warStateChange();
-        this.diceRoll("テスト用テキスト");
     }
 
     setWait() {
@@ -135,9 +132,10 @@ export class GamePlayer {
                     else {
                         this.exileNumber = this.resourceList.getCount("人間");
                     }
-                    this.resourceList.deleteRequest(this.exileNumber, "人間");
+                    this.resourceList.deleteResource("人間", this.exileNumber);
                     this.diceRoll(this.nowEvent.diceCause!);
-                }
+                } else
+                    this.eventClearCallback();
                 break;
 
             case "独立傾向":
@@ -151,7 +149,8 @@ export class GamePlayer {
                     //任意の設置済みアクションカードを2つ選択して削除
                     this.buildActionList.setNowEvent(true);
                     this.buildActionList.deleteRequest(2, "内乱の効果が適用されました。");
-                }
+                } else
+                    this.eventClearCallback();
                 break;
             case "ブラックホール":
                 this.resourceList.randomDeleteResource(1);
