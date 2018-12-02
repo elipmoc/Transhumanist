@@ -53,8 +53,7 @@ export class ResourceList {
                         this.addResource(name);
                 });
                 this.resourceReserveList.Value.fill(null);
-                this.resourceReserveList.update();
-                this.crowdList();
+                this.setCrowdList(this.resourceList.Value);
 
                 if (this.nowEvent) {
                     this.eventClearCallback();
@@ -94,8 +93,7 @@ export class ResourceList {
             count++;
             return null;
         });
-        this.resourceList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     //randomに消す
@@ -126,8 +124,7 @@ export class ResourceList {
         else {
             arr.fill(null);
         }
-        this.resourceList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     //リソースを任意個数交換
@@ -176,24 +173,14 @@ export class ResourceList {
         return count;
     }
 
-    crowdList() {
-        /*
-        let nullCount = 0;
-        let arr = this.resourceList.Value;
-        arr.fill(null);
-
-        this.resourceList.Value.forEach((x, index) => {
-            if (x != null) arr[index - nullCount] = x;
-            else nullCount++;
-        });
-
-        this.resourceList.Value = arr;
-        */
-        this.resourceList.Value.sort((a, b) => {
+    setCrowdList(arr: (ResourceName | null)[]) {
+        arr.sort((a, b) => {
+            if (a == b) return 0;
             if (b == null) return -1;
+            if (a == null) return 1;
             return 0;
         });
-        this.resourceList.update();
+        this.resourceList.Value = arr;
     }
 
     //カードのコストを支払う。
