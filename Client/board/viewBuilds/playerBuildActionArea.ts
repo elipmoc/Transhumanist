@@ -8,6 +8,8 @@ import { PlayerBuildAreaBase } from "../views/bases/playerBuildAreaBase";
 import * as playerBuildAreas from "../views/playerBuildActionAreas";
 import { BuildthrowDialog } from "../views/buildthrowDialog";
 import { BuildOver } from "../../../Share/elementOver";
+import { BuildActionUseDecision } from "../views/buildActionUseDecision";
+import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
@@ -15,8 +17,13 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
 
     const buildOver = new SocketBinder<BuildOver | null>("BuildOver", bindParams.socket);
     const buildthrowDialog = new BuildthrowDialog();
-
+    const gamePlayerCondition =
+        new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     
+    const buildActionUseDecision = new BuildActionUseDecision();
+    bindParams.layerManager.add(LayerTag.PopUp, buildthrowDialog);
+    bindParams.layerManager.add(LayerTag.PopUp, buildActionUseDecision);
+
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
         new playerBuildAreas.Player1BuildArea(bindParams.imgQueue),
         new playerBuildAreas.Player2BuildArea(bindParams.imgQueue),
@@ -52,12 +59,22 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         });
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
-        if (buildOver.Value.overCount != 0) 
-            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+        if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
+            buildActionUseDecision.setText(cardIcon.Kind);
+            buildActionUseDecision.visible = true;
+        }
+        else if (buildOver.Value.overCount != 0) cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+
         bindParams.layerManager.update();
 
         //const selectBuildActionData: SelectBuildActionData = { iconId: cardIcon.IconId };
         //bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+    });
+
+    buildActionUseDecision.visible = false;
+    buildActionUseDecision.buttonOnClick(() => { 
+        buildActionUseDecision.visible = false;
+        bindParams.layerManager.update();
     });
 
     buildOver.onUpdate(x => {
