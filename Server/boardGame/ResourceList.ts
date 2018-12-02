@@ -89,9 +89,8 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
-            if (count > num) return x;
+            if (count >= num) return x;
             if (name != x) return x;
-
             count++;
             return null;
         });
