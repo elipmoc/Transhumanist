@@ -5,8 +5,6 @@ import { BoardGameStatus } from "./boardGame/boardGameStatus";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
 import { Message } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
-import { EventCardStack } from "./boardGame/drawCard/eventCardStack";
-import { EventCardDrawer } from "./boardGame/eventCardDrawer";
 import { ChatSe } from "./boardGame/chatSe";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
@@ -19,7 +17,6 @@ export class BoardGame {
     private boardsocketManager: SocketBinder.Namespace;
     private roomId: number;
     private actionCardStacks: ActionCardStacks;
-    private eventCardStack: EventCardStack;
     private boardGameStatus: BoardGameStatus;
     private chatSe: ChatSe;
     private deleteMemberCallback: (uuid: string) => void;
@@ -30,12 +27,10 @@ export class BoardGame {
         this.boardGameStatus = new BoardGameStatus();
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
-        this.eventCardStack = new EventCardStack(this.boardsocketManager);
 
         this.gamePlayers =
             new GamePlayers(
                 this.boardsocketManager,
-                new EventCardDrawer(this.eventCardStack, this.boardsocketManager),
                 this.actionCardStacks
             );
 
@@ -64,7 +59,6 @@ export class BoardGame {
     private resetGame() {
         this.boardGameStatus.reset();
         this.actionCardStacks.settingCard();
-        // this.war.reset();
         this.gamePlayers.reset();
     }
 

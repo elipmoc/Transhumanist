@@ -31,10 +31,10 @@ export class GamePlayers {
         this.warList.reset();
     }
 
-    constructor(boardSocketManager: SocketBinder.Namespace, eventCardDrawer: EventCardDrawer, actionCardStacks: ActionCardStacks) {
+    constructor(boardSocketManager: SocketBinder.Namespace, actionCardStacks: ActionCardStacks) {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>("gameMasterPlayerId")
         boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
-        this.eventCardDrawer = eventCardDrawer;
+        this.eventCardDrawer = new EventCardDrawer(boardSocketManager);
         this.turnManager = new TurnManager(boardSocketManager);
         this.warList = new WarList(boardSocketManager);
         new LeaveRoom(boardSocketManager)
