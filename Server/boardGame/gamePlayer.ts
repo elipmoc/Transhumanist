@@ -181,7 +181,8 @@ export class GamePlayer {
                     //消すリソースを1つ選択してください
                     this.resourceList.setNowEvent(true);
                     this.resourceList.deleteRequest(1, "暴風の効果が適用されました。");
-                }
+                } else
+                    this.eventClearCallback();
                 break;
             case "未知の病気":
                 let humanNum = diceNumber;
