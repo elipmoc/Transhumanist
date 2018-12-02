@@ -4,6 +4,7 @@ import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
 import { ThrowResource } from "../../Share/throwResource";
 import { ResourceOver } from "../../Share/elementOver";
+import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 
 export class ResourceList {
@@ -53,8 +54,7 @@ export class ResourceList {
                         this.addResource(name);
                 });
                 this.resourceReserveList.Value.fill(null);
-                this.resourceReserveList.update();
-                this.crowdList();
+                this.setCrowdList(this.resourceList.Value);
 
                 if (this.nowEvent) {
                     this.eventClearCallback();
@@ -66,8 +66,9 @@ export class ResourceList {
 
     //リソースを任意個数追加
     public addResource(name: ResourceName, num: number = 1) {
+        const arr = this.resourceList.Value;
         for (let i = 0; i < num; i++) {
-            let idx = this.resourceList.Value.findIndex(x => x == null);
+            let idx = arr.findIndex(x => x == null);
             if (idx == -1) {
                 const emitValue: ResourceOver = {
                     overCount: this.resourceOver.Value.overCount + 1,
@@ -78,8 +79,9 @@ export class ResourceList {
                 idx = this.resourceReserveList.Value.findIndex(x => x == null);
                 this.resourceReserveList.setAt(idx, name);
             } else
-                this.resourceList.setAt(idx, name);
+                arr[idx] = name;
         }
+        this.setCrowdList(arr);
     }
 
     //リソースを任意個数削除
@@ -88,46 +90,29 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
-            if (count > num) return x;
+            if (count >= num) return x;
             if (name != x) return x;
-
             count++;
             return null;
         });
-        this.resourceList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.resourceList.Value;
-        let allCount = this.getAllCount();
+        const allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
         if (allCount >= num) {
-            let target: number[];
-            target = new Array(num);
-            target.fill(-1);
-
-            for (let i = 0; i > target.length; i++) {
-                let ranNum = Math.floor(Math.random() * allCount);
-                while (!target.includes(ranNum)) {
-                    ranNum = Math.floor(Math.random() * allCount);
-                }
-                target[i] = ranNum;
-            }
-
-            arr = arr.map((x, index) => {
-                if (target.includes(index)) return null;
-                return x;
-            });
+            let targetIndexes = new Array<number>(allCount).fill(0).map((_, idx) => idx);
+            targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
+            arr = arr.map((x, index) => targetIndexes.includes(index) ? null : x);
         }
         //消す数より少なかった
-        else {
+        else
             arr.fill(null);
-        }
-        this.resourceList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     //リソースを任意個数交換
@@ -136,14 +121,12 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
-            if (count > num) return x;
+            if (count >= num) return x;
             if (targetName != x) return x;
-
             count++;
             return changeName;
         });
-        this.resourceList.Value = arr;
-        this.resourceList.update();
+        this.setCrowdList(arr);
     }
 
     deleteRequest(num: number, text: string) {
@@ -158,7 +141,7 @@ export class ResourceList {
         this.resourceList.Value.fill("人間", 0, 4);
         const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
             x.level == 2);
-        this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
+        this.resourceList.Value[4] = arr[Math.floor(Math.random() * arr.length)].name;
         this.resourceList.update();
     }
 
@@ -176,24 +159,14 @@ export class ResourceList {
         return count;
     }
 
-    crowdList() {
-        /*
-        let nullCount = 0;
-        let arr = this.resourceList.Value;
-        arr.fill(null);
-
-        this.resourceList.Value.forEach((x, index) => {
-            if (x != null) arr[index - nullCount] = x;
-            else nullCount++;
-        });
-
-        this.resourceList.Value = arr;
-        */
-        this.resourceList.Value.sort((a, b) => {
+    setCrowdList(arr: (ResourceName | null)[]) {
+        arr.sort((a, b) => {
+            if (a == b) return 0;
             if (b == null) return -1;
-            return 0;
+            if (a == null) return 1;
+            return a > b ? 1 : -1;
         });
-        this.resourceList.update();
+        this.resourceList.Value = arr;
     }
 
     //カードのコストを支払う。
@@ -210,7 +183,7 @@ export class ResourceList {
                 return null;
             })
         });
-        this.resourceList.Value = arr;
+        this.setCrowdList(arr);
         return true;
     }
 }

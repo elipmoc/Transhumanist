@@ -1,6 +1,5 @@
 import { ResponseGamePlayerState } from "../../Share/responseGamePlayerState";
 import { PlayerData } from "../playerData";
-import { DiceData } from "../../Share/diceData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
@@ -10,7 +9,7 @@ import { SocketBinder } from "../socketBinder";
 import { ResourceList } from "./ResourceList";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { PlayerActionCard } from "./playerActionCard";
-import { diceRoll } from "./dice";
+import { Dice } from "./dice";
 import { CandidateResources } from "../../Share/candidateResources";
 import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
@@ -22,7 +21,7 @@ export class GamePlayer {
     private uuid: string;
     private state: GamePlayerState;
     private resourceList: ResourceList;
-    private diceData: SocketBinder.Binder<DiceData>;
+    private dice: Dice;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private candidateResources: SocketBinder.Binder<CandidateResources>;
     private beforeCond: number;
@@ -32,8 +31,7 @@ export class GamePlayer {
     private buildActionList: BuildActionList;
     //一度だけアクションカードをノーコストで使用できるようにするフラグ
     private onceNoCostFlag = false;
-    //人間を使用できなくするフラグ
-    private noUseHumanFlag = false;
+
     //現在のイベント名
     private nowEvent: Event;
 
@@ -61,11 +59,6 @@ export class GamePlayer {
         this.surrenderCallback = f;
     }
 
-    //設置アクションカードを使用できなくするフラグ
-    private noUseBuildActionFlag = false;
-    //世界大戦の開幕が起きてる時のフラグ
-    private noLimitUseWarActionFlag = false;
-
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
         this.turnFinishButtonClickCallback = f;
@@ -92,10 +85,7 @@ export class GamePlayer {
 
     setMyTurn(eventCard: Event) {
         this.actionCard.set_drawPhase();
-        this.noLimitUseWarActionFlag = "世界大戦の開幕" == eventCard.name;
-        this.noUseBuildActionFlag = "太陽風" == eventCard.name;
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
-        this.noUseHumanFlag = "ニート化が進む" == eventCard.name;
         this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
@@ -113,7 +103,6 @@ export class GamePlayer {
 
         if (this.war.getWarFlag())
             this.state.warStateChange();
-        this.diceRoll("テスト用テキスト");
     }
 
     setWait() {
@@ -143,9 +132,10 @@ export class GamePlayer {
                     else {
                         this.exileNumber = this.resourceList.getCount("人間");
                     }
-                    this.resourceList.deleteRequest(this.exileNumber, "人間");
+                    this.resourceList.deleteResource("人間", this.exileNumber);
                     this.diceRoll(this.nowEvent.diceCause!);
-                }
+                } else
+                    this.eventClearCallback();
                 break;
 
             case "独立傾向":
@@ -159,7 +149,8 @@ export class GamePlayer {
                     //任意の設置済みアクションカードを2つ選択して削除
                     this.buildActionList.setNowEvent(true);
                     this.buildActionList.deleteRequest(2, "内乱の効果が適用されました。");
-                }
+                } else
+                    this.eventClearCallback();
                 break;
             case "ブラックホール":
                 this.resourceList.randomDeleteResource(1);
@@ -189,7 +180,8 @@ export class GamePlayer {
                     //消すリソースを1つ選択してください
                     this.resourceList.setNowEvent(true);
                     this.resourceList.deleteRequest(1, "暴風の効果が適用されました。");
-                }
+                } else
+                    this.eventClearCallback();
                 break;
             case "未知の病気":
                 let humanNum = diceNumber;
@@ -246,7 +238,7 @@ export class GamePlayer {
         this.state.clear();
         this.resourceList.clear();
         this.actionCard.clear();
-        this.diceData.Value.diceNumber = [];
+        this.dice.clear();
         this.buildActionList.clear();
         this.war.reset();
     }
@@ -260,7 +252,7 @@ export class GamePlayer {
         actionCardStacks: ActionCardStacks
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>("candidateResources" + playerId);
-        this.diceData = new SocketBinder.Binder<DiceData>("diceList" + playerId);
+        this.dice = new Dice(playerId, boardSocketManager);
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>("selectedGetResourceId" + playerId);
         const state = new SocketBinder.Binder<ResponseGamePlayerState>("GamePlayerState" + playerId);
         this.resourceList = new ResourceList(boardSocketManager, playerId);
@@ -283,7 +275,6 @@ export class GamePlayer {
         });
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
         this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
-        const selectDice = new SocketBinder.EmitReceiveBinder<number>("selectDice", true, [`player${playerId}`]);
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
 
@@ -305,11 +296,10 @@ export class GamePlayer {
         });
 
         //サイコロのダイス選択
-        selectDice.OnReceive(diceIndex => {
+        this.dice.onSelectDice(diceNumber => {
             this.playerCond.Value = this.beforeCond;
-            console.log(`diceIndex:${diceIndex}`);
             if (this.playerCond.Value == GamePlayerCondition.Event) {
-                this.diceSelectAfterEvent(this.diceData.Value.diceNumber[diceIndex]);
+                this.diceSelectAfterEvent(diceNumber);
             }
         });
         this.playerId = playerId;
@@ -327,7 +317,7 @@ export class GamePlayer {
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(
             card => {
-                if (this.noUseHumanFlag && this.state.State.negative >= 2 && card.cost.find(x => x.name == "人間")) {
+                if (this.nowEvent.name == "ニート化が進む" && this.state.State.negative >= 2 && card.cost.find(x => x.name == "人間")) {
                     unavailable.emit(UnavailableState.Event);
                     return false;
                 }
@@ -338,7 +328,7 @@ export class GamePlayer {
                 if (
                     card.war_use
                     && this.war.getWarFlag() == false
-                    && (this.noLimitUseWarActionFlag && this.state.State.negative >= 1) == false
+                    && (this.nowEvent.name == "世界大戦の開幕" && this.state.State.negative >= 1) == false
                 ) {
                     unavailable.emit(UnavailableState.War);
                     return false;
@@ -352,12 +342,12 @@ export class GamePlayer {
         );
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard(card => {
-            if (this.noUseBuildActionFlag)
+            if (this.nowEvent.name == "太陽風")
                 unavailable.emit(UnavailableState.Event);
         });
         boardSocketManager.addSocketBinder(
-            state, this.diceData, unavailable,
-            this.playerCond, selectDice, this.candidateResources,
+            state, unavailable,
+            this.playerCond, this.candidateResources,
             turnFinishButtonClick, selectedGetResourceId);
         state.update();
     }
@@ -377,11 +367,7 @@ export class GamePlayer {
     }
 
     diceRoll(causeText: string) {
-        const Data: DiceData = {
-            diceNumber: new Array(this.state.State.uncertainty).fill(0).map(() => diceRoll()),
-            text: causeText
-        };
-        this.diceData.Value = Data;
+        this.dice.diceRoll(causeText, this.state.State.uncertainty);
         this.beforeCond = this.playerCond.Value;
         this.playerCond.Value = GamePlayerCondition.Dice;
     }

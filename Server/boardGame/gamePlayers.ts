@@ -65,7 +65,7 @@ export class GamePlayers {
     }
 
     exileMove(player: GamePlayer, diceNumber: number) {
-        this.gamePlayerList[(player.PlayerId + diceNumber) % this.getNowPlayers.length].addExileResource(player.ExileNumber);
+        this.gamePlayerList[(player.PlayerId + diceNumber) % this.getNowPlayers().length].addExileResource(player.ExileNumber);
     }
 
     getNowPlayers() {
