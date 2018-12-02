@@ -95,10 +95,10 @@ export class GamePlayer {
             this.resourceList.addResource("人間");
 
         if (eventCard.name == "AIへの反抗") {
-            this.state.temporarilyActivityRangeSet(this.state.State.negative * -1);
+            this.state.addAcivityRange(this.state.State.negative * -1);
         }
         if (eventCard.name == "AIへの友好") {
-            this.state.temporarilyActivityRangeSet(this.state.State.positive);
+            this.state.addAcivityRange(this.state.State.positive);
         }
 
         if (this.war.getWarFlag())
@@ -280,7 +280,6 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            if (this.nowEvent && ["AIへの反抗", "AIへの友好"].includes(this.nowEvent.name)) this.state.temporarilyReset();
             this.turnFinishButtonClickCallback();
         });
 
