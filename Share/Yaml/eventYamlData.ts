@@ -38,5 +38,6 @@ export interface Event {
     level: number,
     description: string,
     forever: boolean,
-    resources:string[] | undefined
+    resources: string[] | undefined,
+    diceCause: string | undefined
 }
