@@ -178,7 +178,7 @@ export class ResourceList {
             if (a == b) return 0;
             if (b == null) return -1;
             if (a == null) return 1;
-            return 0;
+            return a > b ? 1 : -1;
         });
         this.resourceList.Value = arr;
     }
