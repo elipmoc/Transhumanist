@@ -155,7 +155,7 @@ export class ResourceList {
         this.resourceList.Value.fill("人間", 0, 4);
         const arr = GenerateResourceYamlDataArray(yamlGet("./Resource/Yaml/resource.yaml")).filter((x) =>
             x.level == 2);
-        this.resourceList.setAt(4, arr[Math.floor(Math.random() * arr.length)].name);
+        this.resourceList.Value[4] = arr[Math.floor(Math.random() * arr.length)].name;
         this.resourceList.update();
     }
 
