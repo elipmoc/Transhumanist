@@ -4,6 +4,7 @@ import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
 import { ThrowResource } from "../../Share/throwResource";
 import { ResourceOver } from "../../Share/elementOver";
+import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 
 export class ResourceList {
@@ -100,31 +101,17 @@ export class ResourceList {
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.resourceList.Value;
-        let allCount = this.getAllCount();
+        const allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
         if (allCount >= num) {
-            let target: number[];
-            target = new Array(num);
-            target.fill(-1);
-
-            for (let i = 0; i > target.length; i++) {
-                let ranNum = Math.floor(Math.random() * allCount);
-                while (!target.includes(ranNum)) {
-                    ranNum = Math.floor(Math.random() * allCount);
-                }
-                target[i] = ranNum;
-            }
-
-            arr = arr.map((x, index) => {
-                if (target.includes(index)) return null;
-                return x;
-            });
+            let targetIndexes = new Array<number>(allCount).fill(0).map((_, idx) => idx);
+            targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
+            arr = arr.map((x, index) => targetIndexes.includes(index) ? null : x);
         }
         //消す数より少なかった
-        else {
+        else
             arr.fill(null);
-        }
         this.setCrowdList(arr);
     }
 
