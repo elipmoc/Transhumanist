@@ -72,11 +72,11 @@ export class SelectDiceWindow extends createjs.Container {
         descriptionText.y = global.canvasHeight / 2 - 130;
 
         this.causeText.textAlign = "center";
-        this.causeText.font = "16px Bold ＭＳ ゴシック";
+        this.causeText.font = "24px Bold ＭＳ ゴシック";
         this.causeText.color = "white";
         this.causeText.shadow = createMyShadow();
         this.causeText.x = global.canvasWidth / 2;
-        this.causeText.y = global.canvasHeight / 2 - 130 + 20;
+        this.causeText.y = global.canvasHeight / 2 - 100;
 
         this.addChild(frame);
         this.addChild(descriptionText,this.causeText);
