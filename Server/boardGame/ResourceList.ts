@@ -65,8 +65,9 @@ export class ResourceList {
 
     //リソースを任意個数追加
     public addResource(name: ResourceName, num: number = 1) {
+        const arr = this.resourceList.Value;
         for (let i = 0; i < num; i++) {
-            let idx = this.resourceList.Value.findIndex(x => x == null);
+            let idx = arr.findIndex(x => x == null);
             if (idx == -1) {
                 const emitValue: ResourceOver = {
                     overCount: this.resourceOver.Value.overCount + 1,
@@ -77,8 +78,9 @@ export class ResourceList {
                 idx = this.resourceReserveList.Value.findIndex(x => x == null);
                 this.resourceReserveList.setAt(idx, name);
             } else
-                this.resourceList.setAt(idx, name);
+                arr[idx] = name;
         }
+        this.setCrowdList(arr);
     }
 
     //リソースを任意個数削除
@@ -139,8 +141,7 @@ export class ResourceList {
             count++;
             return changeName;
         });
-        this.resourceList.Value = arr;
-        this.resourceList.update();
+        this.setCrowdList(arr);
     }
 
     deleteRequest(num: number, text: string) {
@@ -197,7 +198,7 @@ export class ResourceList {
                 return null;
             })
         });
-        this.resourceList.Value = arr;
+        this.setCrowdList(arr);
         return true;
     }
 }
