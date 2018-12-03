@@ -44,15 +44,7 @@ export class SelectResourceWindow extends createjs.Container {
     //リソースを選択する回数設定
     private setNumber(number: number) {
         this.resourceNumber = number;
-        this.descriptionText.text = "欲しいリソースを" + this.resourceNumber + "つ選択してください";
-    }
-    getNumber() {
-        return this.resourceNumber;
-    }
-    //numberの減算
-    decreaseNumber() {
-        this.resourceNumber--;
-        this.descriptionText.text = "欲しいリソースを" + this.resourceNumber + "つ選択してください";
+        this.descriptionText.text = `欲しいリソースを${this.resourceNumber}つ選択してください`;
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする

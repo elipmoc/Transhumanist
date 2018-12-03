@@ -21,13 +21,8 @@ export function build(bindParams: BindParams) {
     });
 
     declareWarSelectButton.visible = false;
-    declareWarSelectButton.OnselectedWarTarget((playerId: number, targetId: number) => {
-        let warPair: number[] = [playerId, targetId];
-
-        //ここで2つの引数で配列を作る。
-        //このemitには引数で作ったjsonを添える。
-        console.log(JSON.stringify(warPair));
-        bindParams.socket.emit("declareWar", JSON.stringify(warPair));
+    declareWarSelectButton.OnselectedWarTarget(targetPlayerId => {
+        bindParams.socket.emit("declareWar", targetPlayerId);
     });
     const warFlag = new SocketBinder<boolean>("warFlag", bindParams.socket);
 
@@ -59,17 +54,12 @@ export function build(bindParams: BindParams) {
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
 
     gamePlayerCondition.onUpdate(cond => {
-        switch (cond) {
-            case GamePlayerCondition.Start:
-                declareWarButton.visible = false;
-                break;
-            case GamePlayerCondition.MyTurn:
-                declareWarButton.visible = true;
-                break;
-            case GamePlayerCondition.Wait:
-                declareWarButton.visible = false;
-                break;
-
+        if (cond == GamePlayerCondition.MyTurn) {
+            declareWarButton.visible = true;
+        } else {
+            declareWarButton.visible = false;
+            declareWarDialog.visible = false;
+            declareWarSelectButton.visible = false;
         }
         bindParams.layerManager.update();
     })

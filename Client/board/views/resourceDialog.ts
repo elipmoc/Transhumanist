@@ -28,7 +28,7 @@ export class ResourceDialog extends createjs.Container {
         button.addEventListener("click", () => this.callBack());
         this.addChild(background, this.label, button);
     }
-    setThrowResourceNum(num: number) {
-        this.label.text = `リソースがいっぱいです。\n捨てるリソースを\n${num}個選んでください`;
+    setThrowResourceNum(num: number,cause:string) {
+        this.label.text = `${cause}\n捨てるリソースを\n${num}個選んでください`;
     }
 }

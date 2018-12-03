@@ -3,26 +3,26 @@ import { BindParams } from "../bindParams";
 import { WarLine } from "../views/warLine";
 
 export class DeclareWarSelectButton extends createjs.Container {
-    private selectButton: WarSelectHitArea[] = [null, null,null];
+    private selectButton: WarSelectHitArea[] = [null, null, null];
     private warLine: WarLine[] = [null, null, null];
 
     //ここの関数型は変更されます。
-    private clickEvent: (playerId:number,targetId:number) => void;
-    OnselectedWarTarget(clickEvent: (playerId: number, targetId: number) => void) {
+    private clickEvent: (targetPlayerId: number) => void;
+    OnselectedWarTarget(clickEvent: (targetPlayerId: number) => void) {
         this.clickEvent = clickEvent;
     };
 
-    constructor(bindParams:BindParams) {
+    constructor(bindParams: BindParams) {
         super();
-        this.selectButton.forEach((x,index) => {
+        this.selectButton.forEach((x, index) => {
             let current: number = bindParams.playerId;
             let playerId: number = ((index + 1) + current) % 4;
-            
+
             this.warLine[index] = new WarLine(current, playerId, current);
             this.warLine[index].alpha = 0.3;
 
             x = new WarSelectHitArea(playerId, index, this.warLine[index]);
-            x.addEventListener("click", () => this.clickEvent(current,playerId));
+            x.addEventListener("click", () => this.clickEvent(playerId));
             this.warLine[index].visible = false;
             x.addEventListener("mouseover", () => {
                 this.warLine[index].visible = true;
@@ -35,16 +35,16 @@ export class DeclareWarSelectButton extends createjs.Container {
 
             });
 
-            this.addChild(x,this.warLine[index]);
+            this.addChild(x, this.warLine[index]);
         });
     }
 }
 
-class WarSelectHitArea extends createjs.Container{
+class WarSelectHitArea extends createjs.Container {
     playerId: number;
     //warLine: WarLine;
     //playerID:対応するID
-    constructor(playerId:number,index:number,warLine:WarLine) {
+    constructor(playerId: number, index: number, warLine: WarLine) {
         super();
         this.playerId = playerId;
 

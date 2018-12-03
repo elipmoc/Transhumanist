@@ -12,20 +12,19 @@ export function build(bindParams: BindParams) {
 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
-        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, cardIcon.IconId);
-        selectResourceWindow.decreaseNumber();
-        if (selectResourceWindow.getNumber() <= 0) {
-            selectResourceWindow.visible = false;
-
-        }
+        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, JSON.stringify({ id: cardIcon.IconId }));
         bindParams.layerManager.update();
     });
 
     const candidateResources = new SocketBinder<CandidateResources>("candidateResources" + bindParams.playerId, bindParams.socket);
     candidateResources.onUpdate(data => {
         if (!data) return;
-        selectResourceWindow.setResource(data, bindParams.yamls.resourceHash, bindParams.imgQueue);
-        selectResourceWindow.visible = true;
+        if (data.number > 0) {
+            selectResourceWindow.setResource(data, bindParams.yamls.resourceHash, bindParams.imgQueue);
+            selectResourceWindow.visible = true;
+        }
+        else selectResourceWindow.visible = false;
+        bindParams.layerManager.update();
     });
     bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
 }
