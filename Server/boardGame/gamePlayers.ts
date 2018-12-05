@@ -136,7 +136,7 @@ export class GamePlayers {
     playerTurnSet() {
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != this.currentPlayerId) player.setWait();
-            else player.setMyTurn(this.eventCardDrawer.NowEvent!);
+            else player.setMyTurn();
         })
     }
 
