@@ -38,7 +38,7 @@ export class BuildActionList {
         this.throwBuild.OnReceive(throwBuild => {
             console.log(`throwBuild: ${throwBuild}`);
             if (this.buildOver.Value.overCount == throwBuild.length) {
-                this.buildOver.Value.overCount = 0;
+                this.buildOver.Value = { overCount: 0, causeText: "" };
                 throwBuild.forEach(id => {
                     this.buildActionList.Value[id] = null;
                 });
