@@ -63,7 +63,11 @@ export class SelectResourceWindow extends createjs.Container {
                 resourceName != "" ? hash[resourceName].index : -1,
                 imgQueue
             );
-        })
+        });
+
+        this.resourceList.x =
+            global.canvasWidth / 2 - (global.cardIconSize * data.resource_names.length) / 2;
+
         //ナンバーぶちこみ
         this.setNumber(data.number);
     }
