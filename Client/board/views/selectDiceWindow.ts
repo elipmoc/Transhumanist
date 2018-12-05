@@ -41,7 +41,7 @@ export class SelectDiceWindow extends createjs.Container {
             ((diceList.length / 2) - 1) * (DiceIcon.size + 10) + DiceIcon.size / 2 + 5;
         this.diceIconList.forEach((dice, index) => {
             dice.x = global.canvasWidth / 2 - fixWidth + index * (DiceIcon.size + 10);
-            dice.y = global.canvasHeight / 2;
+            dice.y = global.canvasHeight / 2 + 16;
             dice.onClicked(() => this.callBack(index));
             this.addChild(dice);
         });
