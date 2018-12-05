@@ -39,12 +39,6 @@ export function createRouter() {
     myRouter.get("/Img/background/:path", (req: any, res: any) => {
         sendPng(res, "./Resource/PImg/background/" + req.params.path);
     });
-    /*myRouter.get("/Img/card/back/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/PImg/card/back/" + req.params.path);
-    });
-    myRouter.get("/Img/card/front/action/:path", (req: any, res: any) => {
-        sendPng(res, "./Resource/PImg/card/front/action/" + req.params.path);
-    });*/
     myRouter.get("/Json/boardSprite.json", (req: any, res: any) => {
         sendJson(res, "./Resource/Sprite/boardSprite.json");
     });
