@@ -90,7 +90,6 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     })
     buildthrowDialog.visible = false;
     buildthrowDialog.onClick(() => {
-        console.log("しんでしまえ");
         const throwBuild: ThrowBuildAction = {
             buildActionList: playerBuildActionAreaList[0].getSelectedAllIconId()
         };
