@@ -145,10 +145,11 @@ export class GamePlayer {
                 else this.eventClearCallback();
                 break;
             case "内乱":
-                if (this.state.State.negative >= 6) {
+                if (this.state.State.negative >= 6 && this.buildActionList.getAllCount() >= 1) {
                     //任意の設置済みアクションカードを2つ選択して削除
                     this.buildActionList.setNowEvent(true);
-                    this.buildActionList.deleteRequest(2, "内乱の効果が適用されました。");
+                    if (this.buildActionList.getAllCount() <= 2) this.buildActionList.deleteRequest(this.buildActionList.getAllCount(), "内乱の効果が適用されました。");
+                    else this.buildActionList.deleteRequest(2, "内乱の効果が適用されました。");
                 } else
                     this.eventClearCallback();
                 break;
