@@ -5,12 +5,13 @@ import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataG
 import { yamlGet } from "../yamlGet";
 import { BuildOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
+import { ThrowBuildAction } from "../../Share/throwBuildAction";
 
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
     private useBuildActionCardCallback: (card: ActionCardYamlData) => void;
     private buildOver: SocketBinder.Binder<BuildOver>;
-    private throwBuild: SocketBinder.EmitReceiveBinder<number[]>;
+    private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
 
     //頑張ってリファクタリングして
     private nowEvent = false;
@@ -38,9 +39,9 @@ export class BuildActionList {
         this.throwBuild = new SocketBinder.EmitReceiveBinder("ThrowBuild", true, ["player" + playerId])
         this.throwBuild.OnReceive(throwBuild => {
             console.log(`throwBuild: ${throwBuild}`);
-            if (this.buildOver.Value.overCount == throwBuild.length) {
+            if (this.buildOver.Value.overCount == throwBuild.buildActionList.length) {
                 this.buildOver.Value = { overCount: 0, causeText: "" };
-                throwBuild.forEach(id => {
+                throwBuild.buildActionList.forEach(id => {
                     this.buildActionList.Value[id] = null;
                 });
                 this.setCrowdList(this.buildActionList.Value);
@@ -49,7 +50,7 @@ export class BuildActionList {
             }
         });
 
-        boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction,this.buildOver);
+        boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction,this.buildOver,this.throwBuild);
         this.clear();
     }
     clear() {
