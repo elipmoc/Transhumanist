@@ -4,6 +4,7 @@ import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
 import { BuildOver } from "../../Share/elementOver";
+import { arrayshuffle } from "../../Share/utility";
 
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
@@ -42,14 +43,13 @@ export class BuildActionList {
                 throwBuild.forEach(id => {
                     this.buildActionList.Value[id] = null;
                 });
-                this.crowdList();
-                this.buildActionList.update();
+                this.setCrowdList(this.buildActionList.Value);
 
                 if (this.nowEvent) this.eventClearCallback();
             }
         });
 
-        boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction);
+        boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction,this.buildOver);
         this.clear();
     }
     clear() {
@@ -70,6 +70,7 @@ export class BuildActionList {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
         if (idx != -1)
             this.buildActionList.setAt(idx, name);
+        this.setCrowdList(this.buildActionList.Value);
     }
 
     deleteBuildAction(name: ActionCardName, num: number) {
@@ -84,40 +85,24 @@ export class BuildActionList {
             return null;
         });
 
-        this.buildActionList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.buildActionList.Value;
-        let allCount = this.getAllCount();
+        const allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
         if (allCount >= num) {
-            let target: number[];
-            target = new Array(num);
-            target.fill(-1);
-
-            for (let i = 0; i > target.length; i++) {
-                let ranNum = Math.floor(Math.random() * allCount);
-                while (!target.includes(ranNum)) {
-                    ranNum = Math.floor(Math.random() * allCount);
-                }
-                target[i] = ranNum;
-            }
-
-            arr = arr.map((x, index) => {
-                if (target.includes(index)) return null;
-                return x;
-            });
+            let targetIndexes = new Array<number>(allCount).fill(0).map((_, idx) => idx);
+            targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
+            arr = arr.map((x, index) => targetIndexes.includes(index) ? null : x);
         }
         //消す数より少なかった
-        else {
+        else
             arr.fill(null);
-        }
-        this.buildActionList.Value = arr;
-        this.crowdList();
+        this.setCrowdList(arr);
     }
 
     deleteRequest(num: number, text: string) {
@@ -128,22 +113,14 @@ export class BuildActionList {
         this.buildOver.Value = emitValue;
     }
 
-    crowdList() {
-        /*let nullCount = 0;
-            let arr = this.buildActionList.Value;
-            arr.fill(null);
-
-            this.buildActionList.Value.forEach((x, index) => {
-                if (x != null) arr[index - nullCount] = x;
-                else nullCount++;
-            });
-        
-        this.buildActionList.Value = arr; */
-        this.buildActionList.Value.sort((a, b) => {
+    setCrowdList(arr: (ActionCardName | null)[]) {
+        arr.sort((a, b) => {
+            if (a == b) return 0;
             if (b == null) return -1;
-            return 0;
+            if (a == null) return 1;
+            return a > b ? 1 : -1;
         });
-        this.buildActionList.update();
+        this.buildActionList.Value = arr;
     }
 
     //カードが使用されるときに呼ばれる関数をセット
