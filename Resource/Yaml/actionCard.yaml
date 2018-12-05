@@ -459,7 +459,7 @@
   number: 8
   war_use: false
 
-- name: テラフォーミングの実行
+- name: テラフォーミング
   level: 5
   build_use: false
   description: 
