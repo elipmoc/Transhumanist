@@ -10,6 +10,7 @@ import { BuildthrowDialog } from "../views/buildthrowDialog";
 import { BuildOver } from "../../../Share/elementOver";
 import { BuildActionUseDecision } from "../views/buildActionUseDecision";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { ThrowBuildAction } from "../../../Share/throwBuildAction";
 
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
@@ -89,7 +90,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     })
     buildthrowDialog.visible = false;
     buildthrowDialog.onClick(() => {
-        const throwBuild = playerBuildActionAreaList[0].getSelectedAllIconId();
+        const throwBuild: ThrowBuildAction = {
+            buildActionList: playerBuildActionAreaList[0].getSelectedAllIconId()
+        };
         bindParams.socket
             .emit("ThrowBuild", JSON.stringify(throwBuild));
     });
