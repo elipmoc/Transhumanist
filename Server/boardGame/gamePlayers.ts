@@ -10,6 +10,7 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
+import { WinActionCardStacks } from "./drawCard/winActionCardStacks";
 
 
 export class GamePlayers {

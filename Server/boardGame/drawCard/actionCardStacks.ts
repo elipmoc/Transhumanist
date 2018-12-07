@@ -1,24 +1,28 @@
-import { ActionCardHash, ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardHash, ActionCardYamlData, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { GenerateActionCardYamlData } from "../../../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../../yamlGet";
 import { ActionCardStackPair } from "./actionCardStackPair";
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 import { SocketBinder } from "../../socketBinder";
+import { WinActionCardStacks } from "./winActionCardStacks";
 
 //アクションカードの山札をレベルごとに持つクラス
 export class ActionCardStacks {
     static maxLevel = 5;
+    private winActionCardStacks: WinActionCardStacks;
     private actionCardStackPairList: ActionCardStackPair[] = [];
     private numberOfActionCardList: SocketBinder.Binder<NumberOfActionCard[]>;
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.numberOfActionCardList = new SocketBinder.Binder<NumberOfActionCard[]>("numberOfActionCard");
+        this.winActionCardStacks = new WinActionCardStacks(boardSocketManager);
         boardSocketManager.addSocketBinder(this.numberOfActionCardList);
         this.settingCard();
     }
 
     //山札をセットする
     settingCard() {
+        this.winActionCardStacks.settingCard();
         this.actionCardStackPairList = [];
         const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
         for (let i = 0; i < ActionCardStacks.maxLevel; i++)
@@ -48,6 +52,12 @@ export class ActionCardStacks {
         return card;
     }
 
+    drawWinCard(cardName: ActionCardName) {
+        const card = this.winActionCardStacks.draw(cardName);
+        this.updateNumberOfActionCards();
+        return card;
+    }
+
     throwAway(card: ActionCardYamlData) {
         if (card.level > ActionCardStacks.maxLevel)
             throw "levelが不正です";
@@ -57,7 +67,7 @@ export class ActionCardStacks {
 
     private updateNumberOfActionCards() {
         let numberOfActionCards = this.actionCardStackPairList.map(x => x.getNumberOfActionCard());
-        numberOfActionCards.push({ currentNumber: 0, dustNumber: 0, maxNumber: 0 });
+        numberOfActionCards.push(this.winActionCardStacks.getNumberOfActionCard());
         this.numberOfActionCardList.Value = numberOfActionCards;
     }
 }

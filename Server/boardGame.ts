@@ -10,6 +10,7 @@ import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
+import { WinActionCardStacks } from "./boardGame/drawCard/winActionCardStacks";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;

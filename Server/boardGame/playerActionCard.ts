@@ -11,17 +11,22 @@ export class PlayerActionCard {
     private actionCardList: SocketBinder.BinderList<string | null>;
     private useActionCardCallback: (card: ActionCardYamlData) => DestructionFlag;
     private selectActionCardLevelCallback: (level: number) => void;
+    private selectWinActionCardCallback: (cardName: string) => void;
 
     constructor(playerId: number, boardSocketManager: SocketBinder.Namespace) {
         //生成
         const selectActionCardLevel = new SocketBinder.EmitReceiveBinder<number>("selectActionCardLevel", true, [`player${playerId}`]);
+        const selectWinActionCard = new SocketBinder.EmitReceiveBinder<string>("selectWinCard", true, [`player${playerId}`]);
         this.actionCardList = new SocketBinder.BinderList<string | null>("actionCardList", true, [`player${playerId}`]);
         const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>("useActionCardIndex", true, [`player${playerId}`]);
 
         //実装
-        selectActionCardLevel.OnReceive(level => {
-            this.selectActionCardLevelCallback(level);
-        });
+        selectActionCardLevel.OnReceive(level =>
+            this.selectActionCardLevelCallback(level)
+        );
+        selectWinActionCard.OnReceive(cardName =>
+            this.selectWinActionCardCallback(cardName)
+        );
         useActionCardIndex.OnReceive(actionCardIndex => {
             const useActionCardName = this.actionCardList.Value[actionCardIndex];
             if (useActionCardName) {
@@ -40,7 +45,8 @@ export class PlayerActionCard {
         boardSocketManager.addSocketBinder(
             this.actionCardList,
             useActionCardIndex,
-            selectActionCardLevel);
+            selectActionCardLevel,
+            selectWinActionCard);
     }
 
     //カードが使用されるときに呼ばれる関数をセット
@@ -52,6 +58,11 @@ export class PlayerActionCard {
     //ドローするカードのレベルが選択されたときに呼ばれる関数をセット
     onSelectActionCardLevel(f: (level: number) => void) {
         this.selectActionCardLevelCallback = f;
+    }
+
+    //ドローするレベル6カードが選択された時に呼ばれる関数をセット
+    onSelectWinActionCard(f: (cardName: string) => void) {
+        this.selectWinActionCardCallback = f;
     }
 
     //手札がいっぱいかどうか

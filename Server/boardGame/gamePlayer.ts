@@ -15,6 +15,7 @@ import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 import { War, WarSuccessFlag } from "./war";
+import { WinActionCardStacks } from "./drawCard/winActionCardStacks";
 
 export class GamePlayer {
     private playerId: number;
@@ -285,6 +286,11 @@ export class GamePlayer {
             this.actionCard.drawActionCard(actionCardStacks.draw(level));
             this.playerCond.Value = GamePlayerCondition.MyTurn;
         })
+        this.actionCard.onSelectWinActionCard(cardName => {
+            const card = actionCardStacks.drawWinCard(cardName);
+            if (card) this.actionCard.drawActionCard(card);
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+        });
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
 
