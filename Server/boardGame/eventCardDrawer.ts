@@ -4,9 +4,10 @@ import { Event } from "../../Share/Yaml/eventYamlData";
 
 export class EventCardDrawer {
     private eventCardStack: EventCardStack;
+
     private nowEvent = new SocketBinder.Binder<Event | null>("nowEvent");
-    constructor(eventCardStack: EventCardStack, boardSocketManager: SocketBinder.Namespace) {
-        this.eventCardStack = eventCardStack;
+    constructor(boardSocketManager: SocketBinder.Namespace) {
+        this.eventCardStack = new EventCardStack(boardSocketManager);
         boardSocketManager.addSocketBinder(this.nowEvent);
     }
 

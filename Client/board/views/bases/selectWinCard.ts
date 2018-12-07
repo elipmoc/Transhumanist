@@ -1,7 +1,7 @@
-import { NumberOfActionCard } from "../../../../Share/numberOfActionCard";
 import { ImageQueue } from "../../imageQueue";
 import { DetailsActionCard } from "../detailsActionCard";
 import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { WinActionCardData } from "../../../../Share/winActionCardData";
 
 export class SelectWinCard extends createjs.Container {
     private winCard: DetailsActionCard;
@@ -10,13 +10,12 @@ export class SelectWinCard extends createjs.Container {
     private nothingWinCard: DetailsActionCard;
 
     private cardNumber = new createjs.Text();
-    private callBack: (value:number) => void;
-    private index: number;
-    
+    private callBack: () => void;
+
     constructor(size: number) {
-       super();
+        super();
         this.winCard = new DetailsActionCard(size);
-        this.winCard.addEventListener("click", () => this.callBack(this.index));
+        this.winCard.addEventListener("click", () => this.callBack());
 
         this.nothingWinCard = new DetailsActionCard(size);
         this.nothingWinCard.alpha = 0.2;
@@ -34,7 +33,7 @@ export class SelectWinCard extends createjs.Container {
         this.winCard.setYamlData(yamlData, queue);
         this.nothingWinCard.setYamlData(yamlData, queue);
     }
-    setCardNumber(cardNum: NumberOfActionCard) {
+    setCardNumber(cardNum: WinActionCardData) {
         this.cardNumber.text =
             cardNum.currentNumber +
             "/" +
@@ -48,11 +47,7 @@ export class SelectWinCard extends createjs.Container {
             this.nothingWinCard.visible = false;
         }
     }
-    setIndex(index: number) {
-        this.index = index;
-    }
-
-    onClick(callBack: (value:number) => void) {
+    onClick(callBack: () => void) {
         this.callBack = callBack;
     }
 }

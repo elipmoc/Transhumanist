@@ -15,6 +15,7 @@ import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 import { War, WarSuccessFlag } from "./war";
+import { WinActionCardStacks } from "./drawCard/winActionCardStacks";
 
 export class GamePlayer {
     private playerId: number;
@@ -83,10 +84,9 @@ export class GamePlayer {
 
     setAICard(ai: StartStatusYamlData) { this.state.setAICard(ai); }
 
-    setMyTurn(eventCard: Event) {
-        this.actionCard.set_drawPhase();
+    setMyTurn() {
+        const eventCard = this.nowEvent;
         this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
-        this.playerCond.Value = GamePlayerCondition.MyTurn;
         if (eventCard.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
             this.resourceList.addResource("人間", len);
@@ -103,6 +103,12 @@ export class GamePlayer {
 
         if (this.war.getWarFlag())
             this.state.warStateChange();
+
+        if (this.actionCard.is_full() == false)
+            this.playerCond.Value = GamePlayerCondition.DrawCard;
+        else
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+
     }
 
     setWait() {
@@ -275,7 +281,16 @@ export class GamePlayer {
             return false;
         });
         this.playerCond = new SocketBinder.Binder<GamePlayerCondition>("gamePlayerCondition", true, [`player${playerId}`]);
-        this.actionCard = new PlayerActionCard(playerId, actionCardStacks, boardSocketManager);
+        this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
+        this.actionCard.onSelectActionCardLevel(level => {
+            this.actionCard.drawActionCard(actionCardStacks.draw(level));
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+        })
+        this.actionCard.onSelectWinActionCard(cardName => {
+            const card = actionCardStacks.drawWinCard(cardName);
+            if (card) this.actionCard.drawActionCard(card);
+            this.playerCond.Value = GamePlayerCondition.MyTurn;
+        });
         const turnFinishButtonClick =
             new SocketBinder.EmitReceiveBinder("turnFinishButtonClick", true, [`player${playerId}`]);
 
