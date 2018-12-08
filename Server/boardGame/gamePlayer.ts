@@ -15,7 +15,9 @@ import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 import { War, WarSuccessFlag } from "./war";
-import { actionCardUseConditionCheck } from "./actionCardUseConditionCheck";
+import { actionCardUseConditionCheck } from "./useActionCard/actionCardUseConditionCheck";
+import { actionCardExec } from "./useActionCard/actionCardExec";
+import { useActionCard } from "./useActionCard/useActionCard";
 
 export class GamePlayer {
     private playerId: number;
@@ -382,100 +384,20 @@ export class GamePlayer {
 
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(card => {
-            //イベントによる制約の処理
-            if (
-                this.nowEvent.name == "ニート化が進む" &&
-                this.state.State.negative >= 2 &&
-                card.cost.find(x => x.name == "人間")
-            ) {
-                unavailable.emit(UnavailableState.Event);
+            const result = useActionCard(
+                card,
+                this.nowEvent,
+                this.state,
+                this.onceNoCostFlag,
+                this.resourceList,
+                this.buildActionList,
+                this.war.getWarFlag()
+            );
+            if (result) {
+                unavailable.emit(result);
                 return false;
             }
-
-            //使用コストの判定
-            if (
-                this.onceNoCostFlag == false &&
-                this.resourceList.canCostPayment(card.cost) == false
-            ) {
-                unavailable.emit(UnavailableState.Cost);
-                return false;
-            }
-
-            //戦争条件の判定
-            if (
-                card.war_use &&
-                this.war.getWarFlag() == false &&
-                (this.nowEvent.name == "世界大戦の開幕" &&
-                    this.state.State.negative >= 1) == false
-            ) {
-                unavailable.emit(UnavailableState.War);
-                return false;
-            }
-
-            //カード使用条件の判定
-            if (
-                actionCardUseConditionCheck(
-                    card,
-                    this.state,
-                    this.buildActionList
-                ) == false
-            ) {
-                unavailable.emit(UnavailableState.Condition);
-                return false;
-            }
-
-            //実際の使用する処理
-            if (card.build_use) this.buildActionList.addBuildAction(card.name);
-            else {
-                switch (card.name) {
-                    case "ロケットの開発":
-                        this.resourceList.addResource("ロケット");
-                        break;
-                    case "花火大会":
-                        //P点がリソース内の人間の半分（切り捨て）の数増える
-                        break;
-                    case "布教活動":
-                        this.resourceList.changeResource("人間", "信者", 1);
-                        break;
-                    case "火星探査":
-                        this.resourceList.addResource("火星の情報");
-                        break;
-                    case "ミサイル発射":
-                        //戦争相手の設置済みアクションを1つ破壊。
-                        break;
-                    case "衛星の打ち上げ":
-                        this.resourceList.addResource("衛星");
-                        break;
-                    case "チップの埋め込み":
-                        this.resourceList.addResource("拡張人間");
-                        break;
-                    case "細菌兵器":
-                        //戦争相手のリソースにある人間を、サイコロの数分、病人に変える。
-                        break;
-                    case "テラフォーミング":
-                        this.resourceList.addResource("テラフォーミング");
-                        break;
-                    case "神の杖":
-                        //戦争相手の設置アクションを1つと、リソースをサイコロの数分破壊する。
-                        break;
-                    case "意識操作のテスト":
-                        this.state.addNegative(-1);
-                        this.state.addPositive(1);
-                        break;
-                    case "御神体の再生":
-                        this.resourceList.addResource("神体");
-                        break;
-                    case "火星の支配":
-                    case "A.Iによる支配":
-                    case "宗教による支配":
-                        //勝利カードの処理
-                        break;
-                }
-            }
-
-            this.resourceList.costPayment(card.cost);
-            if (this.onceNoCostFlag) this.onceNoCostFlag = false;
-
+            this.onceNoCostFlag = false;
             return true;
         });
         //設置アクションカードの使用

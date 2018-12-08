@@ -1,6 +1,6 @@
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { BuildActionList } from "./buildActionList";
-import { GamePlayerState } from "./gamePlayerState";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { BuildActionList } from "../buildActionList";
+import { GamePlayerState } from "../gamePlayerState";
 
 export function actionCardUseConditionCheck(
     card: ActionCardYamlData,
