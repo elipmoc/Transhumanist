@@ -101,20 +101,11 @@ export class GamePlayer {
     }
 
     setMyTurn() {
-        const eventCard = this.nowEvent;
-        this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
-        if (eventCard.name == "人口爆発") {
+        if (this.nowEvent.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
             this.resourceList.addResource("人間", len);
-        } else if (eventCard.name != "少子化")
+        } else if (this.nowEvent.name != "少子化")
             this.resourceList.addResource("人間");
-
-        if (eventCard.name == "AIへの反抗") {
-            this.state.addAcivityRange(this.state.State.negative * -1);
-        }
-        if (eventCard.name == "AIへの友好") {
-            this.state.addAcivityRange(this.state.State.positive);
-        }
 
         if (this.war.getWarFlag()) this.state.warStateChange();
 
@@ -130,6 +121,15 @@ export class GamePlayer {
     setEvent(eventCard: Event) {
         this.playerCond.Value = GamePlayerCondition.Event;
         this.nowEvent = eventCard;
+
+        this.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
+
+        if (eventCard.name == "AIへの反抗") {
+            this.state.addAcivityRange(this.state.State.negative * -1);
+        }
+        if (eventCard.name == "AIへの友好") {
+            this.state.addAcivityRange(this.state.State.positive);
+        }
 
         switch (this.nowEvent.name) {
             case "ムーアの法則":
