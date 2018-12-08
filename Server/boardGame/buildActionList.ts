@@ -82,6 +82,11 @@ export class BuildActionList {
         this.buildActionList.Value.fill(null);
     }
 
+    //指定した設置アクションカードがいくつあるかを計算する
+    getCount(name: ActionCardName) {
+        return this.buildActionList.Value.filter(x => x == name).length;
+    }
+
     //null以外の数
     getAllCount() {
         let count = 0;

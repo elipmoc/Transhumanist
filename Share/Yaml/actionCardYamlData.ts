@@ -16,6 +16,7 @@ export interface ActionCardYamlData {
     cost: ResourceItem[];
     commands: Command[];
     war_use: boolean;
+    conditions: string | undefined;
     conditionDescript: string;
 }
 

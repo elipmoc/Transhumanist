@@ -203,11 +203,15 @@ export class ResourceList {
         this.resourceList.Value = arr;
     }
 
-    //カードのコストを支払う。
+    //カードのコストを支払えるかどうかの判定をする。
     //払えなければ、falseを返す
+    canCostPayment(cost: ResourceItem[]) {
+        return cost.filter(x => this.getCount(x.name) < x.number).length == 0;
+    }
+
+    //カードのコストを支払う。
     costPayment(cost: ResourceItem[]) {
-        if (cost.filter(x => this.getCount(x.name) < x.number).length != 0)
-            return false;
+        if (this.canCostPayment(cost) == false) return;
         let arr = this.resourceList.Value;
         cost.forEach(x => {
             let count = 0;
@@ -215,9 +219,8 @@ export class ResourceList {
                 if (x.name == y) count++;
                 if (y != x.name || count > x.number) return y;
                 return null;
-            })
+            });
         });
         this.setCrowdList(arr);
-        return true;
     }
 }
