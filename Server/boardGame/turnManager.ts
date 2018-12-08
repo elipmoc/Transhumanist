@@ -1,14 +1,11 @@
 import { GamePlayer } from "./gamePlayer";
 import { SocketBinder } from "../socketBinder";
-import { EventCardDrawer } from "./eventCardDrawer";
 
 function cmp(a: GamePlayer, b: GamePlayer) {
-    if (a.GameState.State.speed > b.GameState.State.speed)
-        return 1;
-    else if (a.GameState.State.speed < b.GameState.State.speed)
-        return -1;
+    if (a.GameState.State.speed > b.GameState.State.speed) return 1;
+    else if (a.GameState.State.speed < b.GameState.State.speed) return -1;
     else {
-        return a.PlayerId < b.PlayerId ? 1 : -1
+        return a.PlayerId < b.PlayerId ? 1 : -1;
     }
 }
 
@@ -18,7 +15,9 @@ export class TurnManager {
     private players: Array<GamePlayer>;
     private turn: SocketBinder.Binder<number>;
 
-    get CurrentPlayerId() { return this.currentTurnPlayerId.Value; }
+    get CurrentPlayerId() {
+        return this.currentTurnPlayerId.Value;
+    }
 
     reset() {
         this.turnPlayerIdList = [];
@@ -29,7 +28,9 @@ export class TurnManager {
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
         this.turn = new SocketBinder.Binder<number>("turn");
-        this.currentTurnPlayerId = new SocketBinder.Binder<number>("currentTurnPlayerId");
+        this.currentTurnPlayerId = new SocketBinder.Binder<number>(
+            "currentTurnPlayerId"
+        );
         boardSocketManager.addSocketBinder(this.turn, this.currentTurnPlayerId);
         this.reset();
     }
@@ -44,7 +45,7 @@ export class TurnManager {
         this.turn.Value = this.turn.Value + 1;
     }
 
-    nextPlayer(): { playerId: number, turnChanged: boolean } {
+    nextPlayer(): { playerId: number; turnChanged: boolean } {
         const nextPlayerId = this.turnPlayerIdList.pop();
         if (nextPlayerId == undefined) {
             this.calculate();
