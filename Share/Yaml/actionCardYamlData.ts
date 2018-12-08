@@ -1,5 +1,5 @@
 export interface ActionCardHash {
-    [index: string]: ActionCardYamlData | undefined
+    [index: string]: ActionCardYamlData | undefined;
 }
 
 export type BuildActionIndex = number;
@@ -8,7 +8,7 @@ export type ActionCardName = string;
 
 export interface ActionCardYamlData {
     name: string;
-    number: number;//枚数
+    number: number; //枚数
     index: ActionIndex;
     level: number;
     build_use: boolean;
@@ -16,6 +16,7 @@ export interface ActionCardYamlData {
     cost: ResourceItem[];
     commands: Command[];
     war_use: boolean;
+    conditions: string | undefined;
     conditionDescript: string;
 }
 
@@ -26,7 +27,15 @@ export interface ResourceItem {
 
 export interface Command {
     kind: string;
-    body: RandGet | CreateGet | CostTakeOver | ResourcePlus | ResourceGuard | Get | Trade | SpeedPlus;
+    body:
+        | RandGet
+        | CreateGet
+        | CostTakeOver
+        | ResourcePlus
+        | ResourceGuard
+        | Get
+        | Trade
+        | SpeedPlus;
 }
 
 export interface RandGet {
