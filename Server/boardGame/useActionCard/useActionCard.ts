@@ -51,7 +51,7 @@ export function useActionCard(
     //アクションカード効果発動
     actionCardExec(card, buildActionList, resourceList, state);
 
-    resourceList.costPayment(card.cost);
+    if (onceNoCostFlag == false) resourceList.costPayment(card.cost);
 
     return null;
 }
