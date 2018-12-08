@@ -6,7 +6,9 @@ export interface Message {
 export class MessageBox<MsgT extends Message> extends createjs.Container {
     private bottomY = 0;
     private mouseInFlag = false;
-    set MouseInFlag(x: boolean) { this.mouseInFlag = x; }
+    set MouseInFlag(x: boolean) {
+        this.mouseInFlag = x;
+    }
 
     constructor(height: number) {
         super();

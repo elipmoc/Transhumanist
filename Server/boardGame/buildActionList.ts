@@ -1,5 +1,8 @@
 import { SocketBinder } from "../socketBinder";
-import { ActionCardName, ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import {
+    ActionCardName,
+    ActionCardYamlData
+} from "../../Share/Yaml/actionCardYamlData";
 import { SelectBuildActionData } from "../../Share/selectBuildActionData";
 import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
@@ -15,31 +18,47 @@ export class BuildActionList {
 
     //頑張ってリファクタリングして
     private nowEvent = false;
-    setNowEvent(flag: boolean) { this.nowEvent = flag }
+    setNowEvent(flag: boolean) {
+        this.nowEvent = flag;
+    }
     private eventClearCallback: () => void;
     onEventClearCallback(f: () => void) {
         this.eventClearCallback = f;
     }
 
     constructor(boardSocketManager: SocketBinder.Namespace, playerId: number) {
-        this.buildActionList = new SocketBinder.BinderList<ActionCardName>("BuildActionKindList" + playerId);
-        const selectBuildAction =
-            new SocketBinder.EmitReceiveBinder<SelectBuildActionData>("SelectBuildAction", true, [`player${playerId}`]);
+        this.buildActionList = new SocketBinder.BinderList<ActionCardName>(
+            "BuildActionKindList" + playerId
+        );
+        const selectBuildAction = new SocketBinder.EmitReceiveBinder<
+            SelectBuildActionData
+            >("SelectBuildAction", true, [`player${playerId}`]);
         selectBuildAction.OnReceive(x => {
             const cardName = this.buildActionList.Value[x.iconId];
 
-            const useBuildActionCard =
-                GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), true)[cardName!];
+            const useBuildActionCard = GenerateActionCardYamlData(
+                yamlGet("./Resource/Yaml/actionCard.yaml"),
+                true
+            )[cardName!];
             if (useBuildActionCard) {
-                this.useBuildActionCardCallback(useBuildActionCard)
+                this.useBuildActionCardCallback(useBuildActionCard);
             }
         });
-        this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, ["player" + playerId]);
+        this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, [
+            "player" + playerId
+        ]);
         this.buildOver.Value = { overCount: 0, causeText: "" };
-        this.throwBuild = new SocketBinder.EmitReceiveBinder("ThrowBuild", true, ["player" + playerId])
+        this.throwBuild = new SocketBinder.EmitReceiveBinder(
+            "ThrowBuild",
+            true,
+            ["player" + playerId]
+        );
         this.throwBuild.OnReceive(throwBuild => {
             console.log(`throwBuild: ${throwBuild}`);
-            if (this.buildOver.Value.overCount == throwBuild.buildActionList.length) {
+            if (
+                this.buildOver.Value.overCount ==
+                throwBuild.buildActionList.length
+            ) {
                 this.buildOver.Value = { overCount: 0, causeText: "" };
                 throwBuild.buildActionList.forEach(id => {
                     this.buildActionList.Value[id] = null;
@@ -50,7 +69,12 @@ export class BuildActionList {
             }
         });
 
-        boardSocketManager.addSocketBinder(this.buildActionList, selectBuildAction,this.buildOver,this.throwBuild);
+        boardSocketManager.addSocketBinder(
+            this.buildActionList,
+            selectBuildAction,
+            this.buildOver,
+            this.throwBuild
+        );
         this.clear();
     }
     clear() {
@@ -69,8 +93,7 @@ export class BuildActionList {
 
     addBuildAction(name: ActionCardName) {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
-        if (idx != -1)
-            this.buildActionList.setAt(idx, name);
+        if (idx != -1) this.buildActionList.setAt(idx, name);
         this.setCrowdList(this.buildActionList.Value);
     }
 
@@ -96,13 +119,16 @@ export class BuildActionList {
 
         //乱数で消す数以上リソースがある
         if (allCount >= num) {
-            let targetIndexes = new Array<number>(allCount).fill(0).map((_, idx) => idx);
+            let targetIndexes = new Array<number>(allCount)
+                .fill(0)
+                .map((_, idx) => idx);
             targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
-            arr = arr.map((x, index) => targetIndexes.includes(index) ? null : x);
+            arr = arr.map((x, index) =>
+                targetIndexes.includes(index) ? null : x
+            );
         }
         //消す数より少なかった
-        else
-            arr.fill(null);
+        else arr.fill(null);
         this.setCrowdList(arr);
     }
 
