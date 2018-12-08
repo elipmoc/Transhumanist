@@ -15,8 +15,6 @@ import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 import { War, WarSuccessFlag } from "./war";
-import { actionCardUseConditionCheck } from "./useActionCard/actionCardUseConditionCheck";
-import { actionCardExec } from "./useActionCard/actionCardExec";
 import { useActionCard } from "./useActionCard/useActionCard";
 
 export class GamePlayer {
