@@ -64,12 +64,15 @@ export class GamePlayers {
             player.onExileCallback(diceNumber =>
                 this.exileMove(player, diceNumber)
             );
-            player.onStartWar(targetPlayerId =>
-                this.warList.startWar(player.PlayerId, targetPlayerId)
+            player.onStartWar(
+                targetPlayerId =>
+                    this.getNowPlayers().some(
+                        x => x.PlayerId == targetPlayerId
+                    ) && this.warList.startWar(player.PlayerId, targetPlayerId)
             );
             player.onSurrender(() => {
                 const winPlayerId = this.warList.surrender(player.PlayerId);
-                if (winPlayerId) {
+                if (winPlayerId !== null) {
                     this.gamePlayerList[winPlayerId].winWar();
                     return true;
                 }
