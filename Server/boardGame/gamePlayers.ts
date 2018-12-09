@@ -69,7 +69,7 @@ export class GamePlayers {
             );
             player.onSurrender(() => {
                 const winPlayerId = this.warList.surrender(player.PlayerId);
-                if (winPlayerId) {
+                if (winPlayerId !== null) {
                     this.gamePlayerList[winPlayerId].winWar();
                     return true;
                 }
