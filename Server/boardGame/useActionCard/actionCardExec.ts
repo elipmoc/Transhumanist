@@ -18,6 +18,7 @@ export function actionCardExec(
                 resourceList.addResource("ロケット");
                 break;
             case "花火大会":
+                state.addPositive(Math.floor(resourceList.getCount("人間") / 2));
                 //P点がリソース内の人間の半分（切り捨て）の数増える
                 break;
             case "布教活動":
