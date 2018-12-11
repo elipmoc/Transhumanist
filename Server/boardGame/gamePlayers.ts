@@ -10,6 +10,7 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
+import { warActionCardExec } from "./useActionCard/warActionCardExec";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -78,7 +79,17 @@ export class GamePlayers {
                 }
                 return false;
             });
+            player.onWarActionCallback((name:string) => {
+                this.useWarActionCard(player.PlayerId, name);
+            });
             this.gamePlayerList.push(player);
+        }
+    }
+
+    useWarActionCard(playerId:number,cardName:string) {
+        const target = this.warList.getWarPlayerId(playerId);
+        if (target != null) {
+            this.gamePlayerList[target].warAction(cardName);
         }
     }
 

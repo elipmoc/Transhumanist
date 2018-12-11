@@ -118,7 +118,7 @@ export class BuildActionList {
     }
 
     //randomに消す
-    public randomDeleteResource(num: number) {
+    public randomDeleteBuildAction(num: number) {
         let arr = this.buildActionList.Value;
         const allCount = this.getAllCount();
 

@@ -1,6 +1,7 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
 import { UnavailableState } from "../../Share/unavailableState";
@@ -14,8 +15,9 @@ import { SelectedGetResourceId } from "../../Share/selectedGetResourceId";
 import { Event } from "../../Share/Yaml/eventYamlData";
 import { BuildActionList } from "./buildActionList";
 import { War, WarSuccessFlag } from "./war";
-import { useActionCard } from "./useActionCard/useActionCard";
+import { useActionCard, UseActionResult } from "./useActionCard/useActionCard";
 import { setEvent, diceSelectAfterEvent } from "./eventExec";
+import { warActionCardExec } from "./useActionCard/warActionCardExec";
 
 export class GamePlayer {
     private playerId: number;
@@ -58,6 +60,12 @@ export class GamePlayer {
     private surrenderCallback: () => WarSuccessFlag;
     onSurrender(f: () => WarSuccessFlag) {
         this.surrenderCallback = f;
+    }
+
+    //戦争アクション起動時のコールバック
+    private warActionCallback: (cardName: string) => void;
+    onWarActionCallback(f: (cardName: string) => void) {
+        this.warActionCallback = f;
     }
 
     private turnFinishButtonClickCallback: () => void;
@@ -189,6 +197,10 @@ export class GamePlayer {
         this.war.win();
     }
 
+    warAction(name: ActionCardName) {
+        warActionCardExec(name, this.buildActionList, this.resourceList);
+    }
+
     constructor(
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
@@ -287,7 +299,7 @@ export class GamePlayer {
 
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(card => {
-            const result = useActionCard(
+            const result:UseActionResult = useActionCard(
                 card,
                 this.nowEvent,
                 this.state,
@@ -296,9 +308,16 @@ export class GamePlayer {
                 this.buildActionList,
                 this.war.getWarFlag()
             );
-            if (result) {
-                unavailable.emit(result);
+            if (result.unavailableState != null) {
+                unavailable.emit(result.unavailableState);
                 return false;
+            }
+            else if (result.warActionFlag) {
+                //callback
+                this.warActionCallback(result.cardName);
+            }
+            else if (result.winActionFlag) {
+                //クリア処理
             }
             this.onceNoCostFlag = false;
             return true;

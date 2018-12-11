@@ -153,7 +153,7 @@ export function diceSelectAfterEvent(
         case "天変地異":
             //サイコロの値分、リソースと設置済みを消す。
             resourceList.randomDeleteResource(diceNumber);
-            buildActionList.randomDeleteResource(diceNumber);
+            buildActionList.randomDeleteBuildAction(diceNumber);
             result.eventClearFlag = true;
             break;
         case "独立傾向":
