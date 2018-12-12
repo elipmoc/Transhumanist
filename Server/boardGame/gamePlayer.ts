@@ -326,6 +326,7 @@ export class GamePlayer {
         this.buildActionList.onUseBuildActionCard(card => {
             if (this.nowEvent.name == "太陽風")
                 unavailable.emit(UnavailableState.Event);
+            console.log(card.name);
         });
         boardSocketManager.addSocketBinder(
             unavailable,
