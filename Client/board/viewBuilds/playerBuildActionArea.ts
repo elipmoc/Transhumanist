@@ -69,21 +69,23 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
-            switch (cardIcon.Kind) {
-                case "採掘施設":
-                    const selectResource: CandidateResources = {
-                        number: 1,
-                        resource_names: ["メタル", "ガス", "ケイ素", "硫黄"]
-                    };
-                    selectResourceWindow.CardIndex = cardIcon.IconId;
-                    selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
-                    selectResourceWindow.visible = true;
-                    break;
-                case "印刷所":
-                    buildActionUseDecision.CardIndex = cardIcon.IconId;
-                    buildActionUseDecision.CardName = cardIcon.Kind;
-                    buildActionUseDecision.visible = true;
-                    break;
+            if (!cardIcon.Used) {
+                switch (cardIcon.Kind) {
+                    case "採掘施設":
+                        const selectResource: CandidateResources = {
+                            number: 1,
+                            resource_names: ["メタル", "ガス", "ケイ素", "硫黄"]
+                        };
+                        selectResourceWindow.CardIndex = cardIcon.IconId;
+                        selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
+                        selectResourceWindow.visible = true;
+                        break;
+                    case "印刷所":
+                        buildActionUseDecision.CardIndex = cardIcon.IconId;
+                        buildActionUseDecision.CardName = cardIcon.Kind;
+                        buildActionUseDecision.visible = true;
+                        break;
+                }
             }
         }
         else if (buildOver.Value.overCount != 0) cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
@@ -98,6 +100,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             resourceId: cardIcon.IconId
         };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
         selectResourceWindow.visible = false;
         bindParams.layerManager.update();
     });
