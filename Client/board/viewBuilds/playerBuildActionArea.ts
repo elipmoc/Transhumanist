@@ -12,6 +12,8 @@ import { BuildActionUseDecision } from "../views/buildActionUseDecision";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { ThrowBuildAction } from "../../../Share/throwBuildAction";
 import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
+import { SelectResourceWindow } from "../views/selectResourceWindow";
+import { CandidateResources } from "../../../Share/candidateResources";
 
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
@@ -23,8 +25,12 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     
     const buildActionUseDecision = new ActionCardUseDecisionWindow();
+    const selectResourceWindow = new SelectResourceWindow(4);
+    selectResourceWindow.visible = false;
+
     //const buildActionUseDecision = new BuildActionUseDecision();
     bindParams.layerManager.add(LayerTag.PopUp, buildthrowDialog);
+    bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
     bindParams.layerManager.add(LayerTag.PopUp, buildActionUseDecision);
 
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
@@ -65,6 +71,15 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
             switch (cardIcon.Kind) {
                 case "採掘施設":
+                    const selectResource: CandidateResources = {
+                        number: 1,
+                        resource_names: ["メタル", "ガス", "ケイ素", "硫黄"]
+                    };
+                    selectResourceWindow.CardIndex = cardIcon.IconId;
+                    selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
+                    selectResourceWindow.visible = true;
+                    break;
+                case "印刷所":
                     buildActionUseDecision.CardIndex = cardIcon.IconId;
                     buildActionUseDecision.CardName = cardIcon.Kind;
                     buildActionUseDecision.visible = true;
@@ -76,10 +91,24 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         bindParams.layerManager.update();
     });
 
+    //onClickの設定
+    selectResourceWindow.onClickIcon((cardIcon) => {
+        const selectBuildActionData: SelectBuildActionData = {
+            iconId: selectResourceWindow.CardIndex,
+            resourceId: cardIcon.IconId
+        };
+        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        selectResourceWindow.visible = false;
+        bindParams.layerManager.update();
+    });
+
     buildActionUseDecision.visible = false;
     buildActionUseDecision.onClicked((r) => {
         if (r == DialogResult.Yes) {
-            const selectBuildActionData: SelectBuildActionData = { iconId: buildActionUseDecision.CardIndex };
+            const selectBuildActionData: SelectBuildActionData = {
+                iconId: buildActionUseDecision.CardIndex,
+                resourceId: null
+            };
             bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
         }
         buildActionUseDecision.visible = false;

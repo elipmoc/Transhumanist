@@ -10,7 +10,13 @@ export class SelectResourceWindow extends createjs.Container {
     private resourceNumber: number;
     private maxLength: number;
     private descriptionText = new createjs.Text();
+    private cardIndex: number;
     protected resourceList: IconList<ResourceCardIcon, ResourceName>;
+
+    set CardIndex(index: number) {
+        this.cardIndex = index;
+    }
+    get CardIndex() { return this.cardIndex; }
 
     constructor(maxNum: number) {
         super();
