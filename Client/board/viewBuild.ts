@@ -17,6 +17,8 @@ import * as selectWinCardWindow from "./viewBuilds/selectWinCardWindow";
 import * as unavailableDialog from "./viewBuilds/unavailableDialog";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
+import * as nowEventDialog from "./viewBuilds/nowEventDialog";
+
 import { LayerTag } from "../board";
 
 //viewを生成してソケットと結びつける関数
@@ -39,4 +41,5 @@ export function viewBuild(bindParams: BindParams) {
     unavailableDialog.build(bindParams);
     topWindowL.build(bindParams);
     chatForm.build(bindParams);
+    nowEventDialog.build(bindParams);
 }

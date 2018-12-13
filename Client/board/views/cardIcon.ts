@@ -10,6 +10,7 @@ export class CardIconBase<K> extends createjs.Container {
     private iconId: number;
     private img_name: string;
     private image: createjs.Bitmap = new createjs.Bitmap("");
+    private used: boolean;
 
     get Kind() { return this.kind; }
 
@@ -21,6 +22,12 @@ export class CardIconBase<K> extends createjs.Container {
     }
     get IconId() { return this.iconId; }
 
+    set Used(val:boolean) {
+        this.used = val;
+        this.used ? this.image.alpha = 0.5 : this.image.alpha = 1;
+    }
+    get Used() { return this.used; }
+    
     //リソースをクリックされた時に呼ばれる関数
     private onClickCallBack: () => void;
 

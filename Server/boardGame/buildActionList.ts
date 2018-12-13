@@ -12,7 +12,7 @@ import { ThrowBuildAction } from "../../Share/throwBuildAction";
 
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
-    private useBuildActionCardCallback: (card: ActionCardYamlData) => void;
+    private useBuildActionCardCallback: (card: ActionCardYamlData,data: SelectBuildActionData) => void;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
 
@@ -34,6 +34,7 @@ export class BuildActionList {
             SelectBuildActionData
             >("SelectBuildAction", true, [`player${playerId}`]);
         selectBuildAction.OnReceive(x => {
+            const data = x;
             const cardName = this.buildActionList.Value[x.iconId];
 
             const useBuildActionCard = GenerateActionCardYamlData(
@@ -41,7 +42,7 @@ export class BuildActionList {
                 true
             )[cardName!];
             if (useBuildActionCard) {
-                this.useBuildActionCardCallback(useBuildActionCard);
+                this.useBuildActionCardCallback(useBuildActionCard,data);
             }
         });
         this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, [
@@ -156,7 +157,7 @@ export class BuildActionList {
     }
 
     //カードが使用されるときに呼ばれる関数をセット
-    onUseBuildActionCard(f: (card: ActionCardYamlData) => void) {
+    onUseBuildActionCard(f: (card: ActionCardYamlData,data:SelectBuildActionData) => void) {
         this.useBuildActionCardCallback = f;
     }
 }

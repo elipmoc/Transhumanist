@@ -323,9 +323,17 @@ export class GamePlayer {
             return true;
         });
         //設置アクションカードの使用
-        this.buildActionList.onUseBuildActionCard(card => {
+        this.buildActionList.onUseBuildActionCard((card,data) => {
             if (this.nowEvent.name == "太陽風")
                 unavailable.emit(UnavailableState.Event);
+            console.log(card.name);
+
+            switch (card.name) {
+                case "採掘施設":
+                    const resourceData = ["メタル", "ガス", "ケイ素", "硫黄"];
+                    this.resourceList.addResource(resourceData[data.resourceId!]);
+                    break;
+            }
         });
         boardSocketManager.addSocketBinder(
             unavailable,

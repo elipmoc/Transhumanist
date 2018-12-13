@@ -11,6 +11,9 @@ import { BuildOver } from "../../../Share/elementOver";
 import { BuildActionUseDecision } from "../views/buildActionUseDecision";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { ThrowBuildAction } from "../../../Share/throwBuildAction";
+import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
+import { SelectResourceWindow } from "../views/selectResourceWindow";
+import { CandidateResources } from "../../../Share/candidateResources";
 
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
@@ -21,8 +24,13 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     
-    const buildActionUseDecision = new BuildActionUseDecision();
+    const buildActionUseDecision = new ActionCardUseDecisionWindow();
+    const selectResourceWindow = new SelectResourceWindow(4);
+    selectResourceWindow.visible = false;
+
+    //const buildActionUseDecision = new BuildActionUseDecision();
     bindParams.layerManager.add(LayerTag.PopUp, buildthrowDialog);
+    bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
     bindParams.layerManager.add(LayerTag.PopUp, buildActionUseDecision);
 
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
@@ -61,23 +69,60 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
-            buildActionUseDecision.setText(cardIcon.Kind);
-            buildActionUseDecision.visible = true;
+            if (!cardIcon.Used) {
+                switch (cardIcon.Kind) {
+                    case "採掘施設":
+                        const selectResource: CandidateResources = {
+                            number: 1,
+                            resource_names: ["メタル", "ガス", "ケイ素", "硫黄"]
+                        };
+                        selectResourceWindow.CardIndex = cardIcon.IconId;
+                        selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
+                        selectResourceWindow.visible = true;
+                        break;
+                    case "印刷所":
+                        buildActionUseDecision.CardIndex = cardIcon.IconId;
+                        buildActionUseDecision.CardName = cardIcon.Kind;
+                        buildActionUseDecision.visible = true;
+                        break;
+                }
+            }
         }
         else if (buildOver.Value.overCount != 0) cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
 
         bindParams.layerManager.update();
+    });
 
-        //const selectBuildActionData: SelectBuildActionData = { iconId: cardIcon.IconId };
-        //bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+    //onClickの設定
+    selectResourceWindow.onClickIcon((cardIcon) => {
+        const selectBuildActionData: SelectBuildActionData = {
+            iconId: selectResourceWindow.CardIndex,
+            resourceId: cardIcon.IconId
+        };
+        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
+        selectResourceWindow.visible = false;
+        bindParams.layerManager.update();
     });
 
     buildActionUseDecision.visible = false;
-    buildActionUseDecision.buttonOnClick(() => { 
+    buildActionUseDecision.onClicked((r) => {
+        if (r == DialogResult.Yes) {
+            const selectBuildActionData: SelectBuildActionData = {
+                iconId: buildActionUseDecision.CardIndex,
+                resourceId: null
+            };
+            bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        }
         buildActionUseDecision.visible = false;
         bindParams.layerManager.update();
     });
 
+    gamePlayerCondition.onUpdate(cond => {
+        if (cond != GamePlayerCondition.MyTurn) {
+            buildActionUseDecision.visible = false;
+        }
+    });
     buildOver.onUpdate(x => {
         if (x.overCount != 0) {
             buildthrowDialog.setThrowBuildNum(x.overCount, x.causeText);

@@ -31,11 +31,16 @@ export class PlayerBuildAreaBase extends createjs.Container {
     unSelectFrameVisible() {
         this.buildList.unSelectFrameVisible();
     }
-
+    resetUsed() {
+        this.buildList.resetUsed();
+    }
     getSelectedAllIconId() {
         return this.buildList.getSelectedAllIconId();
     }
     setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: ImageQueue) {
         this.buildList.setResource(iconId, buildActionCardName, buildActionIndex, queue);
+    }
+    setUsed(iconId: number) {
+        this.buildList.setUsed(iconId);
     }
 }
