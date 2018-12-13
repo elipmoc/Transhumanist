@@ -5,8 +5,8 @@ import { createMyShadow } from "../../utility";
 export class NowEventDialog extends createjs.Container {
     constructor() {
         super();
-        const width = 500;
-        const height = 250;
+        const width = 560;
+        const height = 100;
         const background = new createjs.Shape(new createjs.Graphics().beginFill("gray")
             .drawRect(global.canvasWidth / 2 - width / 2, global.canvasHeight / 2 - height / 2, width, height));
 
@@ -16,7 +16,7 @@ export class NowEventDialog extends createjs.Container {
         label.shadow = createMyShadow();
         label.textAlign = "center";
         label.x = global.canvasWidth / 2;
-        label.y = global.canvasHeight / 2 - 100;
+        label.y = global.canvasHeight / 2 - 40;
 
         this.addChild(background, label);
     }
