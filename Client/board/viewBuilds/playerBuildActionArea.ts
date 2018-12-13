@@ -86,6 +86,11 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         bindParams.layerManager.update();
     });
 
+    gamePlayerCondition.onUpdate(cond => {
+        if (cond != GamePlayerCondition.MyTurn) {
+            buildActionUseDecision.visible = false;
+        }
+    });
     buildOver.onUpdate(x => {
         if (x.overCount != 0) {
             buildthrowDialog.setThrowBuildNum(x.overCount, x.causeText);
