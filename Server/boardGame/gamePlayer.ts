@@ -333,6 +333,11 @@ export class GamePlayer {
                     const resourceData = ["メタル", "ガス", "ケイ素", "硫黄"];
                     this.resourceList.addResource(resourceData[data.resourceId!]);
                     break;
+                case "加工施設":
+                    break;
+                case "印刷所":
+                    this.resourceList.addResource("聖書");
+                    break;
             }
         });
         boardSocketManager.addSocketBinder(
