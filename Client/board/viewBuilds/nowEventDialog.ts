@@ -8,6 +8,7 @@ import { LayerTag } from "../../board";
 export function build(bindParams: BindParams) {
 
     const nowEventDialog = new NowEventDialog();
+    nowEventDialog.visible = false;
     bindParams.layerManager.add(LayerTag.Ui, nowEventDialog);
 
     const gamePlayerCondition =
