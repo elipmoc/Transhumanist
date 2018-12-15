@@ -112,7 +112,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             selectNum: null
         };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
-        playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
+        //playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
         selectResourceWindow.visible = false;
         bindParams.layerManager.update();
     });
