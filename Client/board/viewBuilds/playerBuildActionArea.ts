@@ -1,5 +1,5 @@
 import { ActionCardHover } from "../views/actionCardHover";
-import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardName, RandGet } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { SocketBinderList } from "../../socketBinderList";
@@ -77,9 +77,10 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             if (!cardIcon.Used) {
                 switch (cardIcon.Kind) {
                     case "採掘施設":
+                        const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
                         const selectResource: CandidateResources = {
-                            number: 1,
-                            resource_names: ["メタル", "ガス", "ケイ素", "硫黄"]
+                            number: yamlData.select_number,
+                            resource_names: [yamlData.items[0].name, yamlData.items[1].name, yamlData.items[2].name, yamlData.items[3].name]
                         };
                         selectResourceWindow.CardIndex = cardIcon.IconId;
                         selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
