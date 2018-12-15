@@ -72,7 +72,6 @@ export class BuildActionSelectWindow extends createjs.Container {
         
         this.selectButton.forEach((button, index) => {
             button.setCommandData(<CreateGet>yaml.commands[index].body, queue, resourceHash);
-            button.onClickCallback(() => { console.log(yaml.name + " " + index) });
         });
     }
     set CardIndex(id:number) {
