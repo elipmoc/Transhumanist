@@ -1,5 +1,6 @@
 
 export interface SelectBuildActionData {
     iconId: number;
-    resourceId: number|null
+    resourceId: number | null;
+    selectNum: number | null
 }
