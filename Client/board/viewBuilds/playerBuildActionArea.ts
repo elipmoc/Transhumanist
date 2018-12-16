@@ -91,7 +91,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                         buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash["加工施設"], bindParams.imgQueue, bindParams.yamls.resourceHash);
                         buildActionSelectWindow.visible = true;
                         break;
-                    case "印刷所": case "治療施設":
+                    case "印刷所": 
+                    case "治療施設":
+                    case "ロボット工場":
                         buildActionUseDecision.CardIndex = cardIcon.IconId;
                         buildActionUseDecision.CardName = cardIcon.Kind;
                         buildActionUseDecision.visible = true;
@@ -109,7 +111,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         const selectBuildActionData: SelectBuildActionData = {
             iconId: selectResourceWindow.CardIndex,
             resourceId: cardIcon.IconId,
-            selectNum: null
+            selectNum: 0
         };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
         //playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
@@ -139,7 +141,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             const selectBuildActionData: SelectBuildActionData = {
                 iconId: buildActionUseDecision.CardIndex,
                 resourceId: null,
-                selectNum: null
+                selectNum: 0
             };
             bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
         }

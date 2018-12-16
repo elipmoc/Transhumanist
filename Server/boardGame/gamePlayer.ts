@@ -336,6 +336,7 @@ export class GamePlayer {
                     break;
                 case "加工施設":
                 case "研究施設":
+                case "ロボット工場":
                     const createData: CreateGet = <CreateGet>card.commands[data.selectNum!].body;
                     if (this.resourceList.canCostPayment(createData.cost)) {
                         this.resourceList.costPayment(createData.cost);
