@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, CreateGet } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -18,6 +18,7 @@ import { War, WarSuccessFlag } from "./war";
 import { useActionCard, UseActionResult } from "./useActionCard/useActionCard";
 import { setEvent, diceSelectAfterEvent } from "./eventExec";
 import { warActionCardExec } from "./useActionCard/warActionCardExec";
+import { create } from "domain";
 
 export class GamePlayer {
     private playerId: number;
@@ -332,6 +333,20 @@ export class GamePlayer {
                 case "採掘施設":
                     const resourceData = ["メタル", "ガス", "ケイ素", "硫黄"];
                     this.resourceList.addResource(resourceData[data.resourceId!]);
+                    break;
+                case "加工施設":
+                    const createData: CreateGet = <CreateGet>card.commands[data.selectNum!].body;
+                    if (this.resourceList.canCostPayment(createData.cost)) {
+                        this.resourceList.costPayment(createData.cost);
+                        createData.get.forEach(elem => {
+                            this.resourceList.addResource(elem.name, elem.number); 
+                        });
+                    } else {
+                        unavailable.emit(UnavailableState.Cost);
+                    }
+                    break;
+                case "印刷所":
+                    this.resourceList.addResource("聖書");
                     break;
             }
         });
