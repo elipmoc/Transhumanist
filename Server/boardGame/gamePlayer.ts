@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, CreateGet } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, CreateGet, Trade } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -335,6 +335,7 @@ export class GamePlayer {
                     this.resourceList.addResource(resourceData[data.resourceId!]);
                     break;
                 case "加工施設":
+                case "研究施設":
                     const createData: CreateGet = <CreateGet>card.commands[data.selectNum!].body;
                     if (this.resourceList.canCostPayment(createData.cost)) {
                         this.resourceList.costPayment(createData.cost);
@@ -348,6 +349,16 @@ export class GamePlayer {
                 case "印刷所":
                     this.resourceList.addResource("聖書");
                     break;
+                case "治療施設":
+                    const tradeData: Trade = <Trade>card.commands[data.selectNum!].body;
+                    if (this.resourceList.canCostPayment(tradeData.cost_items)) {
+                        this.resourceList.costPayment(tradeData.cost_items);
+                        this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name,1);
+                    } else {
+                        unavailable.emit(UnavailableState.Cost);
+                    }
+                    break;
+
             }
         });
         boardSocketManager.addSocketBinder(

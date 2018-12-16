@@ -86,12 +86,12 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                         selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
                         selectResourceWindow.visible = true;
                         break;
-                    case "加工施設":
+                    case "加工施設": case "研究施設":
                         buildActionSelectWindow.CardIndex = cardIcon.IconId;
                         buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash["加工施設"], bindParams.imgQueue, bindParams.yamls.resourceHash);
                         buildActionSelectWindow.visible = true;
                         break;
-                    case "印刷所":
+                    case "印刷所": case "治療施設":
                         buildActionUseDecision.CardIndex = cardIcon.IconId;
                         buildActionUseDecision.CardName = cardIcon.Kind;
                         buildActionUseDecision.visible = true;
