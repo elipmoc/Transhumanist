@@ -75,6 +75,7 @@ export class ResourceList {
                     if (name) this.addResource(name);
                 });
                 this.resourceReserveList.Value.fill(null);
+                this.resourceReserveList.update();
                 this.setCrowdList(this.resourceList.Value);
 
                 if (this.nowEvent) {
