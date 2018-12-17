@@ -9,10 +9,11 @@ import { yamlGet } from "../yamlGet";
 import { BuildOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
 import { ThrowBuildAction } from "../../Share/throwBuildAction";
+import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
 
 export class BuildActionList {
-    private buildActionList: SocketBinder.BinderList<ActionCardName | null>;
-    private useBuildActionCardCallback: (card: ActionCardYamlData,data: SelectBuildActionData) => void;
+    private buildActionList: SocketBinder.BinderList<HaveBuildActionCard | null>;
+    private useBuildActionCardCallback: (card: ActionCardYamlData, data: SelectBuildActionData) => void;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
 
@@ -27,7 +28,7 @@ export class BuildActionList {
     }
 
     constructor(boardSocketManager: SocketBinder.Namespace, playerId: number) {
-        this.buildActionList = new SocketBinder.BinderList<ActionCardName>(
+        this.buildActionList = new SocketBinder.BinderList<HaveBuildActionCard>(
             "BuildActionKindList" + playerId
         );
         const selectBuildAction = new SocketBinder.EmitReceiveBinder<
@@ -35,14 +36,17 @@ export class BuildActionList {
             >("SelectBuildAction", true, [`player${playerId}`]);
         selectBuildAction.OnReceive(x => {
             const data = x;
-            const cardName = this.buildActionList.Value[x.iconId];
+            const card = this.buildActionList.Value[x.iconId];
+            if (card == null || card.usedFlag == true) return;
 
             const useBuildActionCard = GenerateActionCardYamlData(
                 yamlGet("./Resource/Yaml/actionCard.yaml"),
                 true
-            )[cardName!];
+            )[card.ActionCardName];
             if (useBuildActionCard) {
-                this.useBuildActionCardCallback(useBuildActionCard,data);
+                card.usedFlag = true;
+                this.buildActionList.setAt(x.iconId, card)
+                this.useBuildActionCardCallback(useBuildActionCard, data);
             }
         });
         this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, [
@@ -85,7 +89,7 @@ export class BuildActionList {
 
     //指定した設置アクションカードがいくつあるかを計算する
     getCount(name: ActionCardName) {
-        return this.buildActionList.Value.filter(x => x == name).length;
+        return this.buildActionList.Value.filter(x => x != null && x.ActionCardName == name).length;
     }
 
     //null以外の数
@@ -97,9 +101,18 @@ export class BuildActionList {
         return count;
     }
 
+    resetUsed() {
+        this.buildActionList.Value.map(x => {
+            if (x != null)
+                x.usedFlag = false;
+            return x;
+        })
+        this.buildActionList.update();
+    }
+
     addBuildAction(name: ActionCardName) {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
-        if (idx != -1) this.buildActionList.setAt(idx, name);
+        if (idx != -1) this.buildActionList.setAt(idx, { ActionCardName: name, usedFlag: false });
         this.setCrowdList(this.buildActionList.Value);
     }
 
@@ -109,7 +122,7 @@ export class BuildActionList {
 
         arr = arr.map(x => {
             if (count > num) return x;
-            if (x != name) return x;
+            if (x == null || x.ActionCardName != name) return x;
 
             count++;
             return null;
@@ -146,18 +159,18 @@ export class BuildActionList {
         this.buildOver.Value = emitValue;
     }
 
-    setCrowdList(arr: (ActionCardName | null)[]) {
+    setCrowdList(arr: (HaveBuildActionCard | null)[]) {
         arr.sort((a, b) => {
             if (a == b) return 0;
             if (b == null) return -1;
             if (a == null) return 1;
-            return a > b ? 1 : -1;
+            return a.ActionCardName > b.ActionCardName ? 1 : -1;
         });
         this.buildActionList.Value = arr;
     }
 
     //カードが使用されるときに呼ばれる関数をセット
-    onUseBuildActionCard(f: (card: ActionCardYamlData,data:SelectBuildActionData) => void) {
+    onUseBuildActionCard(f: (card: ActionCardYamlData, data: SelectBuildActionData) => void) {
         this.useBuildActionCardCallback = f;
     }
 }

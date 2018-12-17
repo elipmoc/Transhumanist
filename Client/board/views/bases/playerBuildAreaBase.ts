@@ -1,26 +1,27 @@
 import { IconList } from "../bases/iconList";
-import { BuildActionCardIcon, CardIconBase } from "../cardIcon";
-import { ActionCardName, BuildActionIndex } from "../../../../Share/Yaml/actionCardYamlData";
+import { BuildActionCardIcon } from "../cardIcon";
+import { BuildActionIndex } from "../../../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../../imageQueue";
+import { HaveBuildActionCard } from "../../../../Share/haveBuildActionCard";
 
 //プレイヤー設置アクション欄のベースクラス
 export class PlayerBuildAreaBase extends createjs.Container {
     protected buildArea: createjs.Bitmap;
-    protected buildList: IconList<BuildActionCardIcon, ActionCardName | null>;
+    protected buildList: IconList<BuildActionCardIcon, HaveBuildActionCard | null>;
     constructor(xNum: number) {
         super();
-        this.buildList = new IconList<BuildActionCardIcon, ActionCardName | null>(xNum, 30, BuildActionCardIcon);
+        this.buildList = new IconList<BuildActionCardIcon, HaveBuildActionCard | null>(xNum, 30, BuildActionCardIcon);
         this.buildArea = new createjs.Bitmap("");
         this.addChild(this.buildArea);
         this.addChild(this.buildList);
     }
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (cardicon: CardIconBase<ActionCardName>) => void) {
+    onClickedIcon(onClickIconCallBack: (cardicon: BuildActionCardIcon) => void) {
         this.buildList.onClickedIcon(onClickIconCallBack);
     }
 
     //リソースアイコンがマウスオーバーされた時に呼ばれる関数をセットする
-    onMouseOveredIcon(onMouseOverIconCallBack: (buildActionCardName: ActionCardName) => void) {
+    onMouseOveredIcon(onMouseOverIconCallBack: (buildActionCardData: HaveBuildActionCard) => void) {
         this.buildList.onMouseOveredIcon(onMouseOverIconCallBack);
     }
 
@@ -31,16 +32,10 @@ export class PlayerBuildAreaBase extends createjs.Container {
     unSelectFrameVisible() {
         this.buildList.unSelectFrameVisible();
     }
-    resetUsed() {
-        this.buildList.resetUsed();
-    }
     getSelectedAllIconId() {
         return this.buildList.getSelectedAllIconId();
     }
-    setResource(iconId: number, buildActionCardName: ActionCardName, buildActionIndex: BuildActionIndex, queue: ImageQueue) {
-        this.buildList.setResource(iconId, buildActionCardName, buildActionIndex, queue);
-    }
-    setUsed(iconId: number) {
-        this.buildList.setUsed(iconId);
+    setResource(iconId: number, buildActionCardData: HaveBuildActionCard, buildActionIndex: BuildActionIndex, queue: ImageQueue) {
+        this.buildList.setResource(iconId, buildActionCardData, buildActionIndex, queue);
     }
 }
