@@ -11,6 +11,7 @@ import { ResourceReserveArea } from "../views/resourceReserveArea";
 import { ThrowResource } from "../../../Share/throwResource";
 import { ResourceOver } from "../../../Share/elementOver";
 import { LayerTag } from "../../board";
+import { HaveResourceCard } from "../../..//Share/haveResourceCard";
 
 //プレイヤーのリソース欄生成
 export function build(bindParams: BindParams) {
@@ -28,28 +29,28 @@ export function build(bindParams: BindParams) {
         new playerResourceAreas.Player4ResourceArea(bindParams.imgQueue)
     ];
     for (let i = 0; i < 4; i++) {
-        const resourceKindList = new SocketBinderList<ResourceName | null>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const resourceKindList = new SocketBinderList<HaveResourceCard | null>("ResourceKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         resourceKindList.onUpdate((list) => {
-            list.forEach((resourceName, iconId) =>
+            list.forEach((resourceData, iconId) =>
                 playerResourceAreaList[i].setResource(
                     iconId,
-                    resourceName,
-                    resourceName != null ? bindParams.yamls.resourceHash[resourceName].index : -1,
+                    resourceData,
+                    resourceData != null ? bindParams.yamls.resourceHash[resourceData.resourceCardName].index : -1,
                     bindParams.imgQueue));
             bindParams.layerManager.update();
         });
-        resourceKindList.onSetAt((iconId: number, resourceName: ResourceName) => {
+        resourceKindList.onSetAt((iconId: number, resourceData) => {
             playerResourceAreaList[i].setResource(
                 iconId,
-                resourceName,
-                bindParams.yamls.resourceHash[resourceName].index,
+                resourceData,
+                resourceData != null ? bindParams.yamls.resourceHash[resourceData.resourceCardName].index : -1,
                 bindParams.imgQueue);
             bindParams.layerManager.update();
         });
         bindParams.layerManager.add(LayerTag.Ui, playerResourceAreaList[i]);
-        playerResourceAreaList[i].onMouseOveredIcon(cardName => {
+        playerResourceAreaList[i].onMouseOveredIcon(cardData => {
             resourceHover.visible = true;
-            resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.imgQueue);
+            resourceHover.setYamlData(bindParams.yamls.resourceHash[cardData.resourceCardName], bindParams.imgQueue);
             bindParams.layerManager.update();
         });
         playerResourceAreaList[i].onMouseOutedIcon(() => {
@@ -69,25 +70,25 @@ export function build(bindParams: BindParams) {
     const resourceReserveKindList = new SocketBinderList<ResourceName | null>("ResourceReserveKindList", bindParams.socket);
     const resourceReserveArea = new ResourceReserveArea();
     resourceReserveKindList.onUpdate((list) => {
-        list.forEach((resourceName, iconId) =>
+        list.forEach((resourceCardName, iconId) =>
             resourceReserveArea.setResource(
                 iconId,
-                resourceName,
-                resourceName != null ? bindParams.yamls.resourceHash[resourceName].index : -1,
+                { resourceCardName, guardFlag: false },
+                resourceCardName != null ? bindParams.yamls.resourceHash[resourceCardName].index : -1,
                 bindParams.imgQueue));
         bindParams.layerManager.update();
     });
-    resourceReserveKindList.onSetAt((iconId: number, resourceName: ResourceName) => {
+    resourceReserveKindList.onSetAt((iconId: number, resourceCardName: ResourceName) => {
         resourceReserveArea.setResource(
             iconId,
-            resourceName,
-            bindParams.yamls.resourceHash[resourceName].index,
+            { resourceCardName, guardFlag: false },
+            bindParams.yamls.resourceHash[resourceCardName].index,
             bindParams.imgQueue);
         bindParams.layerManager.update();
     });
-    resourceReserveArea.onMouseOveredIcon(cardName => {
+    resourceReserveArea.onMouseOveredIcon(cardData => {
         resourceHover.visible = true;
-        resourceHover.setYamlData(bindParams.yamls.resourceHash[cardName], bindParams.imgQueue);
+        resourceHover.setYamlData(bindParams.yamls.resourceHash[cardData.resourceCardName], bindParams.imgQueue);
         bindParams.layerManager.update();
     });
     resourceReserveArea.onMouseOutedIcon(() => {
@@ -104,7 +105,7 @@ export function build(bindParams: BindParams) {
 
     resourceOver.onUpdate(x => {
         if (x.overCount != 0) {
-            resourceDialog.setThrowResourceNum(x.overCount,x.causeText);
+            resourceDialog.setThrowResourceNum(x.overCount, x.causeText);
             resourceDialog.visible = true;
         } else {
             resourceReserveArea.unSelectFrameVisible();

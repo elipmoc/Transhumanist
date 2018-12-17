@@ -1,17 +1,18 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { ResourceCardIcon, CardIconBase } from "./cardIcon";
-import { ResourceName, ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceCardIcon } from "./cardIcon";
+import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
 import { IconList } from "./bases/iconList";
 import { ImageQueue } from "../imageQueue";
 import { CandidateResources } from "../../../Share/candidateResources";
+import { HaveResourceCard } from "../../../Share/haveResourceCard";
 
 export class SelectResourceWindow extends createjs.Container {
     private resourceNumber: number;
     private maxLength: number;
     private descriptionText = new createjs.Text();
     private cardIndex: number;
-    protected resourceList: IconList<ResourceCardIcon, ResourceName>;
+    protected resourceList: IconList<ResourceCardIcon, HaveResourceCard>;
 
     set CardIndex(index: number) {
         this.cardIndex = index;
@@ -21,7 +22,7 @@ export class SelectResourceWindow extends createjs.Container {
     constructor(maxNum: number) {
         super();
         this.maxLength = maxNum;
-        this.resourceList = new IconList<ResourceCardIcon, ResourceName>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0)
+        this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0)
         this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength) / 2;
         this.resourceList.y = global.canvasHeight / 2 - global.cardIconSize / 2;
 
@@ -54,7 +55,7 @@ export class SelectResourceWindow extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickIcon(onClickIconCallBack: (cardIcon: CardIconBase<ResourceName>) => void) {
+    onClickIcon(onClickIconCallBack: (cardIcon: ResourceCardIcon) => void) {
         this.resourceList.onClickedIcon(onClickIconCallBack);
     }
 
@@ -62,11 +63,11 @@ export class SelectResourceWindow extends createjs.Container {
     setResource(data: CandidateResources, hash: ResourceHash, imgQueue: ImageQueue) {
         this.resetResource(imgQueue);
         //リソースセット
-        data.resource_names.forEach((resourceName, idx) => {
+        data.resource_names.forEach((resourceCardName, idx) => {
             this.resourceList.setResource(
                 idx,
-                resourceName,
-                resourceName != "" ? hash[resourceName].index : -1,
+                { resourceCardName, guardFlag: false },
+                resourceCardName != "" ? hash[resourceCardName].index : -1,
                 imgQueue
             );
         });
@@ -81,7 +82,7 @@ export class SelectResourceWindow extends createjs.Container {
     //リソースの全削除
     private resetResource(queue: ImageQueue) {
         for (let i = 0; this.maxLength > i; i++) {
-            this.resourceList.setResource(i, "", -1, queue);
+            this.resourceList.setResource(i, { resourceCardName: "", guardFlag: false }, -1, queue);
         }
     }
 }
