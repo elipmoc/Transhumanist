@@ -18,7 +18,6 @@ import { War, WarSuccessFlag } from "./war";
 import { useActionCard, UseActionResult } from "./useActionCard/useActionCard";
 import { setEvent, diceSelectAfterEvent } from "./eventExec";
 import { warActionCardExec } from "./useActionCard/warActionCardExec";
-import { create } from "domain";
 
 export class GamePlayer {
     private playerId: number;
@@ -110,6 +109,7 @@ export class GamePlayer {
     }
 
     setMyTurn() {
+        this.buildActionList.resetUsed();
         if (this.nowEvent.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
             this.resourceList.addResource("人間", len);
@@ -119,10 +119,10 @@ export class GamePlayer {
         if (this.war.getWarFlag()) this.state.warStateChange();
 
         this.state.updateResource(
-            this.resourceList.getCount("倉庫"),10);
+            this.resourceList.getCount("倉庫"), 10);
 
         this.state.updateSpeed(
-            this.resourceList.getCount("量子コンピュータ"),3);
+            this.resourceList.getCount("量子コンピュータ"), 3);
 
         if (this.actionCard.is_full() == false)
             this.playerCond.Value = GamePlayerCondition.DrawCard;
@@ -219,7 +219,7 @@ export class GamePlayer {
         this.dice = new Dice(playerId, boardSocketManager);
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<
             SelectedGetResourceId
-        >("selectedGetResourceId" + playerId);
+            >("selectedGetResourceId" + playerId);
 
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.resourceList.onEventClearCallback(() => {
@@ -302,14 +302,14 @@ export class GamePlayer {
         const unavailable = new SocketBinder.TriggerBinder<
             void,
             UnavailableState
-        >("Unavailable", true, [`player${playerId}`]);
+            >("Unavailable", true, [`player${playerId}`]);
 
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(card => {
-            if (this.playerCond.Value != GamePlayerCondition.MyTurn) { 
+            if (this.playerCond.Value != GamePlayerCondition.MyTurn) {
                 return false;
             }
-            const result:UseActionResult = useActionCard(
+            const result: UseActionResult = useActionCard(
                 card,
                 this.nowEvent,
                 this.state,
@@ -333,10 +333,12 @@ export class GamePlayer {
             return true;
         });
         //設置アクションカードの使用
-        this.buildActionList.onUseBuildActionCard((card,data) => {
-            if (this.nowEvent.name == "太陽風")
+        this.buildActionList.onUseBuildActionCard((card, data) => {
+            if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
+            if (this.nowEvent.name == "太陽風") {
                 unavailable.emit(UnavailableState.Event);
-            console.log(card.name);
+                return false;
+            }
 
             const commandNum = data.selectNum!;
             switch (card.commands[commandNum].kind) {
@@ -349,10 +351,11 @@ export class GamePlayer {
                     if (this.resourceList.canCostPayment(createData.cost)) {
                         this.resourceList.costPayment(createData.cost);
                         createData.get.forEach(elem => {
-                            this.resourceList.addResource(elem.name, elem.number); 
+                            this.resourceList.addResource(elem.name, elem.number);
                         });
                     } else {
                         unavailable.emit(UnavailableState.Cost);
+                        return false;
                     }
                     break;
                 case "get":
@@ -363,13 +366,14 @@ export class GamePlayer {
                     const tradeData: Trade = <Trade>card.commands[commandNum].body;
                     if (this.resourceList.canCostPayment(tradeData.cost_items)) {
                         this.resourceList.costPayment(tradeData.cost_items);
-                        this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name,1);
+                        this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
                     } else {
                         unavailable.emit(UnavailableState.Cost);
+                        return false;
                     }
                     break;
-
             }
+            return true;
         });
         boardSocketManager.addSocketBinder(
             unavailable,

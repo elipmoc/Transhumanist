@@ -1,5 +1,5 @@
 import { ActionCardHover } from "../views/actionCardHover";
-import { ActionCardName, RandGet } from "../../../Share/Yaml/actionCardYamlData";
+import { RandGet } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { SocketBinderList } from "../../socketBinderList";
@@ -14,6 +14,7 @@ import { ThrowBuildAction } from "../../../Share/throwBuildAction";
 import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
 import { SelectResourceWindow } from "../views/selectResourceWindow";
 import { CandidateResources } from "../../../Share/candidateResources";
+import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
 
 import { LayerTag } from "../../board";
 //プレイヤーの設置アクション欄生成
@@ -23,7 +24,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     const buildthrowDialog = new BuildthrowDialog();
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
-    
+
     const buildActionUseDecision = new ActionCardUseDecisionWindow();
     buildActionUseDecision.visible = false;
 
@@ -45,25 +46,27 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         new playerBuildAreas.Player4BuildArea(bindParams.imgQueue)
     ];
     for (let i = 0; i < 4; i++) {
-        const buildActionKindList = new SocketBinderList<ActionCardName>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
+        const buildActionKindList = new SocketBinderList<HaveBuildActionCard | null>("BuildActionKindList" + (i + bindParams.playerId) % 4, bindParams.socket);
         buildActionKindList.onUpdate((list) => {
-            list.forEach((cardName, iconId) =>
+            list.forEach((card, iconId) =>
                 playerBuildActionAreaList[i].setResource(
-                    iconId, cardName,
-                    cardName != null ? bindParams.yamls.buildActionCardHash[cardName].index : -1,
+                    iconId, card,
+                    card != null ? bindParams.yamls.buildActionCardHash[card.ActionCardName].index : -1,
                     bindParams.imgQueue
                 ));
             bindParams.layerManager.update();
         });
-        buildActionKindList.onSetAt((iconId: number, cardName: ActionCardName) => {
+        buildActionKindList.onSetAt((iconId, card) => {
+            const cardIndex =
+                card != null ? bindParams.yamls.buildActionCardHash[card.ActionCardName].index : -1;
             playerBuildActionAreaList[i].setResource(
-                iconId, cardName, bindParams.yamls.buildActionCardHash[cardName].index, bindParams.imgQueue);
+                iconId, card, cardIndex, bindParams.imgQueue);
             bindParams.layerManager.update();
         });
         bindParams.layerManager.add(LayerTag.Ui, playerBuildActionAreaList[i]);
-        playerBuildActionAreaList[i].onMouseOveredIcon(cardName => {
+        playerBuildActionAreaList[i].onMouseOveredIcon(card => {
             actionCardHover.visible = true;
-            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[cardName], bindParams.imgQueue);
+            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[card.ActionCardName], bindParams.imgQueue);
             bindParams.layerManager.update();
         });
         playerBuildActionAreaList[i].onMouseOutedIcon(() => {
@@ -74,8 +77,8 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
-            if (!cardIcon.Used) {
-                switch (cardIcon.Kind) {
+            if (!cardIcon.Kind.usedFlag) {
+                switch (cardIcon.Kind.ActionCardName) {
                     case "採掘施設":
                         const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
                         const selectResource: CandidateResources = {
@@ -91,11 +94,11 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                         buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash["加工施設"], bindParams.imgQueue, bindParams.yamls.resourceHash);
                         buildActionSelectWindow.visible = true;
                         break;
-                    case "印刷所": 
+                    case "印刷所":
                     case "治療施設":
                     case "ロボット工場":
                         buildActionUseDecision.CardIndex = cardIcon.IconId;
-                        buildActionUseDecision.CardName = cardIcon.Kind;
+                        buildActionUseDecision.CardName = cardIcon.Kind.ActionCardName;
                         buildActionUseDecision.visible = true;
                         break;
                 }

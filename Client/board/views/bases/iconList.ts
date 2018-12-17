@@ -34,7 +34,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (cardIcon: CardIconBase<K>) => void) {
+    onClickedIcon(onClickIconCallBack: (cardIcon: I) => void) {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 
@@ -52,19 +52,11 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
         this.icons.forEach(x => x.selectFrameVisible = false);
     }
 
-    resetUsed() {
-        this.icons.forEach(x => x.Used = false);
-    }
-
     getSelectedAllIconId() {
         return this.icons.filter(x => x.selectFrameVisible).map(x => x.IconId);
     }
 
     setResource(iconId: number, kind: K, imgIndex: number, queue: ImageQueue) {
         this.icons[iconId].setKind(kind, imgIndex, queue, this.iconScale);
-    }
-
-    setUsed(iconId: number) {
-        this.icons[iconId].Used = true;
     }
 }
