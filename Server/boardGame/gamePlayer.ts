@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, CreateGet, Trade } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, CreateGet, Trade, RandGet, Get } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -329,15 +329,14 @@ export class GamePlayer {
                 unavailable.emit(UnavailableState.Event);
             console.log(card.name);
 
-            switch (card.name) {
-                case "採掘施設":
-                    const resourceData = ["メタル", "ガス", "ケイ素", "硫黄"];
-                    this.resourceList.addResource(resourceData[data.resourceId!]);
+            const commandNum = data.selectNum!;
+            switch (card.commands[commandNum].kind) {
+                case "rand_get":
+                    const randData: RandGet = <RandGet>card.commands[commandNum].body;
+                    this.resourceList.addResource(randData.items[data.resourceId!].name);
                     break;
-                case "加工施設":
-                case "研究施設":
-                case "ロボット工場":
-                    const createData: CreateGet = <CreateGet>card.commands[data.selectNum!].body;
+                case "create_get":
+                    const createData: CreateGet = <CreateGet>card.commands[commandNum].body;
                     if (this.resourceList.canCostPayment(createData.cost)) {
                         this.resourceList.costPayment(createData.cost);
                         createData.get.forEach(elem => {
@@ -347,11 +346,12 @@ export class GamePlayer {
                         unavailable.emit(UnavailableState.Cost);
                     }
                     break;
-                case "印刷所":
-                    this.resourceList.addResource("聖書");
+                case "get":
+                    const getData: Get = <Get>card.commands[commandNum].body;
+                    this.resourceList.addResource(getData.items[data.resourceId!].name, getData.items[data.resourceId!].number);
                     break;
-                case "治療施設":
-                    const tradeData: Trade = <Trade>card.commands[data.selectNum!].body;
+                case "trade":
+                    const tradeData: Trade = <Trade>card.commands[commandNum].body;
                     if (this.resourceList.canCostPayment(tradeData.cost_items)) {
                         this.resourceList.costPayment(tradeData.cost_items);
                         this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name,1);
