@@ -306,6 +306,9 @@ export class GamePlayer {
 
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(card => {
+            if (this.playerCond.Value != GamePlayerCondition.MyTurn) { 
+                return false;
+            }
             const result:UseActionResult = useActionCard(
                 card,
                 this.nowEvent,
