@@ -125,7 +125,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     buildActionSelectWindow.selectOnClick((index: number) => {
         const selectBuildActionData: SelectBuildActionData = {
             iconId: buildActionSelectWindow.CardIndex,
-            resourceId: null,
+            resourceId: 0,
             selectNum: index
         };
         console.log(selectBuildActionData);
@@ -143,7 +143,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         if (r == DialogResult.Yes) {
             const selectBuildActionData: SelectBuildActionData = {
                 iconId: buildActionUseDecision.CardIndex,
-                resourceId: null,
+                resourceId: 0,
                 selectNum: 0
             };
             bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));

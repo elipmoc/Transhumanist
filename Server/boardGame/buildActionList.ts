@@ -11,9 +11,11 @@ import { arrayshuffle } from "../../Share/utility";
 import { ThrowBuildAction } from "../../Share/throwBuildAction";
 import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
 
+type UseSuccessFlag = boolean;
+
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<HaveBuildActionCard | null>;
-    private useBuildActionCardCallback: (card: ActionCardYamlData, data: SelectBuildActionData) => void;
+    private useBuildActionCardCallback: (card: ActionCardYamlData, data: SelectBuildActionData) => UseSuccessFlag;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
 
@@ -43,10 +45,10 @@ export class BuildActionList {
                 yamlGet("./Resource/Yaml/actionCard.yaml"),
                 true
             )[card.ActionCardName];
-            if (useBuildActionCard) {
+
+            if (useBuildActionCard && this.useBuildActionCardCallback(useBuildActionCard, data)) {
                 card.usedFlag = true;
                 this.buildActionList.setAt(x.iconId, card)
-                this.useBuildActionCardCallback(useBuildActionCard, data);
             }
         });
         this.buildOver = new SocketBinder.Binder<BuildOver>("BuildOver", true, [
@@ -170,7 +172,7 @@ export class BuildActionList {
     }
 
     //カードが使用されるときに呼ばれる関数をセット
-    onUseBuildActionCard(f: (card: ActionCardYamlData, data: SelectBuildActionData) => void) {
+    onUseBuildActionCard(f: (card: ActionCardYamlData, data: SelectBuildActionData) => UseSuccessFlag) {
         this.useBuildActionCardCallback = f;
     }
 }
