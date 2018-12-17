@@ -4,6 +4,8 @@ import { SocketBinder } from "../socketBinder";
 
 export class GamePlayerState {
     private state: SocketBinder.Binder<ResponseGamePlayerState>;
+    private defaultResource: number;
+    private defaultSpeed: number;
 
     get State() {
         return this.state.Value;
@@ -40,6 +42,8 @@ export class GamePlayerState {
             activityRange: 0,
             speed: 0
         };
+        this.defaultResource = 0;
+        this.defaultSpeed = 0;
     }
 
     reset() {
@@ -52,6 +56,8 @@ export class GamePlayerState {
             activityRange: 0,
             speed: 0
         };
+        this.defaultResource = 0;
+        this.defaultSpeed = 0;
     }
 
     addPositive(num: number) {
@@ -103,5 +109,29 @@ export class GamePlayerState {
         if (this.state.Value.positive <= 0) this.state.Value.negative++;
         else this.state.Value.positive--;
         this.state.update();
+    }
+
+    //倉庫反映
+    updateResource(count: number) {
+        if (count >= 1) {
+            const updateNumber =
+                this.defaultResource + (count * 10);
+            if (updateNumber >= 30) {
+                this.state.Value.resource = 30;
+            } else {
+                this.state.Value.resource = updateNumber;
+            }
+            this.state.update();
+        }
+    }
+
+    //量子コンピュータ反映
+    updateSpeed(count: number) {
+        if (count >= 1) {
+            const updateNumber =
+                this.defaultSpeed + (count * 3);
+            this.state.Value.speed = updateNumber;
+            this.state.update();
+        }
     }
 }

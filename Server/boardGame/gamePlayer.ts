@@ -118,6 +118,14 @@ export class GamePlayer {
 
         if (this.war.getWarFlag()) this.state.warStateChange();
 
+        this.state.updateResource(
+            this.resourceList.getCount("倉庫")
+        );
+
+        this.state.updateSpeed(
+            this.resourceList.getCount("量子コンピュータ")
+        );
+
         if (this.actionCard.is_full() == false)
             this.playerCond.Value = GamePlayerCondition.DrawCard;
         else this.playerCond.Value = GamePlayerCondition.MyTurn;
