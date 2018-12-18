@@ -78,6 +78,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
             if (!cardIcon.Kind.usedFlag) {
+                buildActionUseDecision.visible = false;
+                buildActionSelectWindow.visible = false;
+                selectResourceWindow.visible = false;
                 switch (cardIcon.Kind.ActionCardName) {
                     case "採掘施設":
                         const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
