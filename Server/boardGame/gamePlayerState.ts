@@ -87,7 +87,9 @@ export class GamePlayerState {
     setAICard(startStatusYamlData: StartStatusYamlData) {
         this.state.Value.activityRange = startStatusYamlData.activityRange;
         this.state.Value.resource = startStatusYamlData.resource;
+        this.defaultResource = startStatusYamlData.resource;
         this.state.Value.speed = startStatusYamlData.speed;
+        this.defaultSpeed = startStatusYamlData.speed;
         this.state.Value.uncertainty = startStatusYamlData.uncertainty;
         this.state.update();
     }
