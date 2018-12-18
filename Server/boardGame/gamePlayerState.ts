@@ -112,7 +112,8 @@ export class GamePlayerState {
     }
 
     //倉庫反映
-    updateResource(count: number, value: number) {
+    updateResource(count: number) {
+        const value = 10;
         if (count >= 1) {
             const updateNumber =
                 this.defaultResource + (count * value);
@@ -126,7 +127,8 @@ export class GamePlayerState {
     }
 
     //量子コンピュータ反映
-    updateSpeed(count: number, value: number) {
+    updateSpeed(count: number) {
+        const value = 3;
         if (count >= 1) {
             const updateNumber =
                 this.defaultSpeed + (count * value);
