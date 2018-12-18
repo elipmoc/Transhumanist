@@ -1,5 +1,5 @@
 import { getIconResource } from "../../utility";
-import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
+import { HaveResourceCard } from "../../../Share/haveResourceCard";
 import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
 import { ImageQueue } from "../imageQueue";
 import { global } from "../../boardGlobalData";
@@ -62,7 +62,13 @@ export class CardIconBase<K> extends createjs.Container {
 }
 
 //リソースアイコンクラス
-export class ResourceCardIcon extends CardIconBase<ResourceName | null> {
+export class ResourceCardIcon extends CardIconBase<HaveResourceCard | null> {
+
+    setKind(kind: HaveResourceCard | null, imgIndex: number, queue: ImageQueue, iconScale: number) {
+        super.setKind(kind, imgIndex, queue, iconScale);
+        if (this.Kind == null) return;
+        // TODO リソースが破壊対象から外されているときの描画設定変更処理とか
+    }
 
     constructor(iconId: number) {
         super(iconId, null, "resource");

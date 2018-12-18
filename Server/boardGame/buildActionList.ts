@@ -44,7 +44,7 @@ export class BuildActionList {
             const useBuildActionCard = GenerateActionCardYamlData(
                 yamlGet("./Resource/Yaml/actionCard.yaml"),
                 true
-            )[card.ActionCardName];
+            )[card.actionCardName];
 
             if (useBuildActionCard && this.useBuildActionCardCallback(useBuildActionCard, data)) {
                 card.usedFlag = true;
@@ -91,7 +91,7 @@ export class BuildActionList {
 
     //指定した設置アクションカードがいくつあるかを計算する
     getCount(name: ActionCardName) {
-        return this.buildActionList.Value.filter(x => x != null && x.ActionCardName == name).length;
+        return this.buildActionList.Value.filter(x => x != null && x.actionCardName == name).length;
     }
 
     //null以外の数
@@ -114,7 +114,7 @@ export class BuildActionList {
 
     addBuildAction(name: ActionCardName) {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
-        if (idx != -1) this.buildActionList.setAt(idx, { ActionCardName: name, usedFlag: false });
+        if (idx != -1) this.buildActionList.setAt(idx, { actionCardName: name, usedFlag: false });
         this.setCrowdList(this.buildActionList.Value);
     }
 
@@ -124,7 +124,7 @@ export class BuildActionList {
 
         arr = arr.map(x => {
             if (count > num) return x;
-            if (x == null || x.ActionCardName != name) return x;
+            if (x == null || x.actionCardName != name) return x;
 
             count++;
             return null;
@@ -166,7 +166,7 @@ export class BuildActionList {
             if (a == b) return 0;
             if (b == null) return -1;
             if (a == null) return 1;
-            return a.ActionCardName > b.ActionCardName ? 1 : -1;
+            return a.actionCardName > b.actionCardName ? 1 : -1;
         });
         this.buildActionList.Value = arr;
     }

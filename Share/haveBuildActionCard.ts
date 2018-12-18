@@ -1,4 +1,4 @@
 export interface HaveBuildActionCard {
-    ActionCardName: string;
+    actionCardName: string;
     usedFlag: boolean;
 }

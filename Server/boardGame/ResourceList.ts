@@ -9,9 +9,10 @@ import { ThrowResource } from "../../Share/throwResource";
 import { ResourceOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
+import { HaveResourceCard } from "../../Share/haveResourceCard";
 
 export class ResourceList {
-    private resourceList: SocketBinder.BinderList<ResourceName | null>;
+    private resourceList: SocketBinder.BinderList<HaveResourceCard | null>;
     private resourceReserveList: SocketBinder.BinderList<ResourceName | null>;
     private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
@@ -35,7 +36,7 @@ export class ResourceList {
     }
 
     constructor(boardSocketManager: Namespace, playerId: number) {
-        this.resourceList = new SocketBinder.BinderList<ResourceName | null>(
+        this.resourceList = new SocketBinder.BinderList<HaveResourceCard | null>(
             "ResourceKindList" + playerId
         );
         this.resourceList.Value = new Array(30);
@@ -62,7 +63,7 @@ export class ResourceList {
             if (
                 this.resourceOver.Value.overCount ==
                 throwResource.resourceList.length +
-                    throwResource.resourceReserveList.length
+                throwResource.resourceReserveList.length
             ) {
                 this.resourceOver.Value = { overCount: 0, causeText: "" };
                 throwResource.resourceList.forEach(id => {
@@ -75,6 +76,7 @@ export class ResourceList {
                     if (name) this.addResource(name);
                 });
                 this.resourceReserveList.Value.fill(null);
+                this.resourceReserveList.update();
                 this.setCrowdList(this.resourceList.Value);
 
                 if (this.nowEvent) {
@@ -104,7 +106,7 @@ export class ResourceList {
 
                 idx = this.resourceReserveList.Value.findIndex(x => x == null);
                 this.resourceReserveList.setAt(idx, name);
-            } else arr[idx] = name;
+            } else arr[idx] = { resourceCardName: name, guardFlag: false };
         }
         this.setCrowdList(arr);
     }
@@ -115,8 +117,9 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
+            if (x == null) return x;
             if (count >= num) return x;
-            if (name != x) return x;
+            if (name != x.resourceCardName) return x;
             count++;
             return null;
         });
@@ -153,10 +156,11 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
+            if (x == null) return x;
             if (count >= num) return x;
-            if (targetName != x) return x;
+            if (targetName != x.resourceCardName) return x;
             count++;
-            return changeName;
+            return { resourceCardName: changeName, guardFlag: false };
         });
         this.setCrowdList(arr);
     }
@@ -170,18 +174,19 @@ export class ResourceList {
     }
 
     setResourceList() {
-        this.resourceList.Value.fill("人間", 0, 4);
+        for (let i = 0; i < 4; i++)
+            this.resourceList.Value[i] = { resourceCardName: "人間", guardFlag: false };
         const arr = GenerateResourceYamlDataArray(
             yamlGet("./Resource/Yaml/resource.yaml")
         ).filter(x => x.level == 2);
         this.resourceList.Value[4] =
-            arr[Math.floor(Math.random() * arr.length)].name;
+            { resourceCardName: arr[Math.floor(Math.random() * arr.length)].name, guardFlag: false };
         this.resourceList.update();
     }
 
     //指定したリソースがいくつあるかを計算する
     getCount(name: ResourceName) {
-        return this.resourceList.Value.filter(x => x == name).length;
+        return this.resourceList.Value.filter(x => x != null && x.resourceCardName == name).length;
     }
 
     //null以外の数
@@ -193,12 +198,30 @@ export class ResourceList {
         return count;
     }
 
-    setCrowdList(arr: (ResourceName | null)[]) {
+    //指定インデックスのリソースをguardする
+    setGuard(index: number) {
+        const val = this.resourceList.Value[index];
+        if (val == null) return;
+        val.guardFlag = true;
+        this.resourceList.setAt(index, val);
+    }
+
+    //破壊対象からの防御をリセットする
+    resetGuard() {
+        this.resourceList.Value.map(x => {
+            if (x != null)
+                x.guardFlag = false;
+            return x;
+        })
+        this.resourceList.update();
+    }
+
+    setCrowdList(arr: (HaveResourceCard | null)[]) {
         arr.sort((a, b) => {
             if (a == b) return 0;
             if (b == null) return -1;
             if (a == null) return 1;
-            return a > b ? 1 : -1;
+            return a.resourceCardName > b.resourceCardName ? 1 : -1;
         });
         this.resourceList.Value = arr;
     }
@@ -216,8 +239,9 @@ export class ResourceList {
         cost.forEach(x => {
             let count = 0;
             arr = arr.map(y => {
-                if (x.name == y) count++;
-                if (y != x.name || count > x.number) return y;
+                if (y == null) return null;
+                if (x.name == y.resourceCardName) count++;
+                if (y.resourceCardName != x.name || count > x.number) return y;
                 return null;
             });
         });

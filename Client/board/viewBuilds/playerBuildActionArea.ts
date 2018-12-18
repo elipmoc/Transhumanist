@@ -51,14 +51,14 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
             list.forEach((card, iconId) =>
                 playerBuildActionAreaList[i].setResource(
                     iconId, card,
-                    card != null ? bindParams.yamls.buildActionCardHash[card.ActionCardName].index : -1,
+                    card != null ? bindParams.yamls.buildActionCardHash[card.actionCardName].index : -1,
                     bindParams.imgQueue
                 ));
             bindParams.layerManager.update();
         });
         buildActionKindList.onSetAt((iconId, card) => {
             const cardIndex =
-                card != null ? bindParams.yamls.buildActionCardHash[card.ActionCardName].index : -1;
+                card != null ? bindParams.yamls.buildActionCardHash[card.actionCardName].index : -1;
             playerBuildActionAreaList[i].setResource(
                 iconId, card, cardIndex, bindParams.imgQueue);
             bindParams.layerManager.update();
@@ -66,7 +66,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         bindParams.layerManager.add(LayerTag.Ui, playerBuildActionAreaList[i]);
         playerBuildActionAreaList[i].onMouseOveredIcon(card => {
             actionCardHover.visible = true;
-            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[card.ActionCardName], bindParams.imgQueue);
+            actionCardHover.setYamlData(bindParams.yamls.buildActionCardHash[card.actionCardName], bindParams.imgQueue);
             bindParams.layerManager.update();
         });
         playerBuildActionAreaList[i].onMouseOutedIcon(() => {
@@ -78,7 +78,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
             if (!cardIcon.Kind.usedFlag) {
-                switch (cardIcon.Kind.ActionCardName) {
+                switch (cardIcon.Kind.actionCardName) {
                     case "採掘施設":
                         const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
                         const selectResource: CandidateResources = {
@@ -98,7 +98,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                     case "治療施設":
                     case "ロボット工場":
                         buildActionUseDecision.CardIndex = cardIcon.IconId;
-                        buildActionUseDecision.CardName = cardIcon.Kind.ActionCardName;
+                        buildActionUseDecision.CardName = cardIcon.Kind.actionCardName;
                         buildActionUseDecision.visible = true;
                         break;
                 }
