@@ -155,6 +155,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     gamePlayerCondition.onUpdate(cond => {
         if (cond != GamePlayerCondition.MyTurn) {
             buildActionUseDecision.visible = false;
+            buildActionSelectWindow.visible = false;
+            selectResourceWindow.visible = false;
+            bindParams.layerManager.update();
         }
     });
     buildOver.onUpdate(x => {
