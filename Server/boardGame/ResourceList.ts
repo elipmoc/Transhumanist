@@ -15,7 +15,8 @@ export class ResourceList {
     private resourceReserveList: SocketBinder.BinderList<ResourceName | null>;
     private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
-
+    private haveFusionReactor: boolean;
+    
     //頑張ってリファクタリングして
     private nowEvent = false;
     setNowEvent(flag: boolean) {
@@ -203,10 +204,21 @@ export class ResourceList {
         this.resourceList.Value = arr;
     }
 
+    setHaveFusionReactor(have: boolean) {
+        this.haveFusionReactor = have;
+    }
+    
     //カードのコストを支払えるかどうかの判定をする。
     //払えなければ、falseを返す
     canCostPayment(cost: ResourceItem[]) {
-        return cost.filter(x => this.getCount(x.name) < x.number).length == 0;
+        const NonEnough = cost.filter(x => this.getCount(x.name) < x.number);
+        if (NonEnough.length == 0) return true;
+
+        //核融合炉用
+        if (this.haveFusionReactor) {
+            return (NonEnough.filter(x => x.name == "ガス").length == NonEnough.length);
+        }
+        return false;
     }
 
     //カードのコストを支払う。
