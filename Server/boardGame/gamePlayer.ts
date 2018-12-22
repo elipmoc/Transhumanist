@@ -118,12 +118,17 @@ export class GamePlayer {
 
         if (this.war.getWarFlag()) this.state.warStateChange();
 
+        //倉庫反映
         this.state.updateResource(
-            this.resourceList.getCount("倉庫"), 10);
+            this.buildActionList.getCount("倉庫"));
 
+        //量子コンピュータ反映
         this.state.updateSpeed(
-            this.resourceList.getCount("量子コンピュータ"), 3);
+            this.buildActionList.getCount("量子コンピュータ"));
 
+        //核融合炉反映
+        this.resourceList.setHaveFusionReactor(this.buildActionList.getCount("核融合炉") >= 1);
+        
         if (this.actionCard.is_full() == false)
             this.playerCond.Value = GamePlayerCondition.DrawCard;
         else this.playerCond.Value = GamePlayerCondition.MyTurn;

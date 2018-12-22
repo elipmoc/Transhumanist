@@ -78,6 +78,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
         if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
             if (!cardIcon.Kind.usedFlag) {
+                buildActionUseDecision.visible = false;
+                buildActionSelectWindow.visible = false;
+                selectResourceWindow.visible = false;
                 switch (cardIcon.Kind.actionCardName) {
                     case "採掘施設":
                         const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
@@ -91,7 +94,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                         break;
                     case "加工施設": case "研究施設":
                         buildActionSelectWindow.CardIndex = cardIcon.IconId;
-                        buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash["加工施設"], bindParams.imgQueue, bindParams.yamls.resourceHash);
+                        buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash[cardIcon.Kind.actionCardName], bindParams.imgQueue, bindParams.yamls.resourceHash);
                         buildActionSelectWindow.visible = true;
                         break;
                     case "印刷所":
@@ -155,6 +158,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     gamePlayerCondition.onUpdate(cond => {
         if (cond != GamePlayerCondition.MyTurn) {
             buildActionUseDecision.visible = false;
+            buildActionSelectWindow.visible = false;
+            selectResourceWindow.visible = false;
+            bindParams.layerManager.update();
         }
     });
     buildOver.onUpdate(x => {

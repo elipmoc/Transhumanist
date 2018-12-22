@@ -15,9 +15,14 @@ export function actionCardExec(
     buildActionList: BuildActionList,
     resourceList: ResourceList,
     state: GamePlayerState
-) : ExecResult{
+): ExecResult {
     //実際の使用する処理
-    if (card.build_use) buildActionList.addBuildAction(card.name);
+    if (card.build_use) {
+        buildActionList.addBuildAction(card.name);
+        if (card.name == "倉庫") state.updateResource(buildActionList.getCount("倉庫"));
+        if (card.name == "量子コンピュータ") state.updateSpeed(buildActionList.getCount("量子コンピュータ"));
+        if (card.name == "核融合炉") resourceList.setHaveFusionReactor(buildActionList.getCount("核融合炉") >= 1);
+    }
     else {
         switch (card.name) {
             case "ロケットの開発":
