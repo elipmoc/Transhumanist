@@ -75,6 +75,7 @@ export class BuildActionList {
                 if (this.nowEvent) this.eventClearCallback();
             }
         });
+        this.clear();
 
         boardSocketManager.addSocketBinder(
             this.buildActionList,
@@ -82,11 +83,9 @@ export class BuildActionList {
             this.buildOver,
             this.throwBuild
         );
-        this.clear();
     }
     clear() {
-        this.buildActionList.Value = new Array(30);
-        this.buildActionList.Value.fill(null);
+        this.buildActionList.Value = new Array(30).fill(null);
     }
 
     //指定した設置アクションカードがいくつあるかを計算する
