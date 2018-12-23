@@ -10,7 +10,6 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
-import { warActionCardExec } from "./useActionCard/warActionCardExec";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -79,14 +78,14 @@ export class GamePlayers {
                 }
                 return false;
             });
-            player.onWarActionCallback((name:string) => {
+            player.onWarActionCallback((name: string) => {
                 this.useWarActionCard(player.PlayerId, name);
             });
             this.gamePlayerList.push(player);
         }
     }
 
-    useWarActionCard(playerId:number,cardName:string) {
+    useWarActionCard(playerId: number, cardName: string) {
         const target = this.warList.getWarPlayerId(playerId);
         if (target != null) {
             this.gamePlayerList[target].warAction(cardName);
@@ -143,7 +142,8 @@ export class GamePlayers {
         this.getNowPlayers().forEach((x, idx) => {
             x.setAICard(startStatusList[idx]);
             x.drawActionCard(actionCardStacks.draw(1));
-            for (let i = 0; i < 4; i++) {
+            x.drawActionCard(actionCardStacks.drawByCardName("加工施設", 2));
+            for (let i = 0; i < 3; i++) {
                 x.drawActionCard(
                     actionCardStacks.draw(Math.floor(Math.random() * 2) + 2)
                 );

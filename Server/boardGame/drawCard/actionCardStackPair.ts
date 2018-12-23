@@ -1,5 +1,5 @@
 import { ActionCardStack } from "./actionCardStack";
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 
 //山札と捨て札を一つのペアとして持つクラス
@@ -40,6 +40,17 @@ export class ActionCardStackPair {
                 .swap(this.actionCardDiscardStack)
                 .shuffle()
                 .draw();
+        return card;
+    }
+
+    drawByCardName(name: ActionCardName) {
+        let card = this.actionCardStack.drawByCardName(name);
+        if (card == undefined) {
+            card = this.actionCardStack
+                .swap(this.actionCardDiscardStack)
+                .shuffle()
+                .drawByCardName(name)
+        }
         return card;
     }
 
