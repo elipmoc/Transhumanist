@@ -1,4 +1,4 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { arrayshuffle } from "../../../Share/utility";
 
 export class ActionCardStack {
@@ -10,6 +10,19 @@ export class ActionCardStack {
 
     draw() {
         return this.actionCardYamlDataList.pop();
+    }
+
+    drawByCardName(name: ActionCardName) {
+        let card: ActionCardYamlData | undefined;
+        this.actionCardYamlDataList =
+            this.actionCardYamlDataList.filter(x => {
+                if (card == undefined && x.name == name) {
+                    card = x;
+                    return false;
+                }
+                return true;
+            });
+        return card;
     }
 
     shuffle() {

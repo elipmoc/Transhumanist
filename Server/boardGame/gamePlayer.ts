@@ -79,6 +79,7 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Start;
         this.actionCard.clear();
         this.resourceList.clear();
+        this.buildActionList.clear();
     }
 
     get Uuid() {
@@ -128,7 +129,7 @@ export class GamePlayer {
 
         //核融合炉反映
         this.resourceList.setHaveFusionReactor(this.buildActionList.getCount("核融合炉") >= 1);
-        
+
         if (this.actionCard.is_full() == false)
             this.playerCond.Value = GamePlayerCondition.DrawCard;
         else this.playerCond.Value = GamePlayerCondition.MyTurn;
