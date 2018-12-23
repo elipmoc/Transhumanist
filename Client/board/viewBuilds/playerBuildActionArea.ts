@@ -124,6 +124,10 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         selectResourceWindow.visible = false;
         bindParams.layerManager.update();
     });
+    selectResourceWindow.closeOnClick(() => { 
+        selectResourceWindow.visible = false;
+        bindParams.layerManager.update();
+    });
 
     buildActionSelectWindow.selectOnClick((index: number) => {
         const selectBuildActionData: SelectBuildActionData = {
