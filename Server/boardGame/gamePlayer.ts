@@ -68,9 +68,16 @@ export class GamePlayer {
         this.warActionCallback = f;
     }
 
+    //ターン終了した時に呼ばれるコールバック
     private turnFinishButtonClickCallback: () => void;
     onTurnFinishButtonClick(f: () => void) {
         this.turnFinishButtonClickCallback = f;
+    }
+
+    //勝利した時に呼ばれるコールバック
+    private winCallback: () => void;
+    onWin(f: () => void) {
+        this.winCallback = f;
     }
 
     reset() {
@@ -334,6 +341,7 @@ export class GamePlayer {
             }
             else if (result.winActionFlag) {
                 //クリア処理
+                this.winCallback();
             }
             this.onceNoCostFlag = false;
             return true;
