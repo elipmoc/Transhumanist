@@ -12,15 +12,10 @@ export class SelectResourceWindow extends createjs.Container {
     private resourceNumber: number;
     private maxLength: number;
     private descriptionText = new createjs.Text();
-    private cardIndex: number;
     protected resourceList: IconList<ResourceCardIcon, HaveResourceCard>;
     private button: DecisionButton;
     private buttonCallback: () => void;
 
-    set CardIndex(index: number) {
-        this.cardIndex = index;
-    }
-    get CardIndex() { return this.cardIndex; }
 
     constructor(maxNum: number) {
         super();
@@ -69,7 +64,7 @@ export class SelectResourceWindow extends createjs.Container {
     }
 
     //閉じるボタンの関数
-    closeOnClick(f:() => void) {
+    closeOnClick(f: () => void) {
         this.buttonCallback = f;
         this.button.visible = true;
     }

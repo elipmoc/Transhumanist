@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, CreateGet, Trade, RandGet, Get } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, CreateGet, Trade, RandGet, Get, ResourceGuard } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -346,11 +346,23 @@ export class GamePlayer {
                 return false;
             }
 
-            const commandNum = data.selectNum!;
+            const commandNum = data.selectCommandNum;
             switch (card.commands[commandNum].kind) {
+                case "resource_guard":
+                    //保護するリソースの最大数
+                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number;
+                    if (data.resourceIdList.length > guardMaxNum) {
+                        unavailable.emit(UnavailableState.Condition);
+                        return false;
+                    }
+                    this.resourceList.resetGuard();
+                    data.resourceIdList.forEach(x => {
+                        this.resourceList.setGuard(x);
+                    });
+                    return false;
                 case "rand_get":
                     const randData: RandGet = <RandGet>card.commands[commandNum].body;
-                    this.resourceList.addResource(randData.items[data.resourceId!].name);
+                    this.resourceList.addResource(randData.items[data.resourceIdList[0]].name);
                     break;
                 case "create_get":
                     const createData: CreateGet = <CreateGet>card.commands[commandNum].body;
@@ -366,7 +378,7 @@ export class GamePlayer {
                     break;
                 case "get":
                     const getData: Get = <Get>card.commands[commandNum].body;
-                    this.resourceList.addResource(getData.items[data.resourceId!].name, getData.items[data.resourceId!].number);
+                    this.resourceList.addResource(getData.items[data.resourceIdList[0]].name, getData.items[data.resourceIdList[0]].number);
                     break;
                 case "trade":
                     const tradeData: Trade = <Trade>card.commands[commandNum].body;
