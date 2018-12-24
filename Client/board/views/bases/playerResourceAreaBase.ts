@@ -8,6 +8,8 @@ import { HaveResourceCard } from "../../../../Share/haveResourceCard";
 export class PlayerResourceAreaBase extends createjs.Container {
     protected resourceArea: createjs.Bitmap;
     protected resourceList: IconList<ResourceCardIcon, HaveResourceCard>;
+    //リソースを選択できるモードかどうか
+    private selectEnableFlag = false;
 
     //xNum:リソースを横に何個並べるかの数値
     constructor(xNum: number, maxNum: number = 30) {
@@ -19,9 +21,17 @@ export class PlayerResourceAreaBase extends createjs.Container {
 
     }
 
+    setSelectEnable() {
+        this.selectEnableFlag = true;
+    }
+
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
     onClickIcon(onClickIconCallBack: (cardIcon: ResourceCardIcon) => void) {
-        this.resourceList.onClickedIcon(onClickIconCallBack);
+        this.resourceList.onClickedIcon((cardIcon) => {
+            if (this.selectEnableFlag)
+                cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+            onClickIconCallBack(cardIcon);
+        });
     }
 
     //リソースアイコンがマウスオーバーされた時に呼ばれる関数をセットする
@@ -35,6 +45,7 @@ export class PlayerResourceAreaBase extends createjs.Container {
     }
 
     unSelectFrameVisible() {
+        this.selectEnableFlag = false;
         this.resourceList.unSelectFrameVisible();
     }
 
