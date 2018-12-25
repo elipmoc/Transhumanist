@@ -67,7 +67,7 @@ export class ResourceCardIcon extends CardIconBase<HaveResourceCard | null> {
     setKind(kind: HaveResourceCard | null, imgIndex: number, queue: ImageQueue, iconScale: number) {
         super.setKind(kind, imgIndex, queue, iconScale);
         if (this.Kind == null) return;
-        // TODO リソースが破壊対象から外されているときの描画設定変更処理とか
+        this.Kind.guardFlag ? this.image.alpha = 0.5 : this.image.alpha = 1;
     }
 
     constructor(iconId: number) {

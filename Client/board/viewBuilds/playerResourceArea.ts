@@ -5,7 +5,7 @@ import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
 import { SelectResourceData } from "../../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
 import * as playerResourceAreas from "../views/playerResourceAreas";
-import { ResourceDialog } from "../views/resourceDialog";
+import { ConfirmDialog } from "../views/confirmDialog";
 import { SocketBinder } from "../../socketBinder";
 import { ResourceReserveArea } from "../views/resourceReserveArea";
 import { ThrowResource } from "../../../Share/throwResource";
@@ -16,7 +16,7 @@ import { HaveResourceCard } from "../../..//Share/haveResourceCard";
 //プレイヤーのリソース欄生成
 export function build(bindParams: BindParams) {
     const resourceHover = new ResourceHover();
-    const resourceDialog = new ResourceDialog();
+    const resourceDialog = new ConfirmDialog();
     bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
     bindParams.layerManager.add(LayerTag.Hover, resourceHover);
     resourceHover.visible = false;
@@ -60,8 +60,6 @@ export function build(bindParams: BindParams) {
         });
     }
     playerResourceAreaList[0].onClickIcon((cardIcon) => {
-        if (resourceOver.Value.overCount != 0)
-            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.layerManager.update();
         const selectResourceData: SelectResourceData = { iconId: cardIcon.IconId };
         bindParams.socket.emit("SelectResource", JSON.stringify(selectResourceData));
@@ -97,16 +95,16 @@ export function build(bindParams: BindParams) {
         bindParams.layerManager.update();
     });
     resourceReserveArea.onClickIcon((cardIcon) => {
-        if (resourceOver.Value.overCount != 0)
-            cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
         bindParams.layerManager.update();
     });
     bindParams.layerManager.add(LayerTag.Ui, resourceReserveArea);
 
     resourceOver.onUpdate(x => {
         if (x.overCount != 0) {
-            resourceDialog.setThrowResourceNum(x.overCount, x.causeText);
+            resourceDialog.setMessage(`${x.causeText}\n捨てるリソースを\n${x.overCount}個選んでください`);
             resourceDialog.visible = true;
+            resourceReserveArea.setSelectEnable();
+            playerResourceAreaList[0].setSelectEnable();
         } else {
             resourceReserveArea.unSelectFrameVisible();
             playerResourceAreaList[0].unSelectFrameVisible();
@@ -123,4 +121,5 @@ export function build(bindParams: BindParams) {
         bindParams.socket
             .emit("ThrowResource", JSON.stringify(throwResource));
     });
+    return playerResourceAreaList[0];
 }

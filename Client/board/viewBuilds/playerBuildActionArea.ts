@@ -6,7 +6,7 @@ import { SocketBinderList } from "../../socketBinderList";
 import { SelectBuildActionData } from "../../../Share/selectBuildActionData";
 import { PlayerBuildAreaBase } from "../views/bases/playerBuildAreaBase";
 import * as playerBuildAreas from "../views/playerBuildActionAreas";
-import { BuildthrowDialog } from "../views/buildthrowDialog";
+import { ConfirmDialog } from "../views/confirmDialog";
 import { BuildOver } from "../../../Share/elementOver";
 import { BuildActionSelectWindow } from "../views/buildActionUseSelectWindow";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
@@ -17,13 +17,17 @@ import { CandidateResources } from "../../../Share/candidateResources";
 import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
 
 import { LayerTag } from "../../board";
+import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
 //プレイヤーの設置アクション欄生成
-export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
-
+export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerResourceAreaBase, bindParams: BindParams) {
     const buildOver = new SocketBinder<BuildOver | null>("BuildOver", bindParams.socket);
-    const buildthrowDialog = new BuildthrowDialog();
+    const buildthrowDialog = new ConfirmDialog();
+    const resourceDialog = new ConfirmDialog();
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
+
+    //使用しようとしている設置アクションカードのインデックス記録用
+    let usingCardIndex: number;
 
     const buildActionUseDecision = new ActionCardUseDecisionWindow();
     buildActionUseDecision.visible = false;
@@ -33,9 +37,9 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
 
     const buildActionSelectWindow = new BuildActionSelectWindow();
     buildActionSelectWindow.visible = false;
-    //const buildActionUseDecision = new BuildActionUseDecision();
     bindParams.layerManager.add(LayerTag.PopUp, buildActionSelectWindow);
     bindParams.layerManager.add(LayerTag.PopUp, buildthrowDialog);
+    bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
     bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
     bindParams.layerManager.add(LayerTag.PopUp, buildActionUseDecision);
 
@@ -81,28 +85,32 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
                 buildActionUseDecision.visible = false;
                 buildActionSelectWindow.visible = false;
                 selectResourceWindow.visible = false;
+                const cardData = bindParams.yamls.actionCardHash[cardIcon.Kind.actionCardName];
+                usingCardIndex = cardIcon.IconId;
                 switch (cardIcon.Kind.actionCardName) {
                     case "採掘施設":
-                        const yamlData: RandGet = <RandGet>bindParams.yamls.actionCardHash["採掘施設"].commands[0].body;
+                        const yamlData: RandGet = <RandGet>cardData.commands[0].body;
                         const selectResource: CandidateResources = {
                             number: yamlData.select_number,
                             resource_names: [yamlData.items[0].name, yamlData.items[1].name, yamlData.items[2].name, yamlData.items[3].name]
                         };
-                        selectResourceWindow.CardIndex = cardIcon.IconId;
                         selectResourceWindow.setResource(selectResource, bindParams.yamls.resourceHash, bindParams.imgQueue);
                         selectResourceWindow.visible = true;
                         break;
                     case "加工施設": case "研究施設":
-                        buildActionSelectWindow.CardIndex = cardIcon.IconId;
-                        buildActionSelectWindow.setYaml(bindParams.yamls.actionCardHash[cardIcon.Kind.actionCardName], bindParams.imgQueue, bindParams.yamls.resourceHash);
+                        buildActionSelectWindow.setYaml(cardData, bindParams.imgQueue, bindParams.yamls.resourceHash);
                         buildActionSelectWindow.visible = true;
                         break;
                     case "印刷所":
                     case "治療施設":
                     case "ロボット工場":
-                        buildActionUseDecision.CardIndex = cardIcon.IconId;
                         buildActionUseDecision.CardName = cardIcon.Kind.actionCardName;
                         buildActionUseDecision.visible = true;
+                        break;
+                    case "地下シェルター":
+                        resourceDialog.setMessage("保護対象のリソースを\n5個選んでください");
+                        resourceDialog.visible = true;
+                        myResourceArea.setSelectEnable();
                         break;
                 }
             }
@@ -115,27 +123,25 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
         const selectBuildActionData: SelectBuildActionData = {
-            iconId: selectResourceWindow.CardIndex,
-            resourceId: cardIcon.IconId,
-            selectNum: 0
+            iconId: usingCardIndex,
+            resourceIdList: [cardIcon.IconId],
+            selectCommandNum: 0
         };
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
-        //playerBuildActionAreaList[0].setUsed(selectResourceWindow.CardIndex);
         selectResourceWindow.visible = false;
         bindParams.layerManager.update();
     });
-    selectResourceWindow.closeOnClick(() => { 
+    selectResourceWindow.closeOnClick(() => {
         selectResourceWindow.visible = false;
         bindParams.layerManager.update();
     });
 
     buildActionSelectWindow.selectOnClick((index: number) => {
         const selectBuildActionData: SelectBuildActionData = {
-            iconId: buildActionSelectWindow.CardIndex,
-            resourceId: 0,
-            selectNum: index
+            iconId: usingCardIndex,
+            resourceIdList: <number[]>[],
+            selectCommandNum: index
         };
-        console.log(selectBuildActionData);
         bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
         buildActionSelectWindow.visible = false;
         bindParams.layerManager.update();
@@ -145,13 +151,12 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         bindParams.layerManager.update();
     });
 
-
     buildActionUseDecision.onClicked((r) => {
         if (r == DialogResult.Yes) {
             const selectBuildActionData: SelectBuildActionData = {
-                iconId: buildActionUseDecision.CardIndex,
-                resourceId: 0,
-                selectNum: 0
+                iconId: usingCardIndex,
+                resourceIdList: <number[]>[],
+                selectCommandNum: 0
             };
             bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
         }
@@ -169,7 +174,7 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     });
     buildOver.onUpdate(x => {
         if (x.overCount != 0) {
-            buildthrowDialog.setThrowBuildNum(x.overCount, x.causeText);
+            buildthrowDialog.setMessage(`${x.causeText} \n捨てる設置済みアクションカードを\n${x.overCount} 個選んでください`);
             buildthrowDialog.visible = true;
         } else {
             playerBuildActionAreaList[0].unSelectFrameVisible();
@@ -185,4 +190,16 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
         bindParams.socket
             .emit("ThrowBuild", JSON.stringify(throwBuild));
     });
+    resourceDialog.visible = false;
+    resourceDialog.onClick(() => {
+        resourceDialog.visible = false;
+        const selectBuildActionData: SelectBuildActionData = {
+            iconId: usingCardIndex,
+            resourceIdList: myResourceArea.getSelectedAllIconId(),
+            selectCommandNum: 0
+        };
+        myResourceArea.unSelectFrameVisible();
+        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+
+    })
 }

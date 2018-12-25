@@ -42,6 +42,10 @@
   description: 爆発による熱や衝撃を起こす為の道具。
  
 # レベル4
+- name: 信者
+  level: 4
+  description: 聖書の教えを信ずる人間。
+
 - name: マイクロチップ
   level: 4
   description: 生物の皮下に挿入される超小型集積回路。
@@ -54,9 +58,6 @@
   level: 4
   description: 生物の研究の為に回収した、DNAの情報。
  
-- name: 信者
-  level: 4
-  description: 聖書の教えを信ずる人間。
  
 # レベル5
 - name: 火星の情報
