@@ -41,7 +41,7 @@ export class SelectDiceWindow extends createjs.Container {
             ((diceList.length / 2) - 1) * (DiceIcon.size + 10) + DiceIcon.size / 2 + 5;
         this.diceIconList.forEach((dice, index) => {
             dice.x = global.canvasWidth / 2 - fixWidth + index * (DiceIcon.size + 10);
-            dice.y = global.canvasHeight / 2;
+            dice.y = global.canvasHeight / 2 + 16;
             dice.onClicked(() => this.callBack(index));
             this.addChild(dice);
         });
@@ -72,11 +72,11 @@ export class SelectDiceWindow extends createjs.Container {
         descriptionText.y = global.canvasHeight / 2 - 130;
 
         this.causeText.textAlign = "center";
-        this.causeText.font = "16px Bold ＭＳ ゴシック";
+        this.causeText.font = "24px Bold ＭＳ ゴシック";
         this.causeText.color = "white";
         this.causeText.shadow = createMyShadow();
         this.causeText.x = global.canvasWidth / 2;
-        this.causeText.y = global.canvasHeight / 2 - 130 + 20;
+        this.causeText.y = global.canvasHeight / 2 - 100;
 
         this.addChild(frame);
         this.addChild(descriptionText,this.causeText);

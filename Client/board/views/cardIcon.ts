@@ -1,6 +1,6 @@
 import { getIconResource } from "../../utility";
-import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
-import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { HaveResourceCard } from "../../../Share/haveResourceCard";
+import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
 import { ImageQueue } from "../imageQueue";
 import { global } from "../../boardGlobalData";
 
@@ -9,11 +9,11 @@ export class CardIconBase<K> extends createjs.Container {
     private kind: K | null;
     private iconId: number;
     private img_name: string;
-    private image: createjs.Bitmap = new createjs.Bitmap("");
+    protected image: createjs.Bitmap = new createjs.Bitmap("");
 
     get Kind() { return this.kind; }
 
-    setKind(kind: K | null, imgIndex: number, queue: ImageQueue, iconScale:number) {
+    setKind(kind: K | null, imgIndex: number, queue: ImageQueue, iconScale: number) {
         this.kind = kind;
         this.image.image = getIconResource(imgIndex, this.img_name, queue);
         this.image.scaleX = iconScale;
@@ -62,7 +62,13 @@ export class CardIconBase<K> extends createjs.Container {
 }
 
 //リソースアイコンクラス
-export class ResourceCardIcon extends CardIconBase<ResourceName | null> {
+export class ResourceCardIcon extends CardIconBase<HaveResourceCard | null> {
+
+    setKind(kind: HaveResourceCard | null, imgIndex: number, queue: ImageQueue, iconScale: number) {
+        super.setKind(kind, imgIndex, queue, iconScale);
+        if (this.Kind == null) return;
+        this.Kind.guardFlag ? this.image.alpha = 0.5 : this.image.alpha = 1;
+    }
 
     constructor(iconId: number) {
         super(iconId, null, "resource");
@@ -70,7 +76,13 @@ export class ResourceCardIcon extends CardIconBase<ResourceName | null> {
 }
 
 //設置アクションアイコンクラス
-export class BuildActionCardIcon extends CardIconBase<ActionCardName | null> {
+export class BuildActionCardIcon extends CardIconBase<HaveBuildActionCard | null> {
+
+    setKind(kind: HaveBuildActionCard | null, imgIndex: number, queue: ImageQueue, iconScale: number) {
+        super.setKind(kind, imgIndex, queue, iconScale);
+        if (this.Kind == null) return;
+        this.Kind.usedFlag ? this.image.alpha = 0.5 : this.image.alpha = 1;
+    }
 
     constructor(iconId: number) {
         super(iconId, null, "buildAction");

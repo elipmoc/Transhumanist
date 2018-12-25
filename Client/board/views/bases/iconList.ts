@@ -34,7 +34,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     }
 
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (cardIcon: CardIconBase<K>) => void) {
+    onClickedIcon(onClickIconCallBack: (cardIcon: I) => void) {
         this.onClickIconCallBack = onClickIconCallBack;
     }
 

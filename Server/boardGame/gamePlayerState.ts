@@ -4,20 +4,27 @@ import { SocketBinder } from "../socketBinder";
 
 export class GamePlayerState {
     private state: SocketBinder.Binder<ResponseGamePlayerState>;
-    private beforeActivityRange: number;
-    private afterActivityRange: number;
-    private temporarilyNow: boolean;
-  
-    get State() { return this.state.Value; }
-        
-    constructor(state: SocketBinder.Binder<ResponseGamePlayerState>) {
-        this.state = state;
+    private defaultResource: number;
+    private defaultSpeed: number;
+
+    get State() {
+        return this.state.Value;
+    }
+
+    constructor(playerId: number, boardSocketManager: SocketBinder.Namespace) {
+        this.state = new SocketBinder.Binder<ResponseGamePlayerState>(
+            "GamePlayerState" + playerId
+        );
         this.state.Value = {
             playerName: "",
-            negative: 0, positive: 0,
-            uncertainty: 0, resource: 0,
-            activityRange: 0, speed: 0
+            negative: 0,
+            positive: 0,
+            uncertainty: 0,
+            resource: 0,
+            activityRange: 0,
+            speed: 0
         };
+        boardSocketManager.addSocketBinder(this.state);
     }
 
     setPlayerName(playerName: string) {
@@ -28,22 +35,32 @@ export class GamePlayerState {
     clear() {
         this.state.Value = {
             playerName: "",
-            negative: 0, positive: 0,
-            uncertainty: 0, resource: 0,
-            activityRange: 0, speed: 0
+            negative: 0,
+            positive: 0,
+            uncertainty: 0,
+            resource: 0,
+            activityRange: 0,
+            speed: 0
         };
+        this.defaultResource = 0;
+        this.defaultSpeed = 0;
     }
 
     reset() {
         this.state.Value = {
             playerName: this.state.Value.playerName,
-            negative: 0, positive: 0,
-            uncertainty: 0, resource: 0,
-            activityRange: 0, speed: 0
+            negative: 0,
+            positive: 0,
+            uncertainty: 0,
+            resource: 0,
+            activityRange: 0,
+            speed: 0
         };
+        this.defaultResource = 0;
+        this.defaultSpeed = 0;
     }
 
-    addPositive(num:number) {
+    addPositive(num: number) {
         this.state.Value.positive += num;
         if (this.state.Value.positive >= 30) this.state.Value.positive = 30;
         else if (this.state.Value.positive <= 0) this.state.Value.positive = 0;
@@ -59,47 +76,20 @@ export class GamePlayerState {
 
     //加減対応済み
     addAcivityRange(num: number) {
-        if (this.temporarilyNow) {
-            this.beforeActivityRange += num;
-            this.afterActivityRange += num;
-
-            if (this.afterActivityRange >= 30) this.state.Value.activityRange = 30;
-            else if (this.afterActivityRange <= 0) this.state.Value.activityRange = 0;
-            else this.state.Value.activityRange = this.afterActivityRange;
-
-        } else {
-            this.state.Value.activityRange += num;
-            if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
-            else if (this.state.Value.activityRange <= 0) this.state.Value.activityRange = 0;
-        }
-        this.state.update();
-    }
-
-    //加減対応済み
-    temporarilyActivityRangeSet(num: number) {
-        this.temporarilyNow = true;
-        this.beforeActivityRange = this.state.Value.activityRange;
-        this.afterActivityRange = this.beforeActivityRange += num;
-
-        if (this.afterActivityRange >= 30) this.state.Value.activityRange = 30;
-        else if (this.afterActivityRange <= 0) this.state.Value.activityRange = 0;
-        else this.state.Value.activityRange = this.afterActivityRange;
-        this.state.update();
-    }
-
-    //加減対応済み
-    temporarilyReset() {
-        this.temporarilyNow = false;
-        this.state.Value.activityRange = this.beforeActivityRange;
-        if (this.state.Value.activityRange >= 30) this.state.Value.activityRange = 30;
-        else if (this.state.Value.activityRange <= 0) this.state.Value.activityRange = 0;
+        this.state.Value.activityRange += num;
+        if (this.state.Value.activityRange >= 30)
+            this.state.Value.activityRange = 30;
+        else if (this.state.Value.activityRange <= 0)
+            this.state.Value.activityRange = 0;
         this.state.update();
     }
 
     setAICard(startStatusYamlData: StartStatusYamlData) {
         this.state.Value.activityRange = startStatusYamlData.activityRange;
         this.state.Value.resource = startStatusYamlData.resource;
+        this.defaultResource = startStatusYamlData.resource;
         this.state.Value.speed = startStatusYamlData.speed;
+        this.defaultSpeed = startStatusYamlData.speed;
         this.state.Value.uncertainty = startStatusYamlData.uncertainty;
         this.state.update();
     }
@@ -118,10 +108,34 @@ export class GamePlayerState {
         this.state.update();
     }
     warStateChange() {
-        if (this.state.Value.positive <= 0)
-            this.state.Value.negative++;
-        else
-            this.state.Value.positive--;
+        if (this.state.Value.positive <= 0) this.state.Value.negative++;
+        else this.state.Value.positive--;
         this.state.update();
+    }
+
+    //倉庫反映
+    updateResource(count: number) {
+        const value = 10;
+        if (count >= 1) {
+            const updateNumber =
+                this.defaultResource + (count * value);
+            if (updateNumber >= 30) {
+                this.state.Value.resource = 30;
+            } else {
+                this.state.Value.resource = updateNumber;
+            }
+            this.state.update();
+        }
+    }
+
+    //量子コンピュータ反映
+    updateSpeed(count: number) {
+        const value = 3;
+        if (count >= 1) {
+            const updateNumber =
+                this.defaultSpeed + (count * value);
+            this.state.Value.speed = updateNumber;
+            this.state.update();
+        }
     }
 }

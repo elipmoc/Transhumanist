@@ -13,10 +13,11 @@ import * as selectActionWindow from "./viewBuilds/selectActionWindow";
 import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
 import * as selectResourceWindow from "./viewBuilds/selectResourceWindow";
-import * as selectWinCardWindow from "./viewBuilds/selectWinCardWindow";
 import * as unavailableDialog from "./viewBuilds/unavailableDialog";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
+import * as nowEventDialog from "./viewBuilds/nowEventDialog";
+
 import { LayerTag } from "../board";
 
 //viewを生成してソケットと結びつける関数
@@ -24,12 +25,12 @@ export function viewBuild(bindParams: BindParams) {
     topWindowR.build(bindParams);
     warLine.build(bindParams);
     playerWindow.build(bindParams);
-    playerResourceArea.build(bindParams);
+    const myPlayerResourceArea = playerResourceArea.build(bindParams);
     logWindow.build(bindParams);
     eventLogWindow.build(bindParams);
     const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, 3);
     bindParams.layerManager.add(LayerTag.Hover, actionCardHover);
-    playerBuildActionArea.build(actionCardHover, bindParams);
+    playerBuildActionArea.build(actionCardHover, myPlayerResourceArea, bindParams);
     handActionCardStorageWindow.build(actionCardHover, bindParams);
     turnFinishButton.build(bindParams);
     declareWarButton.build(bindParams);
@@ -39,4 +40,5 @@ export function viewBuild(bindParams: BindParams) {
     unavailableDialog.build(bindParams);
     topWindowL.build(bindParams);
     chatForm.build(bindParams);
+    nowEventDialog.build(bindParams);
 }

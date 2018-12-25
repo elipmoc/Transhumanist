@@ -39,6 +39,13 @@ export class WarList {
         return null;
     }
 
+    getWarPlayerId(playerId: number) {
+        if (this.warFlags[playerId].Value) {
+            const warPair = this.warPairList.Value.find(x => x.playerId1 == playerId || x.playerId2 == playerId)!;
+            return playerId == warPair.playerId1 ? warPair.playerId2 : warPair.playerId1;
+        }
+        return null;
+    }
 
     constructor(boardSocketManager: SocketBinder.Namespace) {
 

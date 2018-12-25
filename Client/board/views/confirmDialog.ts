@@ -2,8 +2,8 @@ import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { DecisionButton } from "./decisionButton";
 
-//設置済み捨てろって時のダイアログ
-export class BuildthrowDialog extends createjs.Container {
+//リソースがいっぱいでなんか捨てないといけない時のダイアログ
+export class ConfirmDialog extends createjs.Container {
     private label: createjs.Text;
     private callBack: () => void;
     onClick(callBack: () => void) {
@@ -28,7 +28,7 @@ export class BuildthrowDialog extends createjs.Container {
         button.addEventListener("click", () => this.callBack());
         this.addChild(background, this.label, button);
     }
-    setThrowBuildNum(num: number,cause:string) {
-        this.label.text = `${cause}\n捨てる設置済みアクションカードを\n${num}個選んでください`;
+    setMessage(msg: string) {
+        this.label.text = msg;
     }
 }
