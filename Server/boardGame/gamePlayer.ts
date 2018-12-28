@@ -399,6 +399,14 @@ export class GamePlayer {
                         return false;
                     }
                     break;
+                case "missionary":
+                    if (this.resourceList.getCount("信者") >= 1) {
+                        
+                    } else {
+                        unavailable.emit(UnavailableState.NoBeliever);
+                        return false;
+                    }
+                    break;
             }
             return true;
         });
