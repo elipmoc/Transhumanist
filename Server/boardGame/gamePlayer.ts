@@ -218,7 +218,7 @@ export class GamePlayer {
     }
 
     warAction(name: ActionCardName) {
-        warActionCardExec(name, this.buildActionList, this.resourceList);
+        warActionCardExec(name, this.buildActionList, this.resourceList,this.state);
     }
 
     constructor(
