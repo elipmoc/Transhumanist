@@ -15,6 +15,7 @@ import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCa
 import { SelectResourceWindow } from "../views/selectResourceWindow";
 import { CandidateResources } from "../../../Share/candidateResources";
 import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
+import { SelectChurchWindow } from "../views/selectChurchWindow";
 
 import { LayerTag } from "../../board";
 import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
@@ -35,6 +36,9 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
     const selectResourceWindow = new SelectResourceWindow(4);
     selectResourceWindow.visible = false;
 
+    const selectChurchWindow = new SelectChurchWindow();
+    selectChurchWindow.visible = false;
+
     const buildActionSelectWindow = new BuildActionSelectWindow();
     buildActionSelectWindow.visible = false;
     bindParams.layerManager.add(LayerTag.PopUp, buildActionSelectWindow);
@@ -42,6 +46,7 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
     bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
     bindParams.layerManager.add(LayerTag.PopUp, selectResourceWindow);
     bindParams.layerManager.add(LayerTag.PopUp, buildActionUseDecision);
+    bindParams.layerManager.add(LayerTag.PopUp, selectChurchWindow);
 
     const playerBuildActionAreaList: PlayerBuildAreaBase[] = [
         new playerBuildAreas.Player1BuildArea(bindParams.imgQueue),
@@ -112,6 +117,9 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
                         resourceDialog.visible = true;
                         myResourceArea.setSelectEnable();
                         break;
+                    case "教会":
+                        selectChurchWindow.visible = true;
+                        break;
                 }
             }
         }
@@ -148,6 +156,21 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
     });
     buildActionSelectWindow.closeOnClick(() => {
         buildActionSelectWindow.visible = false;
+        bindParams.layerManager.update();
+    });
+
+    selectChurchWindow.commandOnClick((index: number) => {
+        const selectBuildActionData: SelectBuildActionData = {
+            iconId: usingCardIndex,
+            resourceIdList: <number[]>[],
+            selectCommandNum: index
+        };
+        bindParams.socket.emit("SelectBuildAction", JSON.stringify(selectBuildActionData));
+        selectChurchWindow.visible = false;
+        bindParams.layerManager.update();
+    });
+    selectChurchWindow.closeOnClick(() => {
+        selectChurchWindow.visible = false;
         bindParams.layerManager.update();
     });
 
