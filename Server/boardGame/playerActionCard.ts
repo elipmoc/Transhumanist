@@ -1,6 +1,7 @@
 import { SocketBinder } from "../socketBinder";
 import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
+import { UseHandActionCard, UseKind } from "../../Share/useHandActionCard";
 import { yamlGet } from "../yamlGet";
 
 //カードを破棄するかのフラグ
@@ -11,6 +12,10 @@ export class PlayerActionCard {
     private useActionCardCallback: (
         card: ActionCardYamlData
     ) => DestructionFlag;
+    private destructionActionCardCallback: (
+        card: ActionCardYamlData
+    ) => DestructionFlag;
+
     private selectActionCardLevelCallback: (level: number) => void;
     private selectWinActionCardCallback: (cardName: string) => void;
 
@@ -18,7 +23,7 @@ export class PlayerActionCard {
         //生成
         const selectActionCardLevel = new SocketBinder.EmitReceiveBinder<
             number
-        >("selectActionCardLevel", true, [`player${playerId}`]);
+            >("selectActionCardLevel", true, [`player${playerId}`]);
         const selectWinActionCard = new SocketBinder.EmitReceiveBinder<string>(
             "selectWinCard",
             true,
@@ -29,8 +34,8 @@ export class PlayerActionCard {
             true,
             [`player${playerId}`]
         );
-        const useActionCardIndex = new SocketBinder.EmitReceiveBinder<number>(
-            "useActionCardIndex",
+        const useHandActionCard = new SocketBinder.EmitReceiveBinder<UseHandActionCard>(
+            "useHandActionCard",
             true,
             [`player${playerId}`]
         );
@@ -42,17 +47,21 @@ export class PlayerActionCard {
         selectWinActionCard.OnReceive(cardName =>
             this.selectWinActionCardCallback(cardName)
         );
-        useActionCardIndex.OnReceive(actionCardIndex => {
+        useHandActionCard.OnReceive(handActionCard => {
             const useActionCardName = this.actionCardList.Value[
-                actionCardIndex
+                handActionCard.index
             ];
             if (useActionCardName) {
                 const useActionCard = GenerateActionCardYamlData(
                     yamlGet("./Resource/Yaml/actionCard.yaml"),
                     false
                 )[useActionCardName];
-                if (useActionCard && this.useActionCardCallback(useActionCard))
-                    this.actionCardList.setAt(actionCardIndex, null);
+                if (useActionCard === undefined) return;
+                if (handActionCard.useKind == UseKind.Use && this.useActionCardCallback(useActionCard))
+                    this.actionCardList.setAt(handActionCard.index, null);
+                if (handActionCard.useKind == UseKind.Destruction &&
+                    this.destructionActionCardCallback(useActionCard))
+                    this.actionCardList.setAt(handActionCard.index, null);
             }
         });
 
@@ -62,7 +71,7 @@ export class PlayerActionCard {
         //socketBinder登録
         boardSocketManager.addSocketBinder(
             this.actionCardList,
-            useActionCardIndex,
+            useHandActionCard,
             selectActionCardLevel,
             selectWinActionCard
         );
@@ -72,6 +81,12 @@ export class PlayerActionCard {
     onUseActionCard(f: (card: ActionCardYamlData) => DestructionFlag) {
         this.useActionCardCallback = f;
     }
+
+    //カードが破棄されるときに呼ばれる関数をセット
+    onDestructionActionCard(f: (card: ActionCardYamlData) => DestructionFlag) {
+        this.destructionActionCardCallback = f;
+    }
+
 
     //ドローするカードのレベルが選択されたときに呼ばれる関数をセット
     onSelectActionCardLevel(f: (level: number) => void) {
