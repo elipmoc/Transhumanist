@@ -449,6 +449,14 @@
     - name: メタル
       number: 2
   commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: 人間
+            number: 1
+        get: 
+          - name: 信者
+            number: 1
     - kind: missionary
   number: 8
   war_use: false

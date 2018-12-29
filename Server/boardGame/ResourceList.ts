@@ -199,6 +199,11 @@ export class ResourceList {
         return count;
     }
 
+    getResourceName(index: number) {
+        const getData = this.resourceList.Value[index];
+        return getData == null ? null : getData.resourceCardName;
+    }
+
     //指定インデックスのリソースをguardする
     setGuard(index: number) {
         const val = this.resourceList.Value[index];
