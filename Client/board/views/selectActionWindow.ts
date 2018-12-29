@@ -2,6 +2,7 @@ import { global } from "../../boardGlobalData"
 import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
 import { createMyShadow } from "../../utility";
 import { ImageQueue } from "../imageQueue";
+import { PopupWindowBase } from "./bases/popupWindowBase";
 
 class NumberOfActionCardTexts extends createjs.Container {
     private texts: createjs.Text[] = new Array();
@@ -35,25 +36,17 @@ class NumberOfActionCardTexts extends createjs.Container {
 }
 
 //獲得するアクションカードを選択するウインドウ
-export class SelectActionWindow extends createjs.Container {
+export class SelectActionWindow extends PopupWindowBase {
 
     private callBack: (value: number) => void;
     private numberOfActionCardTexts: NumberOfActionCardTexts;
 
     constructor(queue: ImageQueue) {
-        super();
-
-        const frame = new createjs.Shape();
-        const frameX = 700;
-        const frameY = 290;
-        frame.graphics.beginFill("gray").
-            drawRect(0, 0, frameX, frameY);
-        frame.x = global.canvasWidth / 2 - frameX / 2;
-        frame.y = global.canvasHeight / 2 - frameY / 2;
+        super(700, 290);
 
         this.numberOfActionCardTexts = new NumberOfActionCardTexts();
-        this.numberOfActionCardTexts.x = global.canvasWidth / 2 - frameX / 2 + 90;
-        this.numberOfActionCardTexts.y = global.canvasHeight / 2 + frameY / 2 - 50;
+        this.numberOfActionCardTexts.x = global.canvasWidth / 2 - this.getWidth() / 2 + 90;
+        this.numberOfActionCardTexts.y = global.canvasHeight / 2 + this.getHeight() / 2 - 50;
 
         const descriptionText = new createjs.Text();
         descriptionText.textAlign = "center";
@@ -64,7 +57,6 @@ export class SelectActionWindow extends createjs.Container {
         descriptionText.x = global.canvasWidth / 2;
         descriptionText.y = global.canvasHeight / 2 - 130;
 
-        this.addChild(frame);
         this.addChild(descriptionText);
         this.addChild(this.numberOfActionCardTexts);
 
