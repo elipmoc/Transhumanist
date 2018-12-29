@@ -218,9 +218,13 @@ export class GamePlayer {
         this.state.winWar();
         this.war.win();
     }
+    //戦争状態にする
+    startWar() {
+        this.war.startWar();
+    }
 
     warAction(name: ActionCardName) {
-        warActionCardExec(name, this.buildActionList, this.resourceList,this.state);
+        warActionCardExec(name, this.buildActionList, this.resourceList, this.state);
     }
 
     constructor(
@@ -431,9 +435,9 @@ export class GamePlayer {
                 if (data.selected.length ==
                     data.selected.filter(x => {
                         this.resourceList.getResourceName(x) != null &&
-                        this.resourceList.getResourceName(x) == "信者"
+                            this.resourceList.getResourceName(x) == "信者"
                     }).length) {
-                    
+
                     const adConstant = data.adId == 0 ? 1 : -1;
                     if (data.pnId == 0) {
                         this.state.addPositive(data.selected.length * adConstant);
