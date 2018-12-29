@@ -5,22 +5,15 @@ import { ActionCardYamlData, CreateGet } from "../../../Share/Yaml/actionCardYam
 import { ImageQueue } from "../imageQueue";
 import { SelectButton } from "./buildActionSelect/selectButton";
 import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { PopupWindowBase } from "./bases/popupWindowBase";
 
-export class BuildActionSelectWindow extends createjs.Container {
+export class BuildActionSelectWindow extends PopupWindowBase {
     private cardName = new createjs.Text();
     private callBack: () => void;
     private selectButton: SelectButton[] = [new SelectButton(), new SelectButton(), new SelectButton()];
 
     constructor() {
-        super();
-
-        const frame = new createjs.Shape();
-        const frameX = 700;
-        const frameY = 400;
-        frame.graphics.beginFill("gray").
-            drawRect(0, 0, frameX, frameY);
-        frame.x = global.canvasWidth / 2 - frameX / 2;
-        frame.y = global.canvasHeight / 2 - frameY / 2;
+        super(700, 400);
 
         this.cardName.textAlign = "center";
         this.cardName.text = "";
@@ -43,7 +36,6 @@ export class BuildActionSelectWindow extends createjs.Container {
         button.y = global.canvasHeight / 2 + 120;
         button.addEventListener("click", () => this.callBack());
 
-        this.addChild(frame);
         this.addChild(description);
         this.addChild(this.cardName, button);
 

@@ -7,8 +7,9 @@ import { ImageQueue } from "../imageQueue";
 import { CandidateResources } from "../../../Share/candidateResources";
 import { HaveResourceCard } from "../../../Share/haveResourceCard";
 import { DecisionButton } from "./decisionButton";
+import { PopupWindowBase } from "./bases/popupWindowBase";
 
-export class SelectResourceWindow extends createjs.Container {
+export class SelectResourceWindow extends PopupWindowBase {
     private resourceNumber: number;
     private maxLength: number;
     private descriptionText = new createjs.Text();
@@ -18,19 +19,11 @@ export class SelectResourceWindow extends createjs.Container {
 
 
     constructor(maxNum: number) {
-        super();
+        super(700, 290);
         this.maxLength = maxNum;
         this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0)
         this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength) / 2;
         this.resourceList.y = global.canvasHeight / 2 - global.cardIconSize / 2;
-
-        const frame = new createjs.Shape();
-        const frameX = 700;
-        const frameY = 290;
-        frame.graphics.beginFill("gray").
-            drawRect(0, 0, frameX, frameY);
-        frame.x = global.canvasWidth / 2 - frameX / 2;
-        frame.y = global.canvasHeight / 2 - frameY / 2;
 
         this.button = new DecisionButton("やめる");
         this.button.x = global.canvasWidth / 2;
@@ -46,7 +39,6 @@ export class SelectResourceWindow extends createjs.Container {
         this.descriptionText.x = global.canvasWidth / 2;
         this.descriptionText.y = global.canvasHeight / 2 - 130;
 
-        this.addChild(frame);
         this.addChild(this.resourceList);
         this.addChild(this.descriptionText);
         this.addChild(this.button);

@@ -5,22 +5,15 @@ import { ImageQueue } from "../imageQueue";
 import { SelectWinCard } from "./bases/selectWinCard";
 import { WinActionCardData } from "../../../Share/winActionCardData";
 import { DecisionButton } from "./decisionButton";
+import { PopupWindowBase } from "./bases/popupWindowBase";
 
-export class SelectWinCardWindow extends createjs.Container {
+export class SelectWinCardWindow extends PopupWindowBase {
     private descriptionText = new createjs.Text();
     private winCards: { [cardName: string]: SelectWinCard } = {};
     private callBack: () => void;
 
     constructor(actionCardHash: ActionCardHash, imgQueue: ImageQueue) {
-        super();
-
-        const frame = new createjs.Shape();
-        const frameX = 700;
-        const frameY = 440;
-        frame.graphics.beginFill("gray").
-            drawRect(0, 0, frameX, frameY);
-        frame.x = global.canvasWidth / 2 - frameX / 2;
-        frame.y = global.canvasHeight / 2 - frameY / 2;
+        super(700, 440);
 
         this.winCards["火星の支配"] = new SelectWinCard(2);
         this.winCards["火星の支配"].setYamlData(actionCardHash["火星の支配"], imgQueue);
@@ -48,9 +41,8 @@ export class SelectWinCardWindow extends createjs.Container {
         button.y = global.canvasHeight / 2 + 170;
         button.addEventListener("click", () => this.callBack());
 
-        this.addChild(frame);
         Object.values(this.winCards).forEach(x => {
-            x.y = global.canvasHeight / 2 - frameY / 4 - 40;
+            x.y = global.canvasHeight / 2 - this.getHeight() / 4 - 40;
             this.addChild(x);
         });
 

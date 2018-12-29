@@ -347,6 +347,11 @@ export class GamePlayer {
             this.onceNoCostFlag = false;
             return true;
         });
+
+        //カード破棄の処理
+        this.actionCard.onDestructionActionCard((_) =>
+            this.playerCond.Value == GamePlayerCondition.MyTurn
+        )
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
