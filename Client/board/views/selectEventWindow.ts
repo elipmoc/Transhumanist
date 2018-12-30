@@ -5,7 +5,7 @@ import { PopupWindowBase } from "./bases/popupWindowBase";
 
 export class SelectEventWindow extends PopupWindowBase {
     private layerUpdate: () => void;
-    private submitCallback: () => void;
+    private submitCallback: (array: number[]) => void;
     private selectEvent: SelectEvent[] = [new SelectEvent("陸0"), new SelectEvent("海1"), new SelectEvent("空2")];
 
     constructor(layerUpdate: () => void) {
@@ -39,25 +39,40 @@ export class SelectEventWindow extends PopupWindowBase {
             this.addChild(e);
         });
         this.selectEvent.forEach((e, i) => {
-            e.y = global.canvasHeight / 2 + 40;
-            e.x = global.canvasWidth / 2;
-
-            e.x = e.x + (140 * (i - 1));
-            e.addEventListener("click", () => this.eventButtonClick(i));
-
             e.Enable = true;
-            e.BeginIndex = i;
-            e.NowIndex = i;
+            if (e.Enable) {
+                e.alpha = 1.0;
+                e.y = global.canvasHeight / 2 + 20;
+                e.x = global.canvasWidth / 2;
+
+                e.x = e.x + (140 * (i - 1));
+                e.addEventListener("click", () => this.eventButtonClick(i));
+
+                e.BeginIndex = i;
+                e.NowIndex = i;
+            }
+            else e.alpha = 0.0;
             this.addChild(e);
         });
 
         const submit = new DecisionButton("決定");
         submit.x = global.canvasWidth / 2;
-        submit.y = global.canvasHeight / 2 + 100;
-        submit.addEventListener("click", () => this.submitCallback());
+        submit.y = global.canvasHeight / 2 + 130;
+        submit.addEventListener("click", () => this.submitCallback(this.beginArrayCreate()));
         this.addChild(submit);
     }
 
+    beginArrayCreate() {
+        const enableArray = this.selectEvent.filter((x) => { return x.Enable});
+        let beginIdArray = new Array(enableArray.length);
+        enableArray.forEach((e,i) => {
+            beginIdArray[i] = e.BeginIndex;
+        });
+        return beginIdArray;
+    }
+    submitOnClick(f: (array: number[]) => void) {
+        this.submitCallback = f;   
+    }
     eventButtonClick(index: number) {
         if (this.selectEvent[index].Enable) {
             this.selectEvent[index].Selected = !this.selectEvent[index].Selected;
@@ -66,9 +81,20 @@ export class SelectEventWindow extends PopupWindowBase {
 
         if(this.selectEvent.filter((x)=>{return x.Selected}).length == 2) {
             //swap!
-            
-        }
+            const swapData = this.selectEvent.filter((x) => { return x.Selected });
+            const tempNumber: number = this.selectEvent[swapData[0].NowIndex].BeginIndex;
+            const tempString: string = this.selectEvent[swapData[0].NowIndex].CardName;
 
+            this.selectEvent[swapData[0].NowIndex].BeginIndex = this.selectEvent[swapData[1].NowIndex].BeginIndex;
+            this.selectEvent[swapData[0].NowIndex].CardName = this.selectEvent[swapData[1].NowIndex].CardName;
+            this.selectEvent[swapData[1].NowIndex].BeginIndex = tempNumber;
+            this.selectEvent[swapData[1].NowIndex].CardName = tempString;
+            
+            this.selectEvent.forEach((x) => {
+                x.Selected = false;
+                x.alphaUpdate();
+            });
+        }
         this.layerUpdate();
     };
 }

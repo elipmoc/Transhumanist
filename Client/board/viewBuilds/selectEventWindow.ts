@@ -12,6 +12,10 @@ export function build(bindParams: BindParams) {
     bindParams.layerManager.add(LayerTag.PopUp, selectEventWindow);
     //selectEventWindow.visible = false;
 
+    selectEventWindow.submitOnClick((list:number[]) => { 
+        console.log(list);
+    });
+    
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     gamePlayerCondition.onUpdate(cond => {
