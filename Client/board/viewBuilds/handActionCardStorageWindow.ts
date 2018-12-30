@@ -11,7 +11,7 @@ import { SocketBinder } from "../../socketBinder";
 
 //手札ウインドウの生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
-    const decision = new ActionCardUseDecisionWindow();
+    const decision = new ActionCardUseDecisionWindow(true);
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList", bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.imgQueue);
     const gamePlayerCondition = new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
