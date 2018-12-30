@@ -10,14 +10,12 @@ export function build(bindParams: BindParams) {
     const diceData = new SocketBinder<DiceData>("diceList" + bindParams.playerId, bindParams.socket);
     const selectEventWindow = new SelectEventWindow(()=>{bindParams.layerManager.update()});
     bindParams.layerManager.add(LayerTag.PopUp, selectEventWindow);
+    //selectEventWindow.visible = false;
 
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     gamePlayerCondition.onUpdate(cond => {
-        if (cond != GamePlayerCondition.MyTurn)
-            selectEventWindow.visible = true;
-        else
-            selectEventWindow.visible = false;
+        selectEventWindow.visible = false;
         bindParams.layerManager.update();
     });
 }
