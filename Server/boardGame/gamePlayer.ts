@@ -83,6 +83,12 @@ export class GamePlayer {
         this.winCallback = f;
     }
 
+    //アクションカードを消費した時に呼ばれるコールバック
+    private consumeCallBack: (card: ActionCardYamlData) => void;
+    onConsume(f: (card: ActionCardYamlData) => void) {
+        this.consumeCallBack = f;
+    }
+
     reset() {
         this.state.reset();
         this.war.reset();
@@ -359,13 +365,18 @@ export class GamePlayer {
                 this.winCallback();
             }
             this.onceNoCostFlag = false;
+            this.consumeCallBack(card);
             return true;
         });
 
         //カード破棄の処理
-        this.actionCard.onDestructionActionCard((_) =>
-            this.playerCond.Value == GamePlayerCondition.MyTurn
-        )
+        this.actionCard.onDestructionActionCard(card => {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn) {
+                this.consumeCallBack(card);
+                return true;
+            }
+            return false;
+        })
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;

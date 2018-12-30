@@ -85,6 +85,9 @@ export class GamePlayers {
             player.onWarActionCallback((name: string) => {
                 this.useWarActionCard(player.PlayerId, name);
             });
+            player.onConsume(card => {
+                actionCardStacks.throwAway(card);
+            })
             player.onWin(() => this.endGameRequestCallback());
             this.gamePlayerList.push(player);
         }
