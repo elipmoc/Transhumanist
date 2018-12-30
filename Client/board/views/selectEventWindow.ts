@@ -30,7 +30,7 @@ export class SelectEventWindow extends PopupWindowBase {
         orderText.forEach((e, i) => {
             e.y = global.canvasHeight / 2 - 70;
             e.x = global.canvasWidth / 2;
-            e.x = e.x + (140 * (i - 1));
+            e.x = e.x + (240 * (i - 1));
 
             e.textAlign = "center";
             e.color = "white";
@@ -41,7 +41,7 @@ export class SelectEventWindow extends PopupWindowBase {
         this.selectEvent.forEach((e, i) => {
             e.y = global.canvasHeight / 2 + 20;
             e.x = global.canvasWidth / 2;
-            e.x = e.x + (140 * (i - 1));
+            e.x = e.x + (240 * (i - 1));
             e.addEventListener("click", () => this.eventButtonClick(i));
             e.BeginIndex = i;
             e.NowIndex = i;
@@ -116,19 +116,21 @@ class SelectEvent extends createjs.Container {
     private enable = false;
     private beginIndex: number;
     private nowIndex: number;
-    readonly size = 100;
+    readonly width = 200;
+    readonly height = 100;
 
     constructor(name: string) {
         super();
 
         const base = new createjs.Shape();
-        base.graphics.beginFill("white").drawRect(- this.size/2,- this.size/2, this.size, this.size);
+        base.graphics.beginFill("white").drawRect(- this.width/2,- this.height/2, this.width, this.height);
         this.addChild(base);
 
         this.cardName = new createjs.Text(name);
         this.cardName.textAlign = "center";
         this.cardName.color = "black";
-        this.cardName.font = "48px ＭＳ ゴシック";
+        this.cardName.font = "19px Bold ＭＳ ゴシック";
+        this.cardName.y = -8;
         this.addChild(this.cardName);
     }
 
@@ -153,6 +155,6 @@ class SelectEvent extends createjs.Container {
         this.nowIndex = val;
     }
     alphaUpdate() {
-        this.alpha = this.selected ? 0.5 : 1.0;
+        if(this.enable) this.alpha = this.selected ? 0.5 : 1.0;
     }
 }
