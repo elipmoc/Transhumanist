@@ -89,6 +89,11 @@ export class GamePlayers {
                 actionCardStacks.throwAway(card);
             })
             player.onWin(() => this.endGameRequestCallback());
+
+            //未来予報装置の処理
+            player.onFutureForecastGetEvents(() => this.eventCardDrawer.getEvents());
+            player.onFutureForecastSwapEvents(data => this.eventCardDrawer.swapEvents(data));
+
             this.gamePlayerList.push(player);
         }
     }
