@@ -113,7 +113,7 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
                         buildActionUseDecision.visible = true;
                         break;
                     case "地下シェルター":
-                        resourceDialog.setMessage("保護対象のリソースを\n5個選んでください");
+                        resourceDialog.setMessage("保護対象のリソースを\n選んでください");
                         resourceDialog.visible = true;
                         myResourceArea.setSelectEnable();
                         break;

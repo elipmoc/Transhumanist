@@ -389,7 +389,7 @@ export class GamePlayer {
             switch (card.commands[commandNum].kind) {
                 case "resource_guard":
                     //保護するリソースの最大数
-                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number;
+                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);
                     if (data.resourceIdList.length > guardMaxNum) {
                         unavailable.emit(UnavailableState.Condition);
                         return false;
