@@ -17,6 +17,7 @@ import * as unavailableDialog from "./viewBuilds/unavailableDialog";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
 import * as nowEventDialog from "./viewBuilds/nowEventDialog";
+import * as selectEventWindow from "./viewBuilds/selectEventWindow";
 
 import { LayerTag } from "../board";
 
@@ -41,4 +42,5 @@ export function viewBuild(bindParams: BindParams) {
     topWindowL.build(bindParams);
     chatForm.build(bindParams);
     nowEventDialog.build(bindParams);
+    selectEventWindow.build(bindParams);
 }

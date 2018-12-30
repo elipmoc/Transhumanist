@@ -15,7 +15,7 @@ export class ActionCardUseDecisionWindow extends PopupWindowBase {
     private label: createjs.Text;
     private callBack: ResultFunc;
     private cardName: string;
-    constructor() {
+    constructor(handAction?:boolean) {
         super(500, 250);
         this.label = new createjs.Text("undefined");
         this.label.font = "32px Bold ＭＳ ゴシック";
@@ -29,17 +29,29 @@ export class ActionCardUseDecisionWindow extends PopupWindowBase {
         use.x = global.canvasWidth / 2 - this.getWidth() / 2 + 30 + use.width / 2;
         use.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 - 50;
         use.addEventListener("click", () => this.callBack(DialogResult.Yes));
+        this.addChild(this.label, use,)
 
-        const destruction = new DecisionButton("破棄");
-        destruction.x = global.canvasWidth / 2 + this.getWidth() / 2 - 30 - destruction.width / 2;
-        destruction.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 - 50;
-        destruction.addEventListener("click", () => this.callBack(DialogResult.Destruction));
+        if (handAction) {
+            const destruction = new DecisionButton("破棄");
+            destruction.x = global.canvasWidth / 2 + this.getWidth() / 2 - 30 - destruction.width / 2;
+            destruction.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 - 50;
+            destruction.addEventListener("click", () => this.callBack(DialogResult.Destruction));
+            this.addChild(destruction);
 
-        const no = new DecisionButton("やめる");
-        no.x = global.canvasWidth / 2;
-        no.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 + 20;
-        no.addEventListener("click", () => this.callBack(DialogResult.No));
-        this.addChild(this.label, use, destruction, no);
+            const no = new DecisionButton("やめる");
+            no.x = global.canvasWidth / 2;
+            no.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 + 20;
+            no.addEventListener("click", () => this.callBack(DialogResult.No));
+            this.addChild(no);
+        }
+        else {
+            const no = new DecisionButton("やめる");
+            no.x = global.canvasWidth / 2 + this.getWidth() / 2 - 30 - no.width / 2;
+            no.y = global.canvasHeight / 2 + this.getHeight() / 2 - 30 - use.height / 2 - 50;
+            no.addEventListener("click", () => this.callBack(DialogResult.No));
+            this.addChild(no);
+        }
+
     }
     set CardName(name: string) {
         this.label.text = `${name}をどうする？`;
