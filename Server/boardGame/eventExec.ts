@@ -35,9 +35,15 @@ export function setEvent(
     }
 
     switch (eventCard.name) {
+        case "暴風":
+            if (resourceList.getAllNonGuardCount() == 0) {
+                result.eventClearFlag = true;
+                break;
+            }
+            result.diceRollFlag = true;
+            break;
         case "ムーアの法則":
         case "地震":
-        case "暴風":
         case "未知の病気":
         case "隕石":
         case "天変地異":
