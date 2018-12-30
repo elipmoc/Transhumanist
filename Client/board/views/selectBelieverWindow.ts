@@ -20,7 +20,7 @@ export class SelectBelieverWindow extends createjs.Container {
     get ChangeNumber() {
         return this.changeNumber;
     }
-    set ChangeNumber(num:number) {
+    set ChangeNumber(num: number) {
         this.changeNumber = num;
     }
     private displayNumber: createjs.Text;
@@ -68,25 +68,25 @@ export class SelectBelieverWindow extends createjs.Container {
             button.x = global.canvasWidth / 2;
             button.y = global.canvasHeight / 2 + 50;
 
-            if (Math.floor(i/2) == 0) button.y = button.y - 30;
+            if (Math.floor(i / 2) == 0) button.y = button.y - 30;
             else button.y = button.y + 30;
-            
+
             if (i % 2 == 0) button.x = button.x - 180;
             else button.x = button.x + 180;
-            
-            button.addEventListener("click", () => this.commandCallback(i % 2,Math.floor(i/2)));
+
+            button.addEventListener("click", () => this.commandCallback(i % 2, Math.floor(i / 2)));
 
             this.addChild(button);
         });
 
-        this.upDownButton.forEach((e,i) => {
+        this.upDownButton.forEach((e, i) => {
             e.x = global.canvasWidth / 2;
             e.y = global.canvasHeight / 2 + 30;
 
             if (i == 0) {
                 e.y = e.y - 110;
                 e.addEventListener("click", () => this.upCallback());
-            }else {
+            } else {
                 e.y = e.y + 110;
                 e.addEventListener("click", () => this.downCallback());
             }
@@ -109,38 +109,31 @@ export class SelectBelieverWindow extends createjs.Container {
         this.addChild(this.displayNumber);
     }
 
-    commandOnClick(callback: (pnId: number,adId:number) => void) {
-        this.commandCallback = (pnId: number, adId: number) => { callback(pnId,adId) };
+    commandOnClick(callback: (pnId: number, adId: number) => void) {
+        this.commandCallback = (pnId: number, adId: number) => { callback(pnId, adId) };
     }
 
     upOnClick(f: () => void) {
         this.upCallback = f;
-
-
     }
 
     downOnClick(f: () => void) {
         this.downCallback = f;
-
-
-        this.changeNumber--;
-        if (this.changeNumber <= 0) this.changeNumber = 0;
-        this.updateNum();
     }
-    
+
     updateNum() {
         this.displayNumber.text = this.changeNumber.toString();
     }
 }
 
-class TriButton extends createjs.Container{
-    constructor(rotate:number) {
+class TriButton extends createjs.Container {
+    constructor(rotate: number) {
         super();
         const obj = new createjs.Shape();
         obj.graphics.beginFill("white"); // 赤色で描画するように設定
-        obj.graphics.moveTo(0, 0); 
-        obj.graphics.lineTo(50, 0); 
-        obj.graphics.lineTo(0, 50); 
+        obj.graphics.moveTo(0, 0);
+        obj.graphics.lineTo(50, 0);
+        obj.graphics.lineTo(0, 50);
         obj.graphics.lineTo(0, 0);
         obj.rotation = rotate;
         this.addChild(obj);
