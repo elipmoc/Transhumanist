@@ -59,6 +59,7 @@ export function actionCardExec(
             case "意識操作のテスト":
                 state.addNegative(-1);
                 state.addPositive(1);
+                resourceList.addResource("拡張人間");
                 break;
             case "御神体の再生":
                 resourceList.addResource("神体");

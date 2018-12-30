@@ -19,6 +19,7 @@ import { useActionCard, UseActionResult } from "./useActionCard/useActionCard";
 import { setEvent, diceSelectAfterEvent } from "./eventExec";
 import { warActionCardExec } from "./useActionCard/warActionCardExec";
 import { PnChangeData } from "../../Share/pnChangeData";
+import { ChurchAction } from "../../Share/churchAction";
 
 export class GamePlayer {
     private playerId: number;
@@ -28,7 +29,7 @@ export class GamePlayer {
     private dice: Dice;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private candidateResources: SocketBinder.Binder<CandidateResources>;
-    private churchAction: SocketBinder.Binder<boolean>;
+    private churchAction: SocketBinder.Binder<ChurchAction>;
     private beforeCond: number;
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
@@ -235,7 +236,7 @@ export class GamePlayer {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
             "candidateResources" + playerId
         );
-        this.churchAction = new SocketBinder.Binder<boolean>(
+        this.churchAction = new SocketBinder.Binder<ChurchAction>(
             "churchAction" + playerId
         );
         const pnChangeData = new SocketBinder.EmitReceiveBinder<PnChangeData>(
@@ -291,7 +292,7 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            this.churchAction.Value = false;
+            this.churchAction.Value = {maxNum:0,enable:false};
             this.turnFinishButtonClickCallback();
         });
 
@@ -419,7 +420,10 @@ export class GamePlayer {
                     break;
                 case "missionary":
                     if (this.resourceList.getCount("信者") >= 1) {
-                        this.churchAction.Value = true;
+                        this.churchAction.Value = {
+                            maxNum: this.resourceList.getCount("信者"),
+                            enable: true
+                        };
                     } else {
                         unavailable.emit(UnavailableState.NoBeliever);
                         return false;
@@ -432,19 +436,17 @@ export class GamePlayer {
         //教会のPN変動
         pnChangeData.OnReceive((data) => {
             if (this.churchAction.Value) {
-                if (data.selected.length ==
-                    data.selected.filter(x => {
-                        this.resourceList.getResourceName(x) != null &&
-                            this.resourceList.getResourceName(x) == "信者"
-                    }).length) {
-
+                if (data.changeNumber <= this.resourceList.getCount("信者")) {
                     const adConstant = data.adId == 0 ? 1 : -1;
                     if (data.pnId == 0) {
-                        this.state.addPositive(data.selected.length * adConstant);
+                        this.state.addPositive(data.changeNumber * adConstant);
                     } else {
-                        this.state.addNegative(data.selected.length * adConstant);
+                        this.state.addNegative(data.changeNumber * adConstant);
                     }
-                    this.churchAction.Value = false;
+                    this.churchAction.Value = {
+                        maxNum: 0,
+                        enable: false
+                    };
                 }
             }
         });

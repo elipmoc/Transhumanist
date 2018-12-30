@@ -14,6 +14,7 @@ import { LayerTag } from "../../board";
 import { HaveResourceCard } from "../../..//Share/haveResourceCard";
 import { SelectBelieverWindow } from "../views/selectBelieverWindow";
 import { PnChangeData } from "../../../Share/pnChangeData";
+import { ChurchAction } from "../../../Share/churchAction";
 
 //プレイヤーのリソース欄生成
 export function build(bindParams: BindParams) {
@@ -23,7 +24,7 @@ export function build(bindParams: BindParams) {
     bindParams.layerManager.add(LayerTag.Hover, resourceHover);
     resourceHover.visible = false;
     const resourceOver = new SocketBinder<ResourceOver | null>("ResourceOver", bindParams.socket);
-    const churchAction = new SocketBinder<boolean>("churchAction", bindParams.socket);
+    const churchAction = new SocketBinder<ChurchAction>("churchAction", bindParams.socket);
 
     const playerResourceAreaList: PlayerResourceAreaBase[] = [
         new playerResourceAreas.Player1ResourceArea(bindParams.imgQueue),
@@ -126,23 +127,35 @@ export function build(bindParams: BindParams) {
     });
 
     churchAction.onUpdate(x => {
-        if (x) {
-            playerResourceAreaList[0].setSelectEnable();
-        } else {
-            playerResourceAreaList[0].unSelectFrameVisible();
+        if (x.enable) {
+            selectBelieverWindow.ChangeNumber = 1;
         }
-        selectBelieverWindow.visible = x;
+        selectBelieverWindow.visible = x.enable;
         bindParams.layerManager.update();
     });
 
     const selectBelieverWindow = new SelectBelieverWindow();
     selectBelieverWindow.commandOnClick((pnId: number, adId: number) => {
         const pnChangeData: PnChangeData = {
-            selected: playerResourceAreaList[0].getSelectedAllIconId(),
+            changeNumber: selectBelieverWindow.ChangeNumber,
             pnId: pnId,
             adId: adId
         }
         bindParams.socket.emit("PnChangeData", JSON.stringify(pnChangeData));
+    });
+    selectBelieverWindow.upOnClick(() => {
+        const calcNum = selectBelieverWindow.ChangeNumber + 1;
+        if (calcNum >= churchAction.Value.maxNum) selectBelieverWindow.ChangeNumber = churchAction.Value.maxNum;
+        else selectBelieverWindow.ChangeNumber = calcNum;
+        selectBelieverWindow.updateNum();
+        bindParams.layerManager.update();
+    });
+    selectBelieverWindow.downOnClick(() => {
+        const calcNum = selectBelieverWindow.ChangeNumber - 1;
+        if (calcNum <= 0) selectBelieverWindow.ChangeNumber = 0;
+        else selectBelieverWindow.ChangeNumber = calcNum;
+        selectBelieverWindow.updateNum();
+        bindParams.layerManager.update();
     });
     selectBelieverWindow.visible = false;
     bindParams.layerManager.add(LayerTag.PopUp, selectBelieverWindow);
