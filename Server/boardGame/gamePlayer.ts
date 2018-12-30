@@ -20,6 +20,9 @@ import { setEvent, diceSelectAfterEvent } from "./eventExec";
 import { warActionCardExec } from "./useActionCard/warActionCardExec";
 import { PnChangeData } from "../../Share/pnChangeData";
 import { ChurchAction } from "../../Share/churchAction";
+import { FutureForecastEventData } from "../../Share/futureForecastEventData";
+
+type SuccessFlag = boolean;
 
 export class GamePlayer {
     private playerId: number;
@@ -87,6 +90,18 @@ export class GamePlayer {
     private consumeCallBack: (card: ActionCardYamlData) => void;
     onConsume(f: (card: ActionCardYamlData) => void) {
         this.consumeCallBack = f;
+    }
+
+    //未来予報装置がイベントを3枚取得する時に呼ばれるコールバック
+    private futureForecastGetEventsCallBack: () => Event[];
+    onFutureForecastGetEvents(f: () => Event[]) {
+        this.futureForecastGetEventsCallBack = f;
+    }
+
+    //未来予報装置が組み替えたイベントを3枚送信した時に呼ばれるコールバック
+    private futureForecastSwapEventsCallBack: (data: FutureForecastEventData) => SuccessFlag;
+    onFutureForecastSwapEvents(f: (data: FutureForecastEventData) => SuccessFlag) {
+        this.futureForecastSwapEventsCallBack = f;
     }
 
     reset() {
@@ -298,7 +313,7 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
-            this.churchAction.Value = {maxNum:0,enable:false};
+            this.churchAction.Value = { maxNum: 0, enable: false };
             this.turnFinishButtonClickCallback();
         });
 
@@ -377,6 +392,18 @@ export class GamePlayer {
             }
             return false;
         })
+
+        //未来予報装置のイベント送信用
+        const futureForecastGetEvents = new SocketBinder.Binder<FutureForecastEventData>("futureForecastGetEvents", true, ["player" + this.playerId]);
+        //未来予報装置の入れ替えたイベント受信用
+        const futureForecastSwapEvents = new SocketBinder.EmitReceiveBinder<FutureForecastEventData>("futureForecastSwapEvents", true, ["player" + this.playerId]);
+        futureForecastSwapEvents.OnReceive(data => {
+            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.futureForecastSwapEventsCallBack(data))
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
+        })
+        boardSocketManager.addSocketBinder(futureForecastGetEvents, futureForecastSwapEvents);
+
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
@@ -387,6 +414,15 @@ export class GamePlayer {
 
             const commandNum = data.selectCommandNum;
             switch (card.commands[commandNum].kind) {
+                //未来予報装置
+                case "future_forecast":
+                    const events = this.futureForecastGetEventsCallBack();
+                    if (events.length == 0) {
+                        unavailable.emit(UnavailableState.Condition);
+                        return false;
+                    }
+                    this.playerCond.Value = GamePlayerCondition.Action;
+                    futureForecastGetEvents.Value = { eventNameList: events.slice(0, 3).map(event => event.name) };
                 case "resource_guard":
                     //保護するリソースの最大数
                     const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);

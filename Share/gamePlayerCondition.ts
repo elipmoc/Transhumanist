@@ -12,6 +12,8 @@ export enum GamePlayerCondition {
     Dice,
     //イベント処理中
     Event,
+    //アクションカード処理中
+    Action,
     //イベント処理完了
     EventClear,
     //アクションカードドロー中
