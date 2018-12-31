@@ -3,7 +3,7 @@ import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
 import { BoardGameStatus } from "./boardGame/boardGameStatus";
 import { ActionCardStacks } from "./boardGame/drawCard/actionCardStacks";
-import { Message } from "./boardGame/message";
+import { Message, MessageSender } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { ChatSe } from "./boardGame/chatSe";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
@@ -14,6 +14,7 @@ import { GamePlayer } from "./boardGame/gamePlayer";
 export class BoardGame {
     private gamePlayers: GamePlayers;
     private message: Message;
+    private messageSender: MessageSender;
     private boardsocketManager: SocketBinder.Namespace;
     private roomId: number;
     private actionCardStacks: ActionCardStacks;
@@ -39,11 +40,13 @@ export class BoardGame {
         this.roomId = roomId;
 
         this.message = new Message(this.boardsocketManager);
+        this.messageSender = this.message.createMessageSender();
         this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.gamePlayers.onLeaveRoom(player => {
             if (this.isWait()) {
                 this.deleteMemberCallback(player.Uuid);
+                this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が退室しました`, player.PlayerId);
                 player.clear();
                 if (this.gamePlayers.getPlayerCount() == 0)
                     this.deleteRoomCallback(this.roomId);
@@ -118,6 +121,7 @@ export class BoardGame {
         if (this.boardGameStatus.isWait()) {
             this.gamePlayers.addMember(playerData, playerId);
             this.message.addPlayerName(playerId, playerData.getName());
+            this.messageSender.sendPlayerMessage(`${playerData.getName()}が入室しました`, playerId);
         }
     }
 
