@@ -109,6 +109,7 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
                     case "印刷所":
                     case "治療施設":
                     case "ロボット工場":
+                    case "未来予報装置":
                         buildActionUseDecision.CardName = cardIcon.Kind.actionCardName;
                         buildActionUseDecision.visible = true;
                         break;

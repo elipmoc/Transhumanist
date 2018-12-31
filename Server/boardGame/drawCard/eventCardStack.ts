@@ -26,13 +26,13 @@ export class EventCardStack {
     //イベントを先頭から順に組み替える
     swapEvents(data: FutureForecastEventData) {
         if (this.eventCardList.length < data.eventNameList.length) return false;
-        let eventCardListHeads = this.eventCardList.slice(0, data.eventNameList.length);
-        const eventCardListTails = this.eventCardList.slice(data.eventNameList.length, this.eventCardList.length);
+        const eventCardListHeads = this.eventCardList.slice(0, this.eventCardList.length - data.eventNameList.length);
+        let eventCardListTails = this.eventCardList.slice(this.eventCardList.length - data.eventNameList.length, this.eventCardList.length);
         //イベントが全く関係ないイベントとすり替わってないかチェック
-        if (eventCardListHeads.every(x => data.eventNameList.some(eventName => x.name == eventName)))
+        if (eventCardListTails.every(x => data.eventNameList.some(eventName => x.name == eventName)) == false)
             return false;
 
-        eventCardListHeads = data.eventNameList.map(eventName => eventCardListHeads.find(x => x.name == eventName)!);
+        eventCardListTails = data.eventNameList.map(eventName => eventCardListTails.find(x => x.name == eventName)!);
         this.eventCardList = eventCardListHeads.concat(eventCardListTails);
         return true;
     }
