@@ -60,6 +60,7 @@ export class GamePlayers {
                 `player${player.PlayerId}`
             ]);
             endGame.OnReceive(() => {
+                this.messageSender.sendMessage("ゲームを強制終了しました", LogMessageType.OtherMsg);
                 if (player.IsGameMaster) this.endGameRequestCallback();
             });
             boardSocketManager.addSocketBinder(endGame);
