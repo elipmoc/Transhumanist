@@ -9,12 +9,6 @@ export class Message {
     constructor(boardsocketManager: SocketBinder.Namespace) {
         this.logMessageList = new SocketBinder.BinderList<LogMessageForClient>("logMessageList");
         this.logMessageList.Value = new Array();
-        this.logMessageList.push(new LogMessageForClient("イベント【人口爆発】が発生しました。", LogMessageType.EventMsg));
-        this.logMessageList.push(new LogMessageForClient("スターは「工場」を設置しました。", LogMessageType.Player1Msg));
-        this.logMessageList.push(new LogMessageForClient("N.Hのターンです。", LogMessageType.Player2Msg));
-        this.logMessageList.push(new LogMessageForClient("らいぱん鳥のターンです。", LogMessageType.Player3Msg));
-        this.logMessageList.push(new LogMessageForClient("戦争状態のため、Positiveが-1されました", LogMessageType.Player3Msg));
-        setTimeout(() => this.logMessageList.push(new LogMessageForClient("ようこそ", LogMessageType.EventMsg)), 5000);
 
         for (var i = 0; i < 4; i++) {
             let sendChatMessage = new SocketBinder.EmitReceiveBinder<string>("sendChatMessage", true, ["player" + i]);
@@ -33,8 +27,35 @@ export class Message {
         this.playerNameList[playerId] = name;
     }
 
+    //メッセージ送信
+    sendMessage(msg: string, type: LogMessageType) {
+        this.logMessageList.push(new LogMessageForClient(msg, type));
+    }
+
+    //MessageSenderクラスの作成
+    createMessageSender() {
+        return new MessageSender(this);
+    }
+
+    //ユーザーチャットの不正な文字列の検査
     private chatMessageValidation(str: string) {
         var reg = new RegExp(/[^\s]/g);
         return reg.test(str);
+    }
+}
+
+//メッセージ送信するだけ用のクラス（基本的にはこれを各オブジェクトに配布して使う）
+export class MessageSender {
+    private message: Message;
+    constructor(message: Message) {
+        this.message = message;
+    }
+    //メッセージ送信
+    sendMessage(msg: string, type: LogMessageType) {
+        this.message.sendMessage(msg, type);
+    }
+    //各プレイヤーに関するメッセージ送信
+    sendPlayerMessage(msg: string, playerId: number) {
+        this.message.sendMessage(msg, playerId + 1);
     }
 }

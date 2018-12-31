@@ -1,10 +1,14 @@
 //ログメッセージタイプ
 export const enum LogMessageType {
+    //イベントのメッセージ
     EventMsg = 0,
+    //個人の行動に関係するメッセージ
     Player1Msg,
     Player2Msg,
     Player3Msg,
     Player4Msg,
+    //全体に関係するメッセージとか
+    OtherMsg,
 }
 
 
