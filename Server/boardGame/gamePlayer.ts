@@ -21,6 +21,7 @@ import { warActionCardExec } from "./useActionCard/warActionCardExec";
 import { PnChangeData } from "../../Share/pnChangeData";
 import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
+import { MessageSender } from "./message";
 
 type SuccessFlag = boolean;
 
@@ -252,7 +253,8 @@ export class GamePlayer {
     constructor(
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
             "candidateResources" + playerId
@@ -379,6 +381,8 @@ export class GamePlayer {
                 //クリア処理
                 this.winCallback();
             }
+            if (card.build_use)
+                messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
             this.onceNoCostFlag = false;
             this.consumeCallBack(card);
             return true;

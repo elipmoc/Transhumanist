@@ -53,7 +53,8 @@ export class GamePlayers {
             const player = new GamePlayer(
                 i,
                 boardSocketManager,
-                actionCardStacks
+                actionCardStacks,
+                messageSender
             );
             const endGame = new EmitReceiveBinder("gameEnd", true, [
                 `player${player.PlayerId}`
