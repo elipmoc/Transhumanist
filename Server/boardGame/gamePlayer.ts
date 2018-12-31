@@ -378,7 +378,7 @@ export class GamePlayer {
                 this.warActionCallback(result.cardName);
             }
             else if (result.winActionFlag) {
-                //クリア処理
+                messageSender.sendPlayerMessage(`${card.name}にて、${this.state.State.playerName}が勝利しました！`, playerId);
                 this.winCallback();
             }
             if (card.build_use)
