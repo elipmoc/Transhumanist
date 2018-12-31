@@ -298,14 +298,17 @@ export class GamePlayer {
         );
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             this.actionCard.drawActionCard(actionCardStacks.draw(level));
             if (this.actionCard.is_full())
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         this.actionCard.onSelectWinActionCard(cardName => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             const card = actionCardStacks.drawWinCard(cardName);
             if (card) this.actionCard.drawActionCard(card);
-            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            if (this.actionCard.is_full())
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         const turnFinishButtonClick = new SocketBinder.EmitReceiveBinder(
             "turnFinishButtonClick",
