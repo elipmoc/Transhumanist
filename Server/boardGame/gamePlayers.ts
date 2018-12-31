@@ -10,6 +10,8 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
+import { MessageSender } from "./message";
+import { LogMessageType } from "../../Share/logMessageForClient";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -21,6 +23,7 @@ export class GamePlayers {
     private eventCardDrawer: EventCardDrawer;
     private currentPlayerId: number;
     private warList: WarList;
+    private messageSender: MessageSender;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
@@ -32,8 +35,10 @@ export class GamePlayers {
 
     constructor(
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
+        this.messageSender = messageSender;
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>(
             "gameMasterPlayerId"
         );
@@ -198,7 +203,8 @@ export class GamePlayers {
             this.playerTurnSet();
     }
 
-    startEvent() {
+    private startEvent() {
+        this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
         this.getNowPlayers().forEach(player => {
             player.setEvent(this.eventCardDrawer.NowEvent!);
         });

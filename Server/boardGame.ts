@@ -33,15 +33,16 @@ export class BoardGame {
 
         this.actionCardStacks = new ActionCardStacks(this.boardsocketManager);
 
+        this.message = new Message(this.boardsocketManager);
+        this.messageSender = this.message.createMessageSender();
         this.gamePlayers = new GamePlayers(
             this.boardsocketManager,
-            this.actionCardStacks
+            this.actionCardStacks,
+            this.messageSender
         );
 
         this.roomId = roomId;
 
-        this.message = new Message(this.boardsocketManager);
-        this.messageSender = this.message.createMessageSender();
         this.chatSe = new ChatSe(this.boardsocketManager);
 
         this.gamePlayers.onLeaveRoom(player => {
@@ -101,6 +102,7 @@ export class BoardGame {
                         this.gamePlayers.getPlayerCount() > 1 &&
                         this.boardGameStatus.start()
                     ) {
+                        this.messageSender.sendMessage("ゲームが開始されました", LogMessageType.OtherMsg);
                         const startStatusYamlData = yamlGet(
                             "./Resource/Yaml/startStatus.yaml"
                         );
@@ -109,7 +111,6 @@ export class BoardGame {
                             this.actionCardStacks
                         );
                         this.gamePlayers.initTurnSet();
-                        this.messageSender.sendMessage("ゲームが開始されました", LogMessageType.OtherMsg);
                     }
                 }
                 break;
