@@ -250,6 +250,11 @@ export class GamePlayer {
         warActionCardExec(name, this.buildActionList, this.resourceList, this.state);
     }
 
+    //アクションカードを使用した時のログメッセージ送信
+    useActionCardMessage(cardName: string, messageSender: MessageSender) {
+        messageSender.sendPlayerMessage(`${this.state.State.playerName}が${cardName}を使用しました`, this.playerId);
+    }
+
     constructor(
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
@@ -386,6 +391,8 @@ export class GamePlayer {
             }
             if (card.build_use)
                 messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
+            else
+                this.useActionCardMessage(card.name, messageSender);
             this.onceNoCostFlag = false;
             this.consumeCallBack(card);
             return true;
@@ -443,6 +450,7 @@ export class GamePlayer {
                     data.resourceIdList.forEach(x => {
                         this.resourceList.setGuard(x);
                     });
+                    this.useActionCardMessage(card.name, messageSender);
                     return false;
                 case "rand_get":
                     const randData: RandGet = <RandGet>card.commands[commandNum].body;
@@ -486,6 +494,7 @@ export class GamePlayer {
                     }
                     break;
             }
+            this.useActionCardMessage(card.name, messageSender);
             return true;
         });
 
