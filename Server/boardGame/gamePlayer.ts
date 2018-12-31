@@ -394,15 +394,16 @@ export class GamePlayer {
         })
 
         //未来予報装置のイベント送信用
-        const futureForecastGetEvents = new SocketBinder.Binder<FutureForecastEventData>("futureForecastGetEvents", true, ["player" + this.playerId]);
+        const futureForecastGetEvents = new SocketBinder.Binder<FutureForecastEventData | undefined>("futureForecastGetEvents", true, ["player" + this.playerId]);
         //未来予報装置の入れ替えたイベント受信用
         const futureForecastSwapEvents = new SocketBinder.EmitReceiveBinder<FutureForecastEventData>("futureForecastSwapEvents", true, ["player" + this.playerId]);
         futureForecastSwapEvents.OnReceive(data => {
             if (this.playerCond.Value != GamePlayerCondition.Action) return;
-            if (this.futureForecastSwapEventsCallBack(data))
+            if (this.futureForecastSwapEventsCallBack({ eventNameList: data.eventNameList.reverse() })) {
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
+                futureForecastGetEvents.Value = undefined;
+            }
         })
-        boardSocketManager.addSocketBinder(futureForecastGetEvents, futureForecastSwapEvents);
 
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
@@ -422,7 +423,8 @@ export class GamePlayer {
                         return false;
                     }
                     this.playerCond.Value = GamePlayerCondition.Action;
-                    futureForecastGetEvents.Value = { eventNameList: events.slice(0, 3).map(event => event.name) };
+                    futureForecastGetEvents.Value = { eventNameList: events.slice(events.length - 3, events.length).map(event => event.name).reverse() };
+                    break;
                 case "resource_guard":
                     //保護するリソースの最大数
                     const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);
@@ -505,7 +507,7 @@ export class GamePlayer {
             turnFinishButtonClick,
             selectedGetResourceId,
             pnChangeData,
-            this.churchAction
+            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents
         );
     }
 
