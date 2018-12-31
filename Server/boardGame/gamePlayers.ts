@@ -186,10 +186,13 @@ export class GamePlayers {
         } else this.playerTurnSet();
     }
 
-    playerTurnSet() {
+    private playerTurnSet() {
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != this.currentPlayerId) player.setWait();
-            else player.setMyTurn();
+            else {
+                player.setMyTurn();
+                this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}のターンになりました`, player.PlayerId);
+            };
         });
     }
 
