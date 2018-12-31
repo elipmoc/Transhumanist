@@ -10,6 +10,7 @@ import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
 import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
+import { LogMessageType } from "../Share/logMessageForClient";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -108,6 +109,7 @@ export class BoardGame {
                             this.actionCardStacks
                         );
                         this.gamePlayers.initTurnSet();
+                        this.messageSender.sendMessage("ゲームが開始されました", LogMessageType.OtherMsg);
                     }
                 }
                 break;
