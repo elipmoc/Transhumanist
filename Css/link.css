@@ -9,9 +9,6 @@ a{
 .menubar a{
     color:#111;
 }
-.content a{
-    color:#EEE;
-}
 
 .menubar{
     position:fixed;
@@ -20,6 +17,7 @@ a{
     background:#EEE;
     width:100%;
     border-bottom:solid 1px #888;
+    z-index: 1;
 }
 .menubuttons{
     display: flex;
@@ -87,32 +85,32 @@ a{
     margin-right:1em;
 }
 
-.Nagisa{
-    position:relative;
-    opacity:0;
-    transition-duration:0.25s;
-}
-
-.Nagisa:hover{
-    opacity:1;
-}
-
 .twitter{
-    position:sticky;
-    background:rgba(62, 216, 255, 0.5);
-    color:white;
+    position: absolute;
+    background:rgba(62, 216, 255);
+    color:#3ed8ff;
     width:2em;
     height:2em;
     display:block;
     text-align:center;
+    line-height: 2em;
     border-radius:0.5em;
     transition-duration:0.25s;
     font-weight:bold;
     border:1px solid #EEE;
     cursor:pointer;
+    opacity: 0.55;
+    overflow: hidden;
 }
 .twitter:hover{
-    background:rgb(71, 202, 238);
+    background:rgb(102, 222, 255);
+    color:white;
+    width:5em;
+    opacity: 1;
+}
+
+.icon{
+    border-radius:200px;
 }
 
 footer{
