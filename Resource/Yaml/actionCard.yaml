@@ -545,10 +545,6 @@
       number: 2
     - name: CPU
       number: 2
-    - name: 爆弾
-      number: 2
-    - name: メタル
-      number: 2
   commands:
     - kind: future_forecast
   number: 4
