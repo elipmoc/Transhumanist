@@ -20,7 +20,6 @@ export function build(bindParams: BindParams) {
     selectActionWindow.onSelectedLevel(level => {
         if (level == 6) {
             selectWinCardWindow.visible = true;
-            selectActionWindow.visible = false;
             bindParams.layerManager.update();
             return;
         }

@@ -10,6 +10,8 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
+import { MessageSender } from "./message";
+import { LogMessageType } from "../../Share/logMessageForClient";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -21,6 +23,7 @@ export class GamePlayers {
     private eventCardDrawer: EventCardDrawer;
     private currentPlayerId: number;
     private warList: WarList;
+    private messageSender: MessageSender;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
@@ -32,8 +35,10 @@ export class GamePlayers {
 
     constructor(
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
+        this.messageSender = messageSender;
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>(
             "gameMasterPlayerId"
         );
@@ -48,12 +53,14 @@ export class GamePlayers {
             const player = new GamePlayer(
                 i,
                 boardSocketManager,
-                actionCardStacks
+                actionCardStacks,
+                messageSender
             );
             const endGame = new EmitReceiveBinder("gameEnd", true, [
                 `player${player.PlayerId}`
             ]);
             endGame.OnReceive(() => {
+                this.messageSender.sendMessage("ゲームを強制終了しました", LogMessageType.OtherMsg);
                 if (player.IsGameMaster) this.endGameRequestCallback();
             });
             boardSocketManager.addSocketBinder(endGame);
@@ -181,10 +188,13 @@ export class GamePlayers {
         } else this.playerTurnSet();
     }
 
-    playerTurnSet() {
+    private playerTurnSet() {
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != this.currentPlayerId) player.setWait();
-            else player.setMyTurn();
+            else {
+                player.setMyTurn();
+                this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}のターンになりました`, player.PlayerId);
+            };
         });
     }
 
@@ -198,7 +208,8 @@ export class GamePlayers {
             this.playerTurnSet();
     }
 
-    startEvent() {
+    private startEvent() {
+        this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
         this.getNowPlayers().forEach(player => {
             player.setEvent(this.eventCardDrawer.NowEvent!);
         });

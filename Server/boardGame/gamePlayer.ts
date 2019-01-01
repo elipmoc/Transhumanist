@@ -21,6 +21,7 @@ import { warActionCardExec } from "./useActionCard/warActionCardExec";
 import { PnChangeData } from "../../Share/pnChangeData";
 import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
+import { MessageSender } from "./message";
 
 type SuccessFlag = boolean;
 
@@ -249,10 +250,16 @@ export class GamePlayer {
         warActionCardExec(name, this.buildActionList, this.resourceList, this.state);
     }
 
+    //アクションカードを使用した時のログメッセージ送信
+    useActionCardMessage(cardName: string, messageSender: MessageSender) {
+        messageSender.sendPlayerMessage(`${this.state.State.playerName}が${cardName}を使用しました`, this.playerId);
+    }
+
     constructor(
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
             "candidateResources" + playerId
@@ -296,14 +303,17 @@ export class GamePlayer {
         );
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             this.actionCard.drawActionCard(actionCardStacks.draw(level));
             if (this.actionCard.is_full())
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         this.actionCard.onSelectWinActionCard(cardName => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             const card = actionCardStacks.drawWinCard(cardName);
             if (card) this.actionCard.drawActionCard(card);
-            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            if (this.actionCard.is_full())
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         const turnFinishButtonClick = new SocketBinder.EmitReceiveBinder(
             "turnFinishButtonClick",
@@ -376,9 +386,13 @@ export class GamePlayer {
                 this.warActionCallback(result.cardName);
             }
             else if (result.winActionFlag) {
-                //クリア処理
+                messageSender.sendPlayerMessage(`${card.name}にて、${this.state.State.playerName}が勝利しました！`, playerId);
                 this.winCallback();
             }
+            if (card.build_use)
+                messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
+            else
+                this.useActionCardMessage(card.name, messageSender);
             this.onceNoCostFlag = false;
             this.consumeCallBack(card);
             return true;
@@ -436,6 +450,7 @@ export class GamePlayer {
                     data.resourceIdList.forEach(x => {
                         this.resourceList.setGuard(x);
                     });
+                    this.useActionCardMessage(card.name, messageSender);
                     return false;
                 case "rand_get":
                     const randData: RandGet = <RandGet>card.commands[commandNum].body;
@@ -479,6 +494,7 @@ export class GamePlayer {
                     }
                     break;
             }
+            this.useActionCardMessage(card.name, messageSender);
             return true;
         });
 

@@ -69,7 +69,7 @@ export class ActionCardStacks {
 
     throwAway(card: ActionCardYamlData) {
         if (card.level > ActionCardStacks.maxLevel)
-            throw "levelが不正です";
+            return;
         this.actionCardStackPairList[card.level - 1].throwAway(card);
         this.updateNumberOfActionCards();
     }

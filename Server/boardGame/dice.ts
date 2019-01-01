@@ -22,7 +22,8 @@ export class Dice {
     }
 
     clear() {
-        this.diceData.Value.diceNumber = [];
+        if (this.diceData.Value)
+            this.diceData.Value.diceNumber = [];
         this.diceData.update();
     }
 
