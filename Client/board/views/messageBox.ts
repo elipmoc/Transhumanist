@@ -16,8 +16,8 @@ export class MessageBox<MsgT extends Message> extends createjs.Container {
                 if (e.deltaY) this.y += e.deltaY / 10;
                 else this.y -= e.detail * 2.7;
                 this.y = Math.min(
-                    height - 10,
-                    Math.max(-this.bottomY + 10, this.y)
+                    height - 20,
+                    Math.max(-this.bottomY + 20, this.y)
                 );
                 this.stage.update();
                 e.preventDefault();
@@ -32,6 +32,10 @@ export class MessageBox<MsgT extends Message> extends createjs.Container {
         text.x = 0;
         text.y = this.bottomY;
         this.bottomY += text.getMeasuredHeight();
+        this.y = Math.min(
+            -this.bottomY + 130,
+            Math.max(-this.bottomY + 20, this.y)
+        )
         this.addChild(text);
     }
 }
