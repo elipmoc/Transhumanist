@@ -81,8 +81,10 @@
                 </tr>
             </table>
         </div>
-        <div class="document">
-            <h2 id="intro">ゲーム準備</h2>
+        <div class="document" id="intro">
+            <label for="initButton" class="item">ゲーム準備</label>
+            <input type="checkbox" id="initButton"/>
+            <div class="itemDescript">
             <p>　各プレイヤーに、4つのステータスをランダムで割り振られます。
                 <br>　4つのステータスとは、以下のものです。
                 <table>
@@ -116,10 +118,12 @@
                     <li>『レベル2のリソースカード』をランダムで1枚。</li>
                 </ul>　を予め渡した状態で開始します。
             </p>
-
+            </div>
         </div>
-        <div class="document">
-            <h2 id="playing">ゲーム準備</h2>
+        <div class="document" id="playing">
+            <label for="playButton" class="item">ゲーム中</label>
+            <input type="checkbox" id="playButton" />
+            <div class="itemDescript">
             <p>　各プレイヤーの<span class="colorA">処理速度</span>を参照し、ターンの順番が決まります。
                 <br>　この時、<span class="colorA">処理速度</span>が同じ場合、プレイヤーIDが小さい方が優先されます。
             </p>
@@ -179,15 +183,21 @@
             <p>　次のターンのプレイヤーがまだ残っている場合は、そのプレイヤーにターンが移ります。
                 <br>　全てのプレイヤーがターンを終えている場合、本項目の冒頭まで戻ります。
             </p>
+            </div>
         </div>
-        <div class="document">
-            <h2 id="end">ゲーム終了</h2>
+        <div class="document" id="end">
+            <label for="endButton" class="item">ゲーム終了</label>
+            <input type="checkbox" id="endButton" />
+            <div class="itemDescript">
             <p>　ゲーム中、1番最初に「勝利カード」を出せたら、そのプレイヤーの勝ちになります。
                 <br>　あらゆるイベントと他からの妨害を乗り越えて、特異点まで到達してください！
             </p>
+            </div>
         </div>
-        <div class="document">
-            <h2 id="help">その他</h2>
+        <div class="document" id="help">
+            <label for="helpButton" class="item">その他・質問</label>
+            <input type="checkbox" id="helpButton" />
+            <div class="itemDescript">
             <p>Q.サイコロは何・不確定性って何？
                 <br>　ゲーム中に使用するサイコロは、1,1,2,2,3,3の面を持つ六面体です。
                 <br>　<span class="colorD">不確定性</span>の値は、サイコロをいくつ同時に振れる事が出来るかを意味します。
@@ -199,6 +209,7 @@
             <p>Q.イベントの効果で“<span class="colorC">活動範囲</span>が増減”とあるが、既に設置されたアクションカードが、イベント効果で減った<span class="colorC">活動範囲</span>より多い場合は？
                 <br>　新たに設置出来なくなる以外、何も起こりません。
             </p>
+            </div>
         </div>
     </div>
     <footer>
