@@ -10,6 +10,8 @@ import { LeaveRoom } from "./leaveRoom";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
+import { MessageSender } from "./message";
+import { LogMessageType } from "../../Share/logMessageForClient";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();
@@ -21,6 +23,7 @@ export class GamePlayers {
     private eventCardDrawer: EventCardDrawer;
     private currentPlayerId: number;
     private warList: WarList;
+    private messageSender: MessageSender;
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
@@ -32,8 +35,10 @@ export class GamePlayers {
 
     constructor(
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
+        this.messageSender = messageSender;
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>(
             "gameMasterPlayerId"
         );
@@ -48,12 +53,14 @@ export class GamePlayers {
             const player = new GamePlayer(
                 i,
                 boardSocketManager,
-                actionCardStacks
+                actionCardStacks,
+                messageSender
             );
             const endGame = new EmitReceiveBinder("gameEnd", true, [
                 `player${player.PlayerId}`
             ]);
             endGame.OnReceive(() => {
+                this.messageSender.sendMessage("ゲームを強制終了しました", LogMessageType.OtherMsg);
                 if (player.IsGameMaster) this.endGameRequestCallback();
             });
             boardSocketManager.addSocketBinder(endGame);
@@ -65,10 +72,14 @@ export class GamePlayers {
                 this.exileMove(player, diceNumber)
             );
             player.onStartWar(
-                targetPlayerId =>
-                    this.getNowPlayers().some(
-                        x => x.PlayerId == targetPlayerId
-                    ) && this.warList.startWar(player.PlayerId, targetPlayerId)
+                targetPlayerId => {
+                    const targetPlayer = this.getNowPlayers().find(x => x.PlayerId == targetPlayerId);
+                    if (targetPlayer && this.warList.startWar(player.PlayerId, targetPlayerId)) {
+                        targetPlayer.startWar();
+                        return true;
+                    }
+                    return false;
+                }
             );
             player.onSurrender(() => {
                 const winPlayerId = this.warList.surrender(player.PlayerId);
@@ -81,7 +92,15 @@ export class GamePlayers {
             player.onWarActionCallback((name: string) => {
                 this.useWarActionCard(player.PlayerId, name);
             });
+            player.onConsume(card => {
+                actionCardStacks.throwAway(card);
+            })
             player.onWin(() => this.endGameRequestCallback());
+
+            //未来予報装置の処理
+            player.onFutureForecastGetEvents(() => this.eventCardDrawer.getEvents());
+            player.onFutureForecastSwapEvents(data => this.eventCardDrawer.swapEvents(data));
+
             this.gamePlayerList.push(player);
         }
     }
@@ -169,10 +188,13 @@ export class GamePlayers {
         } else this.playerTurnSet();
     }
 
-    playerTurnSet() {
+    private playerTurnSet() {
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != this.currentPlayerId) player.setWait();
-            else player.setMyTurn();
+            else {
+                player.setMyTurn();
+                this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}のターンになりました`, player.PlayerId);
+            };
         });
     }
 
@@ -186,7 +208,8 @@ export class GamePlayers {
             this.playerTurnSet();
     }
 
-    startEvent() {
+    private startEvent() {
+        this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
         this.getNowPlayers().forEach(player => {
             player.setEvent(this.eventCardDrawer.NowEvent!);
         });

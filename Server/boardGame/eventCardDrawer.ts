@@ -1,6 +1,7 @@
 import { EventCardStack } from "./drawCard/eventCardStack";
 import { SocketBinder } from "../socketBinder";
 import { Event } from "../../Share/Yaml/eventYamlData";
+import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 
 export class EventCardDrawer {
     private eventCardStack: EventCardStack;
@@ -19,6 +20,16 @@ export class EventCardDrawer {
     get NowEvent() {
         return this.nowEvent.Value;
     }
+
+    getEvents() {
+        return this.eventCardStack.getEvents();
+    }
+
+    //イベントを先頭から順に組み替える
+    swapEvents(data: FutureForecastEventData) {
+        return this.eventCardStack.swapEvents(data);
+    }
+
     draw() {
         const eventCard = this.eventCardStack.draw();
         if (eventCard != undefined)

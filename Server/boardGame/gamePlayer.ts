@@ -18,6 +18,12 @@ import { War, WarSuccessFlag } from "./war";
 import { useActionCard, UseActionResult } from "./useActionCard/useActionCard";
 import { setEvent, diceSelectAfterEvent } from "./eventExec";
 import { warActionCardExec } from "./useActionCard/warActionCardExec";
+import { PnChangeData } from "../../Share/pnChangeData";
+import { ChurchAction } from "../../Share/churchAction";
+import { FutureForecastEventData } from "../../Share/futureForecastEventData";
+import { MessageSender } from "./message";
+
+type SuccessFlag = boolean;
 
 export class GamePlayer {
     private playerId: number;
@@ -27,6 +33,7 @@ export class GamePlayer {
     private dice: Dice;
     private playerCond: SocketBinder.Binder<GamePlayerCondition>;
     private candidateResources: SocketBinder.Binder<CandidateResources>;
+    private churchAction: SocketBinder.Binder<ChurchAction>;
     private beforeCond: number;
     private isGameMaster = false;
     private actionCard: PlayerActionCard;
@@ -78,6 +85,24 @@ export class GamePlayer {
     private winCallback: () => void;
     onWin(f: () => void) {
         this.winCallback = f;
+    }
+
+    //アクションカードを消費した時に呼ばれるコールバック
+    private consumeCallBack: (card: ActionCardYamlData) => void;
+    onConsume(f: (card: ActionCardYamlData) => void) {
+        this.consumeCallBack = f;
+    }
+
+    //未来予報装置がイベントを3枚取得する時に呼ばれるコールバック
+    private futureForecastGetEventsCallBack: () => Event[];
+    onFutureForecastGetEvents(f: () => Event[]) {
+        this.futureForecastGetEventsCallBack = f;
+    }
+
+    //未来予報装置が組み替えたイベントを3枚送信した時に呼ばれるコールバック
+    private futureForecastSwapEventsCallBack: (data: FutureForecastEventData) => SuccessFlag;
+    onFutureForecastSwapEvents(f: (data: FutureForecastEventData) => SuccessFlag) {
+        this.futureForecastSwapEventsCallBack = f;
     }
 
     reset() {
@@ -216,18 +241,34 @@ export class GamePlayer {
         this.state.winWar();
         this.war.win();
     }
+    //戦争状態にする
+    startWar() {
+        this.war.startWar();
+    }
 
     warAction(name: ActionCardName) {
-        warActionCardExec(name, this.buildActionList, this.resourceList);
+        warActionCardExec(name, this.buildActionList, this.resourceList, this.state);
+    }
+
+    //アクションカードを使用した時のログメッセージ送信
+    useActionCardMessage(cardName: string, messageSender: MessageSender) {
+        messageSender.sendPlayerMessage(`${this.state.State.playerName}が${cardName}を使用しました`, this.playerId);
     }
 
     constructor(
         playerId: number,
         boardSocketManager: SocketBinder.Namespace,
-        actionCardStacks: ActionCardStacks
+        actionCardStacks: ActionCardStacks,
+        messageSender: MessageSender
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
             "candidateResources" + playerId
+        );
+        this.churchAction = new SocketBinder.Binder<ChurchAction>(
+            "churchAction" + playerId
+        );
+        const pnChangeData = new SocketBinder.EmitReceiveBinder<PnChangeData>(
+            "PnChangeData" + playerId
         );
         this.dice = new Dice(playerId, boardSocketManager);
         const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<
@@ -262,13 +303,17 @@ export class GamePlayer {
         );
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             this.actionCard.drawActionCard(actionCardStacks.draw(level));
-            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            if (this.actionCard.is_full())
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         this.actionCard.onSelectWinActionCard(cardName => {
+            if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
             const card = actionCardStacks.drawWinCard(cardName);
             if (card) this.actionCard.drawActionCard(card);
-            this.playerCond.Value = GamePlayerCondition.MyTurn;
+            if (this.actionCard.is_full())
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
         const turnFinishButtonClick = new SocketBinder.EmitReceiveBinder(
             "turnFinishButtonClick",
@@ -278,6 +323,7 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
+            this.churchAction.Value = { maxNum: 0, enable: false };
             this.turnFinishButtonClickCallback();
         });
 
@@ -340,12 +386,39 @@ export class GamePlayer {
                 this.warActionCallback(result.cardName);
             }
             else if (result.winActionFlag) {
-                //クリア処理
+                messageSender.sendPlayerMessage(`${card.name}にて、${this.state.State.playerName}が勝利しました！`, playerId);
                 this.winCallback();
             }
+            if (card.build_use)
+                messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
+            else
+                this.useActionCardMessage(card.name, messageSender);
             this.onceNoCostFlag = false;
+            this.consumeCallBack(card);
             return true;
         });
+
+        //カード破棄の処理
+        this.actionCard.onDestructionActionCard(card => {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn) {
+                this.consumeCallBack(card);
+                return true;
+            }
+            return false;
+        })
+
+        //未来予報装置のイベント送信用
+        const futureForecastGetEvents = new SocketBinder.Binder<FutureForecastEventData | undefined>("futureForecastGetEvents", true, ["player" + this.playerId]);
+        //未来予報装置の入れ替えたイベント受信用
+        const futureForecastSwapEvents = new SocketBinder.EmitReceiveBinder<FutureForecastEventData>("futureForecastSwapEvents", true, ["player" + this.playerId]);
+        futureForecastSwapEvents.OnReceive(data => {
+            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.futureForecastSwapEventsCallBack({ eventNameList: data.eventNameList.reverse() })) {
+                this.playerCond.Value = GamePlayerCondition.MyTurn;
+                futureForecastGetEvents.Value = undefined;
+            }
+        })
+
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
@@ -356,9 +429,19 @@ export class GamePlayer {
 
             const commandNum = data.selectCommandNum;
             switch (card.commands[commandNum].kind) {
+                //未来予報装置
+                case "future_forecast":
+                    const events = this.futureForecastGetEventsCallBack();
+                    if (events.length == 0) {
+                        unavailable.emit(UnavailableState.Condition);
+                        return false;
+                    }
+                    this.playerCond.Value = GamePlayerCondition.Action;
+                    futureForecastGetEvents.Value = { eventNameList: events.slice(events.length - 3, events.length).map(event => event.name).reverse() };
+                    break;
                 case "resource_guard":
                     //保護するリソースの最大数
-                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number;
+                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);
                     if (data.resourceIdList.length > guardMaxNum) {
                         unavailable.emit(UnavailableState.Condition);
                         return false;
@@ -367,6 +450,7 @@ export class GamePlayer {
                     data.resourceIdList.forEach(x => {
                         this.resourceList.setGuard(x);
                     });
+                    this.useActionCardMessage(card.name, messageSender);
                     return false;
                 case "rand_get":
                     const randData: RandGet = <RandGet>card.commands[commandNum].body;
@@ -386,7 +470,7 @@ export class GamePlayer {
                     break;
                 case "get":
                     const getData: Get = <Get>card.commands[commandNum].body;
-                    this.resourceList.addResource(getData.items[data.resourceIdList[0]].name, getData.items[data.resourceIdList[0]].number);
+                    this.resourceList.addResource(getData.items[0].name, getData.items[0].number);
                     break;
                 case "trade":
                     const tradeData: Trade = <Trade>card.commands[commandNum].body;
@@ -398,15 +482,48 @@ export class GamePlayer {
                         return false;
                     }
                     break;
+                case "missionary":
+                    if (this.resourceList.getCount("信者") >= 1) {
+                        this.churchAction.Value = {
+                            maxNum: this.resourceList.getCount("信者"),
+                            enable: true
+                        };
+                    } else {
+                        unavailable.emit(UnavailableState.NoBeliever);
+                        return false;
+                    }
+                    break;
             }
+            this.useActionCardMessage(card.name, messageSender);
             return true;
         });
+
+        //教会のPN変動
+        pnChangeData.OnReceive((data) => {
+            if (this.churchAction.Value) {
+                if (data.changeNumber <= this.resourceList.getCount("信者")) {
+                    const adConstant = data.adId == 0 ? 1 : -1;
+                    if (data.pnId == 0) {
+                        this.state.addPositive(data.changeNumber * adConstant);
+                    } else {
+                        this.state.addNegative(data.changeNumber * adConstant);
+                    }
+                    this.churchAction.Value = {
+                        maxNum: 0,
+                        enable: false
+                    };
+                }
+            }
+        });
+
         boardSocketManager.addSocketBinder(
             unavailable,
             this.playerCond,
             this.candidateResources,
             turnFinishButtonClick,
-            selectedGetResourceId
+            selectedGetResourceId,
+            pnChangeData,
+            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents
         );
     }
 

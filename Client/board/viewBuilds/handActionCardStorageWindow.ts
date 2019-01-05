@@ -6,11 +6,12 @@ import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 import { LayerTag } from "../../board";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { UseHandActionCard, UseKind } from "../../../Share/useHandActionCard";
 import { SocketBinder } from "../../socketBinder";
 
 //手札ウインドウの生成
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
-    const decision = new ActionCardUseDecisionWindow();
+    const decision = new ActionCardUseDecisionWindow(true);
     const actionCardList = new SocketBinderList<ActionCardName | null>("actionCardList", bindParams.socket);
     const actionStorageWindow = new HandActionCardStorageWindow(actionCardHover, bindParams.imgQueue);
     const gamePlayerCondition = new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
@@ -28,8 +29,15 @@ export function build(actionCardHover: ActionCardHover, bindParams: BindParams) 
     });
     decision.visible = false;
     decision.onClicked((r) => {
-        if (r == DialogResult.Yes) {
-            bindParams.socket.emit("useActionCardIndex", usingCardIndex);
+        if (r != DialogResult.No) {
+            let useKind = UseKind.Use;
+            if (r == DialogResult.Destruction)
+                useKind = UseKind.Destruction;
+            let useHandCard: UseHandActionCard = {
+                index: usingCardIndex,
+                useKind
+            }
+            bindParams.socket.emit("useHandActionCard", JSON.stringify(useHandCard));
         }
         decision.visible = false;
         bindParams.layerManager.update();

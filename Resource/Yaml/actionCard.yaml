@@ -70,7 +70,7 @@
         get:
           - name: 爆弾
             number: 1
-  number: 15
+  number: 10
   war_use: false
 
 - name: 核融合炉
@@ -107,7 +107,7 @@
     - kind: resource_plus
       body:
         add: 10
-  number: 8 
+  number: 5
   war_use: false
 
 - name: 地下シェルター
@@ -127,7 +127,7 @@
     - kind: resource_guard
       body:
         number: 5
-  number: 4
+  number: 5
   war_use: false
 
 - name: 印刷所
@@ -145,7 +145,7 @@
         items:
           - name: 聖書
             number: 1
-  number: 8
+  number: 5
   war_use: false
 
 - name: ロケットの開発
@@ -167,7 +167,7 @@
         items:
           - name: ロケット
             number: 1
-  number: 10
+  number: 5
   war_use: false
 
 - name: 治療施設
@@ -194,7 +194,7 @@
         to_item:
           name: 人間
           number: 1
-  number: 8
+  number: 4
   war_use: false
 
 - name: 研究施設
@@ -242,7 +242,7 @@
         get:
           - name: マイクロチップ
             number: 1
-  number: 10
+  number: 8
   war_use: false
 
 - name: 花火大会
@@ -260,7 +260,7 @@
       number: 3
   commands:
     - kind: human_p_plus
-  number: 4
+  number: 2
   war_use: false
   
 - name: 布教活動
@@ -284,7 +284,7 @@
         get: 
           - name: 信者
             number: 1
-  number: 8
+  number: 5
   war_use: false
 
 - name: 火星探査
@@ -302,7 +302,7 @@
         items:
           - name: 火星の情報
             number: 1
-  number: 10
+  number: 4
   war_use: false
 
 - name: ミサイル発射
@@ -323,7 +323,7 @@
       number: 1
   commands:
      - kind: missile_start
-  number: 5
+  number: 4
   war_use: true
 
 - name: 衛星の打ち上げ
@@ -341,7 +341,7 @@
         items:
           - name: 衛星
             number: 1
-  number: 5
+  number: 4
   war_use: false
 
 - name: ロボット工場
@@ -369,7 +369,7 @@
         get:
           - name: ロボット
             number: 2
-  number: 8
+  number: 4
   war_use: false
 
 - name: 量子コンピュータ
@@ -409,7 +409,7 @@
         items:
           - name: 拡張人間
             number: 1
-  number: 5
+  number: 4
   war_use: false
 
 - name: 細菌兵器
@@ -429,7 +429,7 @@
       number: 1
   commands:
     - kind: bacterial_weapon
-  number: 5
+  number: 4
   war_use: true
 
 - name: 教会
@@ -449,8 +449,16 @@
     - name: メタル
       number: 2
   commands:
+    - kind: create_get
+      body:
+        cost:
+          - name: 人間
+            number: 1
+        get: 
+          - name: 信者
+            number: 1
     - kind: missionary
-  number: 8
+  number: 4
   war_use: false
 
 - name: テラフォーミング
@@ -473,7 +481,7 @@
         items:
           - name: テラフォーミング
             number: 1
-  number: 8
+  number: 3
   war_use: false
 
 - name: 神の杖
@@ -497,7 +505,7 @@
       number: 2
   commands:
     - kind : god_wand
-  number: 4
+  number: 2
   war_use: true
 
 - name: 意識操作のテスト
@@ -514,7 +522,7 @@
       number: 1
   commands:
     - kind:  n_minus_p_plus
-  number: 8
+  number: 3
   war_use: false
 
 - name: 未来予報装置
@@ -537,13 +545,9 @@
       number: 2
     - name: CPU
       number: 2
-    - name: 爆弾
-      number: 2
-    - name: メタル
-      number: 2
   commands:
     - kind: future_forecast
-  number: 5
+  number: 4
   war_use: false
 
 - name: 御神体の再生
@@ -565,7 +569,7 @@
         items:
           - name: 神体
             number: 1
-  number: 5
+  number: 3
   war_use: false
     
 - name: 火星の支配

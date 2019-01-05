@@ -17,7 +17,7 @@ export class ResourceList {
     private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
     private haveFusionReactor: boolean;
-    
+
     //頑張ってリファクタリングして
     private nowEvent = false;
     setNowEvent(flag: boolean) {
@@ -118,7 +118,7 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
-            if (x == null) return x;
+            if (x == null || x.guardFlag) return x;
             if (count >= num) return x;
             if (name != x.resourceCardName) return x;
             count++;
@@ -130,20 +130,23 @@ export class ResourceList {
     //randomに消す
     public randomDeleteResource(num: number) {
         let arr = this.resourceList.Value;
-        const allCount = this.getAllCount();
+        //まず、nullじゃないかつ、リソースが保護されていないリソースの要素番号を抽出
+        const existIndexList: number[] =
+            arr.map((x, i) => {
+                if (x == null || x.guardFlag)
+                    return null;
+                return i;
+            }).filter(x => x != null) as number[];
+        const count = existIndexList.length;
 
         //乱数で消す数以上リソースがある
-        if (allCount >= num) {
-            let targetIndexes = new Array<number>(allCount)
-                .fill(0)
-                .map((_, idx) => idx);
-            targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
-            arr = arr.map((x, index) =>
-                targetIndexes.includes(index) ? null : x
-            );
+        if (count >= num) {
+            arrayshuffle(existIndexList).slice(0, num)
+                .forEach(index => arr[index] = null)
         }
         //消す数より少なかった
-        else arr.fill(null);
+        else
+            existIndexList.forEach(index => arr[index] = null);
         this.setCrowdList(arr);
     }
 
@@ -157,9 +160,12 @@ export class ResourceList {
         let arr = this.resourceList.Value;
         let count = 0;
         arr = arr.map(x => {
-            if (x == null) return x;
-            if (count >= num) return x;
-            if (targetName != x.resourceCardName) return x;
+            if (
+                x == null ||
+                count >= num ||
+                targetName != x.resourceCardName ||
+                x.guardFlag == true
+            ) return x;
             count++;
             return { resourceCardName: changeName, guardFlag: false };
         });
@@ -190,13 +196,23 @@ export class ResourceList {
         return this.resourceList.Value.filter(x => x != null && x.resourceCardName == name).length;
     }
 
-    //null以外の数
+    //null以外のリソースの数
     getAllCount() {
-        let count = 0;
-        this.resourceList.Value.forEach(x => {
-            if (x != null) count++;
-        });
-        return count;
+        return this.resourceList.Value.filter(x =>
+            x != null
+        ).length;
+    }
+
+    //null以外かつ保護されていないリソースの数
+    getAllNonGuardCount() {
+        return this.resourceList.Value.filter(x =>
+            x != null && x.guardFlag == false
+        ).length;
+    }
+
+    getResourceName(index: number) {
+        const getData = this.resourceList.Value[index];
+        return getData == null ? null : getData.resourceCardName;
     }
 
     //指定インデックスのリソースをguardする
@@ -230,7 +246,7 @@ export class ResourceList {
     setHaveFusionReactor(have: boolean) {
         this.haveFusionReactor = have;
     }
-    
+
     //カードのコストを支払えるかどうかの判定をする。
     //払えなければ、falseを返す
     canCostPayment(cost: ResourceItem[]) {
@@ -251,11 +267,16 @@ export class ResourceList {
         cost.forEach(x => {
             let count = 0;
             arr = arr.map(y => {
-                if (y == null) return null;
-                if (x.name == y.resourceCardName) count++;
-                if (y.resourceCardName != x.name || count > x.number) return y;
+                if (y == null || y.guardFlag == true || y.resourceCardName != x.name || count >= x.number) return y;
+                count++;
                 return null;
             });
+            arr = arr.map(y => {
+                if (y == null || y.resourceCardName != x.name || count >= x.number) return y;
+                count++;
+                return null;
+            });
+
         });
         this.setCrowdList(arr);
     }

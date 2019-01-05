@@ -22,6 +22,6 @@ export function build(bindParams: BindParams) {
         selectWinCardWindow.setCardNumber(x)
     );
 
-    bindParams.layerManager.add(LayerTag.PopUp, selectWinCardWindow);
+    bindParams.layerManager.add(LayerTag.PopUp2, selectWinCardWindow);
     return selectWinCardWindow;
 }

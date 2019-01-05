@@ -9,6 +9,10 @@ export class War {
 
     getWarFlag() { return this.warFlag; }
 
+    startWar() {
+        this.warFlag = true;
+    }
+
     win() {
         this.warFlag = false;
     }

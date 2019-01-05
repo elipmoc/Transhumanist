@@ -30,6 +30,9 @@ export function build(bindParams: BindParams) {
             case UnavailableState.Event:
                 unavailableDialog.setText("イベントの効果により、\nカードを使用出来ません。");
                 break;
+            case UnavailableState.NoBeliever:
+                unavailableDialog.setText("信者が居ない為、\nこの効果は使用できません。");
+                break;
         };
         unavailableDialog.visible = true;
         unavailableDialog.stage.update();

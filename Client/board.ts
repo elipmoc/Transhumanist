@@ -39,6 +39,7 @@ export const enum LayerTag {
     UiOver = "ui_over",
     Hover = "hover",
     PopUp = "pop_up",
+    PopUp2 = "pop_up2",
     OptionUi = "option_ui"
 }
 
@@ -50,6 +51,7 @@ function getLayerTags(): string[] {
         LayerTag.UiOver,
         LayerTag.Hover,
         LayerTag.PopUp,
+        LayerTag.PopUp2,
         LayerTag.OptionUi
     ];
 }

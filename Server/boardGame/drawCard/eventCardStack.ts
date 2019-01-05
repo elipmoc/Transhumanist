@@ -4,6 +4,7 @@ import { arrayshuffle } from "../../../Share/utility";
 import { NumberOfEventCard } from "../../../Share/numberOfEventCard";
 import { SocketBinder } from "../../socketBinder";
 import { EventLogMessageForClient } from "../../../Share/eventLogMessageForClient";
+import { FutureForecastEventData } from "../../../Share/futureForecastEventData";
 
 export class EventCardStack {
     private eventCardList: Event[] = [];
@@ -15,6 +16,25 @@ export class EventCardStack {
         this.eventLogMessage = new SocketBinder.Binder<EventLogMessageForClient>("eventLogMessage");
         this.settingCard();
         boardSocketManager.addSocketBinder(this.numberOfEventCard, this.eventLogMessage);
+    }
+
+    //現在残っているイベントの山札を取得する（コピーした配列を渡している）
+    getEvents() {
+        return this.eventCardList.slice();
+    }
+
+    //イベントを先頭から順に組み替える
+    swapEvents(data: FutureForecastEventData) {
+        if (this.eventCardList.length < data.eventNameList.length) return false;
+        const eventCardListHeads = this.eventCardList.slice(0, this.eventCardList.length - data.eventNameList.length);
+        let eventCardListTails = this.eventCardList.slice(this.eventCardList.length - data.eventNameList.length, this.eventCardList.length);
+        //イベントが全く関係ないイベントとすり替わってないかチェック
+        if (eventCardListTails.every(x => data.eventNameList.some(eventName => x.name == eventName)) == false)
+            return false;
+
+        eventCardListTails = data.eventNameList.map(eventName => eventCardListTails.find(x => x.name == eventName)!);
+        this.eventCardList = eventCardListHeads.concat(eventCardListTails);
+        return true;
     }
 
     settingCard() {

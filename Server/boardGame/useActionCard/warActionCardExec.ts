@@ -1,12 +1,14 @@
 import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { BuildActionList } from "../buildActionList";
 import { ResourceList } from "../ResourceList";
+import { GamePlayerState } from "../gamePlayerState";
 
 //アクションカード効果発動の処理
 export function warActionCardExec(
     name: ActionCardName,
     buildActionList: BuildActionList,
-    resourceList: ResourceList
+    resourceList: ResourceList,
+    state: GamePlayerState
 ) {
     //実際の使用する処理
     switch (name) {
@@ -24,4 +26,9 @@ export function warActionCardExec(
             //戦争相手の設置アクションを1つと、リソースを2～4個、破壊する。
             break;
     }
+
+    //破壊系アクションの反映
+    state.updateResource(buildActionList.getCount("倉庫"));
+    state.updateSpeed(buildActionList.getCount("量子コンピュータ"));
+    resourceList.setHaveFusionReactor(buildActionList.getCount("核融合炉") >= 1);
 }
