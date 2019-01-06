@@ -36,6 +36,8 @@ export function useActionCard(
         return actionResult;
     }
 
+    if (onceNoCostFlag == false) resourceList.costPayment(card.cost);
+
     //アクションカード効果発動
     switch (actionCardExec(card, buildActionList, resourceList, state)) {
         case ExecResult.War:
@@ -47,8 +49,6 @@ export function useActionCard(
         default:
             break;
     }
-
-    if (onceNoCostFlag == false) resourceList.costPayment(card.cost);
 
     return actionResult;
 }
