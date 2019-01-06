@@ -98,6 +98,7 @@ export function useBuildActionCard(
                     maxNum: resourceList.getCount("信者"),
                     enable: true
                 };
+                playerCond.Value = GamePlayerCondition.Action;
             } else {
                 result.unavailableState = UnavailableState.NoBeliever;
                 return result;

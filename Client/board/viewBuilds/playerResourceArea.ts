@@ -127,6 +127,7 @@ export function build(bindParams: BindParams) {
     });
 
     churchAction.onUpdate(x => {
+        if (x == undefined) return;
         if (x.enable) {
             selectBelieverWindow.ChangeNumber = 1;
         }

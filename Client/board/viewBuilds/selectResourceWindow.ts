@@ -12,7 +12,7 @@ export function build(bindParams: BindParams) {
 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
-        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, JSON.stringify({ id: cardIcon.IconId }));
+        bindParams.socket.emit("selectedGetResourceId", JSON.stringify({ id: cardIcon.IconId }));
         bindParams.layerManager.update();
     });
 

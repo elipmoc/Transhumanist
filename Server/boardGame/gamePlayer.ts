@@ -263,18 +263,18 @@ export class GamePlayer {
         messageSender: MessageSender
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
-            "candidateResources" + playerId
+            "candidateResources", true, [`player${playerId}`]
         );
         this.churchAction = new SocketBinder.Binder<ChurchAction>(
-            "churchAction" + playerId
+            "churchAction", true, [`player${playerId}`]
         );
         const pnChangeData = new SocketBinder.EmitReceiveBinder<PnChangeData>(
-            "PnChangeData" + playerId
+            "PnChangeData", true, [`player${playerId}`]
         );
         this.dice = new Dice(playerId, boardSocketManager);
-        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<
-            SelectedGetResourceId
-            >("selectedGetResourceId" + playerId);
+        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>(
+            "selectedGetResourceId", true, [`player${playerId}`]
+        );
 
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.resourceList.onEventClearCallback(() => {
@@ -412,7 +412,7 @@ export class GamePlayer {
         //未来予報装置の入れ替えたイベント受信用
         const futureForecastSwapEvents = new SocketBinder.EmitReceiveBinder<FutureForecastEventData>("futureForecastSwapEvents", true, ["player" + this.playerId]);
         futureForecastSwapEvents.OnReceive(data => {
-            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.playerCond.Value != GamePlayerCondition.Action && futureForecastGetEvents.Value != undefined) return;
             if (this.futureForecastSwapEventsCallBack({ eventNameList: data.eventNameList.reverse() })) {
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
                 futureForecastGetEvents.Value = undefined;
@@ -437,7 +437,8 @@ export class GamePlayer {
 
         //教会のPN変動
         pnChangeData.OnReceive((data) => {
-            if (this.churchAction.Value) {
+            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.churchAction.Value && this.churchAction.Value.enable) {
                 if (data.changeNumber <= this.resourceList.getCount("信者")) {
                     const adConstant = data.adId == 0 ? 1 : -1;
                     if (data.pnId == 0) {
@@ -449,6 +450,7 @@ export class GamePlayer {
                         maxNum: 0,
                         enable: false
                     };
+                    this.playerCond.Value = GamePlayerCondition.MyTurn;
                 }
             }
         });
