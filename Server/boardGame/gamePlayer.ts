@@ -22,6 +22,7 @@ import { PnChangeData } from "../../Share/pnChangeData";
 import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
+import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
 
 type SuccessFlag = boolean;
 
@@ -382,7 +383,6 @@ export class GamePlayer {
                 return false;
             }
             else if (result.warActionFlag) {
-                //callback
                 this.warActionCallback(result.cardName);
             }
             else if (result.winActionFlag) {
@@ -422,80 +422,17 @@ export class GamePlayer {
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
-            if (this.nowEvent.name == "太陽風") {
-                unavailable.emit(UnavailableState.Event);
+            const result = useBuildActionCard(
+                card, this.state, this.onceNoCostFlag, this.nowEvent, this.futureForecastGetEventsCallBack(), data
+                , this.resourceList, this.buildActionList, this.playerCond, this.churchAction, futureForecastGetEvents
+            )
+            if (result.unavailableState != null) {
+                unavailable.emit(result.unavailableState);
                 return false;
             }
-
-            const commandNum = data.selectCommandNum;
-            switch (card.commands[commandNum].kind) {
-                //未来予報装置
-                case "future_forecast":
-                    const events = this.futureForecastGetEventsCallBack();
-                    if (events.length == 0) {
-                        unavailable.emit(UnavailableState.Condition);
-                        return false;
-                    }
-                    this.playerCond.Value = GamePlayerCondition.Action;
-                    futureForecastGetEvents.Value = { eventNameList: events.slice(events.length - 3, events.length).map(event => event.name).reverse() };
-                    break;
-                case "resource_guard":
-                    //保護するリソースの最大数
-                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);
-                    if (data.resourceIdList.length > guardMaxNum) {
-                        unavailable.emit(UnavailableState.Condition);
-                        return false;
-                    }
-                    this.resourceList.resetGuard();
-                    data.resourceIdList.forEach(x => {
-                        this.resourceList.setGuard(x);
-                    });
-                    this.useActionCardMessage(card.name, messageSender);
-                    return false;
-                case "rand_get":
-                    const randData: RandGet = <RandGet>card.commands[commandNum].body;
-                    this.resourceList.addResource(randData.items[data.resourceIdList[0]].name);
-                    break;
-                case "create_get":
-                    const createData: CreateGet = <CreateGet>card.commands[commandNum].body;
-                    if (this.resourceList.canCostPayment(createData.cost)) {
-                        this.resourceList.costPayment(createData.cost);
-                        createData.get.forEach(elem => {
-                            this.resourceList.addResource(elem.name, elem.number);
-                        });
-                    } else {
-                        unavailable.emit(UnavailableState.Cost);
-                        return false;
-                    }
-                    break;
-                case "get":
-                    const getData: Get = <Get>card.commands[commandNum].body;
-                    this.resourceList.addResource(getData.items[0].name, getData.items[0].number);
-                    break;
-                case "trade":
-                    const tradeData: Trade = <Trade>card.commands[commandNum].body;
-                    if (this.resourceList.canCostPayment(tradeData.cost_items)) {
-                        this.resourceList.costPayment(tradeData.cost_items);
-                        this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
-                    } else {
-                        unavailable.emit(UnavailableState.Cost);
-                        return false;
-                    }
-                    break;
-                case "missionary":
-                    if (this.resourceList.getCount("信者") >= 1) {
-                        this.churchAction.Value = {
-                            maxNum: this.resourceList.getCount("信者"),
-                            enable: true
-                        };
-                    } else {
-                        unavailable.emit(UnavailableState.NoBeliever);
-                        return false;
-                    }
-                    break;
-            }
+            this.onceNoCostFlag = false;
             this.useActionCardMessage(card.name, messageSender);
-            return true;
+            return result.consumeFlag;
         });
 
         //教会のPN変動

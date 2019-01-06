@@ -1,14 +1,13 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { BuildActionList } from "../buildActionList";
 import { GamePlayerState } from "../gamePlayerState";
 
 export function actionCardUseConditionCheck(
-    card: ActionCardYamlData,
+    cardConditions: string | undefined,
     state: GamePlayerState,
     buildActionList: BuildActionList
 ) {
-    if (card.conditions) {
-        switch (card.conditions) {
+    if (cardConditions) {
+        switch (cardConditions) {
             case "built_quantum_computer":
                 if (buildActionList.getCount("量子コンピュータ") == 0)
                     return false;
