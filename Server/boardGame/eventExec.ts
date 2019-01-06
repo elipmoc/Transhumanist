@@ -28,7 +28,7 @@ export function setEvent(
     result.onceNoCostFlag = ["技術革新", "産業革命"].includes(eventCard.name);
 
     if (eventCard.name == "AIへの反抗") {
-        state.addAcivityRange(state.State.negative * -1);
+        state.addAcivityRange(Math.floor(state.State.negative/2) * -1);
     }
     if (eventCard.name == "AIへの友好") {
         state.addAcivityRange(state.State.positive);
