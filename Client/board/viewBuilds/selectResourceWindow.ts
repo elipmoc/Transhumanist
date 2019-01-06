@@ -16,7 +16,7 @@ export function build(bindParams: BindParams) {
         bindParams.layerManager.update();
     });
 
-    const candidateResources = new SocketBinder<CandidateResources>("candidateResources" + bindParams.playerId, bindParams.socket);
+    const candidateResources = new SocketBinder<CandidateResources>("candidateResources", bindParams.socket);
     candidateResources.onUpdate(data => {
         if (!data) return;
         if (data.number > 0) {
