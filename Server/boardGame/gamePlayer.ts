@@ -305,7 +305,8 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
-            this.actionCard.drawActionCard(actionCardStacks.draw(level));
+            const card = actionCardStacks.draw(level);
+            if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
