@@ -46,8 +46,7 @@ export class ActionCardStacks {
         if (level > ActionCardStacks.maxLevel)
             throw "levelが不正です";
         const card = this.actionCardStackPairList[level - 1].draw();
-        if (card == undefined)
-            throw "山札が空っぽ！！";
+        if (card == undefined) return card;
         this.updateNumberOfActionCards();
         return card;
     }
@@ -55,8 +54,7 @@ export class ActionCardStacks {
         if (level > ActionCardStacks.maxLevel)
             throw "levelが不正です";
         const card = this.actionCardStackPairList[level - 1].drawByCardName(name);
-        if (card == undefined)
-            throw "山札が空っぽ！！";
+        if (card == undefined) return card;
         this.updateNumberOfActionCards();
         return card;
     }
