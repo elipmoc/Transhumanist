@@ -147,7 +147,5 @@
 # レベル6
 - name: ブラックホール
   level: 6
-  description: |-
-    　これ以降イベントは変更されない。
-    　ランダムな『リソースカード』を破棄させる。
+  description: 　ランダムな『リソースカード』を破棄させる。
   forever: false
