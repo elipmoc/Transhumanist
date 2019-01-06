@@ -423,13 +423,14 @@ export class GamePlayer {
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
             const result = useBuildActionCard(
-                card, this.nowEvent, this.futureForecastGetEventsCallBack(), data
+                card, this.state, this.onceNoCostFlag, this.nowEvent, this.futureForecastGetEventsCallBack(), data
                 , this.resourceList, this.buildActionList, this.playerCond, this.churchAction, futureForecastGetEvents
             )
             if (result.unavailableState != null) {
                 unavailable.emit(result.unavailableState);
                 return false;
             }
+            this.onceNoCostFlag = false;
             this.useActionCardMessage(card.name, messageSender);
             return result.consumeFlag;
         });

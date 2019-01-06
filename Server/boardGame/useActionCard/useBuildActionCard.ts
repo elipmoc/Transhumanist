@@ -8,6 +8,9 @@ import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { SocketBinder } from "../../socketBinder";
 import { ChurchAction } from "../../../Share/churchAction";
 import { FutureForecastEventData } from "../../../Share/futureForecastEventData";
+import { getBuildActionCost } from "./getBuildActionCost";
+import { actionCardUseCheck } from "./actionCardUseCheck";
+import { GamePlayerState } from "../gamePlayerState";
 
 export interface UseBuildActionResult {
     consumeFlag: boolean;
@@ -16,6 +19,8 @@ export interface UseBuildActionResult {
 
 export function useBuildActionCard(
     card: ActionCardYamlData,
+    state: GamePlayerState,
+    onceNoCostFlag: boolean,
     nowEvent: Event,
     futureEvents: Event[],
     data: SelectBuildActionData,
@@ -33,6 +38,15 @@ export function useBuildActionCard(
 
     if (nowEvent.name == "太陽風") {
         result.unavailableState = UnavailableState.Event;
+        return result;
+    }
+    //かかるコストを算出
+    const costs = getBuildActionCost(card, data);
+
+    //カードの使用条件のチェック
+    const checkResult = actionCardUseCheck(costs, undefined, false, false, nowEvent, state, onceNoCostFlag, resourceList, buildActionList);
+    if (checkResult != null) {
+        result.unavailableState = checkResult;
         return result;
     }
 
@@ -66,15 +80,9 @@ export function useBuildActionCard(
             break;
         case "create_get":
             const createData: CreateGet = <CreateGet>card.commands[commandNum].body;
-            if (resourceList.canCostPayment(createData.cost)) {
-                resourceList.costPayment(createData.cost);
-                createData.get.forEach(elem => {
-                    resourceList.addResource(elem.name, elem.number);
-                });
-            } else {
-                result.unavailableState = UnavailableState.Cost;
-                return result;
-            }
+            createData.get.forEach(elem => {
+                resourceList.addResource(elem.name, elem.number);
+            });
             break;
         case "get":
             const getData: Get = <Get>card.commands[commandNum].body;
@@ -82,13 +90,7 @@ export function useBuildActionCard(
             break;
         case "trade":
             const tradeData: Trade = <Trade>card.commands[commandNum].body;
-            if (resourceList.canCostPayment(tradeData.cost_items)) {
-                resourceList.costPayment(tradeData.cost_items);
-                resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
-            } else {
-                result.unavailableState = UnavailableState.Cost;
-                return result;
-            }
+            resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
             break;
         case "missionary":
             if (resourceList.getCount("信者") >= 1) {
@@ -102,6 +104,7 @@ export function useBuildActionCard(
             }
             break;
     }
+    if (onceNoCostFlag == false) resourceList.costPayment(costs);
     result.consumeFlag = true;
     return result;
 }
