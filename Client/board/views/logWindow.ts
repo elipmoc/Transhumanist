@@ -38,7 +38,6 @@ export class LogMessage implements Message {
         this.msg = msg;
     }
     msgToText(playerId: number) {
-        console.log(`${playerId}asdf`);
         const text = new createjs.Text();
         text.text = this.msg.msg;
         const colorId = this.msg.msgType == LogMessageType.EventMsg || this.msg.msgType == LogMessageType.OtherMsg ? this.msg.msgType : (4 + this.msg.msgType - 1 - playerId) % 4 + 1;
