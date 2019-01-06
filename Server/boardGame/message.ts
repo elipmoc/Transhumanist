@@ -1,14 +1,15 @@
 import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 import { SocketBinder } from "../socketBinder";
 
+
+
 export class Message {
-    private logMessageList: SocketBinder.BinderList<LogMessageForClient>;
+    private logMessageList: LogMessageList;
 
     private playerNameList = ["", "", "", ""];
 
     constructor(boardsocketManager: SocketBinder.Namespace) {
-        this.logMessageList = new SocketBinder.BinderList<LogMessageForClient>("logMessageList");
-        this.logMessageList.Value = new Array();
+        this.logMessageList = new LogMessageList(boardsocketManager);
 
         for (var i = 0; i < 4; i++) {
             let sendChatMessage = new SocketBinder.EmitReceiveBinder<string>("sendChatMessage", true, ["player" + i]);
@@ -20,7 +21,6 @@ export class Message {
             });
             boardsocketManager.addSocketBinder(sendChatMessage);
         }
-        boardsocketManager.addSocketBinder(this.logMessageList);
     }
 
     addPlayerName(playerId: number, name: string) {
@@ -57,5 +57,22 @@ export class MessageSender {
     //各プレイヤーに関するメッセージ送信
     sendPlayerMessage(msg: string, playerId: number) {
         this.message.sendMessage(msg, playerId + 1);
+    }
+}
+
+class LogMessageList {
+    private static MaxMessageNum: number = 50;
+    private logMessageList: SocketBinder.BinderList<LogMessageForClient>;
+
+    constructor(boardsocketManager: SocketBinder.Namespace) {
+        this.logMessageList = new SocketBinder.BinderList<LogMessageForClient>("logMessageList");
+        this.logMessageList.Value = new Array();
+        boardsocketManager.addSocketBinder(this.logMessageList);
+    }
+
+    push(data: LogMessageForClient) {
+        if (this.logMessageList.Value.length >= 50)
+            this.logMessageList.Value.shift();
+        this.logMessageList.push(data);
     }
 }
