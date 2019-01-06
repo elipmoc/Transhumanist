@@ -98,6 +98,35 @@ a{
     text-align:center;
 }
 
+input{display: none;}
+.item{
+    /*padding:0.5em 0;*/
+    font-weight: bold;
+    font-size:24px;
+    cursor: pointer;
+}
+.itemDescript{
+    height:0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 1.0s;
+}
+#intro input:checked ~ .itemDescript{
+    height: auto;
+    opacity: 1;
+}
+#playing input:checked ~ .itemDescript{
+    height: auto;
+    opacity: 1;
+}
+#end input:checked ~ .itemDescript{
+    height: auto;
+    opacity: 1;
+}
+#help input:checked ~ .itemDescript{
+    height: auto;
+    opacity: 1;
+}
 
 .caution{
     color:#B11;
