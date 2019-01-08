@@ -13,11 +13,18 @@ import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
 
 type UseSuccessFlag = boolean;
 
+const buildActionCardHash = GenerateActionCardYamlData(
+    yamlGet("./Resource/Yaml/actionCard.yaml"),
+    true
+)
+
 export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<HaveBuildActionCard | null>;
     private useBuildActionCardCallback: (card: ActionCardYamlData, data: SelectBuildActionData) => UseSuccessFlag;
+    private deleteBuildActionCardCallback: (card: ActionCardYamlData) => void;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
+
 
     //頑張ってリファクタリングして
     private nowEvent = false;
@@ -41,10 +48,7 @@ export class BuildActionList {
             const card = this.buildActionList.Value[x.iconId];
             if (card == null || card.usedFlag == true) return;
 
-            const useBuildActionCard = GenerateActionCardYamlData(
-                yamlGet("./Resource/Yaml/actionCard.yaml"),
-                true
-            )[card.actionCardName];
+            const useBuildActionCard = buildActionCardHash[card.actionCardName];
 
             if (useBuildActionCard && this.useBuildActionCardCallback(useBuildActionCard, data)) {
                 card.usedFlag = true;
@@ -118,7 +122,7 @@ export class BuildActionList {
     }
 
     deleteBuildAction(name: ActionCardName, num: number) {
-        let arr = this.buildActionList.Value;
+        let arr = this.buildActionList.Value.slice();
         let count = 0;
 
         arr = arr.map(x => {
@@ -129,12 +133,13 @@ export class BuildActionList {
             return null;
         });
 
+        this.consume(this.buildActionList.Value, arr);
         this.setCrowdList(arr);
     }
 
     //randomに消す
-    public randomDeleteBuildAction(num: number) {
-        let arr = this.buildActionList.Value;
+    randomDeleteBuildAction(num: number) {
+        let arr = this.buildActionList.Value.slice();
         const allCount = this.getAllCount();
 
         //乱数で消す数以上リソースがある
@@ -149,6 +154,7 @@ export class BuildActionList {
         }
         //消す数より少なかった
         else arr.fill(null);
+        this.consume(this.buildActionList.Value, arr);
         this.setCrowdList(arr);
     }
 
@@ -173,5 +179,17 @@ export class BuildActionList {
     //カードが使用されるときに呼ばれる関数をセット
     onUseBuildActionCard(f: (card: ActionCardYamlData, data: SelectBuildActionData) => UseSuccessFlag) {
         this.useBuildActionCardCallback = f;
+    }
+
+    //カードが削除される時に呼ばれる関数をセット
+    onDeleteBuildActionCard(f: (card: ActionCardYamlData) => void) {
+        this.deleteBuildActionCardCallback = f;
+    }
+
+    private consume(before: (HaveBuildActionCard | null)[], after: (HaveBuildActionCard | null)[]) {
+        before.map((x, idx) => {
+            if (x != null && after[idx] == null)
+                this.deleteBuildActionCardCallback(buildActionCardHash[x.actionCardName]!)
+        });
     }
 }

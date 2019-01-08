@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, CreateGet, Trade, RandGet, Get, ResourceGuard } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -392,10 +392,11 @@ export class GamePlayer {
             }
             if (card.build_use)
                 messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
-            else
+            else {
                 this.useActionCardMessage(card.name, messageSender);
+                this.consumeCallBack(card);
+            }
             this.onceNoCostFlag = false;
-            this.consumeCallBack(card);
             return true;
         });
 
@@ -454,6 +455,10 @@ export class GamePlayer {
                     this.playerCond.Value = GamePlayerCondition.MyTurn;
                 }
             }
+        });
+
+        this.buildActionList.onDeleteBuildActionCard(card => {
+            this.consumeCallBack(card);
         });
 
         boardSocketManager.addSocketBinder(
