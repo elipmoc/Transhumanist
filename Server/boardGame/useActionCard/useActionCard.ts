@@ -3,9 +3,9 @@ import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { Event } from "../../../Share/Yaml/eventYamlData";
 import { GamePlayerState } from "../gamePlayerState";
 import { ResourceList } from "../ResourceList";
-import { actionCardUseConditionCheck } from "./actionCardUseConditionCheck";
-import { actionCardExec,ExecResult } from "./actionCardExec";
+import { actionCardExec, ExecResult } from "./actionCardExec";
 import { BuildActionList } from "../buildActionList";
+import { actionCardUseCheck } from "./actionCardUseCheck";
 
 export interface UseActionResult {
     cardName: string;
@@ -29,42 +29,14 @@ export function useActionCard(
         winActionFlag: false,
         unavailableState: null,
     }
-    
-    //イベントによる制約の処理
-    if (
-        nowEvent.name == "ニート化が進む" &&
-        state.State.negative >= 2 &&
-        card.cost.find(x => x.name == "人間")
-    ) {
-        actionResult.unavailableState = UnavailableState.Event;
+
+    const checkResult = actionCardUseCheck(card.cost, card.conditions, card.war_use, warFlag, nowEvent, state, onceNoCostFlag, resourceList, buildActionList);
+    if (checkResult != null) {
+        actionResult.unavailableState = checkResult;
         return actionResult;
     }
 
-    //使用コストの判定
-    if (
-        onceNoCostFlag == false &&
-        resourceList.canCostPayment(card.cost) == false
-    ) {
-        actionResult.unavailableState = UnavailableState.Cost;
-        return actionResult;
-    }
-
-    //戦争条件の判定
-    if (
-        card.war_use &&
-        warFlag == false &&
-        (nowEvent.name == "世界大戦の開幕" && state.State.negative >= 1) ==
-            false
-    ) {
-        actionResult.unavailableState = UnavailableState.War;
-        return actionResult;
-    }
-
-    //カード使用条件の判定
-    if (actionCardUseConditionCheck(card, state, buildActionList) == false) {
-        actionResult.unavailableState = UnavailableState.Condition;
-        return actionResult;
-    }
+    if (onceNoCostFlag == false) resourceList.costPayment(card.cost);
 
     //アクションカード効果発動
     switch (actionCardExec(card, buildActionList, resourceList, state)) {
@@ -77,8 +49,6 @@ export function useActionCard(
         default:
             break;
     }
-
-    if (onceNoCostFlag == false) resourceList.costPayment(card.cost);
 
     return actionResult;
 }

@@ -12,11 +12,11 @@ export function build(bindParams: BindParams) {
 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
-        bindParams.socket.emit("selectedGetResourceId" + bindParams.playerId, JSON.stringify({ id: cardIcon.IconId }));
+        bindParams.socket.emit("selectedGetResourceId", JSON.stringify({ id: cardIcon.IconId }));
         bindParams.layerManager.update();
     });
 
-    const candidateResources = new SocketBinder<CandidateResources>("candidateResources" + bindParams.playerId, bindParams.socket);
+    const candidateResources = new SocketBinder<CandidateResources>("candidateResources", bindParams.socket);
     candidateResources.onUpdate(data => {
         if (!data) return;
         if (data.number > 0) {

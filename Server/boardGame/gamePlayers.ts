@@ -161,11 +161,11 @@ export class GamePlayers {
         arrayshuffle(startStatusList);
         this.getNowPlayers().forEach((x, idx) => {
             x.setAICard(startStatusList[idx]);
-            x.drawActionCard(actionCardStacks.draw(1));
-            x.drawActionCard(actionCardStacks.drawByCardName("加工施設", 2));
+            x.drawActionCard(actionCardStacks.draw(1)!);
+            x.drawActionCard(actionCardStacks.drawByCardName("加工施設", 2)!);
             for (let i = 0; i < 3; i++) {
                 x.drawActionCard(
-                    actionCardStacks.draw(Math.floor(Math.random() * 2) + 2)
+                    actionCardStacks.draw(Math.floor(Math.random() * 2) + 2)!
                 );
                 x.setResourceList();
             }

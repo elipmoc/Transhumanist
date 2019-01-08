@@ -13,8 +13,8 @@ export class MessageBox<MsgT extends Message> extends createjs.Container {
         super();
         const mouseWheel = (e: WheelEvent) => {
             if (this.mouseInFlag) {
-                if (e.deltaY) this.y += e.deltaY / 10;
-                else this.y -= e.detail * 2.7;
+                if (e.deltaY) this.y += e.deltaY / 3;
+                else this.y -= e.detail * 4;
                 this.y = Math.min(
                     height - 20,
                     Math.max(-this.bottomY + 20, this.y)

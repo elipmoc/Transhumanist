@@ -22,8 +22,17 @@ export function build(bindParams: BindParams) {
         bindParams.socket.emit("ReminderClap");
     });
     sendButton.click(function () {
+        chatSend();
+    });
+
+    window.addEventListener("keydown", enterPush);
+    function enterPush(event: any) {
+        if (event.keyCode == 13) chatSend();
+    }
+
+    function chatSend() {
         bindParams.socket.emit("sendChatMessage", JSON.stringify(chatText.val()));
         chatText.val("");
-    });
+    }
 
 }

@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData, CreateGet, Trade, RandGet, Get, ResourceGuard } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -22,6 +22,7 @@ import { PnChangeData } from "../../Share/pnChangeData";
 import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
+import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
 
 type SuccessFlag = boolean;
 
@@ -262,18 +263,18 @@ export class GamePlayer {
         messageSender: MessageSender
     ) {
         this.candidateResources = new SocketBinder.Binder<CandidateResources>(
-            "candidateResources" + playerId
+            "candidateResources", true, [`player${playerId}`]
         );
         this.churchAction = new SocketBinder.Binder<ChurchAction>(
-            "churchAction" + playerId
+            "churchAction", true, [`player${playerId}`]
         );
         const pnChangeData = new SocketBinder.EmitReceiveBinder<PnChangeData>(
-            "PnChangeData" + playerId
+            "PnChangeData", true, [`player${playerId}`]
         );
         this.dice = new Dice(playerId, boardSocketManager);
-        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<
-            SelectedGetResourceId
-            >("selectedGetResourceId" + playerId);
+        const selectedGetResourceId = new SocketBinder.EmitReceiveBinder<SelectedGetResourceId>(
+            "selectedGetResourceId", true, [`player${playerId}`]
+        );
 
         this.resourceList = new ResourceList(boardSocketManager, playerId);
         this.resourceList.onEventClearCallback(() => {
@@ -304,7 +305,8 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
-            this.actionCard.drawActionCard(actionCardStacks.draw(level));
+            const card = actionCardStacks.draw(level);
+            if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
         });
@@ -382,7 +384,6 @@ export class GamePlayer {
                 return false;
             }
             else if (result.warActionFlag) {
-                //callback
                 this.warActionCallback(result.cardName);
             }
             else if (result.winActionFlag) {
@@ -391,10 +392,11 @@ export class GamePlayer {
             }
             if (card.build_use)
                 messageSender.sendPlayerMessage(`${this.state.State.playerName}が${card.name}を設置しました`, playerId)
-            else
+            else {
                 this.useActionCardMessage(card.name, messageSender);
+                this.consumeCallBack(card);
+            }
             this.onceNoCostFlag = false;
-            this.consumeCallBack(card);
             return true;
         });
 
@@ -412,7 +414,7 @@ export class GamePlayer {
         //未来予報装置の入れ替えたイベント受信用
         const futureForecastSwapEvents = new SocketBinder.EmitReceiveBinder<FutureForecastEventData>("futureForecastSwapEvents", true, ["player" + this.playerId]);
         futureForecastSwapEvents.OnReceive(data => {
-            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.playerCond.Value != GamePlayerCondition.Action && futureForecastGetEvents.Value != undefined) return;
             if (this.futureForecastSwapEventsCallBack({ eventNameList: data.eventNameList.reverse() })) {
                 this.playerCond.Value = GamePlayerCondition.MyTurn;
                 futureForecastGetEvents.Value = undefined;
@@ -422,85 +424,23 @@ export class GamePlayer {
         //設置アクションカードの使用
         this.buildActionList.onUseBuildActionCard((card, data) => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) return false;
-            if (this.nowEvent.name == "太陽風") {
-                unavailable.emit(UnavailableState.Event);
+            const result = useBuildActionCard(
+                card, this.state, this.onceNoCostFlag, this.nowEvent, this.futureForecastGetEventsCallBack(), data
+                , this.resourceList, this.buildActionList, this.playerCond, this.churchAction, futureForecastGetEvents
+            )
+            if (result.unavailableState != null) {
+                unavailable.emit(result.unavailableState);
                 return false;
             }
-
-            const commandNum = data.selectCommandNum;
-            switch (card.commands[commandNum].kind) {
-                //未来予報装置
-                case "future_forecast":
-                    const events = this.futureForecastGetEventsCallBack();
-                    if (events.length == 0) {
-                        unavailable.emit(UnavailableState.Condition);
-                        return false;
-                    }
-                    this.playerCond.Value = GamePlayerCondition.Action;
-                    futureForecastGetEvents.Value = { eventNameList: events.slice(events.length - 3, events.length).map(event => event.name).reverse() };
-                    break;
-                case "resource_guard":
-                    //保護するリソースの最大数
-                    const guardMaxNum = (<ResourceGuard>card.commands[commandNum].body).number * this.buildActionList.getCount(card.name);
-                    if (data.resourceIdList.length > guardMaxNum) {
-                        unavailable.emit(UnavailableState.Condition);
-                        return false;
-                    }
-                    this.resourceList.resetGuard();
-                    data.resourceIdList.forEach(x => {
-                        this.resourceList.setGuard(x);
-                    });
-                    this.useActionCardMessage(card.name, messageSender);
-                    return false;
-                case "rand_get":
-                    const randData: RandGet = <RandGet>card.commands[commandNum].body;
-                    this.resourceList.addResource(randData.items[data.resourceIdList[0]].name);
-                    break;
-                case "create_get":
-                    const createData: CreateGet = <CreateGet>card.commands[commandNum].body;
-                    if (this.resourceList.canCostPayment(createData.cost)) {
-                        this.resourceList.costPayment(createData.cost);
-                        createData.get.forEach(elem => {
-                            this.resourceList.addResource(elem.name, elem.number);
-                        });
-                    } else {
-                        unavailable.emit(UnavailableState.Cost);
-                        return false;
-                    }
-                    break;
-                case "get":
-                    const getData: Get = <Get>card.commands[commandNum].body;
-                    this.resourceList.addResource(getData.items[0].name, getData.items[0].number);
-                    break;
-                case "trade":
-                    const tradeData: Trade = <Trade>card.commands[commandNum].body;
-                    if (this.resourceList.canCostPayment(tradeData.cost_items)) {
-                        this.resourceList.costPayment(tradeData.cost_items);
-                        this.resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
-                    } else {
-                        unavailable.emit(UnavailableState.Cost);
-                        return false;
-                    }
-                    break;
-                case "missionary":
-                    if (this.resourceList.getCount("信者") >= 1) {
-                        this.churchAction.Value = {
-                            maxNum: this.resourceList.getCount("信者"),
-                            enable: true
-                        };
-                    } else {
-                        unavailable.emit(UnavailableState.NoBeliever);
-                        return false;
-                    }
-                    break;
-            }
+            this.onceNoCostFlag = false;
             this.useActionCardMessage(card.name, messageSender);
-            return true;
+            return result.consumeFlag;
         });
 
         //教会のPN変動
         pnChangeData.OnReceive((data) => {
-            if (this.churchAction.Value) {
+            if (this.playerCond.Value != GamePlayerCondition.Action) return;
+            if (this.churchAction.Value && this.churchAction.Value.enable) {
                 if (data.changeNumber <= this.resourceList.getCount("信者")) {
                     const adConstant = data.adId == 0 ? 1 : -1;
                     if (data.pnId == 0) {
@@ -512,8 +452,13 @@ export class GamePlayer {
                         maxNum: 0,
                         enable: false
                     };
+                    this.playerCond.Value = GamePlayerCondition.MyTurn;
                 }
             }
+        });
+
+        this.buildActionList.onDeleteBuildActionCard(card => {
+            this.consumeCallBack(card);
         });
 
         boardSocketManager.addSocketBinder(
