@@ -167,7 +167,7 @@
         items:
           - name: ロケット
             number: 1
-  number: 6
+  number: 8
   war_use: false
 
 - name: 治療施設
