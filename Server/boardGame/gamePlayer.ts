@@ -458,6 +458,8 @@ export class GamePlayer {
         });
 
         this.buildActionList.onDeleteBuildActionCard(card => {
+            if (card.name == "地下シェルター")
+                this.resourceList.resetGuard();
             this.consumeCallBack(card);
         });
 
