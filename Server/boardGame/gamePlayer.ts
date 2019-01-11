@@ -152,10 +152,6 @@ export class GamePlayer {
 
         if (this.war.getWarFlag()) this.state.warStateChange();
 
-        //倉庫反映
-        this.state.updateResource(
-            this.buildActionList.getCount("倉庫"));
-
         //量子コンピュータ反映
         this.state.updateSpeed(
             this.buildActionList.getCount("量子コンピュータ"));
@@ -365,6 +361,9 @@ export class GamePlayer {
             UnavailableState
             >("Unavailable", true, [`player${playerId}`]);
 
+        this.state.onChangeActivityRange((val) => { });
+        this.state.onChangeResource((val) => this.resourceList.setResourceCapacity(val));
+
         //アクションカードの使用処理
         this.actionCard.onUseActionCard(card => {
             if (this.playerCond.Value != GamePlayerCondition.MyTurn) {
@@ -460,6 +459,8 @@ export class GamePlayer {
         this.buildActionList.onDeleteBuildActionCard(card => {
             if (card.name == "地下シェルター")
                 this.resourceList.resetGuard();
+            if (card.name == "倉庫")
+                this.state.addResource(-10);
             this.consumeCallBack(card);
         });
 

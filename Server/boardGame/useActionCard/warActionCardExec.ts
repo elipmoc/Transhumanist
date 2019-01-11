@@ -28,7 +28,6 @@ export function warActionCardExec(
     }
 
     //破壊系アクションの反映
-    state.updateResource(buildActionList.getCount("倉庫"));
     state.updateSpeed(buildActionList.getCount("量子コンピュータ"));
     resourceList.setHaveFusionReactor(buildActionList.getCount("核融合炉") >= 1);
 }
