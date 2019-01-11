@@ -17,6 +17,19 @@ export class ResourceList {
     private resourceOver: SocketBinder.Binder<ResourceOver>;
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
     private haveFusionReactor: boolean;
+    private resourceCapacity: number;
+
+    setResourceCapacity(val: number) {
+        this.resourceCapacity = val;
+        const delta = this.getAllCount() - this.resourceCapacity;
+        if (delta > 0) {
+            const emitValue: ResourceOver = {
+                overCount: delta,
+                causeText: "リソースがいっぱいです。"
+            };
+            this.resourceOver.Value = emitValue;
+        }
+    }
 
     //頑張ってリファクタリングして
     private nowEvent = false;
@@ -98,13 +111,12 @@ export class ResourceList {
         const arr = this.resourceList.Value;
         for (let i = 0; i < num; i++) {
             let idx = arr.findIndex(x => x == null);
-            if (idx == -1) {
+            if (idx == -1 || this.getAllCount() >= this.resourceCapacity) {
                 const emitValue: ResourceOver = {
                     overCount: this.resourceOver.Value.overCount + 1,
                     causeText: "リソースがいっぱいです。"
                 };
                 this.resourceOver.Value = emitValue;
-
                 idx = this.resourceReserveList.Value.findIndex(x => x == null);
                 this.resourceReserveList.setAt(idx, name);
             } else arr[idx] = { resourceCardName: name, guardFlag: false };

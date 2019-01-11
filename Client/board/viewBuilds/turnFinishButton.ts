@@ -19,6 +19,7 @@ export function build(bindParams: BindParams) {
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
 
     const gameMasterPlayerId = new SocketBinder<number>("gameMasterPlayerId", bindParams.socket);
+    let myTurnFlag = false;
     gamePlayerCondition.onUpdate(cond => {
         switch (cond) {
             case GamePlayerCondition.Start:
@@ -34,15 +35,21 @@ export function build(bindParams: BindParams) {
             case GamePlayerCondition.MyTurn:
                 turnFinishButton.setText("ターン終了");
                 turnFinishButton.visible = true;
-                SoundManager.sePlay("turnStart");
                 break;
             case GamePlayerCondition.Wait:
                 SoundManager.sePlay("turnStart2");
+                myTurnFlag = false;
             default:
                 turnFinishButton.setText("");
                 turnFinishButton.visible = false;
                 break;
         }
+        if (cond == GamePlayerCondition.MyTurn || cond == GamePlayerCondition.DrawCard)
+            if (myTurnFlag == false) {
+                SoundManager.sePlay("turnStart");
+                myTurnFlag = true;
+            }
+
         bindParams.layerManager.update();
     })
     gameMasterPlayerId.onUpdate(playerId => {

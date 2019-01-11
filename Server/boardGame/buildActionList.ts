@@ -22,9 +22,23 @@ export class BuildActionList {
     private buildActionList: SocketBinder.BinderList<HaveBuildActionCard | null>;
     private useBuildActionCardCallback: (card: ActionCardYamlData, data: SelectBuildActionData) => UseSuccessFlag;
     private deleteBuildActionCardCallback: (card: ActionCardYamlData) => void;
+    private buildReserveList: SocketBinder.BinderList<ActionCardName | null>;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
 
+    private buildCapacity: number;
+
+    setBuildCapacity(val: number) {
+        this.buildCapacity = val;
+        const delta = this.getAllCount() - this.buildCapacity;
+        if (delta > 0) {
+            const emitValue: BuildOver = {
+                overCount: delta,
+                causeText: "設置したアクションカードがいっぱいです。"
+            };
+            this.buildOver.Value = emitValue;
+        }
+    }
 
     //頑張ってリファクタリングして
     private nowEvent = false;
@@ -40,6 +54,13 @@ export class BuildActionList {
         this.buildActionList = new SocketBinder.BinderList<HaveBuildActionCard>(
             "BuildActionKindList" + playerId
         );
+        this.buildReserveList = new SocketBinder.BinderList<ActionCardName | null>(
+            "BuildReserveKindList",
+            true,
+            ["player" + playerId]
+        );
+        this.buildReserveList.Value = new Array(12);
+        this.buildReserveList.Value.fill(null);
         const selectBuildAction = new SocketBinder.EmitReceiveBinder<
             SelectBuildActionData
             >("SelectBuildAction", true, [`player${playerId}`]);
@@ -65,15 +86,23 @@ export class BuildActionList {
             ["player" + playerId]
         );
         this.throwBuild.OnReceive(throwBuild => {
-            console.log(`throwBuild: ${throwBuild}`);
             if (
                 this.buildOver.Value.overCount ==
-                throwBuild.buildActionList.length
+                throwBuild.buildActionList.length +
+                throwBuild.buildReserveList.length
             ) {
                 this.buildOver.Value = { overCount: 0, causeText: "" };
                 throwBuild.buildActionList.forEach(id => {
                     this.buildActionList.Value[id] = null;
                 });
+                throwBuild.buildReserveList.forEach(id => {
+                    this.buildReserveList.Value[id] = null;
+                });
+                this.buildReserveList.Value.forEach(name => {
+                    if (name) this.addBuildAction(name);
+                });
+                this.buildReserveList.Value.fill(null);
+                this.buildReserveList.update();
                 this.setCrowdList(this.buildActionList.Value);
 
                 if (this.nowEvent) this.eventClearCallback();
@@ -85,11 +114,14 @@ export class BuildActionList {
             this.buildActionList,
             selectBuildAction,
             this.buildOver,
+            this.buildReserveList,
             this.throwBuild
         );
     }
     clear() {
         this.buildActionList.Value = new Array(30).fill(null);
+        this.buildReserveList.Value = new Array(12);
+        this.buildReserveList.Value.fill(null);
     }
 
     //指定した設置アクションカードがいくつあるかを計算する
@@ -117,7 +149,17 @@ export class BuildActionList {
 
     addBuildAction(name: ActionCardName) {
         const idx = this.buildActionList.Value.findIndex(x => x == null);
-        if (idx != -1) this.buildActionList.setAt(idx, { actionCardName: name, usedFlag: false });
+        if (idx == -1 || this.getAllCount() >= this.buildCapacity) {
+            const emitValue: BuildOver = {
+                overCount: this.buildOver.Value.overCount + 1,
+                causeText: "設置したアクションカードがいっぱいです。"
+            };
+            this.buildOver.Value = emitValue;
+            const reserveIdx = this.buildReserveList.Value.findIndex(x => x == null);
+            this.buildReserveList.setAt(reserveIdx, name);
+        }
+        else
+            this.buildActionList.setAt(idx, { actionCardName: name, usedFlag: false });
         this.setCrowdList(this.buildActionList.Value);
     }
 

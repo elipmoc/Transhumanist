@@ -1,5 +1,5 @@
 import { ActionCardHover } from "../views/actionCardHover";
-import { RandGet } from "../../../Share/Yaml/actionCardYamlData";
+import { RandGet, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { SocketBinderList } from "../../socketBinderList";
@@ -19,6 +19,7 @@ import { SelectChurchWindow } from "../views/selectChurchWindow";
 
 import { LayerTag } from "../../board";
 import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
+import { BuildReserveArea } from "../views/reserveArea";
 //プレイヤーの設置アクション欄生成
 export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerResourceAreaBase, bindParams: BindParams) {
     const buildOver = new SocketBinder<BuildOver | null>("BuildOver", bindParams.socket);
@@ -85,7 +86,7 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
         });
     }
     playerBuildActionAreaList[0].onClickedIcon((cardIcon) => {
-        if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn) {
+        if (gamePlayerCondition.Value == GamePlayerCondition.MyTurn && buildOver.Value.overCount == 0) {
             if (!cardIcon.Kind.usedFlag) {
                 buildActionUseDecision.visible = false;
                 buildActionSelectWindow.visible = false;
@@ -124,10 +125,43 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
                 }
             }
         }
-        else if (buildOver.Value.overCount != 0) cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
 
         bindParams.layerManager.update();
     });
+
+    const buildReserveKindList = new SocketBinderList<ActionCardName | null>("BuildReserveKindList", bindParams.socket);
+    const buildReserveArea = new BuildReserveArea();
+    buildReserveKindList.onUpdate((list) => {
+        list.forEach((actionCardName, iconId) =>
+            buildReserveArea.setResource(
+                iconId,
+                { actionCardName, usedFlag: false },
+                actionCardName != null ? bindParams.yamls.buildActionCardHash[actionCardName].index : -1,
+                bindParams.imgQueue));
+        bindParams.layerManager.update();
+    });
+    buildReserveKindList.onSetAt((iconId: number, actionCardName: ActionCardName) => {
+        buildReserveArea.setResource(
+            iconId,
+            { actionCardName, usedFlag: false },
+            bindParams.yamls.buildActionCardHash[actionCardName].index,
+            bindParams.imgQueue);
+        bindParams.layerManager.update();
+    });
+    buildReserveArea.onMouseOveredIcon(cardData => {
+        actionCardHover.visible = true;
+        actionCardHover.setYamlData(bindParams.yamls.actionCardHash[cardData.actionCardName], bindParams.imgQueue);
+        bindParams.layerManager.update();
+    });
+    buildReserveArea.onMouseOutedIcon(() => {
+        actionCardHover.visible = false;
+        actionCardHover.setYamlData(null, bindParams.imgQueue);
+        bindParams.layerManager.update();
+    });
+    buildReserveArea.onClickedIcon((cardIcon) => {
+        bindParams.layerManager.update();
+    });
+    bindParams.layerManager.add(LayerTag.Ui, buildReserveArea);
 
     //onClickの設定
     selectResourceWindow.onClickIcon((cardIcon) => {
@@ -200,8 +234,11 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
         if (x.overCount != 0) {
             buildthrowDialog.setMessage(`${x.causeText} \n捨てる設置済みアクションカードを\n${x.overCount} 個選んでください`);
             buildthrowDialog.visible = true;
+            playerBuildActionAreaList[0].setSelectEnable();
+            buildReserveArea.setSelectEnable();
         } else {
             playerBuildActionAreaList[0].unSelectFrameVisible();
+            buildReserveArea.unSelectFrameVisible();
             buildthrowDialog.visible = false;
         }
         bindParams.layerManager.update();
@@ -209,7 +246,8 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
     buildthrowDialog.visible = false;
     buildthrowDialog.onClick(() => {
         const throwBuild: ThrowBuildAction = {
-            buildActionList: playerBuildActionAreaList[0].getSelectedAllIconId()
+            buildActionList: playerBuildActionAreaList[0].getSelectedAllIconId(),
+            buildReserveList: buildReserveArea.getSelectedAllIconId()
         };
         bindParams.socket
             .emit("ThrowBuild", JSON.stringify(throwBuild));
