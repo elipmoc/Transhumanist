@@ -3,7 +3,7 @@ import { BuildActionList } from "../buildActionList";
 import { ResourceList } from "../ResourceList";
 import { GamePlayerState } from "../gamePlayerState";
 
-export enum ExecResult{
+export enum ExecResult {
     Success,
     War,
     Win
@@ -19,7 +19,7 @@ export function actionCardExec(
     //実際の使用する処理
     if (card.build_use) {
         buildActionList.addBuildAction(card.name);
-        if (card.name == "倉庫") state.updateResource(buildActionList.getCount("倉庫"));
+        if (card.name == "倉庫") state.addResource(10);
         if (card.name == "量子コンピュータ") state.updateSpeed(buildActionList.getCount("量子コンピュータ"));
         if (card.name == "核融合炉") resourceList.setHaveFusionReactor(buildActionList.getCount("核融合炉") >= 1);
     }

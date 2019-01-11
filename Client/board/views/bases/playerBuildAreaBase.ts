@@ -8,16 +8,28 @@ import { HaveBuildActionCard } from "../../../../Share/haveBuildActionCard";
 export class PlayerBuildAreaBase extends createjs.Container {
     protected buildArea: createjs.Bitmap;
     protected buildList: IconList<BuildActionCardIcon, HaveBuildActionCard | null>;
-    constructor(xNum: number) {
+    //アクションを選択できるモードかどうか
+    private selectEnableFlag = false;
+
+    constructor(xNum: number, maxNum: number = 30) {
         super();
-        this.buildList = new IconList<BuildActionCardIcon, HaveBuildActionCard | null>(xNum, 30, BuildActionCardIcon);
+        this.buildList = new IconList<BuildActionCardIcon, HaveBuildActionCard | null>(xNum, maxNum, BuildActionCardIcon);
         this.buildArea = new createjs.Bitmap("");
         this.addChild(this.buildArea);
         this.addChild(this.buildList);
     }
+
+    setSelectEnable() {
+        this.selectEnableFlag = true;
+    }
+
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
-    onClickedIcon(onClickIconCallBack: (cardicon: BuildActionCardIcon) => void) {
-        this.buildList.onClickedIcon(onClickIconCallBack);
+    onClickedIcon(onClickIconCallBack: (cardIcon: BuildActionCardIcon) => void) {
+        this.buildList.onClickedIcon((cardIcon) => {
+            if (this.selectEnableFlag)
+                cardIcon.selectFrameVisible = !cardIcon.selectFrameVisible;
+            onClickIconCallBack(cardIcon);
+        });
     }
 
     //リソースアイコンがマウスオーバーされた時に呼ばれる関数をセットする
@@ -30,6 +42,7 @@ export class PlayerBuildAreaBase extends createjs.Container {
         this.buildList.onMouseOutedIcon(onMouseOutIconCallBack);
     }
     unSelectFrameVisible() {
+        this.selectEnableFlag = false;
         this.buildList.unSelectFrameVisible();
     }
     getSelectedAllIconId() {

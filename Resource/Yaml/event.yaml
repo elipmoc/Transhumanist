@@ -85,7 +85,9 @@
 # レベル4
 - name: AIへの反抗
   level: 4
-  description: 　AIの活動範囲が所持するN点の半分、減少される。
+  description: |-
+   　AIの活動範囲が所持するN点の半分（四捨五入）
+   減少される。
   forever: false
 
 - name: 隕石

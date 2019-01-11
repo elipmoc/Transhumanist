@@ -50,6 +50,8 @@ export function useBuildActionCard(
         return result;
     }
 
+    if (onceNoCostFlag == false) resourceList.costPayment(costs);
+
     const commandNum = data.selectCommandNum;
     switch (card.commands[commandNum].kind) {
         //未来予報装置
@@ -105,7 +107,6 @@ export function useBuildActionCard(
             }
             break;
     }
-    if (onceNoCostFlag == false) resourceList.costPayment(costs);
     result.consumeFlag = true;
     return result;
 }

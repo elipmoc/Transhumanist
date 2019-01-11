@@ -7,6 +7,18 @@ export class GamePlayerState {
     private defaultResource: number;
     private defaultSpeed: number;
 
+    //ActivityRangeが変更されたときに呼ばれるコールバック
+    private changeActivityRange: (val: number) => void;
+    onChangeActivityRange(f: (val: number) => void) {
+        this.changeActivityRange = f;
+    }
+
+    //Resourceが変更されたときに呼ばれるコールバック
+    private changeResource: (val: number) => void;
+    onChangeResource(f: (val: number) => void) {
+        this.changeResource = f;
+    }
+
     get State() {
         return this.state.Value;
     }
@@ -81,12 +93,15 @@ export class GamePlayerState {
             this.state.Value.activityRange = 30;
         else if (this.state.Value.activityRange <= 0)
             this.state.Value.activityRange = 0;
+        this.changeActivityRange(this.state.Value.activityRange);
         this.state.update();
     }
 
     setAICard(startStatusYamlData: StartStatusYamlData) {
         this.state.Value.activityRange = startStatusYamlData.activityRange;
+        this.changeActivityRange(startStatusYamlData.activityRange);
         this.state.Value.resource = startStatusYamlData.resource;
+        this.changeResource(startStatusYamlData.resource);
         this.defaultResource = startStatusYamlData.resource;
         this.state.Value.speed = startStatusYamlData.speed;
         this.defaultSpeed = startStatusYamlData.speed;
@@ -113,19 +128,12 @@ export class GamePlayerState {
         this.state.update();
     }
 
-    //倉庫反映
-    updateResource(count: number) {
-        const value = 10;
-        if (count >= 1) {
-            const updateNumber =
-                this.defaultResource + (count * value);
-            if (updateNumber >= 30) {
-                this.state.Value.resource = 30;
-            } else {
-                this.state.Value.resource = updateNumber;
-            }
-            this.state.update();
-        }
+    //リソース値を追加
+    addResource(addVal: number) {
+        const updateNumber = this.state.Value.resource + addVal;
+        this.state.Value.resource = Math.max(Math.min(30, updateNumber), this.defaultResource);
+        this.changeResource(this.state.Value.resource);
+        this.state.update();
     }
 
     //量子コンピュータ反映
