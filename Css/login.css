@@ -148,6 +148,22 @@ a{
     background-color:#888;
     transition-duration:0.25s;
 }
+
+.tutorialLink{
+    border:#eee solid 1px;
+    background:linear-gradient(#00213f,#000911);
+    color:rgb(212, 201, 171);
+    font-size:18px;
+    padding:10px;
+    width:16em;
+    margin: 1em 0;
+}
+.tutorialLink a{
+    color:rgb(235, 234, 170);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 footer{
     width:100%;
     position:fixed;

@@ -20,6 +20,7 @@ a{
     background:#EEE;
     width:100%;
     border-bottom:solid 1px #888;
+    z-index: 1;
 }
 .menubuttons{
     display: flex;
@@ -104,6 +105,7 @@ input{display: none;}
     font-weight: bold;
     font-size:24px;
     cursor: pointer;
+    user-select: none;
 }
 .itemDescript{
     height:0;
@@ -111,21 +113,68 @@ input{display: none;}
     opacity: 0;
     transition: 1.0s;
 }
-#intro input:checked ~ .itemDescript{
+
+.arrow{
+    display: inline;
+    position: absolute;
+    transform: 
+        translate(4px,-8px)
+        rotate(-90deg)
+    ;
+    transition: 0.2s;
+    font-size: 28px;
+    z-index: 0;
+}
+
+#tutoButton:checked ~ .itemDescript{
     height: auto;
     opacity: 1;
 }
-#playing input:checked ~ .itemDescript{
+#tutoButton:checked ~ .item > .arrow{
+    transform: 
+        translate(0px,-2px)
+        rotate(90deg)
+    ;
+}
+#initButton:checked ~ .itemDescript{
     height: auto;
     opacity: 1;
 }
-#end input:checked ~ .itemDescript{
+#initButton:checked ~ .item > .arrow{
+    transform: 
+        translate(0px,-2px)
+        rotate(90deg)
+    ;
+}
+#playButton:checked ~ .itemDescript{
     height: auto;
     opacity: 1;
 }
-#help input:checked ~ .itemDescript{
+#playButton:checked ~ .item > .arrow{
+    transform: 
+        translate(0px,-2px)
+        rotate(90deg)
+    ;
+}
+#endButton:checked ~ .itemDescript{
     height: auto;
     opacity: 1;
+}
+#endButton:checked ~ .item > .arrow{
+    transform: 
+        translate(0px,-2px)
+        rotate(90deg)
+    ;
+}
+#helpButton:checked ~ .itemDescript{
+    height: auto;
+    opacity: 1;
+}
+#helpButton:checked ~ .item > .arrow{
+    transform: 
+        translate(0px,-2px)
+        rotate(90deg)
+    ;
 }
 
 .caution{
