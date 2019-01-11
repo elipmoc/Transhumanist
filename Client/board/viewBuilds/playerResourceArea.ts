@@ -7,7 +7,7 @@ import { SocketBinderList } from "../../socketBinderList";
 import * as playerResourceAreas from "../views/playerResourceAreas";
 import { ConfirmDialog } from "../views/confirmDialog";
 import { SocketBinder } from "../../socketBinder";
-import { ResourceReserveArea } from "../views/resourceReserveArea";
+import { ResourceReserveArea } from "../views/reserveArea";
 import { ThrowResource } from "../../../Share/throwResource";
 import { ResourceOver } from "../../../Share/elementOver";
 import { LayerTag } from "../../board";

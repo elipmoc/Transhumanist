@@ -361,7 +361,8 @@ export class GamePlayer {
             UnavailableState
             >("Unavailable", true, [`player${playerId}`]);
 
-        this.state.onChangeActivityRange((val) => { });
+        //リソース数、設置アクション数の制限設定
+        this.state.onChangeActivityRange((val) => this.buildActionList.setBuildCapacity(val));
         this.state.onChangeResource((val) => this.resourceList.setResourceCapacity(val));
 
         //アクションカードの使用処理
