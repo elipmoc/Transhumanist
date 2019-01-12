@@ -78,7 +78,7 @@
 - name: ニート化が進む
   level: 3
   description: |-
-    　N点が2点以上ある場合、『人間』を
+    　N点が3点以上ある場合、『人間』を
     使用できない。
   forever: true
 
