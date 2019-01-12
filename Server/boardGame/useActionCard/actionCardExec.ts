@@ -62,7 +62,7 @@ export function actionCardExec(
                 resourceList.addResource("拡張人間");
                 break;
             case "御神体の再生":
-                resourceList.addResource("神体");
+                resourceList.addResource("御神体");
                 break;
             case "火星の支配":
             case "A.Iによる支配":
