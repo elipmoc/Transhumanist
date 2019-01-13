@@ -92,7 +92,7 @@ export function useBuildActionCard(
             break;
         case "trade":
             const tradeData: Trade = <Trade>card.commands[commandNum].body;
-            resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
+            resourceList.changeResource([tradeData.from_item.name], tradeData.to_item.name, 1);
             break;
         case "missionary":
             if (resourceList.getCount("信者") >= 1) {

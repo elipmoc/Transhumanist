@@ -164,18 +164,18 @@ export class ResourceList {
 
     //リソースを任意個数交換
     public changeResource(
-        targetName: ResourceName,
+        targetNames: ResourceName[],
         changeName: ResourceName,
         num: number
     ) {
         //ちなみに無くてもスルーします。
         let arr = this.resourceList.Value;
         let count = 0;
-        arr = arr.map(x => {
+        arr = arrayshuffle(arr).map(x => {
             if (
                 x == null ||
                 count >= num ||
-                targetName != x.resourceCardName ||
+                targetNames.includes(x.resourceCardName) == false ||
                 x.guardFlag == true
             ) return x;
             count++;

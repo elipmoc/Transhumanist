@@ -33,7 +33,7 @@ export function actionCardExec(
                 //P点がリソース内の人間の半分（切り捨て）の数増える
                 break;
             case "布教活動":
-                resourceList.changeResource("人間", "信者", 1);
+                resourceList.changeResource(["人間"], "信者", 1);
                 break;
             case "火星探査":
                 resourceList.addResource("火星の情報");
