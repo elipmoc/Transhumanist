@@ -17,7 +17,7 @@ export function warActionCardExec(
             //戦争相手の設置済みアクションを1つ破壊。
             break;
         case "細菌兵器":
-            resourceList.changeResource("人間", "病人", Math.floor(Math.random() * 3) + 1);
+            resourceList.changeResource(["人間", "信者"], "病人", Math.floor(Math.random() * 3) + 1);
             //戦争相手のリソースにある人間を、1～3人、病人に変える。
             break;
         case "神の杖":
