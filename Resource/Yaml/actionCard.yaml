@@ -22,7 +22,7 @@
             number: 1
           - name: 硫黄
             number: 1
-  number: 10
+  number: 20
   war_use: false
 
 - name: 加工施設
@@ -30,7 +30,7 @@
   build_use: true
   description: 
     |-
-      　『ケイ素』を2つ消費して
+      　『ケイ素』を1つ消費して
       『注射器』を1つ、
       　『ケイ素』と『メタル』を1
       つ消費して『CPU』を1つ、
@@ -46,7 +46,7 @@
       body:
         cost:
           - name: ケイ素
-            number: 2
+            number: 1
         get:
           - name: 注射器
             number: 1
@@ -91,7 +91,7 @@
       body:
         name: ガス
         max_cost: 2
-  number: 5
+  number: 4
   war_use: false
 
 - name: 倉庫
@@ -107,7 +107,7 @@
     - kind: resource_plus
       body:
         add: 10
-  number: 5
+  number: 4
   war_use: false
 
 - name: 地下シェルター
@@ -127,7 +127,7 @@
     - kind: resource_guard
       body:
         number: 5
-  number: 5
+  number: 6
   war_use: false
 
 - name: 印刷所
@@ -167,7 +167,7 @@
         items:
           - name: ロケット
             number: 1
-  number: 5
+  number: 8
   war_use: false
 
 - name: 治療施設
@@ -524,7 +524,7 @@
       number: 1
   commands:
     - kind:  n_minus_p_plus
-  number: 3
+  number: 5
   war_use: false
 
 - name: 未来予報装置
@@ -555,7 +555,7 @@
 - name: 御神体の再生
   level: 5
   build_use: false
-  description: 『神体』を1つ得る。
+  description: 『御神体』を1つ得る。
   cost:
     - name: 信者
       number: 3
@@ -567,7 +567,7 @@
     - kind: get
       body:
         items:
-          - name: 神体
+          - name: 御神体
             number: 1
   number: 3
   war_use: false
@@ -584,9 +584,9 @@
       らしいよ。
   cost:
     - name: 人間
-      number: 10
+      number: 8
     - name: 火星の情報
-      number: 1
+      number: 2
     - name: テラフォーミング
       number: 1
   commands:
@@ -611,7 +611,7 @@
     - name: ロボット
       number: 8
     - name: 拡張人間
-      number: 4
+      number: 2
   commands:
     - kind: win
   number: 2
@@ -634,10 +634,12 @@
       　完璧で全能なる人工の神は、
       新世界の創世を始めます。
   cost:
-    - name: 神体
+    - name: 御神体
       number: 1
     - name: 信者
-      number: 6
+      number: 8
+    - name: 聖書
+      number: 3
   commands:
     - kind: win
   number: 2

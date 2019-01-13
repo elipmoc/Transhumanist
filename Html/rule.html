@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>トランスヒューマニスト - Transhumanist</title>
+    <title>ルール・ヘルプ - Transhumanist</title>
     <link rel="stylesheet" href="Css\rule.css" type="text/css">
     <!-- <link rel="java"> -->
 </head>
@@ -35,6 +35,9 @@
             </p>
             <h4>目次</h4>
             <ol>
+                <li>
+                    <a href="#tutorial">チュートリアル</a>
+                </li>
                 <li>
                     <a href="#intro">ゲーム準備</a>
                 </li>
@@ -69,7 +72,7 @@
             <table>
                 <tr>
                     <td>『』</td>
-                    <td>リソースカードを示します。</td>
+                    <td>リソースを示します。</td>
                 </tr>
                 <tr>
                     <td>「」</td>
@@ -81,9 +84,21 @@
                 </tr>
             </table>
         </div>
+        <div class="document" id="tutorial">
+            <input type="checkbox" id="tutoButton" checked/>
+            <label for="tutoButton" class="item">チュートリアル
+                <div class="arrow">＞</div>
+            </label>
+            <div class="itemDescript">
+                <p>
+                </p>
+            </div>
+        </div>
         <div class="document" id="intro">
-            <label for="initButton" class="item">ゲーム準備</label>
-            <input type="checkbox" id="initButton"/>
+            <input type="checkbox" id="initButton" />
+            <label for="initButton" class="item">ゲーム準備
+                <div class="arrow">＞</div>
+            </label>
             <div class="itemDescript">
             <p>　各プレイヤーに、4つのステータスをランダムで割り振られます。
                 <br>　4つのステータスとは、以下のものです。
@@ -94,7 +109,7 @@
                     </tr>
                     <tr class="colorB">
                         <td>リソース</td>
-                        <td>リソースカードの上限</td>
+                        <td>リソースの所持数の上限</td>
                     </tr>
                     <tr class="colorC">
                         <td>活動範囲</td>
@@ -110,19 +125,22 @@
                 <h5>アクションカード</h5>
                 <ul>
                     <li>「採掘施設」を1枚、</li>
-                    <li>「レベル2～3までのアクションカード」をランダムで4枚。</li>
+                    <li>「加工施設」を1枚、</li>
+                    <li>「レベル2～3までのアクションカード」をランダムで3枚。</li>
                 </ul>
-                <h5>リソースカード</h5>
+                <h5>リソース</h5>
                 <ul>
-                    <li>『人間』を4枚、</li>
-                    <li>『レベル2のリソースカード』をランダムで1枚。</li>
+                    <li>『人間』を4つ、</li>
+                    <li>『レベル2のリソース』をランダムで1つ。</li>
                 </ul>　を予め渡した状態で開始します。
             </p>
             </div>
         </div>
         <div class="document" id="playing">
-            <label for="playButton" class="item">ゲーム中</label>
             <input type="checkbox" id="playButton" />
+            <label for="playButton" class="item">ゲーム中
+                <div class="arrow">＞</div>
+            </label>
             <div class="itemDescript">
             <p>　各プレイヤーの<span class="colorA">処理速度</span>を参照し、ターンの順番が決まります。
                 <br>　この時、<span class="colorA">処理速度</span>が同じ場合、プレイヤーIDが小さい方が優先されます。
@@ -131,16 +149,16 @@
                 <span class="colorE">イベント</span>を表示します。</p>
             <h3 id="turnIn">ターン開始</h3>
             <p>　<span class="caution">これ以降はターン終了の処理まで、ターンが回ってきたプレイヤーに対する物になります。</span></p>
-            <p>　ターン中のプレイヤーに対し、『人間』を1枚追加する。
-                <br>　※この時、リソースの数が上限に達している状態の時、リソースカードを1つ捨てなければならない。
+            <p>　ターン中のプレイヤーに対し、『人間』を1つ追加する。
+                <br>　※この時、リソースの数が上限に達している状態の時、リソースを1つ捨てなければならない。
             </p>
             <h3 id="event">イベント</h3>
             <p>　このターン中に適用されるイベントがターン開始時の物は、このタイミングで発生します。
                 <br>　<span class="caution">残るイベントが無い状態の場合、最後のイベントを永続的に発生させます。</span>
             </p>
             <h3 id="warning">戦争中</h3>
-            <p>　ターン中のプレイヤーが戦争状態にある場合、P点が1つ減ります。
-                <br>　P点が0だった場合、N点が1つ増えます。
+            <p>　ターン中のプレイヤーが戦争状態にある場合、ターン開始時にP点が1点減ります。
+                <br>　P点が0点だった場合、N点が1点増えます。
             </p>
             <h3 id="action">アクション</h3>
             <p>　以下のアクションをターン中、プレイヤーは任意で行う事が出来ます。
@@ -170,8 +188,8 @@
                                 </p>
                                 　ただし、
                                 <ul>
-                                    <li>降伏ボタンを押したプレイヤーは、P点が1つ増え、N点が2つ増えます。</li>
-                                    <li>戦争相手だったプレイヤーは、P点が2つ増え、N点が2つ減ります。</li>
+                                    <li>降伏ボタンを押したプレイヤーは、P点が1点増え、N点が2点増えます。</li>
+                                    <li>戦争相手だったプレイヤーは、P点が2点増え、N点が2点減ります。</li>
                                 </ul>
                             </ol>
                         </p>
@@ -186,17 +204,21 @@
             </div>
         </div>
         <div class="document" id="end">
-            <label for="endButton" class="item">ゲーム終了</label>
             <input type="checkbox" id="endButton" />
+            <label for="endButton" class="item">ゲーム終了
+                <div class="arrow">＞</div>
+            </label>
             <div class="itemDescript">
             <p>　ゲーム中、1番最初に「勝利カード」を出せたら、そのプレイヤーの勝ちになります。
-                <br>　あらゆるイベントと他からの妨害を乗り越えて、特異点まで到達してください！
+                <br>　あらゆるイベントと他からの妨害を乗り越えて、<ruby>特<rt>ゴ</rt>異<rt>ー</rt>点<rt>ル</rt></ruby>まで到達してください！
             </p>
             </div>
         </div>
         <div class="document" id="help">
-            <label for="helpButton" class="item">その他・質問</label>
             <input type="checkbox" id="helpButton" />
+            <label for="helpButton" class="item">その他・質問
+                <div class="arrow">＞</div>
+            </label>
             <div class="itemDescript">
             <p>Q.サイコロは何・不確定性って何？
                 <br>　ゲーム中に使用するサイコロは、1,1,2,2,3,3の面を持つ六面体です。
@@ -206,6 +228,9 @@
             <p>Q.手札の枚数は？
                 <br>　5枚で固定です。
             </p> 
+            <p>Q.ゲーム内で使用されるカードのリストは？
+                <br>　<a class="caution" href="https://docs.google.com/spreadsheets/d/1dHAVu22c1Nnja4mWB-1F4FwKamqBAMuVcnkql3mSRIo/edit?usp=sharing" target="_blank">こちら</a>にあります。
+            </p>
             <p>Q.イベントの効果で“<span class="colorC">活動範囲</span>が増減”とあるが、既に設置されたアクションカードが、イベント効果で減った<span class="colorC">活動範囲</span>より多い場合は？
                 <br>　新たに設置出来なくなる以外、何も起こりません。
             </p>
