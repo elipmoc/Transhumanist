@@ -8,6 +8,7 @@ import { getSpriteJson } from "./getSpriteJson";
 import { BgmChanger } from "./board/bgmChanger";
 import { BackGroundChanger } from "./board/backGroundChanger";
 import { LayerManager } from "./board/layerManager";
+import { SoundManager } from "./soundManager";
 
 const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
@@ -78,6 +79,9 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     socket.on("rejectBoardGame", () => {
         alert("部屋に参加出来ませんでした！");
         location.href = "./login.html";
+    });
+    socket.on("win", () => {
+        SoundManager.sePlay("surrender");
     });
 
     viewBuild(bindParams);
