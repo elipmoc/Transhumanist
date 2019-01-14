@@ -32,6 +32,8 @@ export class LogWindow extends createjs.Container {
 
 const logMessageColorList: string[] = ["white", "#00c6db", "#00dd00", "#ddab40", "#ddee41", "#ee0eee"];
 
+const MaxOneLineCharWidth = 220;
+
 export class LogMessage implements Message {
     private msg: LogMessageForClient;
     constructor(msg: LogMessageForClient) {
@@ -39,7 +41,18 @@ export class LogMessage implements Message {
     }
     msgToText(playerId: number) {
         const text = new createjs.Text();
-        text.text = this.msg.msg;
+        let msg = "";
+        text.text = "";
+        for (let i = 0; i < this.msg.msg.length; i++) {
+            text.text += this.msg.msg[i];
+            msg += this.msg.msg[i];
+            if (text.getMeasuredWidth() > MaxOneLineCharWidth) {
+                msg += "\n";
+                text.text = "";
+            }
+        }
+        text.text = msg;
+
         const colorId = this.msg.msgType == LogMessageType.EventMsg || this.msg.msgType == LogMessageType.OtherMsg ? this.msg.msgType : (4 + this.msg.msgType - 1 - playerId) % 4 + 1;
         text.color = logMessageColorList[colorId];
         text.font = "16px Arial";

@@ -308,6 +308,7 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
+            if ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) return;
             const card = actionCardStacks.draw(level);
             if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())
