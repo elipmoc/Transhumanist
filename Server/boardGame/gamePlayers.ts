@@ -42,7 +42,8 @@ export class GamePlayers {
         this.gameMasterPlayerId = new SocketBinder.Binder<number | null>(
             "gameMasterPlayerId"
         );
-        boardSocketManager.addSocketBinder(this.gameMasterPlayerId);
+        const winSocketEmitter = new SocketBinder.TriggerBinder<undefined, undefined>("win");
+        boardSocketManager.addSocketBinder(this.gameMasterPlayerId, winSocketEmitter);
         this.eventCardDrawer = new EventCardDrawer(boardSocketManager);
         this.turnManager = new TurnManager(boardSocketManager);
         this.warList = new WarList(boardSocketManager);
@@ -95,7 +96,10 @@ export class GamePlayers {
             player.onConsume(card => {
                 actionCardStacks.throwAway(card);
             })
-            player.onWin(() => this.endGameRequestCallback());
+            player.onWin(() => {
+                winSocketEmitter.emit();
+                this.endGameRequestCallback();
+            });
 
             //未来予報装置の処理
             player.onFutureForecastGetEvents(() => this.eventCardDrawer.getEvents());

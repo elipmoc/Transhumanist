@@ -92,8 +92,9 @@ export class BuildActionList {
                 throwBuild.buildReserveList.length
             ) {
                 this.buildOver.Value = { overCount: 0, causeText: "" };
+                const arr = this.buildActionList.Value.slice();
                 throwBuild.buildActionList.forEach(id => {
-                    this.buildActionList.Value[id] = null;
+                    arr[id] = null;
                 });
                 throwBuild.buildReserveList.forEach(id => {
                     this.buildReserveList.Value[id] = null;
@@ -103,7 +104,8 @@ export class BuildActionList {
                 });
                 this.buildReserveList.Value.fill(null);
                 this.buildReserveList.update();
-                this.setCrowdList(this.buildActionList.Value);
+                this.consume(this.buildActionList.Value, arr);
+                this.setCrowdList(arr);
 
                 if (this.nowEvent) this.eventClearCallback();
             }
