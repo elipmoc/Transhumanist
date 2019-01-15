@@ -62,7 +62,7 @@ export function useBuildActionCard(
                 return result;
             }
             playerCond.Value = GamePlayerCondition.Action;
-            futureForecastGetEvents.Value = { eventNameList: events.slice(events.length - 3, events.length).map(event => event.name).reverse() };
+            futureForecastGetEvents.Value = { eventNameList: events.slice(Math.max(events.length - 3, 0), events.length).map(event => event.name).reverse() };
             break;
         case "resource_guard":
             //保護するリソースの最大数
@@ -92,7 +92,7 @@ export function useBuildActionCard(
             break;
         case "trade":
             const tradeData: Trade = <Trade>card.commands[commandNum].body;
-            resourceList.changeResource(tradeData.from_item.name, tradeData.to_item.name, 1);
+            resourceList.changeResource([tradeData.from_item.name], tradeData.to_item.name, 1);
             break;
         case "missionary":
             if (resourceList.getCount("信者") >= 1) {

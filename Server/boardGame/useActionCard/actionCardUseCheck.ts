@@ -21,7 +21,7 @@ export function actionCardUseCheck(
     //イベントによる制約の処理
     if (
         nowEvent.name == "ニート化が進む" &&
-        state.State.negative >= 2 &&
+        state.State.negative >= 3 &&
         cost.find(x => x.name == "人間")
     )
         return UnavailableState.Event;

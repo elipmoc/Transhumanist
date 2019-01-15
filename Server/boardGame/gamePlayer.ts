@@ -40,6 +40,8 @@ export class GamePlayer {
     private actionCard: PlayerActionCard;
     private war: War;
     private buildActionList: BuildActionList;
+    //ターン内で降伏をしたかどうか
+    private surrenderFlag: boolean;
     //一度だけアクションカードをノーコストで使用できるようにするフラグ
     private onceNoCostFlag = false;
 
@@ -107,6 +109,7 @@ export class GamePlayer {
     }
 
     reset() {
+        this.surrenderFlag = false;
         this.state.reset();
         this.war.reset();
         this.playerCond.Value = GamePlayerCondition.Start;
@@ -143,6 +146,7 @@ export class GamePlayer {
     }
 
     setMyTurn() {
+        this.surrenderFlag = false;
         this.buildActionList.resetUsed();
         if (this.nowEvent.name == "人口爆発") {
             const len = this.resourceList.getCount("人間");
@@ -222,6 +226,7 @@ export class GamePlayer {
     }
 
     clear() {
+        this.surrenderFlag = false;
         this.uuid = "";
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.isGameMaster = false;
@@ -286,9 +291,11 @@ export class GamePlayer {
         this.war.onSurrender(() => {
             if (
                 this.playerCond.Value == GamePlayerCondition.MyTurn &&
+                this.surrenderFlag == false &&
                 this.surrenderCallback()
             ) {
                 this.state.loseWar();
+                this.surrenderFlag = true;
                 return true;
             }
             return false;
@@ -301,6 +308,7 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
+            if ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) return;
             const card = actionCardStacks.draw(level);
             if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())

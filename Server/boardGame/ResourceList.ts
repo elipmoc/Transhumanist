@@ -1,7 +1,8 @@
 import { SocketBinder } from "../socketBinder";
 import {
     ResourceName,
-    GenerateResourceYamlDataArray
+    GenerateResourceYamlDataArray,
+    GenerateResourceYamlData
 } from "../../Share/Yaml/resourceYamlData";
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
@@ -10,6 +11,8 @@ import { ResourceOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 import { HaveResourceCard } from "../../Share/haveResourceCard";
+
+const ResourceHash = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
 
 export class ResourceList {
     private resourceList: SocketBinder.BinderList<HaveResourceCard | null>;
@@ -164,18 +167,18 @@ export class ResourceList {
 
     //リソースを任意個数交換
     public changeResource(
-        targetName: ResourceName,
+        targetNames: ResourceName[],
         changeName: ResourceName,
         num: number
     ) {
         //ちなみに無くてもスルーします。
         let arr = this.resourceList.Value;
         let count = 0;
-        arr = arr.map(x => {
+        arr = arrayshuffle(arr).map(x => {
             if (
                 x == null ||
                 count >= num ||
-                targetName != x.resourceCardName ||
+                targetNames.includes(x.resourceCardName) == false ||
                 x.guardFlag == true
             ) return x;
             count++;
@@ -201,6 +204,12 @@ export class ResourceList {
         this.resourceList.Value[4] =
             { resourceCardName: arr[Math.floor(Math.random() * arr.length)].name, guardFlag: false };
         this.resourceList.update();
+    }
+
+    //指定したレベルのリソースが存在するかの判定
+    getExistLevel(level: number) {
+        return this.resourceList.Value
+            .some(x => x != null && ResourceHash[x.resourceCardName] != undefined && ResourceHash[x.resourceCardName]!.level == level);
     }
 
     //指定したリソースがいくつあるかを計算する

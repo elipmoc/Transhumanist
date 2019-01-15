@@ -142,9 +142,10 @@ export function diceSelectAfterEvent(
             break;
         case "未知の病気":
             let humanNum = diceNumber;
-            if (diceNumber > resourceList.getCount("人間"))
-                humanNum = resourceList.getCount("人間");
-            resourceList.changeResource("人間", "病人", humanNum);
+            const nowHumanNum = resourceList.getCount("人間") + resourceList.getCount("信者");
+            if (diceNumber > nowHumanNum)
+                humanNum = nowHumanNum;
+            resourceList.changeResource(["人間", "信者"], "病人", humanNum);
             result.eventClearFlag = true;
             break;
         case "隕石":
@@ -166,7 +167,7 @@ export function diceSelectAfterEvent(
             let robotNum = diceNumber;
             if (diceNumber > resourceList.getCount("ロボット"))
                 robotNum = resourceList.getCount("ロボット");
-            resourceList.changeResource("ロボット", "人間", robotNum);
+            resourceList.changeResource(["ロボット"], "人間", robotNum);
             result.eventClearFlag = true;
             break;
     }

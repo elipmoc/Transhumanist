@@ -30,6 +30,9 @@ export function useActionCard(
         unavailableState: null,
     }
 
+    if (card.level >= 5)
+        onceNoCostFlag = false;
+
     const checkResult = actionCardUseCheck(card.cost, card.conditions, card.war_use, warFlag, nowEvent, state, onceNoCostFlag, resourceList, buildActionList);
     if (checkResult != null) {
         actionResult.unavailableState = checkResult;
