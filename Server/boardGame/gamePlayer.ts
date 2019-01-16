@@ -149,7 +149,7 @@ export class GamePlayer {
         this.surrenderFlag = false;
         this.buildActionList.resetUsed();
         if (this.nowEvent.name == "人口爆発") {
-            const len = this.resourceList.getCount("人間");
+            const len = this.resourceList.getCount("人間") + 1;
             this.resourceList.addResource("人間", len);
         } else if (this.nowEvent.name != "少子化")
             this.resourceList.addResource("人間");
