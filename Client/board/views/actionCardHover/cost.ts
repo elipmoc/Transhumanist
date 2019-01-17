@@ -34,7 +34,7 @@ export class Cost extends createjs.Container {
         });
         this.costNums.forEach((num, i) => {
             num.x = (global.cardIconSize/2) + 7 + 3 + 7;
-            num.y = 7 + 24 + ((global.cardIconSize/2 + 2) * i) + 7;
+            num.y = 11 + 24 + ((global.cardIconSize/2 + 2) * i) + 7;
             num.font = "22px Arial";
             this.addChild(num);
         });
