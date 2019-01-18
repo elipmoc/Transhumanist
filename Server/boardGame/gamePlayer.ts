@@ -329,6 +329,11 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
+            if (this.Condition == GamePlayerCondition.Start)
+                this.turnFinishButtonClickCallback();
+            if (this.Condition != GamePlayerCondition.MyTurn || this.resourceList.OverResourceFlag || this.buildActionList.OverBuildFlag) {
+                return;
+            }
             this.churchAction.Value = { maxNum: 0, enable: false };
             this.turnFinishButtonClickCallback();
         });

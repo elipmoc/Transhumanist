@@ -22,6 +22,11 @@ export class ResourceList {
     private haveFusionReactor: boolean;
     private resourceCapacity: number;
 
+    //リソースオーバー中かどうか
+    get OverResourceFlag() {
+        return this.resourceOver.Value.overCount != 0;
+    }
+
     setResourceCapacity(val: number) {
         this.resourceCapacity = val;
         const delta = this.getAllCount() - this.resourceCapacity;
@@ -34,7 +39,8 @@ export class ResourceList {
         }
     }
 
-    //頑張ってリファクタリングして
+
+
     private nowEvent = false;
     setNowEvent(flag: boolean) {
         this.nowEvent = flag;
