@@ -69,6 +69,16 @@ export class BoardGame {
             if (this.gamePlayers.getPlayerCount() == 0)
                 this.deleteRoomCallback(this.roomId);
             return true;
+        } else {
+            this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が滅亡しました`, player.PlayerId);
+            this.deleteMemberCallback(player.Uuid);
+            player.fall();
+            if (this.gamePlayers.getPlayerCount() == 0)
+                this.deleteRoomCallback(this.roomId);
+            if (this.gamePlayers.getPlayerCount() == 1) {
+                this.messageSender.sendMessage("ゲームプレイ人数が少ないので強制終了しました", LogMessageType.OtherMsg);
+                this.resetGame();
+            }
         }
         return false;
     }

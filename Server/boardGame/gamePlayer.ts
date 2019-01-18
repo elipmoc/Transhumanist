@@ -217,12 +217,28 @@ export class GamePlayer {
         }
     }
     setEventClear() {
-        this.playerCond.Value = GamePlayerCondition.EventClear;
+        if (this.playerCond.Value != GamePlayerCondition.DownFall)
+            this.playerCond.Value = GamePlayerCondition.EventClear;
     }
 
     //移民
     addExileResource(num: number) {
         this.resourceList.addResource("人間", num);
+    }
+
+    //滅亡処理
+    fall() {
+        if ([GamePlayerCondition.Dice, GamePlayerCondition.Event].includes(this.playerCond.Value)) {
+            this.playerCond.Value = GamePlayerCondition.DownFall;
+            this.eventClearCallback();
+            return;
+        }
+        else if ([GamePlayerCondition.MyTurn, GamePlayerCondition.DrawCard, GamePlayerCondition.Action].includes(this.playerCond.Value)) {
+            this.playerCond.Value = GamePlayerCondition.DownFall;
+            this.turnFinishButtonClickCallback();
+            return;
+        }
+        this.playerCond.Value = GamePlayerCondition.DownFall;
     }
 
     clear() {
