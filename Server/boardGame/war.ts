@@ -13,10 +13,6 @@ export class War {
         this.warFlag = true;
     }
 
-    win() {
-        this.warFlag = false;
-    }
-
     reset() {
         this.warFlag = false;
     }

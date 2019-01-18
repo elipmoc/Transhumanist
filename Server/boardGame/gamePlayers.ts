@@ -219,6 +219,10 @@ export class GamePlayers {
 
     private startEvent() {
         this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
+        if (this.eventCardDrawer.NowEvent!.name == "サブカルチャー") {
+            this.getNowPlayers().forEach(player => player.warReset());
+            this.warList.reset()
+        }
         this.getNowPlayers().forEach(player => {
             player.setEvent(this.eventCardDrawer.NowEvent!);
         });

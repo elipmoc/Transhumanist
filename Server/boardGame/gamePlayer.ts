@@ -257,7 +257,11 @@ export class GamePlayer {
     //プレイヤーが戦争に勝利した時の処理
     winWar() {
         this.state.winWar();
-        this.war.win();
+        this.war.reset();
+    }
+    //戦争状態を解除するだけ
+    warReset() {
+        this.war.reset();
     }
     //戦争状態にする
     startWar() {
@@ -300,7 +304,7 @@ export class GamePlayer {
         });
         this.war = new War(boardSocketManager, playerId);
         this.war.onStartWar(targetPlayerId => {
-            if (this.playerCond.Value == GamePlayerCondition.MyTurn)
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn && this.nowEvent.name != "サブカルチャー")
                 return this.startWarCallback(targetPlayerId);
             return false;
         });
