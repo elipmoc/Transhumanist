@@ -302,7 +302,7 @@
         items:
           - name: 火星の情報
             number: 1
-  number: 4
+  number: 3
   war_use: false
 
 - name: ミサイル発射
@@ -323,7 +323,7 @@
       number: 1
   commands:
      - kind: missile_start
-  number: 4
+  number: 2
   war_use: true
 
 - name: 衛星の打ち上げ
@@ -341,7 +341,7 @@
         items:
           - name: 衛星
             number: 1
-  number: 4
+  number: 3
   war_use: false
 
 - name: ロボット工場
@@ -369,7 +369,7 @@
         get:
           - name: ロボット
             number: 2
-  number: 4
+  number: 3
   war_use: false
 
 - name: 量子コンピュータ
@@ -389,7 +389,7 @@
     - kind: speed_plus
       body:
         plus: 3
-  number: 4
+  number: 2
   war_use: false
 
 - name: チップの埋め込み
@@ -409,7 +409,7 @@
         items:
           - name: 拡張人間
             number: 1
-  number: 4
+  number: 5
   war_use: false
 
 - name: 細菌兵器
@@ -429,7 +429,7 @@
       number: 1
   commands:
     - kind: bacterial_weapon
-  number: 4
+  number: 2
   war_use: true
 
 - name: 教会
@@ -460,7 +460,7 @@
           - name: 信者
             number: 1
     - kind: missionary
-  number: 4
+  number: 3
   war_use: false
 
 - name: テラフォーミング
@@ -549,7 +549,7 @@
       number: 1
   commands:
     - kind: future_forecast
-  number: 4
+  number: 2
   war_use: false
 
 - name: 御神体の再生

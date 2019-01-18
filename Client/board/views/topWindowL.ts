@@ -13,7 +13,7 @@ export class TopWindowL extends createjs.Container {
         let topWindowsL = queue.getImage("topWindows");
         this.addChild(topWindowsL);
         //設定ボタン
-        const settingButton = new SettingButton(() => { optionWindow.visible = true; this.stage.update(); }, queue);
+        const settingButton = new SettingButton(() => { optionWindow.visible = !optionWindow.visible; this.stage.update(); }, queue);
         settingButton.x = (topWindowsL.image.height - settingButton.getHeight()) / 2 - 10;
         settingButton.y = (topWindowsL.image.height - settingButton.getHeight()) / 2 - 10;
         this.addChild(settingButton);

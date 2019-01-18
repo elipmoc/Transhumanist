@@ -11,6 +11,10 @@ export class SettingButton extends ButtonBase {
         settingButton.scaleY = 0.6;
         settingButton.x = settingButton.image.width / 4;
         settingButton.y = settingButton.image.height / 4;
+        settingButton.alpha = 0.5;
+        settingButton.addEventListener("mouseover", () => { settingButton.alpha = 1.0; this.stage.update(); });
+        settingButton.addEventListener("mouseout", () => { settingButton.alpha = 0.5; this.stage.update(); });
+
 
         //Graphicsオブジェクトを作成する
         var g = new createjs.Graphics()
