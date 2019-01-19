@@ -11,5 +11,9 @@ export class DecisionButton extends createjs.Container {
         text.y = -20;
         this.addChild(background);
         this.addChild(text);
+        
+        this.alpha = 0.7;
+        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
+        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
     }
 }

@@ -21,7 +21,7 @@ export class SelectResourceWindow extends PopupWindowBase {
     constructor(maxNum: number) {
         super(700, 290);
         this.maxLength = maxNum;
-        this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0)
+        this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0,true)
         this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength) / 2;
         this.resourceList.y = global.canvasHeight / 2 - global.cardIconSize / 2;
 

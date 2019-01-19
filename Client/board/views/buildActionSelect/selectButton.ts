@@ -47,7 +47,7 @@ export class SelectButton extends createjs.Container {
         });
         this.getNums.forEach((num, i) => {
             num.x = 7 + 3 + (global.cardIconSize / 2) + ((global.cardIconSize / 2 + 30) * i);
-            num.y = 7 + 59;
+            num.y = 7 + 62;
             num.font = "22px Arial";
             this.addChild(num);
         });
@@ -60,7 +60,10 @@ export class SelectButton extends createjs.Container {
         this.addChild(useGetText);
 
         this.addEventListener("click", () => this.callback());
-        
+        this.alpha = 0.7;
+        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
+        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
+
     }
     setCommandData(data: CreateGet, queue: ImageQueue, resourceHash: ResourceHash) {
         this.resetData();

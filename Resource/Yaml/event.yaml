@@ -67,7 +67,9 @@
 
 - name: サブカルチャー
   level: 3
-  description: 　N点が1点減少する。
+  description: |-
+    　N点が1点減少し、戦争状態をすべて解除する。
+    宣戦布告も出来ない。
   forever: false
 
 - name: 世界大戦の開幕
