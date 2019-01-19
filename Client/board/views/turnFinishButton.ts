@@ -23,6 +23,11 @@ export class TurnFinishButton extends ButtonBase {
         this.turnFinishText.x = turnFinishButton.x - turnFinishButton.image.width / 2;
         this.turnFinishText.y = turnFinishButton.y - turnFinishButton.image.height / 2;
         this.addChild(this.turnFinishText);
+
+        this.alpha = 0.7;
+        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
+        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
+
     }
     setText(text: string) {
         this.turnFinishText.text = text;
