@@ -30,6 +30,10 @@ class GeneralOptionButton extends ButtonBase {
         this.text.x = Button.x + Button.image.width / 2;
         this.text.y = Button.y + Button.image.height / 2;
         this.addChild(this.text);
+
+        this.alpha = 0.7;
+        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
+        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
     }
     setText(text: string) {
         this.text.text = text;
@@ -100,14 +104,14 @@ export class OptionWindow extends createjs.Container {
         const optionIcon = queue.getImage("setting");
         optionIcon.scaleX = 1;
         optionIcon.scaleY = 1;
-        optionIcon.x = -280;
-        optionIcon.y = -280;
+        optionIcon.x = -270;
+        optionIcon.y = -270;
         this.addChild(optionIcon);
 
         const volumeText = new createjs.Text();
         volumeText.x = -270;
         volumeText.y = -180;
-        volumeText.text = "Volume";
+        volumeText.text = "ボリューム";
         volumeText.color = "white";
         volumeText.font = "45px Arial";
         this.addChild(volumeText);
@@ -131,7 +135,7 @@ export class OptionWindow extends createjs.Container {
         const developerText = new createjs.Text();
         developerText.x = -40;
         developerText.y = -40;
-        developerText.text = "開発スタッフ";
+        developerText.text = "空きスペース";
         developerText.color = "white";
         developerText.font = "30px Arial";
         this.addChild(developerText);
