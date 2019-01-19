@@ -13,7 +13,7 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
     private iconScale: number;
 
     //xNum:iconを横に何個並べるかの数値
-    constructor(xNum: number, maxIcon: number, icon_creator: { new(i: number): I; }, iconScale?: number) {
+    constructor(xNum: number, maxIcon: number, icon_creator: { new(i: number): I; }, iconScale?: number,getResourse = false) {
         super();
         this.iconScale = iconScale === undefined ? 0.5 : iconScale;
         this.onClickIconCallBack =
@@ -28,6 +28,13 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
             cardIcon.onMouseOvered((kind) => this.onMouseOverIconCallBack(kind));
             cardIcon.x = this.icons.length % this.xNum * (global.cardIconSize * this.iconScale);
             cardIcon.y = Math.floor(this.icons.length / this.xNum) * (global.cardIconSize * this.iconScale);
+            
+            if (getResourse) {
+                cardIcon.alpha = 0.5;
+                cardIcon.onMouseOuted(() => { cardIcon.alpha = 0.5; this.stage.update(); });
+                cardIcon.onMouseOvered(() => { cardIcon.alpha = 1.0; this.stage.update(); });
+            }
+
             this.icons.push(cardIcon);
             this.addChild(cardIcon);
         }
