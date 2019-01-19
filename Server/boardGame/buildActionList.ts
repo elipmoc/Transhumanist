@@ -28,6 +28,10 @@ export class BuildActionList {
 
     private buildCapacity: number;
 
+    get OverBuildFlag() {
+        return this.buildOver.Value.overCount != 0;
+    }
+
     setBuildCapacity(val: number) {
         this.buildCapacity = val;
         const delta = this.getAllCount() - this.buildCapacity;
@@ -92,20 +96,24 @@ export class BuildActionList {
                 throwBuild.buildReserveList.length
             ) {
                 this.buildOver.Value = { overCount: 0, causeText: "" };
-                const arr = this.buildActionList.Value.slice();
                 throwBuild.buildActionList.forEach(id => {
-                    arr[id] = null;
+                    this.deleteBuildActionCardCallback(
+                        buildActionCardHash[this.buildActionList.Value[id]!.actionCardName]!
+                    );
+                    this.buildActionList.Value[id] = null;
                 });
                 throwBuild.buildReserveList.forEach(id => {
+                    this.deleteBuildActionCardCallback(
+                        buildActionCardHash[this.buildReserveList.Value[id]!]!
+                    );
                     this.buildReserveList.Value[id] = null;
                 });
-                this.buildReserveList.Value.forEach(name => {
+                this.buildReserveList.Value.slice().forEach(name => {
                     if (name) this.addBuildAction(name);
                 });
                 this.buildReserveList.Value.fill(null);
                 this.buildReserveList.update();
-                this.consume(this.buildActionList.Value, arr);
-                this.setCrowdList(arr);
+                this.setCrowdList(this.buildActionList.Value);
 
                 if (this.nowEvent) this.eventClearCallback();
             }

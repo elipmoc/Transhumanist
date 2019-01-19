@@ -27,6 +27,7 @@ export class GamePlayers {
 
     //ゲームを再び開始できるようにステータスをリセットする
     reset() {
+        this.gamePlayerList.forEach(x => { if (x.Condition == GamePlayerCondition.DownFall) x.clear(); });
         this.getNowPlayers().forEach(x => x.reset());
         this.turnManager.reset();
         this.eventCardDrawer.reset();
@@ -117,14 +118,14 @@ export class GamePlayers {
     }
 
     exileMove(player: GamePlayer, diceNumber: number) {
-        this.gamePlayerList[
+        this.getNowPlayers()[
             (player.PlayerId + diceNumber) % this.getNowPlayers().length
         ].addExileResource(player.ExileNumber);
     }
 
     getNowPlayers() {
         return this.gamePlayerList.filter(
-            x => x.Condition != GamePlayerCondition.Empty
+            x => x.Condition != GamePlayerCondition.Empty && x.Condition != GamePlayerCondition.DownFall
         );
     }
 
@@ -193,6 +194,10 @@ export class GamePlayers {
     }
 
     private playerTurnSet() {
+        if (this.gamePlayerList[this.currentPlayerId].Condition == GamePlayerCondition.DownFall) {
+            this.rotateTurn();
+            return;
+        }
         this.getNowPlayers().forEach(player => {
             if (player.PlayerId != this.currentPlayerId) player.setWait();
             else {
@@ -214,6 +219,10 @@ export class GamePlayers {
 
     private startEvent() {
         this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
+        if (this.eventCardDrawer.NowEvent!.name == "サブカルチャー") {
+            this.getNowPlayers().forEach(player => player.warReset());
+            this.warList.reset()
+        }
         this.getNowPlayers().forEach(player => {
             player.setEvent(this.eventCardDrawer.NowEvent!);
         });
