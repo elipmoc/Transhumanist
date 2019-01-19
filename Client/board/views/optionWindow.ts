@@ -30,10 +30,6 @@ class GeneralOptionButton extends ButtonBase {
         this.text.x = Button.x + Button.image.width / 2;
         this.text.y = Button.y + Button.image.height / 2;
         this.addChild(this.text);
-
-        this.alpha = 0.7;
-        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
-        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
     }
     setText(text: string) {
         this.text.text = text;

@@ -18,9 +18,9 @@ export class DiceIcon extends createjs.Container {
         this.addChild(text);
         dise.addEventListener("click", () => this.callBack());
 
-        dise.alpha = 0.5;
+        dise.alpha = 0.7;
         dise.addEventListener("mouseover", () => { dise.alpha = 1.0; this.stage.update(); });
-        dise.addEventListener("mouseout", () => { dise.alpha = 0.5; this.stage.update(); });
+        dise.addEventListener("mouseout", () => { dise.alpha = 0.7; this.stage.update(); });
     }
 
     private callBack: () => void;

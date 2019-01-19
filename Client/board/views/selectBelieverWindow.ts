@@ -137,5 +137,9 @@ class TriButton extends createjs.Container {
         obj.graphics.lineTo(0, 0);
         obj.rotation = rotate;
         this.addChild(obj);
+
+        this.alpha = 0.7;
+        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
+        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
     }
 }

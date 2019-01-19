@@ -26,10 +26,5 @@ export class DeclareWarButton extends ButtonBase {
         this.declareWarText.x = declareWarButton.x + declareWarButton.image.width / 2;
         this.declareWarText.y = declareWarButton.y - declareWarButton.image.height / 2;
         this.addChild(this.declareWarText);
-
-        this.alpha = 0.7;
-        this.addEventListener("mouseover", () => { this.alpha = 1.0; this.stage.update(); });
-        this.addEventListener("mouseout", () => { this.alpha = 0.7; this.stage.update(); });
-
     }
 }
