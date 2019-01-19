@@ -13,10 +13,14 @@ export class DiceIcon extends createjs.Container {
         let dise = new createjs.Shape(new createjs.Graphics().beginFill("white").drawRoundRect(-DiceIcon.size / 2, -DiceIcon.size / 2, DiceIcon.size, DiceIcon.size, 5));
         this.addChild(dise);
         let text = new createjs.Text(diseNum.toString(), "64px Bold ＭＳ ゴシック");
-        text.y = -45;
+        text.y = -32;
         text.textAlign = "center";
         this.addChild(text);
         dise.addEventListener("click", () => this.callBack());
+
+        dise.alpha = 0.7;
+        dise.addEventListener("mouseover", () => { dise.alpha = 1.0; this.stage.update(); });
+        dise.addEventListener("mouseout", () => { dise.alpha = 0.7; this.stage.update(); });
     }
 
     private callBack: () => void;
@@ -77,6 +81,8 @@ export class SelectDiceWindow extends createjs.Container {
         this.causeText.shadow = createMyShadow();
         this.causeText.x = global.canvasWidth / 2;
         this.causeText.y = global.canvasHeight / 2 - 100;
+
+        this.y = -180;
 
         this.addChild(frame);
         this.addChild(descriptionText,this.causeText);
