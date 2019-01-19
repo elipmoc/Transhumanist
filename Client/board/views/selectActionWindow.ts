@@ -68,7 +68,7 @@ export class SelectActionWindow extends PopupWindowBase {
 
         this.level.forEach((level,index) => {
             level.y = global.canvasHeight / 2 - 60;
-            level.alpha = 0.5;
+            level.alpha = 0.7;
 
             //魔法の呪文（大嘘）
             level.x = (global.canvasWidth / 2 - (level.image.width + 20) * (3) + 10)
@@ -76,7 +76,7 @@ export class SelectActionWindow extends PopupWindowBase {
 
             level.addEventListener("click", () => this.callBack(index + 1));
             level.addEventListener("mouseover", () => { level.alpha = 1.0; this.stage.update(); });
-            level.addEventListener("mouseout", () => { level.alpha = 0.5; this.stage.update(); });
+            level.addEventListener("mouseout", () => { level.alpha = 0.7; this.stage.update(); });
             console.log(level);
             this.addChild(level);
         });

@@ -30,8 +30,8 @@ export class IconList<I extends CardIconBase<K>, K> extends createjs.Container {
             cardIcon.y = Math.floor(this.icons.length / this.xNum) * (global.cardIconSize * this.iconScale);
             
             if (getResourse) {
-                cardIcon.alpha = 0.5;
-                cardIcon.onMouseOuted(() => { cardIcon.alpha = 0.5; this.stage.update(); });
+                cardIcon.alpha = 0.7;
+                cardIcon.onMouseOuted(() => { cardIcon.alpha = 0.7; this.stage.update(); });
                 cardIcon.onMouseOvered(() => { cardIcon.alpha = 1.0; this.stage.update(); });
             }
 
