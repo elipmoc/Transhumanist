@@ -29,7 +29,7 @@ export function build(bindParams: BindParams) {
                 console.log(state.playerName);
                 playerWindowList[i].clearState();
             }
-            
+
             bindParams.layerManager.update();
         };
         const gamePlayerState = new SocketBinder<ResponseGamePlayerState>("GamePlayerState" + (i + bindParams.playerId) % 4, bindParams.socket);
@@ -44,6 +44,7 @@ export function build(bindParams: BindParams) {
     })
     const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
     gameMasterPlayerId.onUpdate(id => {
+        playerWindowList.forEach(x => x.visibleGMIcon(false));
         playerWindowList[(4 + id - bindParams.playerId) % 4].visibleGMIcon(true);
         bindParams.layerManager.update();
     });

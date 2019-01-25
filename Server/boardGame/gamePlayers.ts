@@ -216,6 +216,12 @@ export class GamePlayers {
         )
             this.playerTurnSet();
     }
+    //ゲームマスターを再度決める
+    reSetGameMaster() {
+        const gameMaster = arrayshuffle(this.getNowPlayers())[0];
+        gameMaster.IsGameMaster = true;
+        this.gameMasterPlayerId.Value = gameMaster.PlayerId;
+    }
 
     private startEvent() {
         this.messageSender.sendMessage(`イベント：${this.eventCardDrawer.NowEvent!.name}が発生しました`, LogMessageType.EventMsg)
