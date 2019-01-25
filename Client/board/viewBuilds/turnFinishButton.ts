@@ -53,10 +53,14 @@ export function build(bindParams: BindParams) {
         bindParams.layerManager.update();
     })
     gameMasterPlayerId.onUpdate(playerId => {
-        if (gamePlayerCondition.Value == GamePlayerCondition.Start && playerId == bindParams.playerId)
+        if (gamePlayerCondition.Value == GamePlayerCondition.Start && playerId == bindParams.playerId) {
             turnFinishButton.setText("ゲーム開始");
-        else
+            turnFinishButton.visible = true;
+        }
+        else {
             turnFinishButton.setText("");
+            turnFinishButton.visible = true;
+        }
         bindParams.layerManager.update();
     })
 }
