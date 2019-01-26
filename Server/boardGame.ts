@@ -62,25 +62,33 @@ export class BoardGame {
 
     //playerの退出させる処理
     private leavePlayer(player: GamePlayer) {
-        if (this.isWait()) {
+        const isGameMaster = player.IsGameMaster;
+        const isWait = this.isWait();
+
+        if (isWait) {
             this.deleteMemberCallback(player.Uuid);
             this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が退室しました`, player.PlayerId);
             player.clear();
-            if (this.gamePlayers.getPlayerCount() == 0)
+            if (this.gamePlayers.getPlayerCount() == 0) {
                 this.deleteRoomCallback(this.roomId);
-            return true;
+                return isWait;
+            }
         } else {
             this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が滅亡しました`, player.PlayerId);
             this.deleteMemberCallback(player.Uuid);
             player.fall();
-            if (this.gamePlayers.getPlayerCount() == 0)
+            if (this.gamePlayers.getPlayerCount() == 0) {
                 this.deleteRoomCallback(this.roomId);
+                return isWait;
+            }
             if (this.gamePlayers.getPlayerCount() == 1) {
                 this.messageSender.sendMessage("ゲームプレイ人数が少ないので強制終了しました", LogMessageType.OtherMsg);
                 this.resetGame();
             }
         }
-        return false;
+        if (isGameMaster) this.gamePlayers.reSetGameMaster();
+
+        return isWait;
     }
 
     //ゲームのリセット処理をする

@@ -5,6 +5,7 @@ import { SocketBinder } from "../../socketBinder";
 import { LayerTag } from "../../board";
 import { build as buildSelectWinCardWindow } from "./selectWinCardWindow";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { DrawCardLimit } from "../../../Share/drawCardLimit";
 
 //ドローするアクションカードのレベル選択ウインドウの生成
 export function build(bindParams: BindParams) {
@@ -30,7 +31,17 @@ export function build(bindParams: BindParams) {
     const gamePlayerCondition =
         new SocketBinder<GamePlayerCondition>("gamePlayerCondition", bindParams.socket);
     gamePlayerCondition.onUpdate(cond => {
-        selectActionWindow.visible = cond === GamePlayerCondition.DrawCard;
+        if (cond === GamePlayerCondition.DrawCard) {
+            bindParams.socket.emit("drawCardLimit");
+        } else
+            selectActionWindow.visible = false;
+        selectActionWindow.stage.update();
+    });
+
+    bindParams.socket.on("drawCardLimit", (data: any) => {
+        data = <DrawCardLimit>JSON.parse(data);
+        selectActionWindow.setDrawCardLevelLimit(data.isLimit);
+        selectActionWindow.visible = true;
         selectActionWindow.stage.update();
     });
     const numberOfActionCard = new SocketBinder<NumberOfActionCard[]>("numberOfActionCard", bindParams.socket);

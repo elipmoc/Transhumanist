@@ -23,6 +23,7 @@ import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
 import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
+import { DrawCardLimit } from "../../Share/drawCardLimit";
 
 type SuccessFlag = boolean;
 
@@ -328,7 +329,7 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
-            if ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) return;
+            if (this.canDrawCardLevelCheck(level) == false) return;
             const card = actionCardStacks.draw(level);
             if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())
@@ -498,6 +499,12 @@ export class GamePlayer {
             this.consumeCallBack(card);
         });
 
+        const drawCardLimit = new SocketBinder.TriggerBinder<void, DrawCardLimit>("drawCardLimit", true, ["player" + this.playerId]);
+
+        drawCardLimit.OnReceive(() => {
+            drawCardLimit.emit({ isLimit: this.canDrawCardLevelCheck(4) == false });
+        });
+
         boardSocketManager.addSocketBinder(
             unavailable,
             this.playerCond,
@@ -505,7 +512,8 @@ export class GamePlayer {
             turnFinishButtonClick,
             selectedGetResourceId,
             pnChangeData,
-            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents
+            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents,
+            drawCardLimit
         );
     }
 
@@ -521,5 +529,10 @@ export class GamePlayer {
 
     drawActionCard(card: ActionCardYamlData) {
         this.actionCard.drawActionCard(card);
+    }
+
+    //指定したレベルのカードを引けるかを判定する
+    private canDrawCardLevelCheck(level: number) {
+        return ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) == false;
     }
 }
