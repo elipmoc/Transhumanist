@@ -40,6 +40,9 @@ export class SelectActionWindow extends PopupWindowBase {
 
     private callBack: (value: number) => void;
     private numberOfActionCardTexts: NumberOfActionCardTexts;
+    private level = new Array<createjs.Bitmap>(6);
+    //リソースによる引けるカードレベルの制限があるかどうか
+    private isDrawCardLevelLimit = false;
 
     constructor(queue: ImageQueue) {
         super(700, 290);
@@ -60,28 +63,40 @@ export class SelectActionWindow extends PopupWindowBase {
         this.addChild(descriptionText);
         this.addChild(this.numberOfActionCardTexts);
 
-        for (var i = 1; i <= 3; i++) {
-            const level = queue.getImage("level" + (4 - i) + "mb");
-            level.y = global.canvasHeight / 2 - 60;
-            level.x = global.canvasWidth / 2 - (level.image.width + 20) * (i) + 10;
-            const levelValue = 4 - i;
-            level.addEventListener("click", () => this.callBack(levelValue));
-            this.addChild(level);
+        for (let i = 0; this.level.length > i; i++) {
+            this.level[i] = queue.getImage("level" + (i + 1) + "mb");
         }
 
-        for (var i = 4; i <= 6; i++) {
-            const level = queue.getImage("level" + i + "mb");
+        this.level.forEach((level, index) => {
             level.y = global.canvasHeight / 2 - 60;
-            level.x = global.canvasWidth / 2 + (level.image.width + 20) * (i - 4) + 10;
-            const levelValue = i;
-            level.addEventListener("click", () => this.callBack(levelValue));
+            level.alpha = 0.7;
+
+            //魔法の呪文（大嘘）
+            level.x = (global.canvasWidth / 2 - (level.image.width + 20) * (3) + 10)
+                + (level.image.width + 20) * (index);
+
+            level.addEventListener("click", () => this.callBack(index + 1));
+            level.addEventListener("mouseover", () => { level.alpha = 1.0; this.stage.update(); });
+            level.addEventListener("mouseout", () => { level.alpha = 0.7; this.stage.update(); });
             this.addChild(level);
-        }
+        });
+    }
+    //ドローカードレベルの制限フラグセット
+    setDrawCardLevelLimit(isLimit: boolean) {
+        this.isDrawCardLevelLimit = isLimit;
+        this.level[4 - 1].visible = !isLimit;
+        this.level[5 - 1].visible = !isLimit;
     }
     onSelectedLevel(callBack: (value: number) => void) {
         this.callBack = callBack;
     }
     setNumberOfActionCard(numberOfActionCardList: NumberOfActionCard[]) {
         this.numberOfActionCardTexts.setNumberOfActionCard(numberOfActionCardList);
+        this.level.forEach((level, index) => {
+            level.visible =
+                (0 != numberOfActionCardList[index].currentNumber + numberOfActionCardList[index].dustNumber)
+                && ((this.isDrawCardLevelLimit && (index == 4 - 1 || index == 5 - 1)) == false);
+        });
+        this.stage.update();
     }
 }

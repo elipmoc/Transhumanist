@@ -18,7 +18,6 @@ export class ResourceHover extends createjs.Container {
         this.cardName.font = "16px Arial";
 
         this.backGround = new createjs.Shape();
-        this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (12 * 8)) + 8, (global.cardIconSize) + 8);
 
         this.scaleX = 0.75;
         this.scaleY = 0.75;
@@ -32,6 +31,10 @@ export class ResourceHover extends createjs.Container {
             this.cardName.text = yamlData.name;
             this.x = this.stage.mouseX + global.cardIconSize / 2;
             this.y = this.stage.mouseY;
+
+            this.backGround.graphics.clear();
+            this.backGround.graphics.beginFill("#EEE").drawRect(-4, -4, (global.cardIconSize + (this.cardName.getMeasuredWidth())) + 12, (global.cardIconSize) + 8);
+
         }
     }
 }

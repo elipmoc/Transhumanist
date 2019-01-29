@@ -17,5 +17,8 @@ export enum GamePlayerCondition {
     //イベント処理完了
     EventClear,
     //アクションカードドロー中
-    DrawCard
+    DrawCard,
+    //滅亡
+    DownFall
+
 }

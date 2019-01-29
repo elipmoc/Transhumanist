@@ -1,4 +1,3 @@
-import { BoardPlayerHandle } from "./boardGame/boardPlayerHandle";
 import { PlayerData } from "./playerData";
 import { GamePlayers } from "./boardGame/gamePlayers";
 import { BoardGameStatus } from "./boardGame/boardGameStatus";
@@ -11,6 +10,7 @@ import { GamePlayerCondition } from "../Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
 import { LogMessageType } from "../Share/logMessageForClient";
+import { PlayerLiveChecker } from "./boardGame/playerLiveChecker";
 
 export class BoardGame {
     private gamePlayers: GamePlayers;
@@ -20,6 +20,7 @@ export class BoardGame {
     private roomId: number;
     private actionCardStacks: ActionCardStacks;
     private boardGameStatus: BoardGameStatus;
+    private playerLiveChecker: PlayerLiveChecker = new PlayerLiveChecker();
     private chatSe: ChatSe;
     private deleteMemberCallback: (uuid: string) => void;
     private deleteRoomCallback: (roomId: number) => void;
@@ -45,22 +46,49 @@ export class BoardGame {
 
         this.chatSe = new ChatSe(this.boardsocketManager);
 
-        this.gamePlayers.onLeaveRoom(player => {
-            if (this.isWait()) {
-                this.deleteMemberCallback(player.Uuid);
-                this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が退室しました`, player.PlayerId);
-                player.clear();
-                if (this.gamePlayers.getPlayerCount() == 0)
-                    this.deleteRoomCallback(this.roomId);
-                return true;
-            }
-            return false;
-        });
+        this.gamePlayers.onLeaveRoom(player =>
+            this.leavePlayer(player)
+        );
         this.gamePlayers.onTurnFinishButtonClick(player =>
             this.turnFinishButtonClick(player)
         );
+        this.playerLiveChecker.onDead(uuid => {
+            const player = this.gamePlayers.getGamePlayer(uuid);
+            if (player) this.leavePlayer(player);
+        })
         this.boardsocketManager.addSocketBinder();
         this.gamePlayers.onEndGameRequest(() => this.resetGame());
+    }
+
+    //playerの退出させる処理
+    private leavePlayer(player: GamePlayer) {
+        const isGameMaster = player.IsGameMaster;
+        const isWait = this.isWait();
+
+        if (isWait) {
+            this.deleteMemberCallback(player.Uuid);
+            this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が退室しました`, player.PlayerId);
+            player.clear();
+            if (this.gamePlayers.getPlayerCount() == 0) {
+                this.deleteRoomCallback(this.roomId);
+                return isWait;
+            }
+        } else {
+            this.messageSender.sendPlayerMessage(`${player.GameState.State.playerName}が滅亡しました`, player.PlayerId);
+            this.deleteMemberCallback(player.Uuid);
+            player.fall();
+            if (this.gamePlayers.getPlayerCount() == 0) {
+                this.deleteRoomCallback(this.roomId);
+                return isWait;
+            }
+            if (this.gamePlayers.getPlayerCount() == 1) {
+                this.messageSender.sendMessage("ゲームプレイ人数が少ないので強制終了しました", LogMessageType.OtherMsg);
+                this.resetGame();
+            }
+        }
+        if (isGameMaster) this.gamePlayers.reSetGameMaster();
+
+        return isWait;
     }
 
     //ゲームのリセット処理をする
@@ -83,7 +111,10 @@ export class BoardGame {
                 `player${gamePlayer.PlayerId}`,
                 socket
             );
-            new BoardPlayerHandle(socket, gamePlayer);
+            this.playerLiveChecker.release(uuid);
+            socket.on("disconnect", () =>
+                this.playerLiveChecker.liveCheckStart(gamePlayer.Uuid)
+            );
             return true;
         }
         return false;

@@ -23,6 +23,7 @@ import { ChurchAction } from "../../Share/churchAction";
 import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
 import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
+import { DrawCardLimit } from "../../Share/drawCardLimit";
 
 type SuccessFlag = boolean;
 
@@ -149,7 +150,7 @@ export class GamePlayer {
         this.surrenderFlag = false;
         this.buildActionList.resetUsed();
         if (this.nowEvent.name == "人口爆発") {
-            const len = this.resourceList.getCount("人間");
+            const len = this.resourceList.getCount("人間") + 1;
             this.resourceList.addResource("人間", len);
         } else if (this.nowEvent.name != "少子化")
             this.resourceList.addResource("人間");
@@ -217,12 +218,28 @@ export class GamePlayer {
         }
     }
     setEventClear() {
-        this.playerCond.Value = GamePlayerCondition.EventClear;
+        if (this.playerCond.Value != GamePlayerCondition.DownFall)
+            this.playerCond.Value = GamePlayerCondition.EventClear;
     }
 
     //移民
     addExileResource(num: number) {
         this.resourceList.addResource("人間", num);
+    }
+
+    //滅亡処理
+    fall() {
+        if ([GamePlayerCondition.Dice, GamePlayerCondition.Event].includes(this.playerCond.Value)) {
+            this.playerCond.Value = GamePlayerCondition.DownFall;
+            this.eventClearCallback();
+            return;
+        }
+        else if ([GamePlayerCondition.MyTurn, GamePlayerCondition.DrawCard, GamePlayerCondition.Action].includes(this.playerCond.Value)) {
+            this.playerCond.Value = GamePlayerCondition.DownFall;
+            this.turnFinishButtonClickCallback();
+            return;
+        }
+        this.playerCond.Value = GamePlayerCondition.DownFall;
     }
 
     clear() {
@@ -241,7 +258,11 @@ export class GamePlayer {
     //プレイヤーが戦争に勝利した時の処理
     winWar() {
         this.state.winWar();
-        this.war.win();
+        this.war.reset();
+    }
+    //戦争状態を解除するだけ
+    warReset() {
+        this.war.reset();
     }
     //戦争状態にする
     startWar() {
@@ -284,7 +305,7 @@ export class GamePlayer {
         });
         this.war = new War(boardSocketManager, playerId);
         this.war.onStartWar(targetPlayerId => {
-            if (this.playerCond.Value == GamePlayerCondition.MyTurn)
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn && this.nowEvent.name != "サブカルチャー")
                 return this.startWarCallback(targetPlayerId);
             return false;
         });
@@ -308,7 +329,7 @@ export class GamePlayer {
         this.actionCard = new PlayerActionCard(playerId, boardSocketManager);
         this.actionCard.onSelectActionCardLevel(level => {
             if (this.playerCond.Value != GamePlayerCondition.DrawCard) return;
-            if ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) return;
+            if (this.canDrawCardLevelCheck(level) == false) return;
             const card = actionCardStacks.draw(level);
             if (card) this.actionCard.drawActionCard(card);
             if (this.actionCard.is_full())
@@ -329,6 +350,11 @@ export class GamePlayer {
 
         //ターン終了ボタンがクリックされた
         turnFinishButtonClick.OnReceive(() => {
+            if (this.Condition == GamePlayerCondition.Start)
+                this.turnFinishButtonClickCallback();
+            if (this.Condition != GamePlayerCondition.MyTurn || this.resourceList.OverResourceFlag || this.buildActionList.OverBuildFlag) {
+                return;
+            }
             this.churchAction.Value = { maxNum: 0, enable: false };
             this.turnFinishButtonClickCallback();
         });
@@ -473,6 +499,12 @@ export class GamePlayer {
             this.consumeCallBack(card);
         });
 
+        const drawCardLimit = new SocketBinder.TriggerBinder<void, DrawCardLimit>("drawCardLimit", true, ["player" + this.playerId]);
+
+        drawCardLimit.OnReceive(() => {
+            drawCardLimit.emit({ isLimit: this.canDrawCardLevelCheck(4) == false });
+        });
+
         boardSocketManager.addSocketBinder(
             unavailable,
             this.playerCond,
@@ -480,7 +512,8 @@ export class GamePlayer {
             turnFinishButtonClick,
             selectedGetResourceId,
             pnChangeData,
-            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents
+            this.churchAction, futureForecastGetEvents, futureForecastSwapEvents,
+            drawCardLimit
         );
     }
 
@@ -496,5 +529,10 @@ export class GamePlayer {
 
     drawActionCard(card: ActionCardYamlData) {
         this.actionCard.drawActionCard(card);
+    }
+
+    //指定したレベルのカードを引けるかを判定する
+    private canDrawCardLevelCheck(level: number) {
+        return ((level == 4 || level == 5) && this.resourceList.getExistLevel(4) == false && this.resourceList.getExistLevel(5) == false) == false;
     }
 }
