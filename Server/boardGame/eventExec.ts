@@ -53,7 +53,12 @@ export function setEvent(
             state.addNegative(-1);
             result.eventClearFlag = true;
             break;
-
+        case "世界大戦の開幕":
+            if (state.State.positive >= 1) state.addPositive(-1);
+            else state.addNegative(1);
+            result.eventClearFlag = true;
+            break;
+        
         case "亡命":
             if (state.State.negative >= 3) {
                 if (resourceList.getCount("人間") >= 3) {
