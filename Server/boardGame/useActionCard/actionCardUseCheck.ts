@@ -36,9 +36,7 @@ export function actionCardUseCheck(
     //戦争条件の判定
     if (
         warUse &&
-        warFlag == false &&
-        (nowEvent.name == "世界大戦の開幕" && state.State.negative >= 1) ==
-        false
+        warFlag == false
     )
         return UnavailableState.War;
 

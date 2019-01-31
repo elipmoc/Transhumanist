@@ -75,9 +75,9 @@
 - name: 世界大戦の開幕
   level: 3
   description: |-
-    　全てのAIがN点を所持する場合、宣戦布告無し
-    で攻撃が可能。
-  forever: true
+    　P点があれば1点減少し、
+    　P点が0点ならN点が1点増加される。
+  forever: false
 
 - name: ニート化が進む
   level: 3
