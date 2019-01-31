@@ -78,7 +78,7 @@ export class LogMessage implements Message {
 const BarFixY = 15;
 const BarHeight = 110;
 const BarWidth = 10;
-const BarCircleRadius = 7;
+const BarCircleRadius = BarWidth / 2;
 
 class LogSlider extends createjs.Container {
     private bar: createjs.Shape;
