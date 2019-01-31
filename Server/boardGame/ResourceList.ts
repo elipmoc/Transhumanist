@@ -2,7 +2,6 @@ import { SocketBinder } from "../socketBinder";
 import {
     ResourceName,
     GenerateResourceYamlDataArray,
-    GenerateResourceYamlData
 } from "../../Share/Yaml/resourceYamlData";
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
@@ -11,8 +10,8 @@ import { ResourceOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 import { HaveResourceCard } from "../../Share/haveResourceCard";
+import { ResourceHash } from "../hashData";
 
-const ResourceHash = GenerateResourceYamlData(yamlGet("./Resource/Yaml/resource.yaml"));
 
 export class ResourceList {
     private resourceList: SocketBinder.BinderList<HaveResourceCard | null>;

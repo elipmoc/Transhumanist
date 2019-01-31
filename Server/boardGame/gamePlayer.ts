@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, ResourceGuard } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -24,6 +24,8 @@ import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
 import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
 import { DrawCardLimit } from "../../Share/drawCardLimit";
+import { GuardMaxNum } from "../../Share/guardMaxNum";
+import { ActionHash } from "../hashData";
 
 type SuccessFlag = boolean;
 
@@ -505,6 +507,15 @@ export class GamePlayer {
             drawCardLimit.emit({ isLimit: this.canDrawCardLevelCheck(4) == false });
         });
 
+        const guardMaxNum = new SocketBinder.TriggerBinder<void, GuardMaxNum>("guardMaxNum", true, ["player" + this.playerId]);
+
+        guardMaxNum.OnReceive(() => {
+            guardMaxNum.emit({
+                num:
+                    (<ResourceGuard>ActionHash["地下シェルター"]!.commands[0].body).number * this.buildActionList.getCount("地下シェルター")
+            });
+        });
+
         boardSocketManager.addSocketBinder(
             unavailable,
             this.playerCond,
@@ -513,7 +524,8 @@ export class GamePlayer {
             selectedGetResourceId,
             pnChangeData,
             this.churchAction, futureForecastGetEvents, futureForecastSwapEvents,
-            drawCardLimit
+            drawCardLimit,
+            guardMaxNum
         );
     }
 

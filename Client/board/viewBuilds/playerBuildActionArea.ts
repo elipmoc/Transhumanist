@@ -15,6 +15,7 @@ import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCa
 import { SelectResourceWindow } from "../views/selectResourceWindow";
 import { CandidateResources } from "../../../Share/candidateResources";
 import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
+import { GuardMaxNum } from "../../../Share/guardMaxNum";
 import { SelectChurchWindow } from "../views/selectChurchWindow";
 
 import { LayerTag } from "../../board";
@@ -115,7 +116,12 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
                         buildActionUseDecision.visible = true;
                         break;
                     case "地下シェルター":
-                        resourceDialog.setMessage("保護対象のリソースを\n選んでください");
+                        bindParams.socket.once("guardMaxNum", (data: string) => {
+                            const num = (JSON.parse(data) as GuardMaxNum).num;
+                            resourceDialog.setMessage(`保護対象のリソースを\n${num}個まで選んでください`);
+                            bindParams.layerManager.update();
+                        });
+                        bindParams.socket.emit("guardMaxNum");
                         resourceDialog.visible = true;
                         myResourceArea.setSelectEnable();
                         break;
