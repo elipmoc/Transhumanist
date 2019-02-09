@@ -11,6 +11,7 @@ import { arrayshuffle } from "../../Share/utility";
 import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
 import { HaveResourceCard } from "../../Share/haveResourceCard";
 import { ResourceHash } from "../hashData";
+import { CardMessageSender } from "./message";
 
 
 export class ResourceList {
@@ -20,6 +21,7 @@ export class ResourceList {
     private throwResource: SocketBinder.EmitReceiveBinder<ThrowResource>;
     private haveFusionReactor: boolean;
     private resourceCapacity: number;
+    private messageSender: CardMessageSender;
 
     //リソースオーバー中かどうか
     get OverResourceFlag() {
@@ -38,8 +40,6 @@ export class ResourceList {
         }
     }
 
-
-
     private nowEvent = false;
     setNowEvent(flag: boolean) {
         this.nowEvent = flag;
@@ -57,7 +57,8 @@ export class ResourceList {
         this.resourceOver.Value.overCount = 0;
     }
 
-    constructor(boardSocketManager: Namespace, playerId: number) {
+    constructor(boardSocketManager: Namespace, playerId: number, messageSender: CardMessageSender) {
+        this.messageSender = messageSender;
         this.resourceList = new SocketBinder.BinderList<HaveResourceCard | null>(
             "ResourceKindList" + playerId
         );
@@ -89,6 +90,7 @@ export class ResourceList {
             ) {
                 this.resourceOver.Value = { overCount: 0, causeText: "" };
                 throwResource.resourceList.forEach(id => {
+                    this.messageSender.cardDeleteMessage(this.resourceList.Value[id]!.resourceCardName);
                     this.resourceList.Value[id] = null;
                 });
                 throwResource.resourceReserveList.forEach(id => {
@@ -142,6 +144,7 @@ export class ResourceList {
             if (count >= num) return x;
             if (name != x.resourceCardName) return x;
             count++;
+            this.messageSender.cardDeleteMessage(name);
             return null;
         });
         this.setCrowdList(arr);
@@ -159,14 +162,12 @@ export class ResourceList {
             }).filter(x => x != null) as number[];
         const count = existIndexList.length;
 
-        //乱数で消す数以上リソースがある
-        if (count >= num) {
-            arrayshuffle(existIndexList).slice(0, num)
-                .forEach(index => arr[index] = null)
-        }
-        //消す数より少なかった
-        else
-            existIndexList.forEach(index => arr[index] = null);
+        //乱数で消す数以上リソースがあるかどうかで分岐
+        (count >= num ? arrayshuffle(existIndexList).slice(0, num) : existIndexList)
+            .forEach(index => {
+                this.messageSender.cardDeleteMessage(arr[index]!.resourceCardName);
+                arr[index] = null;
+            });
         this.setCrowdList(arr);
     }
 
@@ -187,6 +188,7 @@ export class ResourceList {
                 x.guardFlag == true
             ) return x;
             count++;
+            this.messageSender.cardChangeMessage(x.resourceCardName, changeName);
             return { resourceCardName: changeName, guardFlag: false };
         });
         this.setCrowdList(arr);
@@ -295,11 +297,13 @@ export class ResourceList {
             arr = arr.map(y => {
                 if (y == null || y.guardFlag == true || y.resourceCardName != x.name || count >= x.number) return y;
                 count++;
+                this.messageSender.cardPaymentMessage(y.resourceCardName);
                 return null;
             });
             arr = arr.map(y => {
                 if (y == null || y.resourceCardName != x.name || count >= x.number) return y;
                 count++;
+                this.messageSender.cardPaymentMessage(y.resourceCardName);
                 return null;
             });
 

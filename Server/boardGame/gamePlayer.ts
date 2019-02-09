@@ -300,7 +300,7 @@ export class GamePlayer {
             "selectedGetResourceId", true, [`player${playerId}`]
         );
 
-        this.resourceList = new ResourceList(boardSocketManager, playerId);
+        this.resourceList = new ResourceList(boardSocketManager, playerId, messageSender.ToCardMessageSender(playerId));
         this.resourceList.onEventClearCallback(() => {
             this.eventClearCallback();
             this.resourceList.setNowEvent(false);
@@ -386,7 +386,8 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(
             boardSocketManager,
-            playerId
+            playerId,
+            messageSender.ToCardMessageSender(playerId)
         );
         this.buildActionList.onEventClearCallback(() => {
             this.eventClearCallback();
