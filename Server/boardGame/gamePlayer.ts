@@ -242,6 +242,7 @@ export class GamePlayer {
             return;
         }
         this.playerCond.Value = GamePlayerCondition.DownFall;
+        this.war.surrender();
     }
 
     clear() {
@@ -319,6 +320,10 @@ export class GamePlayer {
             ) {
                 this.state.loseWar();
                 this.surrenderFlag = true;
+                return true;
+            }
+            if (this.playerCond.Value == GamePlayerCondition.DownFall) {
+                this.surrenderCallback();
                 return true;
             }
             return false;
