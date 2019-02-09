@@ -154,6 +154,7 @@ export class BoardGame {
     addMember(playerData: PlayerData, playerId: number) {
         if (this.boardGameStatus.isWait()) {
             this.gamePlayers.addMember(playerData, playerId);
+            this.playerLiveChecker.liveCheckStart(playerData.getUuid());
             this.message.addPlayerName(playerId, playerData.getName());
             this.messageSender.sendPlayerMessage(`${playerData.getName()}が入室しました`, playerId);
         }

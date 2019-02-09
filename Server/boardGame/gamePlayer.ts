@@ -1,6 +1,6 @@
 import { PlayerData } from "../playerData";
 import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, ResourceGuard } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { StartStatusYamlData } from "../../Share/Yaml/startStatusYamlData";
@@ -24,6 +24,8 @@ import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { MessageSender } from "./message";
 import { useBuildActionCard } from "./useActionCard/useBuildActionCard";
 import { DrawCardLimit } from "../../Share/drawCardLimit";
+import { GuardMaxNum } from "../../Share/guardMaxNum";
+import { ActionHash } from "../hashData";
 
 type SuccessFlag = boolean;
 
@@ -240,6 +242,10 @@ export class GamePlayer {
             return;
         }
         this.playerCond.Value = GamePlayerCondition.DownFall;
+        this.resourceList.clear();
+        this.buildActionList.randomDeleteBuildAction(30);
+        this.actionCard.throwAllCard();
+        this.war.surrender();
     }
 
     clear() {
@@ -298,7 +304,7 @@ export class GamePlayer {
             "selectedGetResourceId", true, [`player${playerId}`]
         );
 
-        this.resourceList = new ResourceList(boardSocketManager, playerId);
+        this.resourceList = new ResourceList(boardSocketManager, playerId, messageSender.ToCardMessageSender(playerId));
         this.resourceList.onEventClearCallback(() => {
             this.eventClearCallback();
             this.resourceList.setNowEvent(false);
@@ -317,6 +323,10 @@ export class GamePlayer {
             ) {
                 this.state.loseWar();
                 this.surrenderFlag = true;
+                return true;
+            }
+            if (this.playerCond.Value == GamePlayerCondition.DownFall) {
+                this.surrenderCallback();
                 return true;
             }
             return false;
@@ -384,7 +394,8 @@ export class GamePlayer {
         this.playerCond.Value = GamePlayerCondition.Empty;
         this.buildActionList = new BuildActionList(
             boardSocketManager,
-            playerId
+            playerId,
+            messageSender.ToCardMessageSender(playerId)
         );
         this.buildActionList.onEventClearCallback(() => {
             this.eventClearCallback();
@@ -436,7 +447,7 @@ export class GamePlayer {
 
         //カード破棄の処理
         this.actionCard.onDestructionActionCard(card => {
-            if (this.playerCond.Value == GamePlayerCondition.MyTurn) {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn || this.playerCond.Value == GamePlayerCondition.DownFall) {
                 this.consumeCallBack(card);
                 return true;
             }
@@ -505,6 +516,15 @@ export class GamePlayer {
             drawCardLimit.emit({ isLimit: this.canDrawCardLevelCheck(4) == false });
         });
 
+        const guardMaxNum = new SocketBinder.TriggerBinder<void, GuardMaxNum>("guardMaxNum", true, ["player" + this.playerId]);
+
+        guardMaxNum.OnReceive(() => {
+            guardMaxNum.emit({
+                num:
+                    (<ResourceGuard>ActionHash["地下シェルター"]!.commands[0].body).number * this.buildActionList.getCount("地下シェルター")
+            });
+        });
+
         boardSocketManager.addSocketBinder(
             unavailable,
             this.playerCond,
@@ -513,7 +533,8 @@ export class GamePlayer {
             selectedGetResourceId,
             pnChangeData,
             this.churchAction, futureForecastGetEvents, futureForecastSwapEvents,
-            drawCardLimit
+            drawCardLimit,
+            guardMaxNum
         );
     }
 

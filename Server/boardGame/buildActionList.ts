@@ -10,6 +10,7 @@ import { BuildOver } from "../../Share/elementOver";
 import { arrayshuffle } from "../../Share/utility";
 import { ThrowBuildAction } from "../../Share/throwBuildAction";
 import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
+import { CardMessageSender } from "./message";
 
 type UseSuccessFlag = boolean;
 
@@ -25,7 +26,7 @@ export class BuildActionList {
     private buildReserveList: SocketBinder.BinderList<ActionCardName | null>;
     private buildOver: SocketBinder.Binder<BuildOver>;
     private throwBuild: SocketBinder.EmitReceiveBinder<ThrowBuildAction>;
-
+    private messageSender: CardMessageSender;
     private buildCapacity: number;
 
     get OverBuildFlag() {
@@ -54,7 +55,8 @@ export class BuildActionList {
         this.eventClearCallback = f;
     }
 
-    constructor(boardSocketManager: SocketBinder.Namespace, playerId: number) {
+    constructor(boardSocketManager: SocketBinder.Namespace, playerId: number, messageSender: CardMessageSender) {
+        this.messageSender = messageSender;
         this.buildActionList = new SocketBinder.BinderList<HaveBuildActionCard>(
             "BuildActionKindList" + playerId
         );
@@ -100,6 +102,7 @@ export class BuildActionList {
                     this.deleteBuildActionCardCallback(
                         buildActionCardHash[this.buildActionList.Value[id]!.actionCardName]!
                     );
+                    this.messageSender.cardDeleteMessage(this.buildActionList.Value[id]!.actionCardName);
                     this.buildActionList.Value[id] = null;
                 });
                 throwBuild.buildReserveList.forEach(id => {
@@ -180,7 +183,7 @@ export class BuildActionList {
         arr = arr.map(x => {
             if (count > num) return x;
             if (x == null || x.actionCardName != name) return x;
-
+            this.messageSender.cardDeleteMessage(name);
             count++;
             return null;
         });
@@ -200,12 +203,18 @@ export class BuildActionList {
                 .fill(0)
                 .map((_, idx) => idx);
             targetIndexes = arrayshuffle(targetIndexes).slice(0, num);
-            arr = arr.map((x, index) =>
-                targetIndexes.includes(index) ? null : x
-            );
+            arr = arr.map((x, index) => {
+                if (targetIndexes.includes(index)) {
+                    this.messageSender.cardDeleteMessage(x!.actionCardName)
+                    return null;
+                } else { return x; }
+            });
         }
         //消す数より少なかった
-        else arr.fill(null);
+        else {
+            arr.forEach(x => { if (x) this.messageSender.cardDeleteMessage(x.actionCardName); })
+            arr.fill(null);
+        }
         this.consume(this.buildActionList.Value, arr);
         this.setCrowdList(arr);
     }
