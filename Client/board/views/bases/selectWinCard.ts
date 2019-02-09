@@ -10,12 +10,26 @@ export class SelectWinCard extends createjs.Container {
     private nothingWinCard: DetailsActionCard;
 
     private cardNumber = new createjs.Text();
-    private callBack: () => void;
+    private clickCallBack: () => void;
+    onClick(callBack: () => void) {
+        this.clickCallBack = callBack;
+    }
+    private mouseOveredCallBack: () => void;
+    onMouseOvered(callBack: () => void) {
+        this.mouseOveredCallBack = callBack;
+    }
+    private mouseOutedCallBack: () => void;
+    onMouseOuted(callBack: () => void) {
+        this.mouseOutedCallBack = callBack;
+    }
+
 
     constructor(size: number) {
         super();
         this.winCard = new DetailsActionCard(size);
-        this.winCard.addEventListener("click", () => this.callBack());
+        this.winCard.addEventListener("click", () => this.clickCallBack());
+        this.winCard.addEventListener("mouseover", () => this.mouseOveredCallBack());
+        this.winCard.addEventListener("mouseout", () => this.mouseOutedCallBack());
 
         this.nothingWinCard = new DetailsActionCard(size);
         this.nothingWinCard.alpha = 0.2;
@@ -46,8 +60,5 @@ export class SelectWinCard extends createjs.Container {
             this.winCard.visible = true;
             this.nothingWinCard.visible = false;
         }
-    }
-    onClick(callBack: () => void) {
-        this.callBack = callBack;
     }
 }
