@@ -1,11 +1,9 @@
 import * as io from "socket.io-client";
 import * as cookies from "js-cookie";
 import { RoomDataForClient } from "../Share/roomDataForClient";
-import { PlayerDataForClient } from "../Share/playerDataForClient";
 import { RoomViewList } from "./login/roomViewList";
 import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
 import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
-import { PlayFlagDataForClient } from "../Share/playFlagDataForClient";
 import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
 import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
 import { SocketBinderList } from "./socketBinderList";
@@ -13,7 +11,9 @@ import { SocketBinderList } from "./socketBinderList";
 //サンプルソケットに繋げる
 const socket = io("/login");
 
-const roomViewList = new RoomViewList(requestEnter);
+const roomViewList = new RoomViewList(
+    roomId => requestCall(() => requestEnter(roomId))
+);
 
 socket.on("addRoom", (data: string) => {
     let roomData: RoomDataForClient = JSON.parse(data);
@@ -24,21 +24,6 @@ socket.on("deleteRoom", (data: number) => {
     let roomId: number = data;
     roomViewList.deleteRoom(roomId);
 });
-
-/*socket.on("addMember", (data: string) => {
-    let member: PlayerDataForClient = JSON.parse(data);
-    roomViewList.addMember(member);
-});
-
-socket.on("deleteMember", (data: string) => {
-    let member: PlayerDataForClient = JSON.parse(data);
-    roomViewList.deleteMember(member);
-});
-
-socket.on("updatePlayFlag", (data: string) => {
-    let playData: PlayFlagDataForClient = JSON.parse(data);
-    roomViewList.updatePlayFlag(playData);
-});*/
 
 const roomList = new SocketBinderList<RoomDataForClient>("roomList", socket);
 roomList.onUpdate(rooms => {
@@ -52,12 +37,20 @@ roomList.onSetAt((id, room) => {
 });
 
 let button = document.getElementById("createButton");
-button.onclick = () => { requestCreate(); };
+button.onclick = () => { requestCall(requestCreate); };
 
-let requestBuf: { name: string, data: any } = null;
+//リクエスト待機中かどうかを保存する変数
+let requestProcessing = false;
+
+async function requestCall<T>(f: () => Promise<T>) {
+    if (requestProcessing) return;
+    requestProcessing = true;
+    try { await f() } catch (_) { };
+    requestProcessing = false;
+}
 
 //requestCreateRoom
-function requestCreate() {
+async function requestCreate() {
     let request: RequestCreateRoomData = {
         roomName: (<HTMLInputElement>document.getElementById("roomName")).value,
         password: (<HTMLInputElement>document.getElementById("pass")).value,
@@ -71,62 +64,59 @@ function requestCreate() {
     } else if (request.passwordFlag && request.password == "") {
         alert("パスワードが入力されていません！");
     } else {
-        requestBuf = { name: "requestCreateRoom", data: request };
-        socket.emit("requestExistUuid", cookies.get("uuid"));
+        await checkExistUuid(cookies.get("uuid"));
+        const promise = asyncSocketEvent<ResultCreateRoomData>("resultCreateRoom");
+        socket.emit("requestCreateRoom", JSON.stringify(request));
+        let resultCreateRoomData = await promise;
+        if (resultCreateRoomData.successFlag)
+            await requestEnter(resultCreateRoomData.roomId);
+        else throw "";
     }
 }
 
-
-
-socket.on("resultExistUuid", (data: any) => {
-    let isExist: boolean = JSON.parse(data);
-    if (isExist)
-        alert("あなたはすでに別の部屋に入室しています");
-    else
-        socket.emit(requestBuf.name, JSON.stringify(requestBuf.data));
-});
-
-//resultCreateRoom
-socket.on("resultCreateRoom", (data: string) => {
-    let resultCreateRoomData: ResultCreateRoomData = JSON.parse(data);
-    if (resultCreateRoomData.successFlag) {
-        console.log("部屋が作成できました！");
-        requestEnter(resultCreateRoomData.roomId);
-    }
-    else {
-        console.log(resultCreateRoomData.errorMsg);
-    }
-});
-
 //requestEnterRoom
-function requestEnter(roomId: number) {
+async function requestEnter(roomId: number) {
     let target = <HTMLInputElement>document.getElementById("playerName");
     let name: string = target.value;
 
     if (name != "") {
         let requestEnterRoomData: RequestEnterRoomData = {
-            roomId: roomId,
+            roomId,
             playerName: name,
             password: (<HTMLInputElement>document.getElementById("pass")).value
         }
         cookies.set("roomid", String(roomId));
-        socket.emit("requestExistUuid", cookies.get("uuid"));
-        requestBuf = { name: "requestEnterRoom", data: requestEnterRoomData };
+        await checkExistUuid(cookies.get("uuid"));
+        const promise = asyncSocketEvent<ResultEnterRoomData>("resultEnterRoom");
+        socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
+        const resultEnterRoomData = await promise;
+        console.log("aagb");
+        if (resultEnterRoomData.successFlag) {
+            cookies.set("uuid", resultEnterRoomData.uuid);
+            cookies.set("playerId", String(resultEnterRoomData.playerId));
+            location.href = "board.html";
+        }
+        else throw "";
     } else {
         alert("プレイヤー名が入力されていません！");
     }
 }
 
-//resultEnterRoom
-socket.on("resultEnterRoom", (data: string) => {
-    let resultEnterRoomData: ResultEnterRoomData = JSON.parse(data);
-    if (resultEnterRoomData.successFlag) {
-        console.log("入室できました！");
-        cookies.set("uuid", resultEnterRoomData.uuid);
-        cookies.set("playerId", String(resultEnterRoomData.playerId));
-        location.href = "board.html";
+//現在のuuidがサーバーに存在するか確認
+async function checkExistUuid(uuid: string) {
+    const promise = asyncSocketEvent<boolean>("resultExistUuid");
+    socket.emit("requestExistUuid", uuid);
+    const isExist = await promise;
+    if (isExist) {
+        alert("あなたはすでに別の部屋に入室しています");
+        throw "";
     }
-    else {
-        console.log(resultEnterRoomData.errorMsg);
-    }
-});
+}
+
+//socketイベントのasync化
+function asyncSocketEvent<T>(eventName: string): Promise<T> {
+    return new Promise(resolve =>
+        socket.once(eventName, (data: string) => {
+            resolve(JSON.parse(data))
+        }));
+}

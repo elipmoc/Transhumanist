@@ -32,7 +32,6 @@ export class HandActionCardStorageWindow extends createjs.Container {
 
         this.actionCardHover.y = 20;
         this.actionCardHover.visible = false;
-        this.addChild(this.actionCardHover);
     }
 
     setActionCard(index: number, actionCardYaml: ActionCardYamlData) {

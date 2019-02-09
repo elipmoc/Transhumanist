@@ -27,12 +27,13 @@ export class War {
         });
         const surrender = new SocketBinder.EmitReceiveBinder("surrender", true, [`player${playerId}`]);
 
-        surrender.OnReceive(() => {
-            if (this.warFlag && this.surrenderCallback()) {
-                this.warFlag = false;
-            }
-        });
+        surrender.OnReceive(() => this.surrender());
         boardSocketManager.addSocketBinder(declareWar, surrender);
+    }
+
+    surrender() {
+        if (this.warFlag && this.surrenderCallback())
+            this.warFlag = false;
     }
 
     onSurrender(f: () => WarSuccessFlag) {

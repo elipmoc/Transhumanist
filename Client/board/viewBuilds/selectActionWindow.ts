@@ -6,11 +6,12 @@ import { LayerTag } from "../../board";
 import { build as buildSelectWinCardWindow } from "./selectWinCardWindow";
 import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
 import { DrawCardLimit } from "../../../Share/drawCardLimit";
+import { ActionCardHover } from "../views/actionCardHover";
 
 //ドローするアクションカードのレベル選択ウインドウの生成
-export function build(bindParams: BindParams) {
+export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {
     const selectActionWindow = new SelectActionWindow(bindParams.imgQueue);
-    const selectWinCardWindow = buildSelectWinCardWindow(bindParams);
+    const selectWinCardWindow = buildSelectWinCardWindow(actionCardHover, bindParams);
     //ボタンをクリックしたら発火
     selectWinCardWindow.buttonOnClick(() => {
         selectWinCardWindow.visible = false;

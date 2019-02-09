@@ -54,9 +54,22 @@ export class SelectWinCardWindow extends PopupWindowBase {
             this.winCards[cardData.cardName].setCardNumber(cardData);
     }
 
-    cardOnClick(callBack: (cardName: string) => void) {
+    //カードが選択されたときに呼ばれるイベント
+    onClickCard(callBack: (cardName: string) => void) {
         Object.keys(this.winCards).forEach(key =>
             this.winCards[key].onClick(() => callBack(key))
+        );
+    }
+    //カードがホバーされたときに呼ばれるイベント
+    onMouseOveredCard(callBack: (cardName: string) => void) {
+        Object.keys(this.winCards).forEach(key =>
+            this.winCards[key].onMouseOvered(() => callBack(key))
+        );
+    }
+    //カードのホバーが解除されたときに呼ばれるイベント
+    onMouseOutedCard(callBack: (cardName: string) => void) {
+        Object.keys(this.winCards).forEach(key =>
+            this.winCards[key].onMouseOuted(() => callBack(key))
         );
     }
 

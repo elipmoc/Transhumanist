@@ -58,6 +58,38 @@ export class MessageSender {
     sendPlayerMessage(msg: string, playerId: number) {
         this.message.sendMessage(msg, playerId + 1);
     }
+
+    //CardMessageSenderを生成
+    ToCardMessageSender(playerId: number) {
+        return new CardMessageSender(this, playerId);
+    }
+}
+
+//メッセージ送信するだけ用のクラス（基本的にはこれを各オブジェクトに配布して使う）
+export class CardMessageSender {
+    private messageSender: MessageSender;
+    private playerId: number;
+
+    constructor(messageSender: MessageSender, playerId: number) {
+        this.messageSender = messageSender;
+        this.playerId = playerId;
+    }
+    //各プレイヤーに関するメッセージ送信
+    sendPlayerMessage(msg: string) {
+        this.messageSender.sendPlayerMessage(msg, this.playerId);
+    }
+    //カードを破棄したメッセージを送信
+    cardDeleteMessage(cardName: string) {
+        this.sendPlayerMessage(`${cardName}を破棄`);
+    }
+    //カードを消費したメッセージを送信
+    cardPaymentMessage(cardName: string) {
+        this.sendPlayerMessage(`${cardName}を消費`);
+    }
+    //カードを置き換えしたメッセージを送信
+    cardChangeMessage(cardNameFrom: string, cardNameTo: string) {
+        this.sendPlayerMessage(`${cardNameFrom}を${cardNameTo}に置換`);
+    }
 }
 
 class LogMessageList {

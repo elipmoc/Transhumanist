@@ -35,7 +35,7 @@ export function viewBuild(bindParams: BindParams) {
     handActionCardStorageWindow.build(actionCardHover, bindParams);
     turnFinishButton.build(bindParams);
     declareWarButton.build(bindParams);
-    selectActionWindow.build(bindParams);
+    selectActionWindow.build(actionCardHover, bindParams);
     selectDiceWindow.build(bindParams);
     selectResourceWindow.build(bindParams);
     unavailableDialog.build(bindParams);

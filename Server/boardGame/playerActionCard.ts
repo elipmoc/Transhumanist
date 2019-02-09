@@ -3,6 +3,7 @@ import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
 import { UseHandActionCard, UseKind } from "../../Share/useHandActionCard";
 import { yamlGet } from "../yamlGet";
+import { ActionHash } from "../hashData";
 
 //カードを破棄するかのフラグ
 type DestructionFlag = boolean;
@@ -40,7 +41,6 @@ export class PlayerActionCard {
             [`player${playerId}`]
         );
 
-        //実装
         selectActionCardLevel.OnReceive(level =>
             this.selectActionCardLevelCallback(level)
         );
@@ -52,10 +52,7 @@ export class PlayerActionCard {
                 handActionCard.index
             ];
             if (useActionCardName) {
-                const useActionCard = GenerateActionCardYamlData(
-                    yamlGet("./Resource/Yaml/actionCard.yaml"),
-                    false
-                )[useActionCardName];
+                const useActionCard = ActionHash[useActionCardName];
                 if (useActionCard === undefined) return;
                 if (handActionCard.useKind == UseKind.Use && this.useActionCardCallback(useActionCard))
                     this.actionCardList.setAt(handActionCard.index, null);
@@ -102,6 +99,18 @@ export class PlayerActionCard {
     is_full() {
         return this.actionCardList.Value.find(x => x == null) === undefined;
     }
+
+    //全ての手札を破棄する
+    throwAllCard() {
+        this.actionCardList.Value.forEach((cardName, idx) => {
+            if (cardName === null) return;
+            const cardData = ActionHash[cardName];
+            if (cardData === undefined) return;
+            if (this.destructionActionCardCallback(cardData))
+                this.actionCardList.setAt(idx, null);
+        })
+    }
+
 
     drawActionCard(card: ActionCardYamlData) {
         const index = this.actionCardList.Value.findIndex(x => x == null);
