@@ -242,6 +242,9 @@ export class GamePlayer {
             return;
         }
         this.playerCond.Value = GamePlayerCondition.DownFall;
+        this.resourceList.clear();
+        this.buildActionList.randomDeleteBuildAction(30);
+        this.actionCard.throwAllCard();
         this.war.surrender();
     }
 
@@ -444,7 +447,7 @@ export class GamePlayer {
 
         //カード破棄の処理
         this.actionCard.onDestructionActionCard(card => {
-            if (this.playerCond.Value == GamePlayerCondition.MyTurn) {
+            if (this.playerCond.Value == GamePlayerCondition.MyTurn || this.playerCond.Value == GamePlayerCondition.DownFall) {
                 this.consumeCallBack(card);
                 return true;
             }
