@@ -100,6 +100,11 @@ a{
 .btn:hover{
     opacity:0.8;
 }
+.sendForm{
+    display: inline-block;
+    color:#29b!important;
+    text-decoration:underline;
+}
 
 footer{
     width:100%;

@@ -24,6 +24,20 @@ export function build(bindParams: BindParams) {
             bindParams.layerManager.update();
         }
     );
+    optionWindow.cardOnClick(
+        () => {
+            window.open("https://docs.google.com/spreadsheets/d/1dHAVu22c1Nnja4mWB-1F4FwKamqBAMuVcnkql3mSRIo/edit?usp=sharing");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
+    optionWindow.formOnClick(
+        () => {
+            window.open("https://goo.gl/forms/9tx8kwYic59Hj7WB2");
+            optionWindow.visible = false;
+            bindParams.layerManager.update();
+        }
+    );
     optionWindow.leaveOnClick(
         () => {
             bindParams.socket.emit("leaveRoom");

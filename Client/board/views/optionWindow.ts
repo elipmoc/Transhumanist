@@ -39,6 +39,9 @@ class GeneralOptionButton extends ButtonBase {
 //オプションウインドウ
 export class OptionWindow extends createjs.Container {
     private ruleCallBack: () => void;
+    private cardCallBack: () => void;
+    private formCallBack: () => void;
+
     private leaveCallBack: () => void;
     private endCallBack: () => void;
 
@@ -50,6 +53,12 @@ export class OptionWindow extends createjs.Container {
 
     ruleOnClick(callback: () => void) {
         this.ruleCallBack = callback;
+    }
+    cardOnClick(callback: () => void) {
+        this.cardCallBack = callback;
+    }
+    formOnClick(callback: () => void) {
+        this.formCallBack = callback;
     }
     leaveOnClick(callback: () => void) {
         this.leaveCallBack = callback;
@@ -77,16 +86,29 @@ export class OptionWindow extends createjs.Container {
         ruleButton.y = 0;
         this.addChild(ruleButton);
 
+        const cardButton = new GeneralOptionButton(() => this.cardCallBack(), queue);
+        cardButton.setText("カードリスト");
+        cardButton.x = -240;
+        cardButton.y = 80;
+        this.addChild(cardButton);
+
+        const formButton = new GeneralOptionButton(() => this.formCallBack(), queue);
+        formButton.setText("報告フォーム");
+        formButton.x = -240;
+        formButton.y = 160;
+        this.addChild(formButton);
+
+
         const leaveButton = new GeneralOptionButton(() => this.leaveCallBack(), queue);
         leaveButton.setText("部屋を退室");
-        leaveButton.x = -240;
-        leaveButton.y = +80;
+        leaveButton.x = 80;
+        leaveButton.y = 0;
         this.addChild(leaveButton);
 
         this.gameEndButton = new GeneralOptionButton(() => this.endCallBack(), queue);
         this.gameEndButton.setText("ゲーム終了");
-        this.gameEndButton.x = -240;
-        this.gameEndButton.y = +160;
+        this.gameEndButton.x = 80;
+        this.gameEndButton.y = 80;
         this.addChild(this.gameEndButton);
 
         const optionText = new createjs.Text();
@@ -128,13 +150,13 @@ export class OptionWindow extends createjs.Container {
         SeText.font = "30px Arial";
         this.addChild(SeText);
 
-        const developerText = new createjs.Text();
-        developerText.x = -40;
-        developerText.y = -40;
-        developerText.text = "空きスペース";
-        developerText.color = "white";
-        developerText.font = "30px Arial";
-        this.addChild(developerText);
+        // const developerText = new createjs.Text();
+        // developerText.x = -40;
+        // developerText.y = -40;
+        // developerText.text = "空きスペース";
+        // developerText.color = "white";
+        // developerText.font = "30px Arial";
+        // this.addChild(developerText);
 
         const BgmBar = new Bar(queue);
         BgmBar.x = -170;
