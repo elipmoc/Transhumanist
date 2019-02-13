@@ -21,7 +21,7 @@ export class TurnManager {
 
     reset() {
         this.turnPlayerIdList = [];
-        this.currentTurnPlayerId.Value = 0;
+        this.currentTurnPlayerId.Value = -1;
         this.players = [];
         this.turn.Value = 0;
     }
