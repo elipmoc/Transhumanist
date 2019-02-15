@@ -164,7 +164,7 @@ export class OptionWindow extends createjs.Container {
         BgmBar.onChangedValue((value) => {
             SoundManager.BgmVolume = value;
         });
-        BgmBar.setBarValue(0.1);
+        BgmBar.setBarValue(0.3);
         this.addChild(BgmBar);
 
         const SeBar = new Bar(queue);
