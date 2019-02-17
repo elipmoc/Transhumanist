@@ -11,14 +11,14 @@ export class SelectButton extends createjs.Container {
     private getNums: createjs.Text[] = [new createjs.Text(null)];
     private backGround: createjs.Shape;
     private callback: () => void;
-    onClickCallback(f:() => void) {
+    onClickCallback(f: () => void) {
         this.callback = f;
     }
 
     constructor() {
         super();
         this.backGround = new createjs.Shape();
-        this.backGround.graphics.beginFill("#fcfcfc").drawRect(0, 0, (108) + (7 * 2), (14 + (global.cardIconSize/2 * 4)));
+        this.backGround.graphics.beginFill("#fcfcfc").drawRect(0, 0, (108) + (7 * 2), (14 + (global.cardIconSize / 2 * 4)));
         this.addChild(this.backGround);
 
         this.costIcons.forEach((icon, i) => {
@@ -67,10 +67,8 @@ export class SelectButton extends createjs.Container {
     }
     setCommandData(data: CreateGet, queue: ImageQueue, resourceHash: ResourceHash) {
         this.resetData();
-        console.log(data,data.cost.length);
         for (let i = 0; i < data.cost.length; i++) {
             this.costIcons[i].image = getIconResource(resourceHash[data.cost[i].name].index, "resource", queue);
-            console.log(data.cost[i].name);
             this.costIcons[i].scaleX = 0.5;
             this.costIcons[i].scaleY = 0.5;
             this.costNums[i].text = data.cost[i].number.toString();
@@ -84,7 +82,7 @@ export class SelectButton extends createjs.Container {
         }
     }
     private resetData() {
-        for (let i = 0; i < this.costIcons.length; i++){
+        for (let i = 0; i < this.costIcons.length; i++) {
             this.costIcons[i].image = null;
         }
         for (let i = 0; i < this.costNums.length; i++) {
