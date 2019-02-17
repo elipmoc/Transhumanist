@@ -56,7 +56,6 @@ export class SoundManager {
 
             } else {
                 //ロードまだです。
-                console.log("ロードまだでした");
                 this.bgmLoad(level);
             }
         }
@@ -68,7 +67,6 @@ export class SoundManager {
     static bgmLoad(level: number) {
         if (level >= 1 && level <= 6) {
             const nextId = "bgm_level" + level;
-            console.log("bgm_level" + level + "loading");
             createjs.Sound.registerSound(mapping[nextId], nextId);
         }
     }

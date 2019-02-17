@@ -16,7 +16,6 @@ export function build(bindParams: BindParams) {
     declareWarDialog.onClick(() => {
         declareWarDialog.visible = false;
         declareWarSelectButton.visible = false;
-        console.log("反応してるよ！");
         bindParams.layerManager.update();
     });
 

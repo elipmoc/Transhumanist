@@ -26,7 +26,6 @@ export function build(bindParams: BindParams) {
                 playerWindowList[i].setUncertainty(state.uncertainty);
                 playerWindowList[i].setActivityRange(state.activityRange);
             } else {
-                console.log(state.playerName);
                 playerWindowList[i].clearState();
             }
 
@@ -39,7 +38,7 @@ export function build(bindParams: BindParams) {
     const currentTurnPlayerId = new SocketBinder<number>("currentTurnPlayerId", bindParams.socket);
     currentTurnPlayerId.onUpdate(id => {
         playerWindowList.forEach(x => x.setMyTurn(false));
-        if(id != -1) playerWindowList[(4 + id - bindParams.playerId) % 4].setMyTurn(true);
+        if (id != -1) playerWindowList[(4 + id - bindParams.playerId) % 4].setMyTurn(true);
         bindParams.layerManager.update();
     })
     const gameMasterPlayerId = new SocketBinder<number | null>("gameMasterPlayerId", bindParams.socket);
