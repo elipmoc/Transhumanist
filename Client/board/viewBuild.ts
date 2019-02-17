@@ -12,7 +12,7 @@ import * as turnFinishButton from "./viewBuilds/turnFinishButton";
 import * as selectActionWindow from "./viewBuilds/selectActionWindow";
 import * as logWindow from "./viewBuilds/logWindow";
 import * as selectDiceWindow from "./viewBuilds/selectDiceWindow";
-import * as selectResourceWindow from "./viewBuilds/selectResourceWindow";
+import * as selectResourceWindowBuild from "./viewBuilds/selectResourceWindow";
 import * as unavailableDialog from "./viewBuilds/unavailableDialog";
 import * as declareWarButton from "./viewBuilds/declareWarButton";
 import * as chatForm from "./viewBuilds/chatForm";
@@ -20,24 +20,29 @@ import * as nowEventDialog from "./viewBuilds/nowEventDialog";
 import * as selectEventWindow from "./viewBuilds/selectEventWindow";
 
 import { LayerTag } from "../board";
+import { ResourceHover } from "./views/resourceHover";
+import { SelectResourceWindow } from "./views/selectResourceWindow";
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {
     topWindowR.build(bindParams);
     warLine.build(bindParams);
     playerWindow.build(bindParams);
-    const myPlayerResourceArea = playerResourceArea.build(bindParams);
+    const resourceHover = new ResourceHover();
+    bindParams.layerManager.add(LayerTag.Hover, resourceHover);
+    resourceHover.visible = false;
+    const myPlayerResourceArea = playerResourceArea.build(bindParams, resourceHover);
     logWindow.build(bindParams);
     eventLogWindow.build(bindParams);
     const actionCardHover = new ActionCardHover(bindParams.yamls.resourceHash, 3);
     bindParams.layerManager.add(LayerTag.Hover, actionCardHover);
-    playerBuildActionArea.build(actionCardHover, myPlayerResourceArea, bindParams);
+    selectResourceWindowBuild.build(bindParams, resourceHover);
+    playerBuildActionArea.build(actionCardHover, myPlayerResourceArea, resourceHover, bindParams);
     handActionCardStorageWindow.build(actionCardHover, bindParams);
     turnFinishButton.build(bindParams);
     declareWarButton.build(bindParams);
     selectActionWindow.build(actionCardHover, bindParams);
     selectDiceWindow.build(bindParams);
-    selectResourceWindow.build(bindParams);
     unavailableDialog.build(bindParams);
     topWindowL.build(bindParams);
     chatForm.build(bindParams);

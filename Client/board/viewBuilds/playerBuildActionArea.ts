@@ -21,8 +21,9 @@ import { SelectChurchWindow } from "../views/selectChurchWindow";
 import { LayerTag } from "../../board";
 import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
 import { BuildReserveArea } from "../views/reserveArea";
+import { ResourceHover } from "../views/resourceHover";
 //プレイヤーの設置アクション欄生成
-export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerResourceAreaBase, bindParams: BindParams) {
+export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerResourceAreaBase, resourceHover: ResourceHover, bindParams: BindParams) {
     const buildOver = new SocketBinder<BuildOver | null>("BuildOver", bindParams.socket);
     const buildthrowDialog = new ConfirmDialog();
     const resourceDialog = new ConfirmDialog();
@@ -37,6 +38,18 @@ export function build(actionCardHover: ActionCardHover, myResourceArea: PlayerRe
 
     const selectResourceWindow = new SelectResourceWindow(4);
     selectResourceWindow.visible = false;
+
+    //iconをホバーした時の処理
+    selectResourceWindow.onMouseOveredIcon(cardData => {
+        resourceHover.visible = true;
+        resourceHover.setYamlData(bindParams.yamls.resourceHash[cardData.resourceCardName], bindParams.imgQueue);
+        bindParams.layerManager.update();
+    });
+    selectResourceWindow.onMouseOutedIcon(() => {
+        resourceHover.visible = false;
+        resourceHover.setYamlData(null, bindParams.imgQueue);
+        bindParams.layerManager.update();
+    });
 
     const selectChurchWindow = new SelectChurchWindow();
     selectChurchWindow.visible = false;

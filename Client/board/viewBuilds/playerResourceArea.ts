@@ -17,12 +17,9 @@ import { PnChangeData } from "../../../Share/pnChangeData";
 import { ChurchAction } from "../../../Share/churchAction";
 
 //プレイヤーのリソース欄生成
-export function build(bindParams: BindParams) {
-    const resourceHover = new ResourceHover();
+export function build(bindParams: BindParams,resourceHover:ResourceHover) {
     const resourceDialog = new ConfirmDialog();
     bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
-    bindParams.layerManager.add(LayerTag.Hover, resourceHover);
-    resourceHover.visible = false;
     const resourceOver = new SocketBinder<ResourceOver | null>("ResourceOver", bindParams.socket);
     const churchAction = new SocketBinder<ChurchAction>("churchAction", bindParams.socket);
 
