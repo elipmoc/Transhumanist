@@ -9,10 +9,8 @@ export class ImageQueue {
     }
 
     getImage(name: string) {
-        console.log(name);
         const info = this.spriteJson[name];
         if (info == undefined) {
-            console.log("まだ用意されていないリソース" + name);
             return new createjs.Bitmap("");
         }
         return clipBitmap(this.sprite, info.x, info.y, info.width, info.height);

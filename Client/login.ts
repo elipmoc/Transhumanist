@@ -90,7 +90,6 @@ async function requestEnter(roomId: number) {
         const promise = asyncSocketEvent<ResultEnterRoomData>("resultEnterRoom");
         socket.emit("requestEnterRoom", JSON.stringify(requestEnterRoomData));
         const resultEnterRoomData = await promise;
-        console.log("aagb");
         if (resultEnterRoomData.successFlag) {
             cookies.set("uuid", resultEnterRoomData.uuid);
             cookies.set("playerId", String(resultEnterRoomData.playerId));

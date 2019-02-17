@@ -13,7 +13,7 @@ export class SelectResourceWindow extends PopupWindowBase {
     private resourceNumber: number;
     private maxLength: number;
     private descriptionText = new createjs.Text();
-    protected resourceList: IconList<ResourceCardIcon, HaveResourceCard>;
+    private resourceList: IconList<ResourceCardIcon, HaveResourceCard>;
     private button: DecisionButton;
     private buttonCallback: () => void;
 
@@ -21,7 +21,7 @@ export class SelectResourceWindow extends PopupWindowBase {
     constructor(maxNum: number) {
         super(700, 290);
         this.maxLength = maxNum;
-        this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0,true)
+        this.resourceList = new IconList<ResourceCardIcon, HaveResourceCard>(this.maxLength, this.maxLength, ResourceCardIcon, 1.0, true)
         this.resourceList.x = global.canvasWidth / 2 - (global.cardIconSize * this.maxLength) / 2;
         this.resourceList.y = global.canvasHeight / 2 - global.cardIconSize / 2;
 
@@ -53,6 +53,16 @@ export class SelectResourceWindow extends PopupWindowBase {
     //リソースアイコンがクリックされた時に呼ばれる関数をセットする
     onClickIcon(onClickIconCallBack: (cardIcon: ResourceCardIcon) => void) {
         this.resourceList.onClickedIcon(onClickIconCallBack);
+    }
+
+    //リソースアイコンがマウスオーバーされた時に呼ばれる関数をセットする
+    onMouseOveredIcon(onMouseOverIconCallBack: (resouorceData: HaveResourceCard) => void) {
+        this.resourceList.onMouseOveredIcon(onMouseOverIconCallBack);
+    }
+
+    //リソースアイコンがマウスアウトされた時に呼ばれる関数をセットする
+    onMouseOutedIcon(onMouseOutIconCallBack: () => void) {
+        this.resourceList.onMouseOutedIcon(onMouseOutIconCallBack);
     }
 
     //閉じるボタンの関数

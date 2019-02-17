@@ -1,10 +1,10 @@
 const mapping: { [index: string]: string } = {
-    "bg_level1": "Img/background/bg_level1.png",
-    "bg_level2": "Img/background/bg_level2.png",
-    "bg_level3": "Img/background/bg_level3.png",
-    "bg_level4": "Img/background/bg_level4.png",
-    "bg_level5": "Img/background/bg_level5.png",
-    "bg_level6": "Img/background/bg_level6.png",
+    "bg_level1": "https://elipmoc.github.io/img/bg_level1.png",
+    "bg_level2": "https://elipmoc.github.io/img/bg_level2.png",
+    "bg_level3": "https://elipmoc.github.io/img/bg_level3.png",
+    "bg_level4": "https://elipmoc.github.io/img/bg_level4.png",
+    "bg_level5": "https://elipmoc.github.io/img/bg_level5.png",
+    "bg_level6": "https://elipmoc.github.io/img/bg_level6.png",
 };
 
 export class BackGround extends createjs.Container {
