@@ -155,7 +155,7 @@ a{
     color:rgb(212, 201, 171);
     font-size:18px;
     padding:10px;
-    width:16em;
+    width:18em;
     margin: 1em 0;
 }
 .tutorialLink a{
@@ -171,6 +171,9 @@ a{
 }
 .sendForm a{
     color:rgb(174, 170, 235);
+}
+.cautionMessage{
+    color:rgb(255, 206, 253);
 }
 
 footer{
