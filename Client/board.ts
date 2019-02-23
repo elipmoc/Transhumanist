@@ -24,12 +24,12 @@ window.onload = () => {
     }));
     queue.loadManifest([
         { id: "boardSprite", src: "Img/boardSprite.png" },
-        { id: "bell", src: "https://elipmoc.github.io/audio/bell.mp3" },
-        { id: "clap", src: "https://elipmoc.github.io/audio/clap.mp3" },
-        { id: "surrender", src: "https://elipmoc.github.io/audio/surrender.mp3" },
-        { id: "turnStart", src: "https://elipmoc.github.io/audio/turnStart.mp3" },
-        { id: "turnStart2", src: "https://elipmoc.github.io/audio/turnStart2.mp3" },
-        { id: "warAlarm", src: "https://elipmoc.github.io/audio/warAlarm.mp3" },
+        { id: "bell", src: "https://trans-humanist.github.io/audio/bell.mp3" },
+        { id: "clap", src: "https://trans-humanist.github.io/audio/clap.mp3" },
+        { id: "surrender", src: "https://trans-humanist.github.io/audio/surrender.mp3" },
+        { id: "turnStart", src: "https://trans-humanist.github.io/audio/turnStart.mp3" },
+        { id: "turnStart2", src: "https://trans-humanist.github.io/audio/turnStart2.mp3" },
+        { id: "warAlarm", src: "https://trans-humanist.github.io/audio/warAlarm.mp3" },
     ]);
 }
 

@@ -19,7 +19,7 @@ export function build(bindParams: BindParams) {
 
     optionWindow.ruleOnClick(
         () => {
-            window.open("https://elipmoc.github.io/rule.html");
+            window.open("https://trans-humanist.github.io/rule.html");
             optionWindow.visible = false;
             bindParams.layerManager.update();
         }
