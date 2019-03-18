@@ -42,6 +42,7 @@
     "start": "node dist/Server/main.js",
     "test": "npx jasmine",
     "postinstall": "gulp compress && gulp sprite && gulp sprite_compress && gulp webpack_pro && gulp build",
+    "heroku-postbuild": "echo hoge",
     "build": "webpack && tsc -p Server && npm start",
     "build_only": "gulp test_build"
   },
