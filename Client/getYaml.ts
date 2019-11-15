@@ -1,8 +1,8 @@
 import * as $ from "jquery";
-import { GenerateActionCardYamlData } from "../Share/Yaml/actionCardYamlDataGen";
-import { ActionCardHash } from "../Share/Yaml/actionCardYamlData";
-import { ResourceHash, GenerateResourceYamlData } from "../Share/Yaml/resourceYamlData";
-import { EventHash, GenerateEventYamlData } from "../Share/Yaml/eventYamlData";
+import { GenerateActionCardYamlData } from "./Share/Yaml/actionCardYamlDataGen";
+import { ActionCardHash } from "./Share/Yaml/actionCardYamlData";
+import { ResourceHash, GenerateResourceYamlData } from "./Share/Yaml/resourceYamlData";
+import { EventHash, GenerateEventYamlData } from "./Share/Yaml/eventYamlData";
 
 export interface Yamls {
     actionCardHash: ActionCardHash,

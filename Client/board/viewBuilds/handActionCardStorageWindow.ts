@@ -1,12 +1,12 @@
 import { HandActionCardStorageWindow } from "../views/handActionCard/handActionStorageWindow";
 import { ActionCardHover } from "../views/actionCardHover";
-import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardName } from "../../Share/Yaml/actionCardYamlData";
 import { ActionCardUseDecisionWindow, DialogResult } from "../views/handActionCard/actionCardUseDecisionWindow";
 import { BindParams } from "../bindParams";
 import { SocketBinderList } from "../../socketBinderList";
 import { LayerTag } from "../../board";
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
-import { UseHandActionCard, UseKind } from "../../../Share/useHandActionCard";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
+import { UseHandActionCard, UseKind } from "../../Share/useHandActionCard";
 import { SocketBinder } from "../../socketBinder";
 
 //手札ウインドウの生成

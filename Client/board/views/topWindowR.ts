@@ -1,6 +1,6 @@
 import { global } from "../../boardGlobalData";
 import { ImageQueue } from "../imageQueue";
-import { Event } from "../../../Share/Yaml/eventYamlData";
+import { Event } from "../../Share/Yaml/eventYamlData";
 
 export class TopWindowR extends createjs.Container {
 

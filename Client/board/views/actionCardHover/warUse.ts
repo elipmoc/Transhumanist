@@ -1,4 +1,4 @@
-import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 
 export class WarUse extends createjs.Container {
     private backGround: createjs.Shape;

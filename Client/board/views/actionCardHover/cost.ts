@@ -1,5 +1,5 @@
-import { ResourceHash } from "../../../../Share/Yaml/resourceYamlData";
-import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { getIconResource } from "../../../utility";
 import { global } from "../../../boardGlobalData";
 import { ImageQueue } from "../../imageQueue";

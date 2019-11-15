@@ -1,9 +1,9 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { ActionCardHash } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardHash } from "../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../imageQueue";
 import { SelectWinCard } from "./bases/selectWinCard";
-import { WinActionCardData } from "../../../Share/winActionCardData";
+import { WinActionCardData } from "../../Share/winActionCardData";
 import { DecisionButton } from "./decisionButton";
 import { PopupWindowBase } from "./bases/popupWindowBase";
 

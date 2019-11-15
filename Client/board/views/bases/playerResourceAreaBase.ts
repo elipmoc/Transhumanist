@@ -1,8 +1,8 @@
 import { ResourceCardIcon, CardIconBase } from "../cardIcon";
-import { ResourceName, ResourceIndex } from "../../../../Share/Yaml/resourceYamlData";
+import { ResourceName, ResourceIndex } from "../../../Share/Yaml/resourceYamlData";
 import { IconList } from "../bases/iconList";
 import { ImageQueue } from "../../imageQueue";
-import { HaveResourceCard } from "../../../../Share/haveResourceCard";
+import { HaveResourceCard } from "../../../Share/haveResourceCard";
 
 //プレイヤーリソース欄のベースクラス
 export class PlayerResourceAreaBase extends createjs.Container {

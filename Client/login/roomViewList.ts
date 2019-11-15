@@ -1,4 +1,4 @@
-import { RoomDataForClient } from "../../Share/roomDataForClient";
+import { RoomDataForClient } from "../Share/roomDataForClient";
 import { RoomView } from "./roomView";
 
 export class RoomViewList {

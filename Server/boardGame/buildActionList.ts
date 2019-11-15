@@ -2,20 +2,20 @@ import { SocketBinder } from "../socketBinder";
 import {
     ActionCardName,
     ActionCardYamlData
-} from "../../Share/Yaml/actionCardYamlData";
-import { SelectBuildActionData } from "../../Share/selectBuildActionData";
-import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
+} from "../../Client/Share/Yaml/actionCardYamlData";
+import { SelectBuildActionData } from "../../Client/Share/selectBuildActionData";
+import { GenerateActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
-import { BuildOver } from "../../Share/elementOver";
-import { arrayshuffle } from "../../Share/utility";
-import { ThrowBuildAction } from "../../Share/throwBuildAction";
-import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
+import { BuildOver } from "../../Client/Share/elementOver";
+import { arrayshuffle } from "../../Client/Share/utility";
+import { ThrowBuildAction } from "../../Client/Share/throwBuildAction";
+import { HaveBuildActionCard } from "../../Client/Share/haveBuildActionCard";
 import { CardMessageSender } from "./message";
 
 type UseSuccessFlag = boolean;
 
 const buildActionCardHash = GenerateActionCardYamlData(
-    yamlGet("./Resource/Yaml/actionCard.yaml"),
+    yamlGet("./Client/Resource/Yaml/actionCard.yaml"),
     true
 )
 

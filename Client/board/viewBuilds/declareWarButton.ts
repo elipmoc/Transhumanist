@@ -4,7 +4,7 @@ import { LayerTag } from "../../board";
 import { DeclareWarDialog } from "../views/declareWarDialog";
 import { DeclareWarSelectButton } from "../views/declareWarSelectButton";
 import { SocketBinder } from "../../socketBinder";
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 
 //宣戦布告ボタン生成
 export function build(bindParams: BindParams) {

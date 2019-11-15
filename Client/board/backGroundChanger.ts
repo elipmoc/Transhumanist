@@ -1,7 +1,7 @@
 import { BindParams } from "./bindParams";
 import { SocketBinder } from "../socketBinder";
 import { BackGround } from "./views/backGround";
-import { Event } from "../../Share/Yaml/eventYamlData";
+import { Event } from "../Share/Yaml/eventYamlData";
 
 export class BackGroundChanger extends createjs.Container {
     private background: BackGround;

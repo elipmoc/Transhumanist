@@ -1,6 +1,6 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { DiceData } from "../../../Share/diceData";
+import { DiceData } from "../../Share/diceData";
 
 
 //ダイスアイコン

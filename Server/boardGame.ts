@@ -6,10 +6,10 @@ import { Message, MessageSender } from "./boardGame/message";
 import { SocketBinder } from "./socketBinder";
 import { ChatSe } from "./boardGame/chatSe";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
-import { GamePlayerCondition } from "../Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../Client/Share/gamePlayerCondition";
 import { yamlGet } from "./yamlGet";
 import { GamePlayer } from "./boardGame/gamePlayer";
-import { LogMessageType } from "../Share/logMessageForClient";
+import { LogMessageType } from "../Client/Share/logMessageForClient";
 import { PlayerLiveChecker } from "./boardGame/playerLiveChecker";
 
 export class BoardGame {
@@ -135,7 +135,7 @@ export class BoardGame {
                     ) {
                         this.messageSender.sendMessage("ゲームが開始されました", LogMessageType.OtherMsg);
                         const startStatusYamlData = yamlGet(
-                            "./Resource/Yaml/startStatus.yaml"
+                            "./Client/Resource/Yaml/startStatus.yaml"
                         );
                         this.gamePlayers.initCard(
                             startStatusYamlData,

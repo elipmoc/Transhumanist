@@ -1,4 +1,4 @@
-import { RoomDataForClient } from "../../Share/roomDataForClient";
+import { RoomDataForClient } from "../Share/roomDataForClient";
 import * as $ from "jquery";
 
 export class RoomView {

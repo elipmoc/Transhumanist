@@ -2,14 +2,14 @@ import { SocketBinder } from "../socketBinder";
 import {
     ResourceName,
     GenerateResourceYamlDataArray,
-} from "../../Share/Yaml/resourceYamlData";
+} from "../../Client/Share/Yaml/resourceYamlData";
 import { yamlGet } from "../yamlGet";
 import { Namespace } from "../socketBinder/bindManager";
-import { ThrowResource } from "../../Share/throwResource";
-import { ResourceOver } from "../../Share/elementOver";
-import { arrayshuffle } from "../../Share/utility";
-import { ResourceItem } from "../../Share/Yaml/actionCardYamlData";
-import { HaveResourceCard } from "../../Share/haveResourceCard";
+import { ThrowResource } from "../../Client/Share/throwResource";
+import { ResourceOver } from "../../Client/Share/elementOver";
+import { arrayshuffle } from "../../Client/Share/utility";
+import { ResourceItem } from "../../Client/Share/Yaml/actionCardYamlData";
+import { HaveResourceCard } from "../../Client/Share/haveResourceCard";
 import { ResourceHash } from "../hashData";
 import { CardMessageSender } from "./message";
 
@@ -206,7 +206,7 @@ export class ResourceList {
         for (let i = 0; i < 4; i++)
             this.resourceList.Value[i] = { resourceCardName: "人間", guardFlag: false };
         const arr = GenerateResourceYamlDataArray(
-            yamlGet("./Resource/Yaml/resource.yaml")
+            yamlGet("./Client/Resource/Yaml/resource.yaml")
         ).filter(x => x.level == 2);
         this.resourceList.Value[4] =
             { resourceCardName: arr[Math.floor(Math.random() * arr.length)].name, guardFlag: false };

@@ -1,5 +1,5 @@
 import { SocketBinder } from "../socketBinder";
-import { DiceData } from "../../Share/diceData";
+import { DiceData } from "../../Client/Share/diceData";
 
 //ダイスを振る。1~3が返る。
 export function diceRoll() {

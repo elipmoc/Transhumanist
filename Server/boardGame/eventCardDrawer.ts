@@ -1,7 +1,7 @@
 import { EventCardStack } from "./drawCard/eventCardStack";
 import { SocketBinder } from "../socketBinder";
-import { Event } from "../../Share/Yaml/eventYamlData";
-import { FutureForecastEventData } from "../../Share/futureForecastEventData";
+import { Event } from "../../Client/Share/Yaml/eventYamlData";
+import { FutureForecastEventData } from "../../Client/Share/futureForecastEventData";
 
 export class EventCardDrawer {
     private eventCardStack: EventCardStack;

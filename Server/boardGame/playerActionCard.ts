@@ -1,7 +1,7 @@
 import { SocketBinder } from "../socketBinder";
-import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../Share/Yaml/actionCardYamlDataGen";
-import { UseHandActionCard, UseKind } from "../../Share/useHandActionCard";
+import { ActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlDataGen";
+import { UseHandActionCard, UseKind } from "../../Client/Share/useHandActionCard";
 import { yamlGet } from "../yamlGet";
 import { ActionHash } from "../hashData";
 
@@ -24,7 +24,7 @@ export class PlayerActionCard {
         //生成
         const selectActionCardLevel = new SocketBinder.EmitReceiveBinder<
             number
-            >("selectActionCardLevel", true, [`player${playerId}`]);
+        >("selectActionCardLevel", true, [`player${playerId}`]);
         const selectWinActionCard = new SocketBinder.EmitReceiveBinder<string>(
             "selectWinCard",
             true,

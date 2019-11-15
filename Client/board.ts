@@ -1,7 +1,7 @@
 import * as io from "socket.io-client";
 import { viewBuild } from "./board/viewBuild"
 import * as cookies from "js-cookie";
-import { RequestBoardGameJoin } from "../Share/requestBoardGameJoin";
+import { RequestBoardGameJoin } from "./Share/requestBoardGameJoin";
 import { Yamls, getYamls } from "./getYaml";
 import { ImageQueue } from "./board/imageQueue";
 import { getSpriteJson } from "./getSpriteJson";

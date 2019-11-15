@@ -1,4 +1,4 @@
-import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
+import { LogMessageForClient, LogMessageType } from "../../Client/Share/logMessageForClient";
 import { SocketBinder } from "../socketBinder";
 
 

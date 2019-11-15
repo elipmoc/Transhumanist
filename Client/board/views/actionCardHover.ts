@@ -1,7 +1,7 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { DetailsActionCard } from "./detailsActionCard";
 import { global } from "../../boardGlobalData";
-import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 import { Cost } from "./actionCardHover/cost";
 import { WarUse } from "./actionCardHover/warUse";
 import { Condition } from "./actionCardHover/condition";
@@ -36,7 +36,7 @@ export class ActionCardHover extends createjs.Container {
         this.addChild(this.costView);
 
         this.warUseView.x = (this.cardWidth) + (7 * 2) + 7;
-        this.warUseView.y = ((global.cardIconSize/2 + 2) * 6) + (7 * 2) + 7
+        this.warUseView.y = ((global.cardIconSize / 2 + 2) * 6) + (7 * 2) + 7
         this.addChild(this.warUseView);
 
         this.conditionView.y = (this.cardHeight) + (7 * 2) + 7;

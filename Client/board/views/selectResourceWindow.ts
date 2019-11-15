@@ -1,11 +1,11 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { ResourceCardIcon } from "./cardIcon";
-import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 import { IconList } from "./bases/iconList";
 import { ImageQueue } from "../imageQueue";
-import { CandidateResources } from "../../../Share/candidateResources";
-import { HaveResourceCard } from "../../../Share/haveResourceCard";
+import { CandidateResources } from "../../Share/candidateResources";
+import { HaveResourceCard } from "../../Share/haveResourceCard";
 import { DecisionButton } from "./decisionButton";
 import { PopupWindowBase } from "./bases/popupWindowBase";
 

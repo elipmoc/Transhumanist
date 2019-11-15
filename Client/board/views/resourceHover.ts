@@ -1,5 +1,5 @@
 import { global } from "../../boardGlobalData";
-import { ResourceYamlData } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceYamlData } from "../../Share/Yaml/resourceYamlData";
 import { getIconResource } from "../../utility";
 import { ImageQueue } from "../imageQueue";
 

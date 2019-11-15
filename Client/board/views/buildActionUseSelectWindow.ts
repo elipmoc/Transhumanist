@@ -1,10 +1,10 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
 import { DecisionButton } from "./decisionButton";
-import { ActionCardYamlData, CreateGet } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData, CreateGet } from "../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../imageQueue";
 import { SelectButton } from "./buildActionSelect/selectButton";
-import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 import { PopupWindowBase } from "./bases/popupWindowBase";
 
 export class BuildActionSelectWindow extends PopupWindowBase {

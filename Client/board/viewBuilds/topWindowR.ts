@@ -1,7 +1,7 @@
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
-import { Event } from "../../../Share/Yaml/eventYamlData";
-import { NumberOfEventCard } from "../../../Share/numberOfEventCard";
+import { Event } from "../../Share/Yaml/eventYamlData";
+import { NumberOfEventCard } from "../../Share/numberOfEventCard";
 import { TopWindowR } from "../views/topWindowR";
 import { LayerTag } from "../../board";
 

@@ -1,6 +1,6 @@
-import { UnavailableState } from "../../../Share/unavailableState";
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
-import { Event } from "../../../Share/Yaml/eventYamlData";
+import { UnavailableState } from "../../../Client/Share/unavailableState";
+import { ActionCardYamlData } from "../../../Client/Share/Yaml/actionCardYamlData";
+import { Event } from "../../../Client/Share/Yaml/eventYamlData";
 import { GamePlayerState } from "../gamePlayerState";
 import { ResourceList } from "../ResourceList";
 import { actionCardExec, ExecResult } from "./actionCardExec";

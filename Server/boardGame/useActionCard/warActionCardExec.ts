@@ -1,4 +1,4 @@
-import { ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardName } from "../../../Client/Share/Yaml/actionCardYamlData";
 import { BuildActionList } from "../buildActionList";
 import { ResourceList } from "../ResourceList";
 import { GamePlayerState } from "../gamePlayerState";

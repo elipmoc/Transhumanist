@@ -1,11 +1,11 @@
 import { SelectActionWindow } from "../views/selectActionWindow";
 import { BindParams } from "../bindParams";
-import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
+import { NumberOfActionCard } from "../../Share/numberOfActionCard";
 import { SocketBinder } from "../../socketBinder";
 import { LayerTag } from "../../board";
 import { build as buildSelectWinCardWindow } from "./selectWinCardWindow";
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
-import { DrawCardLimit } from "../../../Share/drawCardLimit";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
+import { DrawCardLimit } from "../../Share/drawCardLimit";
 import { ActionCardHover } from "../views/actionCardHover";
 
 //ドローするアクションカードのレベル選択ウインドウの生成

@@ -1,9 +1,9 @@
 import { SocketBinder } from "../../socketBinder";
 import { WinActionCardStack } from "./winActionCardStack";
-import { ActionCardHash, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../../Share/Yaml/actionCardYamlDataGen";
+import { ActionCardHash, ActionCardName } from "../../../Client/Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../../Client/Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../../yamlGet";
-import { WinActionCardData } from "../../../Share/winActionCardData";
+import { WinActionCardData } from "../../../Client/Share/winActionCardData";
 
 export class WinActionCardStacks {
     private winActionCardDataList = new SocketBinder.BinderList<WinActionCardData>("winActionCardDataList");
@@ -18,7 +18,7 @@ export class WinActionCardStacks {
     settingCard() {
         this.winActionCardStackList = {};
         const actionCardHash: ActionCardHash =
-            GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
+            GenerateActionCardYamlData(yamlGet("./Client/Resource/Yaml/actionCard.yaml"), false);
         Object.values(actionCardHash)
             .filter(x => x != undefined && x.level == 6)
             .forEach(x =>

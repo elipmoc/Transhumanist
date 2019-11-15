@@ -1,8 +1,8 @@
-import { ActionCardHash, ActionCardYamlData, ActionCardName } from "../../../Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../../Share/Yaml/actionCardYamlDataGen";
+import { ActionCardHash, ActionCardYamlData, ActionCardName } from "../../../Client/Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../../Client/Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../../yamlGet";
 import { ActionCardStackPair } from "./actionCardStackPair";
-import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
+import { NumberOfActionCard } from "../../../Client/Share/numberOfActionCard";
 import { SocketBinder } from "../../socketBinder";
 import { WinActionCardStacks } from "./winActionCardStacks";
 
@@ -24,7 +24,7 @@ export class ActionCardStacks {
     settingCard() {
         this.winActionCardStacks.settingCard();
         this.actionCardStackPairList = [];
-        const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Resource/Yaml/actionCard.yaml"), false);
+        const actionCardHash: ActionCardHash = GenerateActionCardYamlData(yamlGet("./Client/Resource/Yaml/actionCard.yaml"), false);
         for (let i = 0; i < ActionCardStacks.maxLevel; i++)
             this.actionCardStackPairList.push(new ActionCardStackPair());
         for (let actionCardYamlData of Object.values(actionCardHash))

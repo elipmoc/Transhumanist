@@ -18,6 +18,6 @@
     ],
     "exclude": [
         "../Server",
-        "../Share/**/*"
+        "Share/**/*"
     ]
 }

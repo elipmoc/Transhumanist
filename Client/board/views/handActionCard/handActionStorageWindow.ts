@@ -1,5 +1,5 @@
 import { global } from "../../../boardGlobalData";
-import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { HandActionCard } from "./handActionCard";
 import { ActionCardHover } from "../actionCardHover";
 import { ImageQueue } from "../../imageQueue";

@@ -1,18 +1,18 @@
 import { Room } from "./room";
 import { RoomIdGenerator } from "./roomIdGenerator";
 import { UuidGenerator } from "./uuidGenerator";
-import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
-import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import { RequestCreateRoomData } from "../Client/Share/requestCreateRoomData";
+import { RequestEnterRoomData } from "../Client/Share/requestEnterRoomData";
 import {
     successResultCreateRoomData, faildResultCreateRoomData
-} from "../Share/resultCreateRoomData";
+} from "../Client/Share/resultCreateRoomData";
 import {
     ResultEnterRoomData, faildResultEnterRoomData
-} from "../Share/resultEnterRoomData";
+} from "../Client/Share/resultEnterRoomData";
 import { PasswordInfo } from "./passwordInfo";
 import { RoomEvents } from "./roomEvents";
 import { SocketBinder } from "./socketBinder";
-import { RoomDataForClient } from "../Share/roomDataForClient";
+import { RoomDataForClient } from "../Client/Share/roomDataForClient";
 
 export class RoomList {
     private roomMap: Map<number, Room> = new Map();

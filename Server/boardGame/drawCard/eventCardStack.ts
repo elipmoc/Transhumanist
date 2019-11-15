@@ -1,10 +1,10 @@
 import { yamlGet } from "../../yamlGet";
-import { GenerateEventYamlDataArray, Event } from "../../../Share/Yaml/eventYamlData"
-import { arrayshuffle } from "../../../Share/utility";
-import { NumberOfEventCard } from "../../../Share/numberOfEventCard";
+import { GenerateEventYamlDataArray, Event } from "../../../Client/Share/Yaml/eventYamlData"
+import { arrayshuffle } from "../../../Client/Share/utility";
+import { NumberOfEventCard } from "../../../Client/Share/numberOfEventCard";
 import { SocketBinder } from "../../socketBinder";
-import { EventLogMessageForClient } from "../../../Share/eventLogMessageForClient";
-import { FutureForecastEventData } from "../../../Share/futureForecastEventData";
+import { EventLogMessageForClient } from "../../../Client/Share/eventLogMessageForClient";
+import { FutureForecastEventData } from "../../../Client/Share/futureForecastEventData";
 
 export class EventCardStack {
     private eventCardList: Event[] = [];
@@ -43,7 +43,7 @@ export class EventCardStack {
         for (let i = 0; i < 6; i++) {
             eventCardGroups[i] = [];
         }
-        GenerateEventYamlDataArray(yamlGet("./Resource/Yaml/event.yaml")).forEach(x => {
+        GenerateEventYamlDataArray(yamlGet("./Client/Resource/Yaml/event.yaml")).forEach(x => {
             eventCardGroups[x.level - 1].push(x);
         });
         eventCardGroups.forEach(x => {

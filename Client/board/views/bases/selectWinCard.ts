@@ -1,7 +1,7 @@
 import { ImageQueue } from "../../imageQueue";
 import { DetailsActionCard } from "../detailsActionCard";
-import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
-import { WinActionCardData } from "../../../../Share/winActionCardData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { WinActionCardData } from "../../../Share/winActionCardData";
 
 export class SelectWinCard extends createjs.Container {
     private winCard: DetailsActionCard;

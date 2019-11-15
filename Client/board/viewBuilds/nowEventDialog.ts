@@ -1,4 +1,4 @@
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 import { BindParams } from "../bindParams";
 import { SocketBinder } from "../../socketBinder";
 import { NowEventDialog } from "../views/nowEventDialog";
