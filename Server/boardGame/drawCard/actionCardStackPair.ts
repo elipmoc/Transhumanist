@@ -1,6 +1,6 @@
 import { ActionCardStack } from "./actionCardStack";
-import { ActionCardYamlData, ActionCardName } from "../../../Client/Share/Yaml/actionCardYamlData";
-import { NumberOfActionCard } from "../../../Client/Share/numberOfActionCard";
+import { ActionCardYamlData, ActionCardName } from "../../../Client/src/Share/Yaml/actionCardYamlData";
+import { NumberOfActionCard } from "../../../Client/src/Share/numberOfActionCard";
 
 //山札と捨て札を一つのペアとして持つクラス
 export class ActionCardStackPair {

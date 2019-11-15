@@ -1,12 +1,12 @@
-import { GenerateResourceYamlData } from "../Client/Share/Yaml/resourceYamlData";
-import { GenerateEventYamlData } from "../Client/Share/Yaml/eventYamlData";
-import { GenerateActionCardYamlData } from "../Client/Share/Yaml/actionCardYamlDataGen";
+import { GenerateResourceYamlData } from "../Client/src/Share/Yaml/resourceYamlData";
+import { GenerateEventYamlData } from "../Client/src/Share/Yaml/eventYamlData";
+import { GenerateActionCardYamlData } from "../Client/src/Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../Server/yamlGet";
-import { GenerateStartStatusYamlData } from "../Client/Share/Yaml/startStatusYamlData";
+import { GenerateStartStatusYamlData } from "../Client/src/Share/Yaml/startStatusYamlData";
 
 describe("GenerateResourceYamlData", () => {
     it("", () => {
-        const data = yamlGet("./Client/Resource/Yaml/resource.yaml");
+        const data = yamlGet("./Client/public/Resource/Yaml/resource.yaml");
         const resourceHash = GenerateResourceYamlData(data);
         expect(resourceHash["人間"]!.name).toBeDefined();
         expect(resourceHash["人間"]!.level).toBeDefined();
@@ -17,7 +17,7 @@ describe("GenerateResourceYamlData", () => {
 
 describe("GenerateEventYamlData", () => {
     it("", () => {
-        const data = yamlGet("./Client/Resource/Yaml/event.yaml");
+        const data = yamlGet("./Client/public/Resource/Yaml/event.yaml");
         const eventHash = GenerateEventYamlData(data);
         expect(eventHash["無風状態"]!.name).toBeDefined();
         expect(eventHash["無風状態"]!.level).toBeDefined();
@@ -29,7 +29,7 @@ describe("GenerateEventYamlData", () => {
 
 describe("ActionCardYamlDataCheck", () => {
     it("", () => {
-        const data = yamlGet("./Client/Resource/Yaml/actionCard.yaml");
+        const data = yamlGet("./Client/public/Resource/Yaml/actionCard.yaml");
         const actionCardHash = GenerateActionCardYamlData(data, false);
         expect(actionCardHash["採掘施設"]!.name).toBeDefined();
         expect(actionCardHash["採掘施設"]!.level).toBeDefined();
@@ -44,7 +44,7 @@ describe("ActionCardYamlDataCheck", () => {
 
 describe("StartStatusYamlDataCheck", () => {
     it("", () => {
-        const data = yamlGet("./Client/Resource/Yaml/startStatus.yaml");
+        const data = yamlGet("./Client/public/Resource/Yaml/startStatus.yaml");
         const startStatusYamlData = GenerateStartStatusYamlData(data);
         expect(startStatusYamlData[0]!.name).toBeDefined();
         expect(startStatusYamlData[0]!.speed).toBeDefined();

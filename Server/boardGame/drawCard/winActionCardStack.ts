@@ -1,5 +1,5 @@
-import { ActionCardYamlData } from "../../../Client/Share/Yaml/actionCardYamlData";
-import { WinActionCardData } from "../../../Client/Share/winActionCardData";
+import { ActionCardYamlData } from "../../../Client/src/Share/Yaml/actionCardYamlData";
+import { WinActionCardData } from "../../../Client/src/Share/winActionCardData";
 
 //一種類の勝利カードの枚数を管理するクラス
 export class WinActionCardStack {

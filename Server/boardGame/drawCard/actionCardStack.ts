@@ -1,5 +1,5 @@
-import { ActionCardYamlData, ActionCardName } from "../../../Client/Share/Yaml/actionCardYamlData";
-import { arrayshuffle } from "../../../Client/Share/utility";
+import { ActionCardYamlData, ActionCardName } from "../../../Client/src/Share/Yaml/actionCardYamlData";
+import { arrayshuffle } from "../../../Client/src/Share/utility";
 
 export class ActionCardStack {
     private actionCardYamlDataList: ActionCardYamlData[] = [];

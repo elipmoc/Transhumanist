@@ -1,10 +1,10 @@
-import { Event } from "../../../Client/Share/Yaml/eventYamlData";
+import { Event } from "../../../Client/src/Share/Yaml/eventYamlData";
 import { GamePlayerState } from "../gamePlayerState";
-import { ResourceItem } from "../../../Client/Share/Yaml/actionCardYamlData";
+import { ResourceItem } from "../../../Client/src/Share/Yaml/actionCardYamlData";
 import { actionCardUseConditionCheck } from "./actionCardUseConditionCheck";
 import { ResourceList } from "../ResourceList";
 import { BuildActionList } from "../buildActionList";
-import { UnavailableState } from "../../../Client/Share/unavailableState";
+import { UnavailableState } from "../../../Client/src/Share/unavailableState";
 
 //アクションカード、または設置したアクションカードの使用をする時の使用条件チェック
 export function actionCardUseCheck(

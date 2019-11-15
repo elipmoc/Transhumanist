@@ -1,5 +1,5 @@
-import { ActionCardYamlData, CreateGet, Trade } from "../../../Client/Share/Yaml/actionCardYamlData";
-import { SelectBuildActionData } from "../../../Client/Share/selectBuildActionData";
+import { ActionCardYamlData, CreateGet, Trade } from "../../../Client/src/Share/Yaml/actionCardYamlData";
+import { SelectBuildActionData } from "../../../Client/src/Share/selectBuildActionData";
 
 //設置したアクションカードの使用時のコストを取得
 export function getBuildActionCost(card: ActionCardYamlData, data: SelectBuildActionData) {

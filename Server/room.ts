@@ -2,14 +2,14 @@ import { RoomData } from "./roomData";
 import { BoardGame } from "./boardGame";
 import { RoomEvents } from "./roomEvents";
 import { PasswordInfo } from "./passwordInfo";
-import { RequestEnterRoomData } from "../Client/Share/requestEnterRoomData";
+import { RequestEnterRoomData } from "../Client/src/Share/requestEnterRoomData";
 import {
     successResultEnterRoomData, faildResultEnterRoomData
-} from "../Client/Share/resultEnterRoomData";
+} from "../Client/src/Share/resultEnterRoomData";
 import { PlayerData } from "./playerData";
-import { RoomDataForClient } from "../Client/Share/roomDataForClient";
+import { RoomDataForClient } from "../Client/src/Share/roomDataForClient";
 import { BoardGameStatusKind } from "./boardGame/boardGameStatusKind";
-import { RequestBoardGameJoin } from "../Client/Share/requestBoardGameJoin";
+import { RequestBoardGameJoin } from "../Client/src/Share/requestBoardGameJoin";
 
 export class Room {
     private roomData: RoomData;

@@ -53,21 +53,21 @@ gulp.task("webpack_pro", done => {
 
 gulp.task("build", done => {
     var pj_server = typescript.createProject("./Server/tsconfig.json");
-    var pj_share = typescript.createProject("./Client/Share/tsconfig.json");
+    var pj_share = typescript.createProject("./Client/src/Share/tsconfig.json");
     Promise.all([
         new Promise((resolve, reject) => {
             gulp.src([
-                "./Client/Share/**/*.ts",
+                "./Client/src/Share/**/*.ts",
                 "!./node_modules/**"
             ])
                 .pipe(pj_share())
-                .pipe(gulp.dest("./dist/Client/Share/"))
+                .pipe(gulp.dest("./dist/Client/src/Share/"))
                 .on("end", resolve)
         }),
         new Promise((resolve, reject) => {
             gulp.src([
                 "./Server/**/*.ts",
-                "./Client/Share/**/*.ts",
+                "./Client/src/Share/**/*.ts",
                 "!./node_modules/**"
             ])
                 .pipe(pj_server())
@@ -83,7 +83,7 @@ gulp.task("build", done => {
 gulp.task("test_build", done => {
     var pj_test = typescript.createProject("./Test/tsconfig.json");
     gulp.src([
-        "./Client/Share/**/*.ts",
+        "./Client/src/Share/**/*.ts",
         "./Test/**/*.ts",
         "!./node_modules/**",
         "./Server/**/*.ts",

@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "es6",
+        "sourceMap": false,
+        "outDir": "./dist",
+        "declaration": false,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "strictNullChecks": false,
+        "noImplicitReturns": true,
+        "noEmitOnError": true
+    },
+    "include": [
+        "../src/**/*"
+    ],
+    "exclude": [
+        "Share/**/*"
+    ]
+}

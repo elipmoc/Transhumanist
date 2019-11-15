@@ -2,20 +2,20 @@ import { SocketBinder } from "../socketBinder";
 import {
     ActionCardName,
     ActionCardYamlData
-} from "../../Client/Share/Yaml/actionCardYamlData";
-import { SelectBuildActionData } from "../../Client/Share/selectBuildActionData";
-import { GenerateActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlDataGen";
+} from "../../Client/src/Share/Yaml/actionCardYamlData";
+import { SelectBuildActionData } from "../../Client/src/Share/selectBuildActionData";
+import { GenerateActionCardYamlData } from "../../Client/src/Share/Yaml/actionCardYamlDataGen";
 import { yamlGet } from "../yamlGet";
-import { BuildOver } from "../../Client/Share/elementOver";
-import { arrayshuffle } from "../../Client/Share/utility";
-import { ThrowBuildAction } from "../../Client/Share/throwBuildAction";
-import { HaveBuildActionCard } from "../../Client/Share/haveBuildActionCard";
+import { BuildOver } from "../../Client/src/Share/elementOver";
+import { arrayshuffle } from "../../Client/src/Share/utility";
+import { ThrowBuildAction } from "../../Client/src/Share/throwBuildAction";
+import { HaveBuildActionCard } from "../../Client/src/Share/haveBuildActionCard";
 import { CardMessageSender } from "./message";
 
 type UseSuccessFlag = boolean;
 
 const buildActionCardHash = GenerateActionCardYamlData(
-    yamlGet("./Client/Resource/Yaml/actionCard.yaml"),
+    yamlGet("./Client/public/Resource/Yaml/actionCard.yaml"),
     true
 )
 

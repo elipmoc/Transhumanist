@@ -1,5 +1,5 @@
-import { ResponseGamePlayerState } from "../../Client/Share/responseGamePlayerState";
-import { StartStatusYamlData } from "../../Client/Share/Yaml/startStatusYamlData";
+import { ResponseGamePlayerState } from "../../Client/src/Share/responseGamePlayerState";
+import { StartStatusYamlData } from "../../Client/src/Share/Yaml/startStatusYamlData";
 import { SocketBinder } from "../socketBinder";
 
 export class GamePlayerState {

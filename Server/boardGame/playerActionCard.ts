@@ -1,7 +1,7 @@
 import { SocketBinder } from "../socketBinder";
-import { ActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlData";
-import { GenerateActionCardYamlData } from "../../Client/Share/Yaml/actionCardYamlDataGen";
-import { UseHandActionCard, UseKind } from "../../Client/Share/useHandActionCard";
+import { ActionCardYamlData } from "../../Client/src/Share/Yaml/actionCardYamlData";
+import { GenerateActionCardYamlData } from "../../Client/src/Share/Yaml/actionCardYamlDataGen";
+import { UseHandActionCard, UseKind } from "../../Client/src/Share/useHandActionCard";
 import { yamlGet } from "../yamlGet";
 import { ActionHash } from "../hashData";
 

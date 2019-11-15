@@ -1,8 +1,8 @@
-import { Event } from "../../Client/Share/Yaml/eventYamlData";
+import { Event } from "../../Client/src/Share/Yaml/eventYamlData";
 import { GamePlayerState } from "./gamePlayerState";
 import { ResourceList } from "./ResourceList";
 import { BuildActionList } from "./buildActionList";
-import { CandidateResources } from "../../Client/Share/candidateResources";
+import { CandidateResources } from "../../Client/src/Share/candidateResources";
 
 export interface SetEventResult {
     onceNoCostFlag: boolean;

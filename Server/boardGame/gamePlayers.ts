@@ -1,17 +1,17 @@
 import { GamePlayer } from "./gamePlayer";
 import { PlayerData } from "../playerData";
-import { StartStatusYamlData } from "../../Client/Share/Yaml/startStatusYamlData";
-import { arrayshuffle } from "../../Client/Share/utility";
+import { StartStatusYamlData } from "../../Client/src/Share/Yaml/startStatusYamlData";
+import { arrayshuffle } from "../../Client/src/Share/utility";
 import { TurnManager } from "./turnManager";
 import { SocketBinder } from "../socketBinder";
 import { EventCardDrawer } from "./eventCardDrawer";
 import { ActionCardStacks } from "./drawCard/actionCardStacks";
 import { LeaveRoom } from "./leaveRoom";
-import { GamePlayerCondition } from "../../Client/Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../../Client/src/Share/gamePlayerCondition";
 import { EmitReceiveBinder } from "../socketBinder/emitReceiveBinder";
 import { WarList } from "./warList";
 import { MessageSender } from "./message";
-import { LogMessageType } from "../../Client/Share/logMessageForClient";
+import { LogMessageType } from "../../Client/src/Share/logMessageForClient";
 
 export class GamePlayers {
     private gamePlayerList: GamePlayer[] = new Array();

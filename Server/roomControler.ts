@@ -1,9 +1,9 @@
 import { RoomList } from "./roomList";
-import { RequestCreateRoomData } from "../Client/Share/requestCreateRoomData";
-import { RequestEnterRoomData } from "../Client/Share/requestEnterRoomData";
+import { RequestCreateRoomData } from "../Client/src/Share/requestCreateRoomData";
+import { RequestEnterRoomData } from "../Client/src/Share/requestEnterRoomData";
 import { SocketBinder } from "./socketBinder";
-import { ResultEnterRoomData } from "../Client/Share/resultEnterRoomData";
-import { ResultCreateRoomData } from "../Client/Share/resultCreateRoomData";
+import { ResultEnterRoomData } from "../Client/src/Share/resultEnterRoomData";
+import { ResultCreateRoomData } from "../Client/src/Share/resultCreateRoomData";
 
 export class RoomControler {
     private roomList: RoomList;
