@@ -23,13 +23,13 @@ window.onload = () => {
         )
     }));
     queue.loadManifest([
-        { id: "boardSprite", src: "../Resource/Sprite/boardSprite.png" },
-        { id: "bell", src: "../Resource/Se/bell.mp3" },
-        { id: "clap", src: "../Resource/Se/clap.mp3" },
-        { id: "surrender", src: "../Resource/Se/surrender.mp3" },
-        { id: "turnStart", src: "../Resource/Se/turnStart.mp3" },
-        { id: "turnStart2", src: "../Resource/Se/turnStart2.mp3" },
-        { id: "warAlarm", src: "../Resource/Se/warAlarm.mp3" },
+        { id: "boardSprite", src: "./Resource/Sprite/boardSprite.png" },
+        { id: "bell", src: "./Resource/Se/bell.mp3" },
+        { id: "clap", src: "./Resource/Se/clap.mp3" },
+        { id: "surrender", src: "./Resource/Se/surrender.mp3" },
+        { id: "turnStart", src: "./Resource/Se/turnStart.mp3" },
+        { id: "turnStart2", src: "./Resource/Se/turnStart2.mp3" },
+        { id: "warAlarm", src: "./Resource/Se/warAlarm.mp3" },
     ]);
 }
 
