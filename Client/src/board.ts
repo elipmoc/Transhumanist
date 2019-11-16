@@ -14,14 +14,10 @@ const queue = new createjs.LoadQueue();
 queue.installPlugin(createjs.Sound);
 window.onload = () => {
 
-    queue.on("complete", () => getYamls().then(yamls => {
-        getSpriteJson().then(
-            spriteJson => {
-                preloadImage(yamls, spriteJson);
-                return Promise.resolve();
-            }
-        )
-    }));
+    queue.on("complete", async () => {
+        const [yamls, spriteJson] = await Promise.all([getYamls(), getSpriteJson()])
+        preloadImage(yamls, spriteJson);
+    });
     queue.loadManifest([
         { id: "boardSprite", src: "./Resource/Sprite/boardSprite.png" },
         { id: "bell", src: "./Resource/Se/bell.mp3" },
