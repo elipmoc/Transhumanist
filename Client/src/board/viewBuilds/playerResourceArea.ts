@@ -1,23 +1,23 @@
 import { BindParams } from "../bindParams";
 import { PlayerResourceAreaBase } from "../views/bases/playerResourceAreaBase";
 import { ResourceHover } from "../views/resourceHover";
-import { ResourceName } from "../../../Share/Yaml/resourceYamlData";
-import { SelectResourceData } from "../../../Share/selectResourceData";
+import { ResourceName } from "../../Share/Yaml/resourceYamlData";
+import { SelectResourceData } from "../../Share/selectResourceData";
 import { SocketBinderList } from "../../socketBinderList";
 import * as playerResourceAreas from "../views/playerResourceAreas";
 import { ConfirmDialog } from "../views/confirmDialog";
 import { SocketBinder } from "../../socketBinder";
 import { ResourceReserveArea } from "../views/reserveArea";
-import { ThrowResource } from "../../../Share/throwResource";
-import { ResourceOver } from "../../../Share/elementOver";
+import { ThrowResource } from "../../Share/throwResource";
+import { ResourceOver } from "../../Share/elementOver";
 import { LayerTag } from "../../board";
-import { HaveResourceCard } from "../../../Share/haveResourceCard";
+import { HaveResourceCard } from "../../Share/haveResourceCard";
 import { SelectBelieverWindow } from "../views/selectBelieverWindow";
-import { PnChangeData } from "../../../Share/pnChangeData";
-import { ChurchAction } from "../../../Share/churchAction";
+import { PnChangeData } from "../../Share/pnChangeData";
+import { ChurchAction } from "../../Share/churchAction";
 
 //プレイヤーのリソース欄生成
-export function build(bindParams: BindParams,resourceHover:ResourceHover) {
+export function build(bindParams: BindParams, resourceHover: ResourceHover) {
     const resourceDialog = new ConfirmDialog();
     bindParams.layerManager.add(LayerTag.PopUp, resourceDialog);
     const resourceOver = new SocketBinder<ResourceOver | null>("ResourceOver", bindParams.socket);

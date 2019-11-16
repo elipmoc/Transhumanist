@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>ログイン画面 - Transhumanist</title>
-    <link rel="stylesheet" href="Css/login.css" type="text/css">
+    <link rel="stylesheet" href="../css/login.css" type="text/css">
     <link rel="java">
 </head>
 
@@ -12,25 +12,25 @@
     <header class="menubar">
         <ul class="menubuttons">
             <li class="menubutton">
-                <a href="https://trans-humanist.github.io/index.html">トップ</a>
+                <a href="index.html">トップ</a>
             </li>
             <li class="menubutton">
-                <a href="https://trans-humanist.github.io/rule.html">ルール</a>
+                <a href="rule.html">ルール</a>
             </li>
             <li class="menubutton">
                 <a href="login.html" target="_blank">ゲーム</a>
             </li>
             <li class="menubutton">
-                <a href="https://trans-humanist.github.io/link.html">リンク</a>
+                <a href="link.html">リンク</a>
             </li>
         </ul>
     </header>
     <div class="content">
         <div class="pageTitle">
-            <img src="Img/page/game.png">
+            <img src="../Resource/img/page/game.png">
         </div>
         <div class="tutorialLink">
-            初めてプレイする方はまず<a href="https://trans-humanist.github.io/rule.html#tutorial" target="_blank">こちらへ</a>
+            初めてプレイする方はまず<a href="rule.html#tutorial" target="_blank">こちらへ</a>
             <br>
             <p class="sendForm">バグや感想は<a href="https://goo.gl/forms/9tx8kwYic59Hj7WB2" target="_blank">こちらへ</a></p>
             <p class="cautionMessage">
@@ -50,7 +50,8 @@
                     <input type="text" name="roomName" id="roomName" maxlength="6">
                 </div>
                 <div class="passForm">
-                    <input type="checkbox" id="passwordFlag">パス<input type="password" name="pass" id="pass" maxlength="8">
+                    <input type="checkbox" id="passwordFlag">パス<input type="password" name="pass" id="pass"
+                        maxlength="8">
                 </div>
                 <div style="text-align:right"><input type="submit" value="部屋を作成" id="createButton" class="button"></div>
             </div>
@@ -64,7 +65,7 @@
         © 2018 創電アドバンス
     </footer>
 
-    <script src="Client/login.js"></script>
+    <script src="../dist/login.js"></script>
 </body>
 
 </html>

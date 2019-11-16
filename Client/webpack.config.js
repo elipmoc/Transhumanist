@@ -6,11 +6,11 @@ module.exports = {
     mode: 'development',
 
     entry: {
-        "Client/board": "./Client/board.ts",
-        "Client/login": "./Client/login.ts",
+        "board": "./src/board.ts",
+        "login": "./src/login.ts",
     },
     output: {
-        filename: './dist/[name].js'
+        filename: './public/dist/[name].js'
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.

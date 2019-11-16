@@ -1,9 +1,9 @@
 import { SelectDiceWindow } from "../views/selectDiceWindow";
 import { BindParams } from "../bindParams";
-import { DiceData } from "../../../Share/diceData";
+import { DiceData } from "../../Share/diceData";
 import { SocketBinder } from "../../socketBinder";
 import { LayerTag } from "../../board";
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 
 //ダイス選択ウインドウの生成
 export function build(bindParams: BindParams) {

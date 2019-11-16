@@ -1,4 +1,4 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../imageQueue";
 
 //詳細な情報が書かれたアクションカードのクラス

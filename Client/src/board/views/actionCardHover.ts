@@ -1,7 +1,7 @@
-import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../Share/Yaml/actionCardYamlData";
 import { DetailsActionCard } from "./detailsActionCard";
 import { global } from "../../boardGlobalData";
-import { ResourceHash } from "../../../Share/Yaml/resourceYamlData";
+import { ResourceHash } from "../../Share/Yaml/resourceYamlData";
 import { Cost } from "./actionCardHover/cost";
 import { WarUse } from "./actionCardHover/warUse";
 import { Condition } from "./actionCardHover/condition";

@@ -1,9 +1,9 @@
 import { SelectEventWindow } from "../views/selectEventWindow";
 import { BindParams } from "../bindParams";
-import { FutureForecastEventData } from "../../../Share/futureForecastEventData";
+import { FutureForecastEventData } from "../../Share/futureForecastEventData";
 import { SocketBinder } from "../../socketBinder";
 import { LayerTag } from "../../board";
-import { GamePlayerCondition } from "../../../Share/gamePlayerCondition";
+import { GamePlayerCondition } from "../../Share/gamePlayerCondition";
 
 //イベントカードウインドウの生成
 export function build(bindParams: BindParams) {

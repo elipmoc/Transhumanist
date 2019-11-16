@@ -1,6 +1,6 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { DiceData } from "../../../Share/diceData";
+import { DiceData } from "../../Share/diceData";
 
 
 //ダイスアイコン
@@ -85,10 +85,10 @@ export class SelectDiceWindow extends createjs.Container {
         this.y = -180;
 
         this.addChild(frame);
-        this.addChild(descriptionText,this.causeText);
+        this.addChild(descriptionText, this.causeText);
     }
 
-    setText(text:string) {
+    setText(text: string) {
         this.causeText.text = text;
     }
 }

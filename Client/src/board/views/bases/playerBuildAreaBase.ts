@@ -1,8 +1,8 @@
 import { IconList } from "./iconList";
 import { BuildActionCardIcon } from "../cardIcon";
-import { BuildActionIndex } from "../../../../Share/Yaml/actionCardYamlData";
+import { BuildActionIndex } from "../../../Share/Yaml/actionCardYamlData";
 import { ImageQueue } from "../../imageQueue";
-import { HaveBuildActionCard } from "../../../../Share/haveBuildActionCard";
+import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
 
 //プレイヤー設置アクション欄のベースクラス
 export class PlayerBuildAreaBase extends createjs.Container {

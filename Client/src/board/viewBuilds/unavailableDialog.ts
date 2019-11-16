@@ -1,7 +1,7 @@
 import { BindParams } from "../bindParams";
 import { LayerTag } from "../../board";
 import { UnavailableDialog } from "../views/unavailableDialog";
-import { UnavailableState } from "../../../Share/unavailableState";
+import { UnavailableState } from "../../Share/unavailableState";
 
 export function build(bindParams: BindParams) {
     const unavailableDialog = new UnavailableDialog();

@@ -23,13 +23,13 @@ window.onload = () => {
         )
     }));
     queue.loadManifest([
-        { id: "boardSprite", src: "Img/boardSprite.png" },
-        { id: "bell", src: "https://trans-humanist.github.io/audio/bell.mp3" },
-        { id: "clap", src: "https://trans-humanist.github.io/audio/clap.mp3" },
-        { id: "surrender", src: "https://trans-humanist.github.io/audio/surrender.mp3" },
-        { id: "turnStart", src: "https://trans-humanist.github.io/audio/turnStart.mp3" },
-        { id: "turnStart2", src: "https://trans-humanist.github.io/audio/turnStart2.mp3" },
-        { id: "warAlarm", src: "https://trans-humanist.github.io/audio/warAlarm.mp3" },
+        { id: "boardSprite", src: "../Resource/Sprite/boardSprite.png" },
+        { id: "bell", src: "../Resource/Se/bell.mp3" },
+        { id: "clap", src: "../Resource/Se/clap.mp3" },
+        { id: "surrender", src: "../Resource/Se/surrender.mp3" },
+        { id: "turnStart", src: "../Resource/Se/turnStart.mp3" },
+        { id: "turnStart2", src: "../Resource/Se/turnStart2.mp3" },
+        { id: "warAlarm", src: "../Resource/Se/warAlarm.mp3" },
     ]);
 }
 
@@ -61,7 +61,7 @@ function preloadImage(yamls: Yamls, spriteJson: any) {
     let stage = new createjs.Stage("myCanvas");
     stage.enableMouseOver();
     const layerManager = new LayerManager(getLayerTags(), stage);
-    const socket = io(`/room${Number(cookies.get("roomid"))}`);
+    const socket = io("https://trans-humanist.herokuapp.com" + `/room${Number(cookies.get("roomid"))}`);
     const imgQueue = new ImageQueue(queue, spriteJson);
     const bindParams = {
         imgQueue,

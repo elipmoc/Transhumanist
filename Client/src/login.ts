@@ -1,15 +1,15 @@
 import * as io from "socket.io-client";
 import * as cookies from "js-cookie";
-import { RoomDataForClient } from "../Share/roomDataForClient";
-import { RoomViewList } from "../login/roomViewList";
-import { ResultEnterRoomData } from "../Share/resultEnterRoomData";
-import { ResultCreateRoomData } from "../Share/resultCreateRoomData";
-import { RequestCreateRoomData } from "../Share/requestCreateRoomData";
-import { RequestEnterRoomData } from "../Share/requestEnterRoomData";
+import { RoomDataForClient } from "Share/roomDataForClient";
+import { RoomViewList } from "./login/roomViewList";
+import { ResultEnterRoomData } from "Share/resultEnterRoomData";
+import { ResultCreateRoomData } from "Share/resultCreateRoomData";
+import { RequestCreateRoomData } from "Share/requestCreateRoomData";
+import { RequestEnterRoomData } from "Share/requestEnterRoomData";
 import { SocketBinderList } from "./socketBinderList";
 
 //サンプルソケットに繋げる
-const socket = io("/login");
+const socket = io("https://trans-humanist.herokuapp.com" + "/login");
 
 const roomViewList = new RoomViewList(
     roomId => requestCall(() => requestEnter(roomId))

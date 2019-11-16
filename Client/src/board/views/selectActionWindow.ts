@@ -1,5 +1,5 @@
 import { global } from "../../boardGlobalData"
-import { NumberOfActionCard } from "../../../Share/numberOfActionCard";
+import { NumberOfActionCard } from "../../Share/numberOfActionCard";
 import { createMyShadow } from "../../utility";
 import { ImageQueue } from "../imageQueue";
 import { PopupWindowBase } from "./bases/popupWindowBase";

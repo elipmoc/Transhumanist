@@ -2,7 +2,7 @@ import { SelectResourceWindow } from "../views/selectResourceWindow";
 import { BindParams } from "../bindParams";
 import { LayerTag } from "../../board";
 import { SocketBinder } from "../../socketBinder";
-import { CandidateResources } from "../../../Share/candidateResources";
+import { CandidateResources } from "../../Share/candidateResources";
 import { ResourceHover } from "../views/resourceHover";
 
 export function build(bindParams: BindParams, resourceHover: ResourceHover) {

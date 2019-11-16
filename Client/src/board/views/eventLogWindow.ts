@@ -1,6 +1,6 @@
 import { global } from "../../boardGlobalData";
 import { createMyShadow } from "../../utility";
-import { EventLogMessageForClient } from "../../../Share/eventLogMessageForClient";
+import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { ImageQueue } from "../imageQueue";
 
 

@@ -1,7 +1,7 @@
 import { BindParams } from "./bindParams";
 import { SocketBinder } from "../socketBinder";
 import { SoundManager } from "../soundManager";
-import { Event } from "../../Share/Yaml/eventYamlData";
+import { Event } from "../Share/Yaml/eventYamlData";
 
 export class BgmChanger {
     private nowLevel: number = 0;

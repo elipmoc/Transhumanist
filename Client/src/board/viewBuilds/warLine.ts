@@ -1,7 +1,7 @@
 import { BindParams } from "../bindParams";
 import { WarLineControl } from "../views/warLine";
 import { SocketBinderList } from "../../socketBinderList";
-import { WarPair } from "../../../Share/warPair";
+import { WarPair } from "../../Share/warPair";
 import { LayerTag } from "../../board";
 
 //戦争ライン表示の生成

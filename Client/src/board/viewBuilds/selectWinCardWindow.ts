@@ -2,7 +2,7 @@ import { SelectWinCardWindow } from "../views/selectWinCardWindow";
 import { BindParams } from "../bindParams";
 import { LayerTag } from "../../board";
 import { SocketBinderList } from "../../socketBinderList";
-import { WinActionCardData } from "../../../Share/winActionCardData";
+import { WinActionCardData } from "../../Share/winActionCardData";
 import { ActionCardHover } from "../views/actionCardHover";
 
 export function build(actionCardHover: ActionCardHover, bindParams: BindParams) {

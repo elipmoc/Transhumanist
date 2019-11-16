@@ -1,6 +1,6 @@
 import { EventLogWindow } from "../views/eventLogWindow";
 import { BindParams } from "../bindParams";
-import { EventLogMessageForClient } from "../../../Share/eventLogMessageForClient";
+import { EventLogMessageForClient } from "../../Share/eventLogMessageForClient";
 import { SocketBinder } from "../../socketBinder";
 import { LayerTag } from "../../board";
 

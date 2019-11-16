@@ -21,7 +21,6 @@ import * as selectEventWindow from "./viewBuilds/selectEventWindow";
 
 import { LayerTag } from "../board";
 import { ResourceHover } from "./views/resourceHover";
-import { SelectResourceWindow } from "./views/selectResourceWindow";
 
 //viewを生成してソケットと結びつける関数
 export function viewBuild(bindParams: BindParams) {

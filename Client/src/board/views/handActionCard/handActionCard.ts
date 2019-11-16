@@ -1,4 +1,4 @@
-import { ActionCardYamlData } from "../../../../Share/Yaml/actionCardYamlData";
+import { ActionCardYamlData } from "../../../Share/Yaml/actionCardYamlData";
 import { DetailsActionCard } from "../detailsActionCard";
 import { ActionCardHover } from "../actionCardHover";
 import { ImageQueue } from "../../imageQueue";

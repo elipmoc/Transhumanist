@@ -1,6 +1,6 @@
 import { getIconResource } from "../../utility";
-import { HaveResourceCard } from "../../../Share/haveResourceCard";
-import { HaveBuildActionCard } from "../../../Share/haveBuildActionCard";
+import { HaveResourceCard } from "../../Share/haveResourceCard";
+import { HaveBuildActionCard } from "../../Share/haveBuildActionCard";
 import { ImageQueue } from "../imageQueue";
 import { global } from "../../boardGlobalData";
 

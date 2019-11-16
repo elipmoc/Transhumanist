@@ -1,5 +1,5 @@
 import { global } from "../../boardGlobalData";
-import { LogMessageForClient, LogMessageType } from "../../../Share/logMessageForClient";
+import { LogMessageForClient, LogMessageType } from "../../Share/logMessageForClient";
 import { createMyShadow } from "../../utility";
 import { MessageBox, Message } from "./messageBox";
 import { ImageQueue } from "../imageQueue";
