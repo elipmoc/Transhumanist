@@ -26,7 +26,7 @@ window.onload = () => {
         { id: "turnStart", src: "./Resource/Se/turnStart.mp3" },
         { id: "turnStart2", src: "./Resource/Se/turnStart2.mp3" },
         { id: "warAlarm", src: "./Resource/Se/warAlarm.mp3" },
-    ]);
+    ], true);
 }
 
 export const enum LayerTag {
