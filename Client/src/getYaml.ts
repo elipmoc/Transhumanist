@@ -3,6 +3,7 @@ import { GenerateActionCardYamlData } from "./Share/Yaml/actionCardYamlDataGen";
 import { ActionCardHash } from "./Share/Yaml/actionCardYamlData";
 import { ResourceHash, GenerateResourceYamlData } from "./Share/Yaml/resourceYamlData";
 import { EventHash, GenerateEventYamlData } from "./Share/Yaml/eventYamlData";
+import * as yaml from "js-yaml";
 
 export interface Yamls {
     actionCardHash: ActionCardHash,
@@ -14,7 +15,7 @@ export interface Yamls {
 export async function getYamls(): Promise<Yamls> {
     const actionYaml = await new Promise<any>((resolve) =>
         $.get("./Resource/Yaml/actionCard.yaml", data => resolve(
-            JSON.parse(data)
+            yaml.safeLoad(data)
         ))
     );
 
@@ -22,12 +23,12 @@ export async function getYamls(): Promise<Yamls> {
     const buildActionCardHash = GenerateActionCardYamlData(actionYaml, true)
     const resourceHash = await new Promise<ResourceHash>((resolve) =>
         $.get("./Resource/Yaml/resource.yaml", data => resolve(
-            GenerateResourceYamlData(JSON.parse(data))
+            GenerateResourceYamlData(yaml.safeLoad(data))
         ))
     );
     const eventHash = await new Promise<EventHash>((resolve) =>
         $.get("./Resource/Yaml/event.yaml", data => resolve(
-            GenerateEventYamlData(JSON.parse(data))
+            GenerateEventYamlData(yaml.safeLoad(data))
         ))
     );
     return {
