@@ -35,8 +35,8 @@ export class MessageBox<MsgT extends Message> extends createjs.Container {
                 e.preventDefault();
             }
         };
-        window.addEventListener("mousewheel", mouseWheel, false);
-        window.addEventListener("DOMMouseScroll", mouseWheel, false);
+        window.addEventListener("mousewheel", mouseWheel, { passive: false });
+        window.addEventListener("DOMMouseScroll", mouseWheel, { passive: false });
     }
 
     setY(y: number) {
